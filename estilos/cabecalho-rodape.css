@@ -24,7 +24,7 @@ header {
 
 .logo {
     font-family: var(--font-logo);
-    font-size: 26px;
+    font-size: 25px;
     font-weight: 700;
     color: var(--text-main);
     letter-spacing: -1px;
