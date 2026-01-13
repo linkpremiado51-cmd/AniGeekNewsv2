@@ -9,7 +9,7 @@ const displayPrincipal = document.getElementById('conteudo_de_destaque');
 async function carregarSecao(nome) {
     if (!displayPrincipal) return;
 
-    displayPrincipal.innerHTML = '<div style="text-align: center; padding: 100px; color: var(--text-muted);">Carregando conteúdo...</div>';
+    displayPrincipal.innerHTML = '<div style="text-align: center; padding: 99px; color: var(--text-muted);">Carregando conteúdo...</div>';
     
     try {
         // Busca o arquivo na subpasta /secoes/
