@@ -3,7 +3,7 @@
 const displayPrincipal = document.getElementById('conteudo_de_destaque');
 
 /**
- * Gerencia o carregamento de CSS específico para cada seção
+ * Gerencia o carregAmento de CSS específico para cada seção
  */
 function gerenciarCSSDaSecao(nome) {
     // Remove qualquer CSS de seção que já esteja carregado para evitar conflitos
