@@ -1,6 +1,6 @@
 /* scripts/config-firebase.js */
 
-// Importações Do SDK do Firebase via CDN
+// Importações do SDK do Firebase via CDN
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
@@ -19,9 +19,26 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+// --- NOVIDADE: Sincronização para a Busca ---
+window.noticiasFirebase = []; // Criamos a lista global vazia
+
+// Função que fica ouvindo o banco de dados em tempo real
+function carregarNoticiasRealTime() {
+    onSnapshot(collection(db, "noticias"), (snapshot) => {
+        window.noticiasFirebase = snapshot.docs.map(doc => ({ 
+            id: doc.id, 
+            ...doc.data() 
+        }));
+        console.log("✅ Busca sincronizada com Firebase.");
+    });
+}
+
 // Exporta para o escopo global (window) para que outros scripts modularizados acessem
 window.db = db;
 window.collection = collection;
 window.onSnapshot = onSnapshot;
+
+// Inicia a escuta das notícias imediatamente
+carregarNoticiasRealTime();
 
 console.log("🔥 Firebase inicializado com sucesso.");
