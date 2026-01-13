@@ -1,0 +1,37 @@
+/* ESTILO EXCLUSIVO: ANÁLISES 
+   Paleta focada em tons de Roxo e Deep Blue
+*/
+
+.destaque-wrapper {
+  width: 100vw; position: relative; left: 50%; right: 50%;
+  margin-left: -50vw; margin-right: -50vw;
+  font-family: 'Inter', sans-serif; background: #0f172a; color: #f8fafc;
+  overflow-x: hidden; box-sizing: border-box;
+}
+
+/* Reutilizando a lógica das Manchetes, mas trocando a identidade */
+.destaque-secao { width: 100%; margin-bottom: 80px; border-bottom: 1px solid #1e293b; padding-bottom: 20px; }
+.destaque-padding { padding: 0 25px; max-width: 1100px; margin: 0 auto; }
+
+.destaque-categoria { 
+  color: #818cf8; /* Roxo Indigo */
+  font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; 
+}
+
+.destaque-titulo { font-size: clamp(26px, 5vw, 44px); font-weight: 800; color: #ffffff; }
+
+.destaque-info-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 20px; background: #1e293b; padding: 15px;
+  border-left: 4px solid #818cf8; margin-bottom: 25px;
+}
+
+.info-label { color: #94a3b8; font-size: 10px; text-transform: uppercase; }
+.info-valor { color: #f1f5f9; font-size: 13px; }
+
+/* Botões específicos para a seção de análises */
+.btn-ver-artigo { color: #818cf8; text-decoration: none; font-weight: 800; }
+.btn-acao { border: 1px solid #334155; color: #f1f5f9; background: transparent; }
+.btn-acao:hover { background: #818cf8; color: #fff; }
+
+/* Omiti o restante por brevidade, mas segue a mesma estrutura do manchetes.css */
