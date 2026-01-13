@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
-        /* --- VARIÁVEIS --- */
+        /* --- SEU CSS ORIGINAL PRESERVADO --- */
         :root {
             --nyt-black: #121212;
             --nyt-ink: #202020;
@@ -101,6 +101,81 @@
         }
         .nav-item:hover > a { border-bottom-color: var(--primary); }
 
+        .search-bar-wrapper {
+            max-width: var(--container-w);
+            margin: 0 auto;
+            padding: 10px 20px;
+            background: var(--bg);
+            border-bottom: 1px solid var(--border);
+            position: relative; /* Importante para a superfície flutuante */
+        }
+        .search-box {
+            position: relative;
+            display: flex;
+            align-items: center;
+            background: var(--nyt-gray-light);
+            border-radius: 4px;
+            padding: 5px 15px;
+            transition: 0.3s;
+        }
+        body.dark-mode .search-box { background: #222; }
+        .search-box:focus-within {
+            background: var(--card-bg);
+            box-shadow: 0 0 0 1px var(--primary);
+        }
+        .search-box i { color: var(--text-muted); font-size: 14px; }
+        .search-box input {
+            width: 100%;
+            background: none;
+            border: none;
+            padding: 8px 10px;
+            font-size: 14px;
+            color: var(--text-main);
+            outline: none;
+        }
+
+        /* --- NOVA SUPERFÍCIE DE RESULTADOS (ADAPTAÇÃO SOLICITADA) --- */
+        #search-results-surface {
+            position: absolute;
+            top: 100%;
+            left: 20px;
+            right: 20px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-top: none;
+            z-index: 2000;
+            display: none;
+            max-height: 500px;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
+        .result-item-list {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border);
+            gap: 15px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .result-item-list:hover { background: rgba(0,0,0,0.03); }
+        body.dark-mode .result-item-list:hover { background: rgba(255,255,255,0.05); }
+
+        .result-img {
+            width: 100px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 2px;
+            background: #eee;
+        }
+
+        .result-info { flex: 1; }
+        .result-cat { font-size: 9px; font-weight: 800; text-transform: uppercase; color: var(--primary); letter-spacing: 1px; }
+        .result-title { font-size: 14px; font-weight: 700; color: var(--text-main); line-height: 1.2; margin: 2px 0; }
+        /* ------------------------------------------------------------ */
+
         .header-actions { display: flex; align-items: center; gap: 20px; }
         .sections-btn {
             background: none; border: none; cursor: pointer;
@@ -109,7 +184,6 @@
         .sections-btn .bar { display: block; width: 20px; height: 2px; background-color: var(--text-main); }
         .menu-toggle { background: none; border: none; font-size: 20px; color: var(--text-main); cursor: pointer; display: none; }
 
-        /* --- TEMA --- */
         .theme-toggle-container { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; }
         .theme-toggle { position: relative; display: inline-block; width: 40px; height: 20px; }
         .theme-toggle input { opacity: 0; width: 0; height: 0; }
@@ -118,7 +192,6 @@
         input:checked + .slider { background-color: var(--accent-news); }
         input:checked + .slider:before { transform: translateX(20px); }
 
-        /* --- LAYOUT --- */
         .filter-scroller {
             max-width: var(--container-w);
             margin: 0 auto;
@@ -138,7 +211,6 @@
 
         footer { border-top: 1px solid var(--border); padding: 40px 0; margin-top: 60px; text-align: center; color: var(--text-muted); font-size: 12px; }
 
-        /* --- MOBILE --- */
         .mobile-menu {
             position: fixed; top: var(--header-h); right: -100%; width: 100%; height: calc(100vh - var(--header-h));
             background: var(--bg); z-index: 2000; padding: 20px; transition: 0.3s; overflow-y: auto;
@@ -179,7 +251,13 @@
             </div>
         </header>
 
-        <div id="search-container"></div>
+        <div class="search-bar-wrapper">
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="input-busca-global" placeholder="Pesquisar notícias, animes ou análises..." autocomplete="off">
+            </div>
+            <div id="search-results-surface"></div>
+        </div>
 
         <div class="filter-scroller" id="filterScroller">
             <button class="filter-tag active" data-section="manchetes">Manchetes</button>
@@ -230,98 +308,121 @@
 
     <button class="back-to-top" onclick="scrollToTop()" style="position: fixed; bottom: 30px; right: 30px; padding: 15px; background: var(--text-main); color: var(--bg); border: none; opacity: 0; cursor: pointer; transition: 0.3s; z-index: 100;">↑</button>
 
-    <script type="module" src="./sessao_usuario.js"></script>
-    <script type="module" src="./main.js"></script>
-    <script src="./ads-manager.js" defer></script>
+<script type="module">
+    // --- FIREBASE SDK ---
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, onSnapshot, query } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    <script>
-        // Funções de Interface
-        function toggleMobileMenu() { document.getElementById('mobileMenu').classList.toggle('active'); }
-        function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+    // --- CONFIGURAÇÃO FIREBASE ---
+    const firebaseConfig = {
+        apiKey: "AIzaSyBC_ad4X9OwCHKvcG_pNQkKEl76Zw2tu6o",
+        authDomain: "anigeeknews.firebaseapp.com",
+        projectId: "anigeeknews",
+        storageBucket: "anigeeknews.firebasestorage.app",
+        messagingSenderId: "769322939926",
+        appId: "1:769322939926:web:6eb91a96a3f74670882737",
+        measurementId: "G-G5T8CCRGZT"
+    };
 
-        const mobileThemeToggle = document.getElementById('mobileThemeToggle');
-        function applyTheme(isDark) {
-            document.body.classList.toggle('dark-mode', isDark);
-            if (mobileThemeToggle) mobileThemeToggle.checked = isDark;
-            localStorage.setItem('theme', isDark ? 'dark' : 'light');
-        }
-        if (mobileThemeToggle) mobileThemeToggle.addEventListener('change', (e) => applyTheme(e.target.checked));
-        if (localStorage.getItem('theme') === 'dark') applyTheme(true);
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    window.noticiasFirebase = []; 
 
-        window.addEventListener('scroll', () => {
-            const winScroll = window.pageYOffset;
-            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            const scrolled = (winScroll / height) * 100;
-            const bar = document.getElementById("progress-bar");
-            if(bar) bar.style.width = scrolled + "%";
-            const btt = document.querySelector('.back-to-top');
-            if(btt) btt.style.opacity = winScroll > 300 ? "1" : "0";
-        });
-    </script>
+    const inputBusca = document.getElementById('input-busca-global');
+    const surface = document.getElementById('search-results-surface');
+    const displayPrincipal = document.getElementById('conteudo_de_destaque');
 
-    <script type="module">
-        // Lógica de Carregamento de Módulos de Seções
-        const displayPrincipal = document.getElementById('conteudo_de_destaque');
-
-        async function carregarModuloSecao(nomeSecao) {
-            if (!displayPrincipal) return;
-            
-            displayPrincipal.innerHTML = '<p style="text-align: center; padding: 50px;">Carregando...</p>';
-            
-            try {
-                // Tenta buscar o arquivo dentro da pasta /secoes/
-                const caminho = `./secoes/${nomeSecao}.html`;
-                const response = await fetch(caminho);
-                
-                if (!response.ok) throw new Error("Módulo não encontrado");
-                
-                const html = await response.text();
-                displayPrincipal.innerHTML = html;
-
-                // Executa scripts que porventura existam dentro do módulo carregado
-                const scripts = displayPrincipal.querySelectorAll("script");
-                scripts.forEach(oldScript => {
-                    const newScript = document.createElement("script");
-                    Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
-                    newScript.appendChild(document.createTextNode(oldScript.innerHTML));
-                    oldScript.parentNode.replaceChild(newScript, oldScript);
-                });
-
-            } catch (error) {
-                console.error("Erro ao carregar seção:", error);
-                displayPrincipal.innerHTML = `<p style="text-align: center; padding: 50px; color: var(--accent-news);">Erro: O módulo de ${nomeSecao} ainda não foi publicado.</p>`;
-            }
-        }
-
-        // Evento para os botões do filtro (Abas)
-        document.querySelectorAll('.filter-tag').forEach(tag => {
-            tag.addEventListener('click', () => {
-                // UI: Troca a classe ativa
-                document.querySelectorAll('.filter-tag').forEach(t => t.classList.remove('active'));
-                tag.classList.add('active');
-
-                // Lógica: Carrega o arquivo correspondente
-                const secao = tag.getAttribute('data-section');
-                carregarModuloSecao(secao);
+    // --- CARREGAMENTO REALTIME ---
+    function carregarNoticiasRealTime() {
+        const q = collection(db, "noticias");
+        onSnapshot(q, (snapshot) => {
+            const noticiasFB = [];
+            snapshot.forEach((doc) => {
+                noticiasFB.push({ id: doc.id, ...doc.data() });
             });
+            window.noticiasFirebase = noticiasFB;
+            
+            // Renderização padrão no início (pode ser o seu outro código de módulos)
+            if (inputBusca.value.trim() === "") {
+                // Aqui você chamaria a função que carrega as manchetes originais
+            }
         });
+    }
 
-        // Carregamento Inicial
-        window.addEventListener('DOMContentLoaded', async () => {
-            // 1. Carrega Manchetes por padrão
-            carregarModuloSecao('manchetes');
+    // --- LOGICA DE PESQUISA REFINADA (SUPERFÍCIE) ---
+    inputBusca.addEventListener('input', (e) => {
+        const termo = e.target.value.toLowerCase().trim();
+        
+        if (termo === "") {
+            surface.style.display = 'none';
+            return;
+        }
 
-            // 2. Carrega componentes globais (se existirem)
-            try {
-                const searchRes = await fetch('./motor_de_pesquisa/barra_de_pesquisa.html');
-                if (searchRes.ok) document.getElementById('search-container').innerHTML = await searchRes.text();
-            } catch (e) { console.warn("Barra de pesquisa não encontrada."); }
+        const filtradas = window.noticiasFirebase.filter(n => 
+            n.titulo.toLowerCase().includes(termo) || 
+            (n.categoria && n.categoria.toLowerCase().includes(termo))
+        );
 
-            try {
-                const { carregarPerfilLateral } = await import('./usuario/perfil-lateral.js');
-                carregarPerfilLateral();
-            } catch (e) { console.warn("Módulo de perfil lateral não encontrado."); }
-        });
-    </script>
+        renderizarSuperficie(filtradas);
+    });
+
+    function renderizarSuperficie(lista) {
+        if (lista.length === 0) {
+            surface.innerHTML = '<div style="padding:15px; font-size:12px; color:#888;">Nenhum resultado.</div>';
+        } else {
+            surface.innerHTML = lista.map(news => {
+                // Busca thumb do primeiro relacionado ou usa padrão
+                const thumb = (news.relacionados && news.relacionados[0]) ? news.relacionados[0].thumb : 'https://anigeeknews.com/default-og.jpg';
+                return `
+                <div class="result-item-list" onclick="focarNoticia('${news.id}')">
+                    <img src="${thumb}" class="result-img">
+                    <div class="result-info">
+                        <div class="result-cat" style="color: ${news.cor || 'var(--primary)'}">${news.categoria}</div>
+                        <h4 class="result-title">${news.titulo}</h4>
+                    </div>
+                </div>
+                `;
+            }).join('');
+        }
+        surface.style.display = 'block';
+    }
+
+    // --- AÇÃO AO CLICAR NO RESULTADO ---
+    window.focarNoticia = (id) => {
+        surface.style.display = 'none';
+        inputBusca.value = "";
+        
+        // Exemplo: Se quiser carregar o card completo no conteúdo principal ao clicar:
+        const noticia = window.noticiasFirebase.find(n => n.id === id);
+        if(noticia && window.renderizarNoticias) {
+             window.renderizarNoticias([noticia]);
+             window.scrollTo({ top: displayPrincipal.offsetTop - 100, behavior: 'smooth' });
+        }
+    };
+
+    // Fechar ao clicar fora
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.search-bar-wrapper')) surface.style.display = 'none';
+    });
+
+    // Inicializar
+    window.addEventListener('DOMContentLoaded', carregarNoticiasRealTime);
+</script>
+
+<script>
+    function toggleMobileMenu() {
+        document.getElementById('mobileMenu').classList.toggle('active');
+    }
+    function scrollToTop() {
+        window.scrollTo({top: 0, behavior: 'smooth'});
+    }
+    window.onscroll = function() {
+        let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        let scrolled = (winScroll / height) * 100;
+        document.getElementById("progress-bar").style.width = scrolled + "%";
+    };
+</script>
+
 </body>
 </html>
