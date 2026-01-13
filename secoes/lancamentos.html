@@ -12,7 +12,9 @@
   </div>
 
   <div id="container-principal">
-     <div style="text-align: center; padding: 50px; color: #666;">Buscando lançamentos no servidor...</div>
+    <div style="text-align: center; padding: 50px; color: #666; font-family: sans-serif;">
+        <p>Carregando lançamentos...</p>
+    </div>
   </div>
 
   <div id="notificacao-video">
@@ -71,7 +73,6 @@
 
     window.pedirTroca = (idPlayer, idVideo, titulo, cor) => {
       playerAlvo = idPlayer;
-      // Correção da URL de Embed do YouTube
       urlAlvo = `https://www.youtube.com/embed/${idVideo}?autoplay=1`;
       const notif = document.getElementById('notificacao-video');
       document.getElementById('notif-titulo').innerText = titulo;
@@ -126,13 +127,15 @@
           </div>
           <div class="carrossel-temas">
             <div class="carrossel-header"><span class="temas-label">Vídeos Relacionados</span></div>
-            <div class="temas-scroll-wrapper"><div class="temas-container">
-                ${news.relacionados ? news.relacionados.map(rel => `
-                  <div class="tema-card" onclick="window.pedirTroca('player-${news.id}', '${rel.idVid}', '${rel.titulo.replace(/'/g, "\\'")}', '${news.cor}')">
-                    <img src="${limparEspacos(rel.thumb)}" class="tema-thumb">
-                    <div class="tema-titulo">${rel.titulo}</div>
-                  </div>`).join('') : ''}
-            </div></div>
+            <div class="temas-scroll-wrapper">
+                <div class="temas-container">
+                    ${news.relacionados ? news.relacionados.map(rel => `
+                      <div class="tema-card" onclick="window.pedirTroca('player-${news.id}', '${rel.idVid}', '${rel.titulo.replace(/'/g, "\\'")}', '${news.cor}')">
+                        <img src="${limparEspacos(rel.thumb)}" class="tema-thumb">
+                        <div class="tema-titulo">${rel.titulo}</div>
+                      </div>`).join('') : '<p style="padding:10px; font-size:12px; opacity:0.5;">Nenhum vídeo relacionado.</p>'}
+                </div>
+            </div>
           </div>
         </article>
       `;
@@ -140,7 +143,7 @@
     }
 
     function carregarTudoRealTime() {
-      // Coleção específica desta página
+      // Conectando especificamente à coleção "lancamentos"
       const q = collection(db, "lancamentos");
       
       onSnapshot(q, (snapshot) => {
@@ -150,11 +153,18 @@
         });
 
         if (noticiasFB.length === 0) {
-          document.getElementById('container-principal').innerHTML = "<p style='text-align:center; padding:30px;'>Nenhum lançamento cadastrado ainda.</p>";
+            document.getElementById('container-principal').innerHTML = `
+                <div style="text-align: center; padding: 50px; color: #666; font-family: sans-serif;">
+                    <i class="fa-solid fa-box-open" style="font-size: 30px; opacity: 0.3;"></i>
+                    <p>Nenhum lançamento cadastrado ainda.</p>
+                </div>`;
         } else {
-          renderizarNoticias(noticiasFB);
-          document.getElementById('novo-artigo-titulo').innerText = noticiasFB[0].titulo;
+            renderizarNoticias(noticiasFB);
+            document.getElementById('novo-artigo-titulo').innerText = noticiasFB[0].titulo;
         }
+      }, (error) => {
+          console.error("Erro no Firebase Lançamentos:", error);
+          document.getElementById('container-principal').innerHTML = "<p>Erro ao conectar com o banco de dados.</p>";
       });
     }
 
