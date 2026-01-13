@@ -1,71 +1,74 @@
 /* scripts/busca.js */
 
-// Referência aos elementos de busca
-const inputBusca = document.getElementById('search-input');
-const displayPrincipalBusca = document.getElementById('conteudo_de_destaque');
+// Seleção dos elementos baseada no seu index.html
+const inputBusca = document.getElementById('input-busca-global');
+const surface = document.getElementById('search-results-surface');
 
 /**
- * Realiza a busca no Firebase baseada no termo digitado
- * @param {string} termo - O texto para pesquisa
+ * Renderiza os resultados na superfície flutuante abaixo da barra de busca
  */
-async function realizarBusca(termo) {
-    if (!termo || termo.length < 2) {
-        // Se apagar a busca, volta para as manchetes
-        window.carregarSecao('manchetes');
-        return;
+function renderizarSuperficie(lista) {
+    if (lista.length === 0) {
+        surface.innerHTML = '<div style="padding:15px; font-size:12px; color:#888;">Nenhum resultado encontrado.</div>';
+    } else {
+        surface.innerHTML = lista.map(news => `
+            <div class="result-item-list" onclick="focarNoticia('${news.id}')">
+                <img src="${news.relacionados?.[0]?.thumb || 'https://anigeeknews.com/default-og.jpg'}" class="result-img">
+                <div class="result-info">
+                    <div class="result-cat" style="color: ${news.cor || 'var(--primary)'}">${news.categoria}</div>
+                    <h4 class="result-title">${news.titulo}</h4>
+                </div>
+            </div>
+        `).join('');
     }
-
-    displayPrincipalBusca.innerHTML = '<div style="text-align: center; padding: 100px; color: var(--text-muted);">Pesquisando no arquivo...</div>';
-
-    try {
-        // Nota: No Firebase real, usaríamos query() e where() 
-        // Aqui simulamos a filtragem da coleção 'artigos'
-        const artigosRef = window.db.collection("artigos");
-        const snapshot = await artigosRef.where("titulo", ">=", termo).where("titulo", "<=", termo + "\uf8ff").get();
-
-        if (snapshot.empty) {
-            displayPrincipalBusca.innerHTML = `
-                <div style="text-align: center; padding: 100px; color: var(--text-muted);">
-                    Nenhum resultado encontrado para "${termo}".
-                </div>`;
-            return;
-        }
-
-        let resultadosHTML = `<h2 style="margin-bottom: 20px;">Resultados para: ${termo}</h2><div class="news-grid">`;
-
-        snapshot.forEach(doc => {
-            const dados = doc.data();
-            resultadosHTML += `
-                <article class="news-card">
-                    <img src="${dados.imagem || 'https://via.placeholder.com/400x250'}" alt="Capa">
-                    <div class="news-content">
-                        <span class="category-tag">${dados.categoria || 'Geral'}</span>
-                        <h3>${dados.titulo}</h3>
-                        <p>${dados.resumo || ''}</p>
-                    </div>
-                </article>
-            `;
-        });
-
-        resultadosHTML += `</div>`;
-        displayPrincipalBusca.innerHTML = resultadosHTML;
-
-    } catch (error) {
-        console.error("Erro na busca:", error);
-        displayPrincipalBusca.innerHTML = "Erro ao processar pesquisa.";
-    }
+    surface.style.display = 'block';
 }
 
-// Evento para detectar quando o usuário digita (Debounce)
-let timeoutBusca;
+/**
+ * Lógica de filtragem enquanto o usuário digita
+ */
 if (inputBusca) {
     inputBusca.addEventListener('input', (e) => {
-        clearTimeout(timeoutBusca);
-        const valor = e.target.value.trim();
+        const termo = e.target.value.toLowerCase().trim();
         
-        // Aguarda 500ms após o usuário parar de digitar para não sobrecarregar o Firebase
-        timeoutBusca = setTimeout(() => {
-            realizarBusca(valor);
-        }, 500);
+        if (termo === "") { 
+            surface.style.display = 'none'; 
+            return; 
+        }
+
+        // Filtra a lista que o config-firebase.js está mantendo atualizada
+        const filtradas = (window.noticiasFirebase || []).filter(n => 
+            (n.titulo && n.titulo.toLowerCase().includes(termo)) || 
+            (n.categoria && n.categoria.toLowerCase().includes(termo))
+        );
+
+        renderizarSuperficie(filtradas);
     });
 }
+
+/**
+ * Função chamada ao clicar em um resultado da busca
+ */
+window.focarNoticia = (id) => {
+    surface.style.display = 'none';
+    if (inputBusca) inputBusca.value = "";
+    
+    const noticia = window.noticiasFirebase.find(n => n.id === id);
+    
+    // Chama a função de renderização que está dentro do manchetes.html
+    if (noticia && window.renderizarNoticias) {
+        window.renderizarNoticias([noticia]);
+        
+        // Rola a página para o topo para ver a notícia selecionada
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+};
+
+/**
+ * Fecha a superfície de resultados se clicar fora da barra de busca
+ */
+document.addEventListener('click', (e) => {
+    if (surface && !e.target.closest('.search-bar-wrapper')) {
+        surface.style.display = 'none';
+    }
+});
