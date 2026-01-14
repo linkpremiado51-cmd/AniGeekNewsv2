@@ -3,7 +3,7 @@
 const displayPrincipal = document.getElementById('conteudo_de_destaque');
 
 /**
- * VERSÃO CORRIGIDA: Renderiza a notícia garantindo que os scripts da seção existam
+ * VERSÃO CORRIGIDA: Renderiza a notícia garantindo que os scripts dA seção existam
  */
 async function abrirNoticiaUnica(item) {
     if (!displayPrincipal) return;
