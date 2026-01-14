@@ -4,12 +4,12 @@ const inputBusca = document.getElementById('input-busca-global');
 const surface = document.getElementById('search-results-surface');
 
 /**
- * Realça o termo pesquisado para dar um visual maiS profissional
+ * Realça o termo pesquisado nos resultados
  */
 const destacarTexto = (texto, termo) => {
     if (!termo) return texto;
     const regex = new RegExp(`(${termo})`, 'gi');
-    return texto.replace(regex, '<mark style="background:rgba(255,255,0,0.2);color:inherit;padding:0 2px;">$1</mark>');
+    return texto.replace(regex, '<mark style="background:rgba(255,255,0,0.2);color:inherit;padding:0 2px;border-radius:2px;">$1</mark>');
 };
 
 /**
@@ -29,7 +29,7 @@ function renderizarSuperficie(lista, termo) {
             
             return `
             <div class="result-item-list" onclick="focarNoticia('${item.id}')" 
-                 style="border-left: 4px solid ${item.cor || 'var(--primary)'}; display:flex; gap:12px; padding:10px; cursor:pointer; align-items:center; transition:0.2s;">
+                 style="border-left: 4px solid ${item.cor || 'var(--primary)'}; display:flex; gap:12px; padding:10px; cursor:pointer; align-items:center; transition:0.2s; border-bottom: 1px solid var(--border);">
                 <div style="position:relative; flex-shrink:0;">
                     <img src="${thumb}" style="width:55px; height:55px; object-fit:cover; border-radius:4px;">
                     <span style="position:absolute; bottom:-5px; right:-5px; font-size:8px; background:${item.cor || 'var(--primary)'}; color:#fff; padding:2px 5px; font-weight:900; border-radius:2px; text-transform:uppercase;">
@@ -47,7 +47,7 @@ function renderizarSuperficie(lista, termo) {
 }
 
 /**
- * Lógica de busca em tempo real em todas as sessões
+ * Lógica de busca em tempo real
  */
 if (inputBusca) {
     inputBusca.addEventListener('input', (e) => {
@@ -58,7 +58,6 @@ if (inputBusca) {
             return; 
         }
 
-        // Pega do window.noticiasFirebase que o config-firebase.js está alimentando com todas as coleções
         const baseDados = window.noticiasFirebase || [];
         
         const filtradas = baseDados.filter(n => 
@@ -72,34 +71,30 @@ if (inputBusca) {
 }
 
 /**
- * Ação Universal ao clicar: Renderiza qualquer item em qualquer página
+ * Ação ao clicar no resultado:
+ * Agora chama a função de limpeza de DOM e renderização única do navegacao.js
  */
 window.focarNoticia = (id) => {
+    // 1. Fecha a lista de resultados e limpa o campo de busca
     surface.style.display = 'none';
     if (inputBusca) inputBusca.value = "";
     
-    // Busca o item no grande array global
+    // 2. Localiza o item no grande array global unificado
     const item = window.noticiasFirebase.find(n => n.id === id);
     
     if (item) {
-        /* AQUI ESTÁ O SEGREDO:
-           Se a função 'renderizarNoticias' existir (ela está nos scripts de cada seção), 
-           nós a chamamos passando o item. Como as funções de renderização que fizemos 
-           são compatíveis entre as seções, o conteúdo aparece na hora.
-        */
-        if (typeof window.renderizarNoticias === 'function') {
-            window.renderizarNoticias([item]);
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+        // 3. ATUALIZAÇÃO: Chama a função central de navegação que limpa a tela e coloca o botão Voltar
+        if (typeof window.abrirNoticiaUnica === 'function') {
+            window.abrirNoticiaUnica(item);
         } else {
-            // Caso por algum motivo a renderização falhe (ex: você está numa página estática sem scripts de seção)
-            // Aí sim ele redireciona como backup de segurança.
-            window.location.href = `${item.origem || 'index'}.html?id=${item.id}`;
+            // Backup de segurança: se a função não existir, usa o parâmetro da URL
+            window.location.href = `?id=${item.id}`;
         }
     }
 };
 
 /**
- * Fecha ao clicar fora com animação simples
+ * Fecha a busca ao clicar fora
  */
 document.addEventListener('click', (e) => {
     if (surface && !e.target.closest('.search-bar-wrapper')) {
