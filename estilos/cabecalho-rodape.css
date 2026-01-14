@@ -124,6 +124,34 @@ header {
     font-size: 13px; 
 }
 
+/* --- ESTRUTURA DE FOCO E NAVEGAÇÃO DE ARTIGO (NOVO) --- */
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.foco-noticia-wrapper {
+    width: 100%;
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Botão "Voltar" que aparece ao clicar em resultados da busca ou link ?id= */
+.btn-voltar-estilizado {
+    border-radius: 4px;
+    font-family: inherit;
+}
+
+.btn-voltar-estilizado:hover {
+    background: var(--text-main) !important;
+    color: var(--bg) !important;
+    transform: translateX(-5px);
+}
+
+.barra-ferramentas-foco {
+    background-color: transparent;
+}
+
 /* --- RODAPÉ (FOOTER) --- */
 footer { 
     border-top: 1px solid var(--border); 
@@ -134,8 +162,14 @@ footer {
     font-size: 12px; 
 }
 
-/* --- MEDIA QUERIES (RESPONSIVIDADE DO HEADER) --- */
+/* --- MEDIA QUERIES (RESPONSIVIDADE) --- */
 @media (max-width: 900px) {
     .nav-menu { display: none; }
     .menu-toggle { display: block; }
+
+    .btn-voltar-estilizado {
+        width: 100%;
+        justify-content: center;
+        padding: 12px !important;
+    }
 }
