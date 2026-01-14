@@ -20,62 +20,90 @@ function gerenciarCSSDaSecao(nome) {
 }
 
 /**
- * Carrega dinamicamente o conteúdo HTML de uma seção específica
+ * Carrega dinamicamente o conteúdo HTML de uma seção específica com cache em LocalStorage
  */
 async function carregarSecao(nome) {
     if (!displayPrincipal) return;
 
-    displayPrincipal.innerHTML = '<div style="text-align: center; padding: 99px; color: var(--text-muted);">Carregando conteúdo...</div>';
+    // Chave única para o cache desta seção
+    const CACHE_KEY = `cache_secao_${nome}`;
+    const cachedHTML = localStorage.getItem(CACHE_KEY);
+
+    // Se tiver no cache, carrega imediatamente para o usuário não esperar
+    if (cachedHTML) {
+        displayPrincipal.innerHTML = cachedHTML;
+        gerenciarCSSDaSecao(nome);
+        executarScriptsDaSecao(displayPrincipal);
+        console.log(`⚡ [Cache] Seção '${nome}' carregada do LocalStorage.`);
+    } else {
+        displayPrincipal.innerHTML = '<div style="text-align: center; padding: 99px; color: var(--text-muted);">Carregando conteúdo...</div>';
+    }
     
     try {
-        gerenciarCSSDaSecao(nome);
-
+        // Busca na rede (para atualizar o cache ou carregar pela primeira vez)
         const response = await fetch(`./secoes/${nome}.html`);
         if (!response.ok) throw new Error("Erro 404: Arquivo não encontrado.");
         
-        const html = await response.text();
-        displayPrincipal.innerHTML = html;
+        const novoHtml = await response.text();
 
-        const scripts = displayPrincipal.querySelectorAll("script");
-        scripts.forEach(oldScript => {
-            const newScript = document.createElement("script");
-            newScript.type = oldScript.type || "text/javascript";
-            if (oldScript.src) newScript.src = oldScript.src;
-            newScript.text = oldScript.text;
-            document.body.appendChild(newScript);
-        });
+        // Se o que veio da rede é diferente do que está no cache, atualizamos a tela e o cache
+        if (novoHtml !== cachedHTML) {
+            localStorage.setItem(CACHE_KEY, novoHtml);
+            displayPrincipal.innerHTML = novoHtml;
+            gerenciarCSSDaSecao(nome);
+            executarScriptsDaSecao(displayPrincipal);
+            console.log(`📡 [Rede] Seção '${nome}' atualizada e guardada no cache.`);
+        }
 
         window.scrollTo({ top: 0, behavior: 'smooth' });
 
     } catch (err) {
-        displayPrincipal.innerHTML = `
-            <div style="text-align: center; padding: 100px; color: var(--accent-news);">
-                Erro ao carregar seção: ${nome} <br> 
-                <small>${err.message}</small>
-            </div>`;
+        // Se der erro de rede e não tivermos cache, mostra erro
+        if (!cachedHTML) {
+            displayPrincipal.innerHTML = `
+                <div style="text-align: center; padding: 100px; color: var(--accent-news);">
+                    Erro ao carregar seção: ${nome} <br> 
+                    <small>${err.message}</small>
+                </div>`;
+        }
     }
 }
 
 /**
+ * Auxiliar para rodar os scripts dos arquivos carregados
+ */
+function executarScriptsDaSecao(container) {
+    const scripts = container.querySelectorAll("script");
+    scripts.forEach(oldScript => {
+        const newScript = document.createElement("script");
+        newScript.type = oldScript.type || "text/javascript";
+        if (oldScript.src) {
+            newScript.src = oldScript.src;
+        } else {
+            newScript.text = oldScript.text;
+        }
+        document.body.appendChild(newScript);
+        // Remove após execução para não sujar o body em futuras trocas
+        setTimeout(() => newScript.remove(), 500);
+    });
+}
+
+/**
  * LÓGICA DO MODAL GLOBAL
- * Preenche e exibe a notícia sobreposta ao conteúdo atual
  */
 window.abrirModalNoticia = function(item) {
     const modal = document.getElementById('modal-noticia-global');
     if (!modal) return;
 
-    // 1. Preenchimento de textos básicos
     document.getElementById('m-titulo').innerText = item.titulo || "";
     document.getElementById('m-categoria').innerText = item.categoria || "GEEK";
     document.getElementById('m-categoria').style.color = item.cor || "var(--primary)";
     document.getElementById('m-resumo').innerText = item.resumo || "";
     
-    // 2. Mídia e Links
     const iframe = document.getElementById('m-video');
     iframe.src = item.videoPrincipal ? item.videoPrincipal.trim() : "";
     document.getElementById('m-link').href = item.linkArtigo || "#";
 
-    // 3. Ficha Técnica Dinâmica
     const fichaContainer = document.getElementById('m-ficha');
     if (item.ficha && Array.isArray(item.ficha)) {
         fichaContainer.innerHTML = item.ficha.map(f => `
@@ -89,22 +117,17 @@ window.abrirModalNoticia = function(item) {
         fichaContainer.style.display = 'none';
     }
 
-    // 4. Exibição e bloqueio de scroll
     modal.style.display = 'block';
     document.body.style.overflow = 'hidden';
 };
 
-/**
- * Fecha o modal e limpa os dados sensíveis (como vídeo)
- */
 window.fecharModalGlobal = function() {
     const modal = document.getElementById('modal-noticia-global');
     if (modal) {
         modal.style.display = 'none';
-        document.getElementById('m-video').src = ""; // Para o áudio do vídeo
+        document.getElementById('m-video').src = ""; 
         document.body.style.overflow = 'auto';
 
-        // Limpa o parâmetro ID da URL sem recarregar a página
         const url = new URL(window.location);
         if (url.searchParams.has('id')) {
             url.searchParams.delete('id');
