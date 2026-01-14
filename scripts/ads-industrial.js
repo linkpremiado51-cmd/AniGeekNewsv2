@@ -1,14 +1,8 @@
-// Aguarda o navegador carregar o corpo do site para injetar os anúncios
 window.addEventListener('DOMContentLoaded', () => {
 
     // === 1. GESTÃO DE ESTADO E MONITORAMENTO ===
     let isTabActive = true;
     document.addEventListener("visibilitychange", () => isTabActive = !document.hidden);
-
-    // === INSERÇÃO DO POPUNDER ADSTERRA ===
-    const popunder = document.createElement('script');
-    popunder.src = 'https://pl28480241.effectivegatecpm.com/03/fd/7f/03fd7fcc66be850e0b69314ae833f984.js';
-    document.head.appendChild(popunder);
 
     // === 2. CONTAINER MESTRE (ROOT) ===  
     const adsRoot = document.createElement('div');  
@@ -65,7 +59,7 @@ window.addEventListener('DOMContentLoaded', () => {
         </div>  
     `;  
 
-    // Carrega o Script do Banner Adsterra dinamicamente após criar os containers
+    // Carrega o Script do Banner Adsterra
     const scriptBanner = document.createElement('script');
     scriptBanner.async = true;
     scriptBanner.dataset.cfasync = "false";
@@ -76,13 +70,11 @@ window.addEventListener('DOMContentLoaded', () => {
     const blockBottom = document.getElementById('ind-block-bottom');  
     const blockTop = document.getElementById('ind-block-top');  
 
-    const REPEAT_TIME = 20000; // 20 segundos para reaparecer
+    const REPEAT_TIME = 20000; 
 
-    // Funções de Abrir
     const openBottom = () => { if(isTabActive) blockBottom.style.bottom = '0px'; };  
     const openTop = () => { if(isTabActive) blockTop.style.top = '0px'; };  
 
-    // Lógica de Fechar e Agendar Repetição
     document.getElementById('ind-close-bottom').onclick = () => {  
         blockBottom.style.bottom = '-800px';  
         setTimeout(openBottom, REPEAT_TIME);  
@@ -94,10 +86,7 @@ window.addEventListener('DOMContentLoaded', () => {
     };  
 
     // === INICIALIZAÇÃO ===  
-    // 1. Bloco de baixo aparece em 5 segundos
     setTimeout(openBottom, 5000); 
-
-    // 2. Bloco de cima aparece em 10 segundos
     setTimeout(openTop, 10000);
 
 });
