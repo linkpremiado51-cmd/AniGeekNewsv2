@@ -10,7 +10,7 @@
 
     // === 3. ESTILOS ===
     const style = document.createElement('style');
-    style.textContent = `/* todo seu CSS aqui */`; // mantém o CSS que você já colocou
+    style.textContent = `/* todo seu CSS aqui */`; // [placeholder removido – CSS será injetado externamente]
     document.head.appendChild(style);
 
     // === 4. HTML dos blocos ===
