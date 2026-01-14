@@ -12,6 +12,12 @@
   </div>
 
   <div id="container-principal"></div>
+  
+  <div id="pagination-control" style="text-align: center; padding: 20px; display: none;">
+      <button id="btn-carregar-mais" style="background: var(--primary); color: white; border: none; padding: 12px 25px; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 14px;">
+          <i class="fa-solid fa-plus"></i> Carregar mais notícias
+      </button>
+  </div>
 
   <div id="notificacao-video">
     <div style="flex: 1;">
@@ -23,18 +29,6 @@
   </div>
 
   <div id="toast-copiado">Link copiado!</div>
-
-  <div id="modal-noticia">
-    <div id="modal-conteudo">
-      <button id="modal-fechar" onclick="window.fecharModal()">×</button>
-      <div id="modal-titulo" class="destaque-titulo" style="margin-top: 0;"></div>
-      <div id="modal-categoria" class="destaque-categoria"></div>
-      <p id="modal-resumo" class="destaque-resumo"></p>
-      <a id="modal-link" class="btn-ver-artigo"><i class="fa-solid fa-book-open"></i> Ver artigo completo</a>
-      <div id="modal-ficha" class="destaque-info-grid"></div>
-      <iframe id="modal-video" allowfullscreen></iframe>
-    </div>
-  </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -53,31 +47,19 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
+    // Variáveis de Controle de Paginação
+    let todasAsNoticias = [];
+    let noticiasExibidas = 5;
+
     function limparEspacos(url) {
       return url ? url.trim() : url;
     }
-
-    const meuFeedNoticias = [
-      {
-        id: "onepiece",
-        cor: "#e63946",
-        categoria: "Análise Técnica",
-        titulo: "Por que Egghead é o melhor arco de One Piece em décadas",
-        resumo: "Uma análise profunda sobre a mudança estética da Toei Animation e o impacto da direção de arte de Sota Shigeshita.",
-        linkArtigo: "#",
-        ficha: [{ label: "Estúdio", valor: "Toei Animation" }, { label: "Direção", valor: "Sota Shigeshita" }, { label: "Analista", valor: "Gustavo Lima" }],
-        videoPrincipal: "https://www.youtube.com/embed/uJMdqWHlnD4",
-        relacionados: [
-          { idVid: "uJMdqWHlnD4", titulo: "EGGHEAD SE TORNOU O MELHOR ARCO!", thumb: "https://img.youtube.com/vi/uJMdqWHlnD4/mqdefault.jpg" }
-        ]
-      }
-    ];
 
     window.shareNews = (titulo, url) => {
       if (navigator.share) {
         navigator.share({ title: titulo, url }).catch(console.error);
       } else {
-        alert("Seu navegador não suporta Web Share. Use 'Copiar Link'.");
+        window.copiarLink(url);
       }
     };
 
@@ -90,10 +72,6 @@
       } catch (err) {
         console.error("Falha ao copiar:", err);
       }
-    };
-
-    window.fecharModal = () => {
-      document.getElementById('modal-noticia').style.display = 'none';
     };
 
     window.pedirTroca = (idPlayer, idVideo, titulo, cor) => {
@@ -121,12 +99,17 @@
         };
     }
 
-    function renderizarNoticias(listaCompleta) {
+    function renderizarNoticias() {
       const container = document.getElementById('container-principal');
+      const btnPaginacao = document.getElementById('pagination-control');
       if (!container) return;
-      const baseUrl = window.location.origin + window.location.pathname;
 
-      container.innerHTML = listaCompleta.map(news => {
+      const baseUrl = window.location.origin + window.location.pathname;
+      
+      // Corta o array para mostrar apenas a quantidade permitida
+      const listaParaExibir = todasAsNoticias.slice(0, noticiasExibidas);
+
+      container.innerHTML = listaParaExibir.map(news => {
         const shareUrl = `${baseUrl}?id=${encodeURIComponent(news.id)}`;
 
         return `
@@ -146,17 +129,32 @@
             <p class="destaque-resumo">${news.resumo}</p>
             <a href="${news.linkArtigo}" class="btn-ver-artigo"><i class="fa-solid fa-book-open"></i> Ver artigo completo</a>
             <div class="destaque-info-grid">
-              ${news.ficha.map(item => `<div class="info-item"><span class="info-label">${item.label}</span><span class="info-valor">${item.valor}</span></div>`).join('')}
+              ${news.ficha ? news.ficha.map(item => `<div class="info-item"><span class="info-label">${item.label}</span><span class="info-valor">${item.valor}</span></div>`).join('') : ''}
             </div>
           </div>
           <div class="destaque-media">
             <iframe id="player-${news.id}" src="${limparEspacos(news.videoPrincipal)}" allowfullscreen></iframe>
           </div>
-          <div class="destaque-acoes">
+          
+          <div class="destaque-acoes" style="display: flex; gap: 10px; align-items: center;">
               <button class="btn-acao" onclick="event.preventDefault(); window.shareNews('${news.titulo.replace(/'/g, "\\'")}', '${shareUrl}')">
                 <i class="fa-solid fa-share-nodes"></i> Compartilhar
               </button>
+
+              <div class="menu-opcoes-container" tabindex="0" style="position: relative;">
+                <button class="btn-acao" style="background: #333; color: white;">
+                  <i class="fa-solid fa-star"></i> Útil
+                </button>
+                <div class="dropdown-conteudo header-dropdown" style="bottom: 100%; top: auto; margin-bottom: 10px;">
+                  <a href="#" onclick="event.preventDefault()"><i class="fa-solid fa-circle-play"></i> Curti vídeo</a>
+                  <a href="#" onclick="event.preventDefault()"><i class="fa-solid fa-newspaper"></i> Curti artigo</a>
+                  <a href="#" onclick="event.preventDefault()"><i class="fa-solid fa-user-pen"></i> Curti editor</a>
+                  <a href="#" onclick="event.preventDefault()"><i class="fa-solid fa-minus"></i> Ver menos</a>
+                  <a href="#" onclick="event.preventDefault()"><i class="fa-solid fa-plus"></i> Ver mais</a>
+                </div>
+              </div>
           </div>
+
           <div class="carrossel-temas">
             <div class="carrossel-header"><span class="temas-label">Vídeos Relacionados</span></div>
             <div class="temas-scroll-wrapper"><div class="temas-container">
@@ -170,20 +168,77 @@
         </article>
       `;
       }).join('');
+
+      // Mostrar ou esconder botão de carregar mais
+      if (noticiasExibidas < todasAsNoticias.length) {
+          btnPaginacao.style.display = 'block';
+      } else {
+          btnPaginacao.style.display = 'none';
+      }
     }
+
+    // Lógica do botão carregar mais
+    document.getElementById('btn-carregar-mais').onclick = () => {
+        noticiasExibidas += 5;
+        renderizarNoticias();
+    };
 
     function carregarTudoRealTime() {
       const q = collection(db, "noticias");
       onSnapshot(q, (snapshot) => {
         const noticiasFB = [];
         snapshot.forEach((doc) => {
-          const data = doc.data();
-          noticiasFB.push({ id: doc.id, ...data });
+          noticiasFB.push({ id: doc.id, ...doc.data() });
         });
-        renderizarNoticias([...meuFeedNoticias, ...noticiasFB]);
+        
+        // Combina feed local (se houver) com Firebase e ordena por data
+        todasAsNoticias = [...noticiasFB];
+        todasAsNoticias.sort((a, b) => (b.data || 0) - (a.data || 0));
+
+        if(todasAsNoticias.length > 0) {
+            document.getElementById('novo-artigo-titulo').innerText = todasAsNoticias[0].titulo;
+        }
+
+        renderizarNoticias();
       });
     }
 
     carregarTudoRealTime();
   </script>
+
+  <style>
+    /* Ajuste para o Menu Suspenso subir quando o botão está embaixo */
+    .destaque-acoes .dropdown-conteudo {
+        display: none;
+        position: absolute;
+        background: white;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 10;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    .menu-opcoes-container:focus-within .dropdown-conteudo {
+        display: block;
+    }
+    .dropdown-conteudo a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+        font-size: 13px;
+        border-bottom: 1px solid #eee;
+    }
+    .dropdown-conteudo a:hover { background-color: #f1f1f1; }
+    .btn-acao {
+        cursor: pointer;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 5px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+  </style>
 </div>
