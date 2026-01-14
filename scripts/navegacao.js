@@ -3,22 +3,17 @@
 const displayPrincipal = document.getElementById('conteudo_de_destaque');
 
 /**
- * VERSÃO CORRIGIDA: Renderiza a notícia garantindo que os scripts dA seção existam
+ * VERSÃO EDITADA: Abre a notícia garantindo que o motor de renderização da seção seja injetado corretamente
  */
 async function abrirNoticiaUnica(item) {
     if (!displayPrincipal) return;
 
     try {
-        // 1. Carrega o CSS da seção de origem para manter o layout
+        // 1. Carrega o CSS da seção de origem
         gerenciarCSSDaSecao(item.origem || 'manchetes');
 
-        // 2. BUSCA O CONTEÚDO DA SEÇÃO (Onde está a lógica de renderização)
-        // Isso é crucial para que o window.renderizarNoticias passe a existir
-        const response = await fetch(`./secoes/${item.origem || 'manchetes'}.html`);
-        if (!response.ok) throw new Error("Falha ao carregar motor de renderização.");
-        const htmlBase = await response.text();
-
-        // 3. Prepara a estrutura visual com o botão de Voltar
+        // 2. Prepara o layout com o botão de Voltar. 
+        // IMPORTANTE: O container agora usa o ID 'container-principal' para bater com o que a seção espera
         displayPrincipal.innerHTML = `
             <div class="foco-noticia-wrapper" style="animation: fadeIn 0.4s ease; max-width: var(--container-w); margin: 0 auto; padding: 20px;">
                 <div class="barra-ferramentas-foco" style="display: flex; justify-content: flex-start; padding-bottom: 20px; border-bottom: 1px dashed var(--border); margin-bottom: 30px;">
@@ -27,32 +22,59 @@ async function abrirNoticiaUnica(item) {
                         <span>Voltar para ${item.origem ? item.origem.toUpperCase() : 'Início'}</span>
                     </button>
                 </div>
-                <div id="container-render-unico">
-                    </div>
+                <div id="container-principal">
+                    <p style="text-align:center; padding:50px; color:var(--text-muted);">Carregando conteúdo...</p>
+                </div>
             </div>
         `;
 
-        // 4. Injeta os scripts da seção para que a função renderizarNoticias seja registrada
+        // 3. Busca o HTML da seção silenciosamente
+        const response = await fetch(`./secoes/${item.origem || 'manchetes'}.html`);
+        if (!response.ok) throw new Error("Falha ao carregar motor de renderização.");
+        const htmlBase = await response.text();
+
+        // 4. Extrai os scripts. Como sua seção usa type="module", precisamos forçar
+        // a função renderizarNoticias para o window.
         const parser = new DOMParser();
         const docSeçao = parser.parseFromString(htmlBase, 'text/html');
         const scripts = docSeçao.querySelectorAll("script");
 
         scripts.forEach(oldScript => {
             const newScript = document.createElement("script");
-            newScript.type = oldScript.type || "text/javascript";
-            if (oldScript.src) newScript.src = oldScript.src;
-            newScript.text = oldScript.text;
-            document.body.appendChild(newScript);
+            
+            // Se for módulo, mantemos, mas vamos injetar uma "ponte"
+            if (oldScript.type === 'module' || !oldScript.type) {
+                let conteudo = oldScript.textContent;
+                
+                // Técnica para expor a função de renderização ao window mesmo sendo module
+                if (conteudo.includes('function renderizarNoticias')) {
+                    conteudo += `\n window.renderizarNoticias = renderizarNoticias;`;
+                }
+                
+                newScript.type = 'module';
+                newScript.textContent = conteudo;
+            } else {
+                if (oldScript.src) newScript.src = oldScript.src;
+                newScript.textContent = oldScript.textContent;
+            }
+            document.head.appendChild(newScript);
         });
 
-        // 5. Agora sim, tenta renderizar a notícia usando o motor da seção carregada
+        // 5. Tentativa de renderização com verificação de segurança
+        let tentativas = 0;
         const tentarRenderizar = () => {
             if (typeof window.renderizarNoticias === 'function') {
+                // Limpa o aviso de carregamento
+                const container = document.getElementById('container-principal');
+                if (container) container.innerHTML = "";
+                
                 window.renderizarNoticias([item]);
                 window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else if (tentativas < 20) {
+                tentativas++;
+                setTimeout(tentarRenderizar, 150);
             } else {
-                // Tenta novamente em intervalos curtos caso o script demore a processar
-                setTimeout(tentarRenderizar, 100);
+                console.error("Motor de renderização não respondeu.");
             }
         };
 
@@ -151,7 +173,7 @@ async function carregarSecao(nome) {
     }
 }
 
-// Tags de filtro
+// Eventos de clique nas tags
 document.querySelectorAll('.filter-tag').forEach(tag => {
     tag.addEventListener('click', () => {
         document.querySelectorAll('.filter-tag').forEach(t => t.classList.remove('active'));
