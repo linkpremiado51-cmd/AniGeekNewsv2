@@ -20,51 +20,83 @@ function gerenciarCSSDaSecao(nome) {
 }
 
 /**
- * Carrega dinamicamente o conteúdo HTML de uma seção específica com cache em LocalStorage
+ * SISTEMA DE CARREGAMENTO PREGUIÇOSO (LAZY LOADING)
+ * Só ativa elementos quando entram na tela
+ */
+function ativarObservadorDeScroll() {
+    const opcoes = {
+        root: null, // usa o viewport
+        rootMargin: '200px', // carrega 200px antes de aparecer para evitar "pulo" visual
+        threshold: 0.1
+    };
+
+    const observador = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const elemento = entry.target;
+                
+                // Se for um iframe (vídeo), coloca o SRC real que estava guardado no DATA-SRC
+                if (elemento.tagName === 'IFRAME' && elemento.dataset.src) {
+                    elemento.src = elemento.dataset.src;
+                    elemento.removeAttribute('data-src');
+                }
+                
+                // Se for imagem, faz o mesmo
+                if (elemento.tagName === 'IMG' && elemento.dataset.src) {
+                    elemento.src = elemento.dataset.src;
+                    elemento.removeAttribute('data-src');
+                }
+
+                // Para de observar este elemento já que ele já foi carregado
+                observer.unobserve(elemento);
+            }
+        });
+    }, opcoes);
+
+    // Seleciona todos os elementos marcados para carregamento preguiçoso
+    const alvos = document.querySelectorAll('iframe[data-src], img[data-src]');
+    alvos.forEach(alvo => observador.observe(alvo));
+}
+
+/**
+ * Carrega dinamicamente o conteúdo HTML de uma seção específica com cache
  */
 async function carregarSecao(nome) {
     if (!displayPrincipal) return;
 
-    // Chave única para o cache desta seção
     const CACHE_KEY = `cache_secao_${nome}`;
     const cachedHTML = localStorage.getItem(CACHE_KEY);
 
-    // Se tiver no cache, carrega imediatamente para o usuário não esperar
     if (cachedHTML) {
         displayPrincipal.innerHTML = cachedHTML;
         gerenciarCSSDaSecao(nome);
         executarScriptsDaSecao(displayPrincipal);
-        console.log(`⚡ [Cache] Seção '${nome}' carregada do LocalStorage.`);
+        ativarObservadorDeScroll(); // Ativa o observador para o conteúdo do cache
+        console.log(`⚡ [Cache] Seção '${nome}' carregada.`);
     } else {
         displayPrincipal.innerHTML = '<div style="text-align: center; padding: 99px; color: var(--text-muted);">Carregando conteúdo...</div>';
     }
     
     try {
-        // Busca na rede (para atualizar o cache ou carregar pela primeira vez)
         const response = await fetch(`./secoes/${nome}.html`);
         if (!response.ok) throw new Error("Erro 404: Arquivo não encontrado.");
         
         const novoHtml = await response.text();
 
-        // Se o que veio da rede é diferente do que está no cache, atualizamos a tela e o cache
         if (novoHtml !== cachedHTML) {
             localStorage.setItem(CACHE_KEY, novoHtml);
             displayPrincipal.innerHTML = novoHtml;
             gerenciarCSSDaSecao(nome);
             executarScriptsDaSecao(displayPrincipal);
-            console.log(`📡 [Rede] Seção '${nome}' atualizada e guardada no cache.`);
+            ativarObservadorDeScroll(); // Ativa o observador para o conteúdo novo
+            console.log(`📡 [Rede] Seção '${nome}' atualizada.`);
         }
 
         window.scrollTo({ top: 0, behavior: 'smooth' });
 
     } catch (err) {
-        // Se der erro de rede e não tivermos cache, mostra erro
         if (!cachedHTML) {
-            displayPrincipal.innerHTML = `
-                <div style="text-align: center; padding: 100px; color: var(--accent-news);">
-                    Erro ao carregar seção: ${nome} <br> 
-                    <small>${err.message}</small>
-                </div>`;
+            displayPrincipal.innerHTML = `<div style="text-align: center; padding: 100px; color: var(--accent-news);">Erro: ${err.message}</div>`;
         }
     }
 }
@@ -83,7 +115,6 @@ function executarScriptsDaSecao(container) {
             newScript.text = oldScript.text;
         }
         document.body.appendChild(newScript);
-        // Remove após execução para não sujar o body em futuras trocas
         setTimeout(() => newScript.remove(), 500);
     });
 }
@@ -101,6 +132,7 @@ window.abrirModalNoticia = function(item) {
     document.getElementById('m-resumo').innerText = item.resumo || "";
     
     const iframe = document.getElementById('m-video');
+    // No modal carregamos direto pois o usuário explicitamente clicou para ver
     iframe.src = item.videoPrincipal ? item.videoPrincipal.trim() : "";
     document.getElementById('m-link').href = item.linkArtigo || "#";
 
@@ -155,3 +187,6 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 window.carregarSecao = carregarSecao;
+// Exporta o observador para ser usado por outros scripts se necessário
+window.ativarObservadorDeScroll = ativarObservadorDeScroll;
+
