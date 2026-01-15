@@ -10,10 +10,8 @@ async function abrirNoticiaUnica(item) {
     if (!displayPrincipal) return;
 
     try {
-        // 1. Carrega o CSS da seção de origem
         gerenciarCSSDaSecao(item.origem || 'manchetes');
 
-        // 2. Prepara o layout com o botão de Voltar
         displayPrincipal.innerHTML = `
             <div class="foco-noticia-wrapper" style="animation: fadeIn 0.4s ease; max-width: var(--container-w); margin: 0 auto; padding: 20px;">
                 <div class="barra-ferramentas-foco" style="display: flex; justify-content: flex-start; padding-bottom: 20px; border-bottom: 1px dashed var(--border); margin-bottom: 30px;">
@@ -28,7 +26,6 @@ async function abrirNoticiaUnica(item) {
             </div>
         `;
 
-        // 3. Busca o HTML da seção silenciosamente
         const response = await fetch(`./secoes/${item.origem || 'manchetes'}.html`);
         if (!response.ok) throw new Error("Falha ao carregar motor de renderização.");
         const htmlBase = await response.text();
@@ -75,14 +72,12 @@ async function abrirNoticiaUnica(item) {
 
 /**
  * Vigia de URL para Links Compartilhados (?id=...)
- * Agora integrado com o Modal Global do index.html
  */
 function verificarLinkCompartilhado() {
     const params = new URLSearchParams(window.location.search);
     const idNoticia = params.get('id');
 
     if (idNoticia) {
-        // Mostra um loader enquanto o Firebase sincroniza
         if (displayPrincipal) {
             displayPrincipal.innerHTML = '<div style="text-align: center; padding: 120px; color: var(--text-muted); font-family: sans-serif; letter-spacing: 1px;">BUSCANDO NOTÍCIA...</div>';
         }
@@ -91,22 +86,19 @@ function verificarLinkCompartilhado() {
             if (window.noticiasFirebase && window.noticiasFirebase.length > 0) {
                 const item = window.noticiasFirebase.find(n => n.id === idNoticia);
                 if (item) {
-                    // PRIORIDADE: Abre no Modal Global para não quebrar a navegação de fundo
                     if (typeof window.abrirModalNoticia === 'function') {
                         window.abrirModalNoticia(item);
-                        // Carrega a seção de fundo padrão (manchetes) para o site não ficar vazio atrás do modal
-                        carregarSecao('manchetes');
+                        carregarSecao('manchetes', false);
                     } else {
-                        // Fallback para página cheia caso o modal falhe
                         abrirNoticiaUnica(item);
                     }
                 } else {
-                    carregarSecao('manchetes');
+                    carregarSecao('manchetes', false);
                 }
                 clearInterval(checkData);
             }
         }, 100);
-        
+
         setTimeout(() => clearInterval(checkData), 5000);
     }
 }
@@ -141,22 +133,29 @@ function gerenciarCSSDaSecao(nome) {
 
 /**
  * Carrega dinamicamente o feed de uma seção
+ * 🔥 AGORA SUPORTA ?secao=
  */
-async function carregarSecao(nome) {
+async function carregarSecao(nome, atualizarURL = true) {
     if (!displayPrincipal) return;
 
     displayPrincipal.innerHTML = '<div style="text-align: center; padding: 120px; color: var(--text-muted); opacity: 0.5;">SINCRONIZANDO...</div>';
-    
+
     try {
+        if (atualizarURL) {
+            const url = new URL(window.location);
+            url.searchParams.set('secao', nome);
+            url.searchParams.delete('id');
+            window.history.pushState({}, '', url);
+        }
+
         gerenciarCSSDaSecao(nome);
 
         const response = await fetch(`./secoes/${nome}.html`);
         if (!response.ok) throw new Error("Arquivo não encontrado.");
-        
+
         const html = await response.text();
         displayPrincipal.innerHTML = html;
 
-        // Re-executa os scripts da seção para renderizar os dados do Firebase
         const scripts = displayPrincipal.querySelectorAll("script");
         scripts.forEach(oldScript => {
             const newScript = document.createElement("script");
@@ -173,7 +172,7 @@ async function carregarSecao(nome) {
     }
 }
 
-// Eventos de clique nas categorias (Filtros)
+// Eventos de clique nos filtros
 document.querySelectorAll('.filter-tag').forEach(tag => {
     tag.addEventListener('click', () => {
         document.querySelectorAll('.filter-tag').forEach(t => t.classList.remove('active'));
@@ -181,16 +180,23 @@ document.querySelectorAll('.filter-tag').forEach(tag => {
         carregarSecao(tag.dataset.section);
     });
 });
+
 // Inicialização
 window.addEventListener('DOMContentLoaded', () => {
     const params = new URLSearchParams(window.location.search);
+
     if (params.has('id')) {
         verificarLinkCompartilhado();
+        return;
+    }
+
+    if (params.has('secao')) {
+        carregarSecao(params.get('secao'), false);
     } else {
-        carregarSecao('manchetes');
+        carregarSecao('manchetes', false);
     }
 });
 
-// Exposição global para integração entre arquivos
+// Exposição global
 window.carregarSecao = carregarSecao;
 window.abrirNoticiaUnica = abrirNoticiaUnica;
