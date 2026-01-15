@@ -17,7 +17,8 @@
     { id: 'entrevistas', nome: 'Entrevistas' },
     { id: 'lancamentos', nome: 'Lançamentos' },
     { id: 'podcast', nome: 'Podcast' },
-    { id: 'futebol', nome: 'Futebol' }
+    { id: 'futebol', nome: 'Futebol' },
+    { id: 'tecnologia', nome: 'Tecnologia' } // ← SEÇÃO ADICIONADA
   ];
 
   const CHAVE_LOCAL_STORAGE = 'pref_secoes_visiveis';
