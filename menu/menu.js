@@ -23,7 +23,7 @@ export async function inicializarMegaMenu() {
 
     /* =========================================
        FUNÇÃO CENTRAL DE FECHAMENTO
-       ========================================= */
+    ========================================= */
     const fecharMegaMenu = () => {
         overlay.classList.remove('active');
         document.body.style.overflow = '';
@@ -31,7 +31,7 @@ export async function inicializarMegaMenu() {
 
     /* =========================================
        TOGGLE PELO BOTÃO QUE ABRE O MENU
-       ========================================= */
+    ========================================= */
     window.abrirMegaMenu = () => {
         const menuAberto = overlay.classList.contains('active');
 
@@ -45,12 +45,12 @@ export async function inicializarMegaMenu() {
 
     /* =========================================
        BOTÃO X
-       ========================================= */
+    ========================================= */
     btnFechar.onclick = fecharMegaMenu;
 
     /* =========================================
        CLICK FORA DO CONTEÚDO
-       ========================================= */
+    ========================================= */
     overlay.onclick = (e) => {
         if (e.target === overlay) {
             fecharMegaMenu();
@@ -59,7 +59,7 @@ export async function inicializarMegaMenu() {
 
     /* =========================================
        CONEXÃO COM carregarSecao()
-       ========================================= */
+    ========================================= */
     const linksSecao = overlay.querySelectorAll('[data-secao]');
 
     linksSecao.forEach(link => {
@@ -77,4 +77,22 @@ export async function inicializarMegaMenu() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     });
+
+    /* =========================================
+       🔐 LOGIN / CADASTRO (REDIRECIONAMENTO)
+    ========================================= */
+    const btnLogin = document.getElementById('btnAbrirLogin');
+    const btnCadastro = document.getElementById('btnAbrirCadastro');
+
+    if (btnLogin) {
+        btnLogin.addEventListener('click', () => {
+            window.location.href = 'acesso.html';
+        });
+    }
+
+    if (btnCadastro) {
+        btnCadastro.addEventListener('click', () => {
+            window.location.href = 'acesso.html#signup';
+        });
+    }
 }
