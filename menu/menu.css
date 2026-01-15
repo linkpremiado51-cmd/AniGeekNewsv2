@@ -1,0 +1,74 @@
+.mega-menu-overlay {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: var(--bg);
+    z-index: 3000;
+    transition: left 0.4s ease;
+    overflow-y: auto;
+    padding: 60px 20px;
+    border-right: 1px solid var(--border);
+}
+
+.mega-menu-overlay.active {
+    left: 0;
+}
+
+.mega-menu-content {
+    max-width: 1200px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 40px;
+}
+
+.menu-col h3 {
+    font-size: 13px;
+    font-weight: 800;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.menu-col ul {
+    list-style: none;
+    padding: 0;
+}
+
+.menu-col ul li {
+    margin-bottom: 12px;
+}
+
+.menu-col ul li a {
+    text-decoration: none;
+    color: var(--text-main);
+}
+
+.menu-col ul li a:hover {
+    color: var(--accent-news);
+    text-decoration: underline;
+}
+
+.close-mega {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 32px;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.menu-highlight p,
+.promo-box p {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.promo-box {
+    border: 1px solid var(--border);
+    padding: 15px;
+}
