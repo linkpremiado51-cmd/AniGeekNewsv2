@@ -8,44 +8,43 @@ const adsRoot = document.createElement('div');
 adsRoot.id = 'industrial-ads-system';  
 document.body.appendChild(adsRoot);  
 
-// === 3. ESTILIZAÇÃO ATUALIZADA ===  
+// === 3. ESTILIZAÇÃO (Ajustada para os novos tamanhos) ===  
 const style = document.createElement('style');  
 style.textContent = `  
     #industrial-ads-system { font-family: 'Helvetica', 'Arial', sans-serif; pointer-events: none; -webkit-font-smoothing: antialiased; }  
     #industrial-ads-system * { pointer-events: auto; box-sizing: border-box; }  
     
-    .ind-banner { position: fixed; left: 50%; transform: translateX(-50%); z-index: 2147483646; background: #fff; border: 2px solid #000; box-shadow: 0 0 20px rgba(0,0,0,0.2); transition: all 0.7s cubic-bezier(0.19, 1, 0.22, 1); }  
+    .ind-banner { position: fixed; left: 50%; transform: translateX(-50%); z-index: 2147483646; background: #ffffff; border: 2px solid #000; box-shadow: 0 0 30px rgba(0,0,0,0.3); transition: all 0.7s cubic-bezier(0.19, 1, 0.22, 1); }  
     
-    /* Bloco 1 - Inferior (300x250) */
     .ind-bottom { bottom: -600px; width: 320px; height: 310px; padding: 5px; } 
-
-    /* Bloco 3 - Superior (300x100) */
     .ind-top { top: -600px; width: 320px; height: 145px; padding: 5px; } 
     
-    .ind-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; border-bottom: 1px solid #eee; padding-bottom: 2px; }  
-    .ind-label { font-size: 10px; font-weight: 900; color: #000; text-transform: uppercase; }  
-    .ind-close-btn { font-size: 10px; font-weight: 900; background: #000; color: #fff; border: none; padding: 2px 8px; cursor: pointer; }  
+    .ind-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }  
+    .ind-label { font-size: 10px; font-weight: 900; color: #000; text-transform: uppercase; letter-spacing: 1px; }  
+    .ind-close-btn { font-size: 10px; font-weight: 900; background: #000; color: #fff; border: none; padding: 4px 10px; cursor: pointer; }  
 
-    /* Slots de Banner */
-    .slot-300x250 { width: 300px; height: 250px; margin: 0 auto; overflow: hidden; }
-    .slot-300x100 { width: 300px; height: 100px; margin: 0 auto; overflow: hidden; }
+    .slot-300x250 { width: 300px; height: 250px; margin: 0 auto; background: #f0f0f0; }  
+    .slot-300x100 { width: 300px; height: 100px; margin: 0 auto; background: #f0f0f0; }  
 
-    /* Bloco 2 - Interstitial Video */
-    .ind-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.95); z-index: 2147483647; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.5s ease; }  
-    .ind-modal { background: #fff; width: 95%; max-width: 500px; padding: 20px; border-top: 8px solid #000; position: relative; }  
-    .video-container { width: 100%; background: #000; aspect-ratio: 16/9; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; }
+    /* Bloco 2 Overlay */
+    .ind-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.95); z-index: 2147483647; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.4s ease; }  
+    .ind-modal { background: #fff; width: 95%; max-width: 500px; padding: 20px; border-top: 10px solid #000; text-align: center; }  
     
-    .ind-btn-skip { background: #f0f0f0; border: 1px solid #ddd; padding: 10px 20px; font-size: 11px; font-weight: 800; color: #888; cursor: not-allowed; text-transform: uppercase; }  
+    .video-wrapper { width: 100%; aspect-ratio: 16/9; background: #000; margin-bottom: 15px; position: relative; overflow: hidden; }
+    video { width: 100%; height: 100%; object-fit: contain; }
+
+    .ind-btn-skip { background: #f0f0f0; border: 1px solid #ddd; padding: 12px 30px; font-size: 12px; font-weight: 800; color: #888; cursor: not-allowed; text-transform: uppercase; width: 100%; }  
     .ind-btn-skip.ready { background: #000; color: #fff; border-color: #000; cursor: pointer; }  
-    .ind-progress-bg { width: 100%; height: 4px; background: #eee; margin: 10px 0; }  
+
+    .ind-progress-bg { width: 100%; height: 6px; background: #eee; margin: 15px 0; }  
     .ind-progress-fill { width: 0%; height: 100%; background: #000; transition: width 0.1s linear; }  
 `;  
 document.head.appendChild(style);  
 
-// === 4. ESTRUTURA HTML ===  
+// === 4. ESTRUTURA DOS BLOCOS ===  
 adsRoot.innerHTML = `  
     <div id="ind-block-1" class="ind-banner ind-bottom">  
-        <div class="ind-header"><span class="ind-label">Promoção</span><button id="ind-close-1" class="ind-close-btn">X</button></div>  
+        <div class="ind-header"><span class="ind-label">Oferta</span><button id="ind-close-1" class="ind-close-btn">X</button></div>  
         <div id="ad-slot-1" class="slot-300x250"></div>  
     </div>  
 
@@ -56,22 +55,23 @@ adsRoot.innerHTML = `
 
     <div id="ind-block-2-overlay" class="ind-overlay">  
         <div class="ind-modal">  
-            <div class="ind-header">  
-                <span class="ind-label">Publicidade em Vídeo</span>  
-                <button id="ind-close-2" class="ind-btn-skip" disabled>Aguarde</button>  
+            <div class="ind-header"><span class="ind-label">Publicidade</span></div>  
+            <div class="video-wrapper">
+                <video id="ind-video-player" playsinline muted autoplay>
+                    <source src="https://different-protection.com/dWmlFtzgd.GTNGvzZDGrUm/ve/m/9PucZgUnlvkSPXTbY-3mNwD_g/0/M/zqI/tnNRjvco0IOIDJQ/z-MRwr" type="video/mp4">
+                    Seu navegador não suporta vídeos.
+                </video>
             </div>  
-            <div class="video-container">
-                <iframe id="video-player" src="" width="100%" height="100%" frameborder="0" allow="autoplay; fullscreen" style="background:#000;"></iframe>
-            </div>
+            <div id="ind-timer-txt" style="font-size:11px; font-weight:900; margin-bottom:5px;">CARREGANDO...</div>
             <div class="ind-progress-bg"><div id="ind-prog-2" class="ind-progress-fill"></div></div>  
-            <div id="ind-timer-txt" style="font-size:10px; font-weight:900; text-align:center;">INICIALIZANDO...</div>  
+            <button id="ind-close-2" class="ind-btn-skip" disabled>Aguarde...</button>  
         </div>  
     </div>  
 `;  
 
-// === 5. FUNÇÕES DE CARREGAMENTO DE ANÚNCIOS ===
+// === 5. FUNÇÕES DE CARREGAMENTO ===
 
-function loadAdBlock1() {
+function loadAd1() {
     const container = document.getElementById('ad-slot-1');
     container.innerHTML = '';
     const s = document.createElement('script');
@@ -80,7 +80,7 @@ function loadAdBlock1() {
     container.appendChild(s);
 }
 
-function loadAdBlock3() {
+function loadAd3() {
     const container = document.getElementById('ad-slot-3');
     container.innerHTML = '';
     const s = document.createElement('script');
@@ -89,67 +89,67 @@ function loadAdBlock3() {
     container.appendChild(s);
 }
 
-function startVideoInterstitial() {
+function startVideoAd() {
     const overlay = document.getElementById('ind-block-2-overlay');
-    const player = document.getElementById('video-player');
+    const video = document.getElementById('ind-video-player');
     const btn = document.getElementById('ind-close-2');
     const prog = document.getElementById('ind-prog-2');
     const txt = document.getElementById('ind-timer-txt');
 
-    // Link do vídeo fornecido
-    player.src = "https://different-protection.com/dWmlFtzgd.GTNGvzZDGrUm/ve/m/9PucZgUnlvkSPXTbY-3mNwD_g/0/M/zqI/tnNRjvco0IOIDJQ/z-MRwr";
-
     overlay.style.display = 'flex';
     setTimeout(() => overlay.style.opacity = '1', 50);
+    
+    // Tenta dar play (muitos navegadores exigem que esteja mudo)
+    video.play().catch(e => console.log("Autoplay impedido, aguardando interação."));
 
     let timeLeft = 15;
     const total = 15;
 
-    const timer = setInterval(() => {
+    const countdown = setInterval(() => {
         if (isTabActive) {
             if (timeLeft > 0) {
                 timeLeft--;
-                txt.innerText = `PULAR EM ${timeLeft}S`;
+                txt.innerText = `VOCÊ PODE PULAR EM ${timeLeft}S`;
                 prog.style.width = `${((total - timeLeft) / total) * 100}%`;
             } else {
-                clearInterval(timer);
-                txt.innerText = "VÍDEO CONCLUÍDO";
-                btn.innerText = "FECHAR ANÚNCIO";
+                clearInterval(countdown);
+                txt.innerText = "VÍDEO PRONTO";
+                btn.innerText = "PULAR ANÚNCIO E ACESSAR";
                 btn.disabled = false;
                 btn.classList.add('ready');
             }
+        } else {
+            txt.innerText = "CRONÔMETRO PAUSADO";
         }
     }, 1000);
 
     btn.onclick = () => {
         overlay.style.opacity = '0';
-        setTimeout(() => {
-            overlay.style.display = 'none';
-            player.src = ""; // Para o vídeo
-        }, 500);
+        video.pause();
+        setTimeout(() => overlay.style.display = 'none', 500);
     };
 }
 
-// === 6. CONTROLE DE TIMING ===
+// === 6. INICIALIZAÇÃO ===
 
-// Bloco 1: Abre em 2 segundos
+// Banner Inferior (2s após carregar)
 setTimeout(() => {
     document.getElementById('ind-block-1').style.bottom = '10px';
-    loadAdBlock1();
+    loadAd1();
 }, 2000);
 
-// Bloco 3: Abre em 4 segundos
+// Banner Superior (4s após carregar)
 setTimeout(() => {
     document.getElementById('ind-block-3').style.top = '10px';
-    loadAdBlock3();
+    loadAd3();
 }, 4000);
 
-// Bloco 2 (VÍDEO): Abre em exatos 15 segundos após carregar a página
+// INTERSTITIAL DE VÍDEO (15s após carregar)
 setTimeout(() => {
-    startVideoInterstitial();
-}, 15000); 
+    startVideoAd();
+}, 15000);
 
-// Botões de fechar banners comuns
+// Fechar banners manuais
 document.getElementById('ind-close-1').onclick = () => document.getElementById('ind-block-1').style.bottom = '-600px';
 document.getElementById('ind-close-3').onclick = () => document.getElementById('ind-block-3').style.top = '-600px';
 
