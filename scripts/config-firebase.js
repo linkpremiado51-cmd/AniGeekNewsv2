@@ -87,6 +87,7 @@ const colecoesParaMonitorar = [
     "entrevistas",
     "podcast",
     "futebol"
+    "smartphones"
 ];
 
 colecoesParaMonitorar.forEach(nome => sincronizarComBusca(nome));
