@@ -1,5 +1,5 @@
 <div class="mega-menu-overlay" id="megaOverlay">
-    <button class="close-mega" id="btnFecharMega">×</button>
+    <button class="close-mega" id="btnFecharMega" type="button">×</button>
 
     <!-- ===============================
          🔥 ÁREA DO USUÁRIO
@@ -16,18 +16,22 @@
             id="menuUserLoggedOut"
         >
             <p class="user-msg">Entre ou crie sua conta</p>
+
             <div class="user-actions">
                 <a
-                    href="../acesso.html"
+                    href="javascript:void(0)"
                     class="btn-login"
                     id="btnAbrirLogin"
+                    role="button"
                 >
                     Entrar
                 </a>
+
                 <a
-                    href="../acesso.html"
+                    href="javascript:void(0)"
                     class="btn-signup"
                     id="btnAbrirCadastro"
+                    role="button"
                 >
                     Criar conta
                 </a>
@@ -41,7 +45,7 @@
             class="user-auth user-logged-in"
             data-auth="logged-in"
             id="menuUserLoggedIn"
-            style="display:none;"
+            style="display: none;"
         >
             <p class="user-welcome">
                 Bem-vindo,
@@ -97,7 +101,7 @@
             <div class="promo-box">
                 <h4>A Manhã</h4>
                 <p>Resumo diário da cultura pop.</p>
-                <button>INSCREVER-SE</button>
+                <button type="button">INSCREVER-SE</button>
             </div>
         </div>
     </div>
