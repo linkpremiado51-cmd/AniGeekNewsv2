@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Noto+Serif:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-    <!-- TODO: seu CSS original permanece igual -->
+    <!-- SEU CSS ORIGINAL CONTINUA IGUAL -->
 </head>
 <body>
 
@@ -45,17 +45,17 @@
 
         <div class="input-group">
             <label>Nome</label>
-            <input type="text" id="signup-nome">
+            <input type="text" id="nome">
         </div>
 
         <div class="input-group">
             <label>E-mail</label>
-            <input type="email" id="signup-email">
+            <input type="email" id="email">
         </div>
 
         <div class="input-group">
             <label>Senha</label>
-            <input type="password" id="signup-senha">
+            <input type="password" id="senha">
             <i class="fa-regular fa-eye toggle-password"></i>
         </div>
 
@@ -72,8 +72,30 @@
 <!-- FIREBASE -->
 <script type="module" src="scripts/config-firebase.js"></script>
 
-<!-- LÓGICA DE LOGIN / CADASTRO -->
+<!-- AUTH -->
 <script type="module" src="scripts/acesso.js"></script>
+
+<!-- CONTROLE DE TELAS + SENHA -->
+<script>
+    window.showTab = function(tab) {
+        document.getElementById('login-section')
+            .classList.toggle('hidden', tab !== 'login');
+
+        document.getElementById('signup-section')
+            .classList.toggle('hidden', tab !== 'signup');
+
+        document.getElementById('mensagem').textContent = '';
+    };
+
+    document.querySelectorAll('.toggle-password').forEach(icon => {
+        icon.addEventListener('click', () => {
+            const input = icon.previousElementSibling;
+            input.type = input.type === 'password' ? 'text' : 'password';
+            icon.classList.toggle('fa-eye');
+            icon.classList.toggle('fa-eye-slash');
+        });
+    });
+</script>
 
 </body>
 </html>
