@@ -2,9 +2,9 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
   <div id="notificacao-novo-artigo">
-    <i class="fa-solid fa-microchip"></i>
+    <i class="fa-solid fa-satellite-dish"></i>
     <div>
-      <div style="font-size: 10px; font-weight: 800; opacity: 0.8; text-transform: uppercase;">Atualização Tech</div>
+      <div style="font-size: 10px; font-weight: 800; opacity: 0.8; text-transform: uppercase;">Atualização via Cloud</div>
       <div id="novo-artigo-titulo" style="font-size: 13px; font-weight: 700;">Conectando ao AniGeek...</div>
     </div>
   </div>
@@ -47,23 +47,23 @@
       <div class="modal-geek-header">
         <div class="header-main-title">
           <i class="fa-solid fa-comments"></i>
-          <span>Comunidade <small>Discussão ativa</small></span>
+          <span>Comunidade <small>24 comentários</small></span>
         </div>
         <button onclick="window.fecharComentarios()" class="btn-geek-close">×</button>
       </div>
       
       <div class="modal-geek-body" id="flow-comentarios">
         <div class="geek-comment-card">
-          <div class="geek-avatar" style="background: #0d6efd;">T</div>
+          <div class="geek-avatar" style="background: #e63946;">G</div>
           <div class="geek-info-col">
             <div class="geek-user-row">
-                <span class="g-name">TechGeek</span>
+                <span class="g-name">GeekMaster</span>
                 <span class="g-badge badge-pro">PRO</span>
                 <span class="g-time">2h atrás</span>
             </div>
-            <div class="geek-text">Esse review de hardware foi impecável! Mal posso esperar pelo próximo benchmark.</div>
+            <div class="geek-text">A qualidade da animação nessa temporada superou todas as expectativas. O estúdio mandou muito bem na iluminação!</div>
             <div class="geek-actions-row">
-                <span><i class="fa-regular fa-heart"></i> 32</span>
+                <span><i class="fa-regular fa-heart"></i> 45</span>
                 <span><i class="fa-regular fa-comment-dots"></i> Responder</span>
             </div>
           </div>
@@ -125,10 +125,10 @@
       } catch (err) { console.error("Erro copiar:", err); }
     };
 
-    // --- LÓGICA DE TROCA DE VÍDEO ---
+    // --- LÓGICA DE TROCA DE VÍDEO (RESTAURADA) ---
     window.pedirTroca = (idPlayer, idVideo, titulo, cor) => {
       playerAlvo = idPlayer;
-      urlAlvo = `https://www.youtube.com/embed/${idVideo}?autoplay=1`; // ← ESPAÇO REMOVIDO
+      urlAlvo = `https://www.youtube.com/embed/${idVideo}?autoplay=1`;
       const notif = document.getElementById('notificacao-video');
       document.getElementById('notif-titulo').innerText = titulo;
       notif.style.setProperty('--notif-cor', cor);
@@ -148,10 +148,12 @@
         };
     }
 
-    // --- LÓGICA DO MODAL ---
+    // --- LÓGICA DO MODAL DE PESQUISA/LINK (RESTAURADA) ---
     window.fecharModal = () => {
       document.getElementById('modal-noticia').style.display = 'none';
-      document.getElementById('modal-video').src = "";
+      document.getElementById('modal-video').src = ""; // Para o vídeo
+      
+      // Limpa a URL sem recarregar
       const url = new URL(window.location);
       url.searchParams.delete('id');
       window.history.pushState({}, '', url);
@@ -159,7 +161,7 @@
 
     function abrirNoticiaEmModal(noticia) {
       document.getElementById('modal-titulo').innerText = noticia.titulo;
-      document.getElementById('modal-categoria').innerHTML = `<i class="fa-solid fa-microchip"></i> ${noticia.categoria}`;
+      document.getElementById('modal-categoria').innerHTML = `<i class="fa-solid fa-video"></i> ${noticia.categoria}`;
       document.getElementById('modal-resumo').innerText = noticia.resumo;
       document.getElementById('modal-link').href = noticia.linkArtigo;
 
@@ -186,7 +188,7 @@
       }
     }
 
-    // --- LÓGICA DO MODAL DE COMENTÁRIOS ---
+    // --- LÓGICA DO MODAL DE COMENTÁRIOS (SOCIAL) ---
     window.abrirComentarios = (idNoticia) => {
       document.getElementById('modal-comentarios-geek').classList.add('active');
       document.body.style.overflow = 'hidden';
@@ -208,12 +210,14 @@
 
       container.innerHTML = listaParaExibir.map(news => {
         const shareUrl = `${baseUrl}?id=${encodeURIComponent(news.id)}`;
+        
+        // Simulação de visualizações
         const viewCount = Math.floor(Math.random() * 900) + 100 + "K";
 
         return `
-        <article class="destaque-secao" id="artigo-${news.id}" style="--tema-cor: ${news.cor || '#0d6efd'}">
+        <article class="destaque-secao" id="artigo-${news.id}" style="--tema-cor: ${news.cor}">
           <div class="destaque-padding">
-            <div class="destaque-categoria"><i class="fa-solid fa-microchip"></i> ${news.categoria}</div>
+            <div class="destaque-categoria"><i class="fa-solid fa-hashtag"></i> ${news.categoria}</div>
             
             <div class="destaque-header">
               <h2 class="destaque-titulo">${news.titulo}</h2>
@@ -240,6 +244,7 @@
           </div>
           
           <div class="premium-actions-bar">
+              
               <div class="menu-opcoes-container" tabindex="0" style="position: relative;">
                 <button class="btn-premium-icon">
                   <i class="fa-regular fa-thumbs-up"></i> Útil
@@ -266,13 +271,14 @@
               <button class="btn-premium-icon btn-monetize" onclick="alert('Você ganhou pontos Geek!')">
                 <i class="fa-regular fa-gem"></i>
               </button>
+
           </div>
 
           <div class="carrossel-temas">
             <div class="carrossel-header"><span class="temas-label">Vídeos Relacionados</span></div>
             <div class="temas-scroll-wrapper"><div class="temas-container">
                 ${news.relacionados ? news.relacionados.map(rel => `
-                  <div class="tema-card" onclick="window.pedirTroca('player-${news.id}', '${rel.idVid}', '${rel.titulo.replace(/'/g, "\\'")}', '${news.cor || '#0d6efd'}')">
+                  <div class="tema-card" onclick="window.pedirTroca('player-${news.id}', '${rel.idVid}', '${rel.titulo.replace(/'/g, "\\'")}', '${news.cor}')">
                     <img src="${limparEspacos(rel.thumb)}" class="tema-thumb">
                     <div class="tema-titulo">${rel.titulo}</div>
                   </div>`).join('') : ''}
@@ -290,6 +296,7 @@
             </div>
             <i class="fa-solid fa-chevron-right" style="opacity: 0.5;"></i>
           </div>
+
         </article>
       `;
       }).join('');
@@ -307,9 +314,9 @@
         renderizarNoticias();
     };
 
-    // --- FIREBASE: CONECTA À COLEÇÃO "tecnologia" ---
+    // --- FIREBASE LISTENERS ---
     function carregarTudoRealTime() {
-      const q = collection(db, "tecnologia"); // ← ALTERADO AQUI
+      const q = collection(db, "tecnologia");
       onSnapshot(q, (snapshot) => {
         const noticiasFB = [];
         snapshot.forEach((doc) => {
@@ -325,10 +332,7 @@
         }
 
         renderizarNoticias();
-        verificarNoticiaNaUrl();
-      }, (error) => {
-        console.error("Erro ao carregar coleção 'tecnologia':", error);
-        document.getElementById('container-principal').innerHTML = "<p style='text-align:center; padding:30px;'>Erro ao carregar notícias de tecnologia.</p>";
+        verificarNoticiaNaUrl(); // Checa se precisa abrir o modal de pesquisa
       });
     }
 
