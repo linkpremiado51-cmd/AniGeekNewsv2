@@ -6,6 +6,11 @@ import {
     signOut
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
+/* =========================================
+   BASE URL (GitHub Pages)
+========================================= */
+const BASE_URL = "/AniGeekNewsv2";
+
 export async function inicializarMegaMenu() {
 
     /* =========================================
@@ -15,7 +20,7 @@ export async function inicializarMegaMenu() {
         const link = document.createElement('link');
         link.id = 'menu-css';
         link.rel = 'stylesheet';
-        link.href = 'menu/menu.css';
+        link.href = `${BASE_URL}/menu/menu.css`;
         document.head.appendChild(link);
     }
 
@@ -28,7 +33,7 @@ export async function inicializarMegaMenu() {
     /* =========================================
        CARREGA HTML
     ========================================= */
-    const response = await fetch('menu/menu.html');
+    const response = await fetch(`${BASE_URL}/menu/menu.html`);
     container.innerHTML = await response.text();
 
     const overlay = document.getElementById('megaOverlay');
@@ -101,13 +106,13 @@ export async function inicializarMegaMenu() {
 
     if (btnLogin) {
         btnLogin.addEventListener('click', () => {
-            window.location.href = 'acesso.html';
+            window.location.href = `${BASE_URL}/acesso.html`;
         });
     }
 
     if (btnCadastro) {
         btnCadastro.addEventListener('click', () => {
-            window.location.href = 'acesso.html#signup';
+            window.location.href = `${BASE_URL}/acesso.html#signup`;
         });
     }
 
@@ -126,7 +131,6 @@ export async function inicializarMegaMenu() {
     ========================================= */
     onAuthStateChanged(auth, (user) => {
         if (user) {
-            // USUÁRIO LOGADO
             if (areaLogado) areaLogado.style.display = 'block';
             if (areaDeslogado) areaDeslogado.style.display = 'none';
 
@@ -140,7 +144,6 @@ export async function inicializarMegaMenu() {
             }
 
         } else {
-            // USUÁRIO DESLOGADO
             if (areaLogado) areaLogado.style.display = 'none';
             if (areaDeslogado) areaDeslogado.style.display = 'block';
 
@@ -160,8 +163,8 @@ export async function inicializarMegaMenu() {
 
                 fecharMegaMenu();
 
-                // opcional: redirecionar
-                // window.location.href = 'index.html';
+                // Redireciona para home após logout
+                window.location.href = `${BASE_URL}/index.html`;
 
             } catch (error) {
                 console.error('Erro ao sair:', error);
