@@ -1,6 +1,34 @@
 <div class="mega-menu-overlay" id="megaOverlay">
     <button class="close-mega" id="btnFecharMega">×</button>
 
+    <!-- ===============================
+         🔥 ÁREA DO USUÁRIO / CAPA
+    ================================ -->
+    <div class="mega-user-area">
+        <div class="user-cover" id="userCover">
+            <!-- Imagem de capa futura -->
+        </div>
+
+        <!-- NÃO LOGADO -->
+        <div class="user-auth user-logged-out" data-auth="logged-out">
+            <p class="user-msg">Entre ou crie sua conta</p>
+            <div class="user-actions">
+                <button class="btn-login" id="btnAbrirLogin">Entrar</button>
+                <button class="btn-signup" id="btnAbrirCadastro">Criar conta</button>
+            </div>
+        </div>
+
+        <!-- LOGADO -->
+        <div class="user-auth user-logged-in" data-auth="logged-in" style="display:none;">
+            <p class="user-welcome">
+                Bem-vindo, <strong id="userName">Usuário</strong>
+            </p>
+        </div>
+    </div>
+
+    <!-- ===============================
+         🔥 CONTEÚDO DO MEGA MENU
+    ================================ -->
     <div class="mega-menu-content">
         <div class="menu-col">
             <h3>Seções</h3>
