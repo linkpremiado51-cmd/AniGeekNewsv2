@@ -1,43 +1,32 @@
 /* ===============================
-   SEARCH BAR — ESTILO GEEK
-================================*/
+   SEARCH BAR — CORPORATE
+================================ */
 
 .search-bar-wrapper {
     max-width: var(--container-w);
     margin: 0 auto;
-    padding: 15px 20px;
-    background: #fff;
-    border-bottom: 1px solid #eee;
+    padding: 14px 20px;
+    background: var(--card-bg);
+    border-bottom: 1px solid var(--border);
     position: sticky;
-    top: 0;
+    top: var(--header-h);
     z-index: 3000;
-}
-
-body.dark-mode .search-bar-wrapper {
-    background: #111;
-    border-color: #222;
 }
 
 /* Caixa da busca */
 .search-box {
     display: flex;
     align-items: center;
-    gap: 10px;
-    background: #f1f3f5;
-    padding: 12px 16px;
-    border-radius: 30px;
-    transition: 0.25s ease;
-    border: 1px solid transparent;
+    gap: 12px;
+    background: var(--bg);
+    padding: 12px 14px;
+    border: 1px solid var(--border);
 }
 
-body.dark-mode .search-box {
-    background: #1c1c1c;
-}
-
+/* Estado foco */
 .search-box:focus-within {
-    background: #fff;
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(0,0,0,0.05);
+    background: #fff;
 }
 
 body.dark-mode .search-box:focus-within {
@@ -46,7 +35,7 @@ body.dark-mode .search-box:focus-within {
 
 /* Ícone */
 .search-box i {
-    color: #777;
+    color: var(--text-muted);
     font-size: 14px;
 }
 
@@ -58,69 +47,53 @@ body.dark-mode .search-box:focus-within {
     outline: none;
     font-size: 14px;
     font-weight: 600;
-    color: #222;
-}
-
-body.dark-mode .search-box input {
-    color: #fff;
+    color: var(--text-main);
 }
 
 /* ===============================
-   RESULTADOS DA BUSCA
-================================*/
+   RESULTADOS DE BUSCA
+================================ */
 
 #search-results-surface {
     position: absolute;
     top: 100%;
     left: 20px;
     right: 20px;
-    background: #fff;
-    border-radius: 14px;
-    margin-top: 10px;
-    overflow: hidden;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.18);
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    margin-top: 0;
     display: none;
-    max-height: 70vh;
+    max-height: 65vh;
     overflow-y: auto;
     z-index: 5000;
 }
 
-body.dark-mode #search-results-surface {
-    background: #111;
-}
-
-/* Card de resultado */
+/* Linha do resultado */
 .result-item-list {
     display: flex;
-    gap: 12px;
+    gap: 14px;
     padding: 14px;
     cursor: pointer;
-    transition: background 0.2s ease;
-    border-bottom: 1px solid #f0f0f0;
-}
-
-body.dark-mode .result-item-list {
-    border-color: #222;
+    border-bottom: 1px solid var(--border);
 }
 
 .result-item-list:hover {
-    background: #f1f3f5;
+    background: rgba(0,0,0,0.03);
 }
 
 body.dark-mode .result-item-list:hover {
-    background: #1b1b1b;
+    background: rgba(255,255,255,0.04);
 }
 
 /* Thumb */
 .result-img {
     width: 90px;
     height: 55px;
-    border-radius: 8px;
     object-fit: cover;
     flex-shrink: 0;
 }
 
-/* Coluna de texto */
+/* Texto */
 .result-info {
     display: flex;
     flex-direction: column;
@@ -130,7 +103,7 @@ body.dark-mode .result-item-list:hover {
 /* Categoria */
 .result-cat {
     font-size: 10px;
-    font-weight: 800;
+    font-weight: 900;
     text-transform: uppercase;
     letter-spacing: 1px;
     color: var(--primary);
@@ -140,17 +113,13 @@ body.dark-mode .result-item-list:hover {
 .result-title {
     font-size: 14px;
     font-weight: 700;
-    color: #222;
-    line-height: 1.2;
-}
-
-body.dark-mode .result-title {
-    color: #fff;
+    color: var(--text-main);
+    line-height: 1.25;
 }
 
 /* ===============================
-   FILTROS (SCROLLER)
-================================*/
+   FILTROS — CORPORATE
+================================ */
 
 .filter-scroller {
     max-width: var(--container-w);
@@ -159,38 +128,33 @@ body.dark-mode .result-title {
     display: flex;
     gap: 10px;
     overflow-x: auto;
-    border-bottom: 1px solid #eee;
-    background: #fff;
+    border-bottom: 1px solid var(--border);
+    background: var(--card-bg);
 }
 
-body.dark-mode .filter-scroller {
-    background: #111;
-    border-color: #222;
-}
-
+/* Tag de filtro */
 .filter-tag {
-    background: #f1f3f5;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 700;
+    background: transparent;
+    border: 1px solid var(--border);
+    padding: 8px 14px;
+    font-size: 11px;
+    font-weight: 800;
     cursor: pointer;
-    color: #444;
+    color: var(--text-main);
     white-space: nowrap;
-    transition: 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
 }
 
-body.dark-mode .filter-tag {
-    background: #1c1c1c;
-    color: #ccc;
-}
-
+/* Hover */
 .filter-tag:hover {
-    background: #e9ecef;
+    border-color: var(--primary);
+    color: var(--primary);
 }
 
+/* Ativo */
 .filter-tag.active {
     background: var(--primary);
+    border-color: var(--primary);
     color: #fff;
 }
