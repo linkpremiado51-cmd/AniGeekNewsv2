@@ -1,8 +1,8 @@
 /* ======================================================
-   AniGeekNews – Enterprise Section System v5
-   • Integração Nativa com Tema (Dark/Light)
-   • Interface Executiva e Barra de Pesquisa
-   • Sistema de Gaveta Inteligente
+   AniGeekNews – Enterprise Section System v6
+   • Harmonia Estrutural e Proporção Fixa
+   • Sessões e Subcategorias Agrupadas
+   • Ícones Profissionais e Comportamento Adaptativo
 ====================================================== */
 
 (function(){
@@ -13,144 +13,194 @@ const KEY_MODE  = 'ag_sections_mode';
 const KEY_STATS = 'ag_sections_stats';
 
 /* ===========================
-   CSS INJETADO (Estilo Executivo)
+   DATABASE ESTRUTURADO
+=========================== */
+const ESTRUTURA = [
+  {
+    titulo: "MANCHETES",
+    sub: ["Destaques do Dia", "Últimas Notícias", "Trending", "Exclusivos", "Urgente", "Mais Lidas", "Editor’s Pick"]
+  },
+  {
+    titulo: "ANÁLISES",
+    sub: ["Opinião", "Crítica Técnica", "Análise de Mercado", "Comparativos", "Teorias", "Explicações", "Indústria"]
+  },
+  {
+    titulo: "ENTREVISTAS",
+    sub: ["Desenvolvedores", "Criadores", "Atores", "Influencers", "Profissionais", "Comunidade"]
+  },
+  {
+    titulo: "LANÇAMENTOS",
+    sub: ["Jogos", "Animes", "Filmes", "Séries", "Tecnologia", "Mangás", "Datas", "Rumores"]
+  },
+  {
+    titulo: "REVIEWS",
+    sub: ["Games Review", "Anime Review", "Movie Review", "Tech Review", "Produtos Geek", "Streaming Review"]
+  },
+  {
+    titulo: "TRAILERS",
+    sub: ["Game Trailers", "Movie Trailers", "Teasers", "Oficiais", "Gameplay Reveal"]
+  },
+  {
+    titulo: "STREAMING",
+    sub: ["Netflix", "Prime Video", "Disney+", "HBO Max", "Crunchyroll", "Star+", "Apple TV+"]
+  },
+  {
+    titulo: "PODCAST",
+    sub: ["Episódios", "Temas Geek", "Games Cast", "Tech Cast", "Cultura Pop", "Bastidores"]
+  },
+  {
+    titulo: "FUTEBOL",
+    sub: ["Mercado da Bola", "Futebol Inter", "Futebol Nacional", "Estatísticas", "Tabelas"]
+  },
+  {
+    titulo: "TECNOLOGIA",
+    sub: ["Smartphones", "Hardware", "Software", "IA", "Games Tech", "Inovação"]
+  },
+  {
+    titulo: "COSPLAY",
+    sub: ["Destaques Cosplay", "Guias", "Fotos", "Entrevistas Cosplay"]
+  },
+  {
+    titulo: "EVENTOS",
+    sub: ["Feiras Geek", "Campeonatos", "Convenções", "Cobertura Ao Vivo"]
+  },
+  {
+    titulo: "ESPORTS",
+    sub: ["Times", "Jogadores", "Resultados", "Agenda eSports"]
+  },
+  {
+    titulo: "CINEMA",
+    sub: ["Bilheteria", "Premiações", "Produção", "Cinema News"]
+  },
+  {
+    titulo: "TV & SÉRIES",
+    sub: ["Renovadas", "Canceladas", "Episódios News", "TV News"]
+  },
+  {
+    titulo: "COMUNIDADE",
+    sub: ["Enquetes", "Fanarts", "Teorias", "Voz do Leitor"]
+  },
+  {
+    titulo: "RANKING",
+    sub: ["Melhores do Ano", "Top Games", "Top Animes", "Votação Público"]
+  }
+];
+
+// Flatten para busca e lógica de ID
+const SECOES = [];
+ESTRUTURA.forEach(s => {
+    s.sub.forEach(nome => {
+        SECOES.push({ id: nome.toLowerCase().replace(/ /g, '_'), nome: nome, pai: s.titulo });
+    });
+});
+
+/* ===========================
+   CSS ATUALIZADO
 =========================== */
 const styles = `
   #ag-drawer {
     background: #fff;
-    border-bottom: 1px solid #ddd;
-    overflow: hidden;
+    border-bottom: 2px solid #eee;
+    overflow-y: auto;
     max-height: 0;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    opacity: 0;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     width: 100%;
     position: absolute;
     left: 0;
-    z-index: 999;
-    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+    z-index: 1000;
   }
 
-  /* Suporte ao Dark Mode do seu tema.js */
-  body.dark-mode #ag-drawer {
-    background: #121212;
-    border-bottom: 1px solid #333;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.5);
-  }
+  body.dark-mode #ag-drawer { background: #0f0f0f; border-color: #222; }
+  #ag-drawer.open { max-height: 85vh; padding: 20px 0; }
 
-  #ag-drawer.open {
-    max-height: 800px;
-    opacity: 1;
-    padding: 25px 15px;
-  }
+  .ag-drawer-container { max-width: 1000px; margin: 0 auto; padding: 0 15px; }
 
-  .ag-drawer-content {
-    max-width: 900px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-
-  /* Header da Gaveta: Pesquisa e Modos */
-  .ag-drawer-header {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 15px;
-    border-bottom: 1px solid rgba(128,128,128,0.2);
-    padding-bottom: 15px;
-  }
-
-  /* Barra de Pesquisa Estilizada */
+  /* Barra de Pesquisa Profissional */
   .ag-search-wrapper {
     position: relative;
-    flex: 1;
-    min-width: 250px;
+    margin-bottom: 25px;
   }
-
   .ag-search-input {
     width: 100%;
-    padding: 10px 15px 10px 35px;
-    border-radius: 8px;
-    border: 1px solid #ddd;
-    background: #f8f9fa;
-    font-size: 14px;
+    padding: 12px 15px 12px 45px;
+    border-radius: 12px;
+    border: 1px solid rgba(128,128,128,0.2);
+    background: rgba(128,128,128,0.05);
+    color: inherit;
+    font-size: 15px;
     outline: none;
-    transition: 0.3s;
   }
-  
-  body.dark-mode .ag-search-input {
-    background: #1e1e1e;
-    border-color: #333;
-    color: #fff;
-  }
-
-  .ag-search-input:focus {
-    border-color: var(--primary-color, #e50914);
-    box-shadow: 0 0 0 2px rgba(229, 9, 20, 0.2);
-  }
-
   .ag-search-icon {
     position: absolute;
-    left: 12px;
+    left: 15px;
     top: 50%;
     transform: translateY(-50%);
-    opacity: 0.5;
+    width: 20px;
+    height: 20px;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>') no-repeat center;
+    opacity: 0.6;
   }
 
-  /* Botões de Modo (Executivo) */
-  .ag-mode-toggle {
-    display: flex;
-    background: #eee;
-    padding: 4px;
-    border-radius: 10px;
-  }
-
-  body.dark-mode .ag-mode-toggle { background: #222; }
-
-  .mode-btn {
-    padding: 6px 16px;
-    border-radius: 7px;
-    border: none;
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.2s;
-    background: transparent;
-    color: #666;
-  }
-
-  .mode-btn.active {
-    background: #fff;
-    color: #000;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  }
-
-  body.dark-mode .mode-btn.active {
-    background: #444;
-    color: #fff;
-  }
-
-  /* Grid de Abas */
-  .ag-tags-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
+  /* Harmonia de Tamanho nos Botões */
+  .filter-tag {
+    min-width: 110px; /* Tamanho fixo para harmonia */
+    height: 38px;
+    display: inline-flex;
+    align-items: center;
     justify-content: center;
+    padding: 0 12px;
+    font-size: 12px;
+    text-transform: uppercase;
+    font-weight: 600;
+    border-radius: 6px;
+    position: relative;
+    border: 1px solid transparent;
   }
 
-  .ag-tags-grid .filter-tag {
-    cursor: pointer;
-    transition: all 0.2s;
-    user-select: none;
+  /* Ícone de fechar (X) ou Mover (3 pontos) */
+  .tag-action-icon {
+    position: absolute;
+    top: 2px;
+    right: 4px;
+    font-size: 9px;
+    line-height: 1;
+    opacity: 0.7;
   }
 
-  /* Estado desativado na gaveta */
-  .ag-tags-grid .filter-tag:not(.is-selected) {
-    opacity: 0.4;
-    filter: grayscale(1);
-    background: rgba(128,128,128,0.1);
+  /* Agrupamento por Sessões */
+  .ag-session-block {
+    margin-bottom: 30px;
+  }
+  .ag-session-title {
+    display: flex;
+    align-items: center;
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--primary-color, #e50914);
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+  }
+  .ag-session-title::before {
+    content: "";
+    width: 4px;
+    height: 16px;
+    background: currentColor;
+    margin-right: 8px;
+    border-radius: 2px;
+  }
+
+  .ag-grid-sub {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 10px;
+  }
+
+  /* Modo Fixo - Estilo 3 pontos */
+  .mode-fixed-dots::after {
+    content: "⋮";
+    position: absolute;
+    right: 5px;
+    font-size: 14px;
   }
 `;
 
@@ -159,184 +209,123 @@ styleSheet.innerText = styles;
 document.head.appendChild(styleSheet);
 
 /* ===========================
-   DATABASE DE SEÇÕES
-=========================== */
-const SECOES = [
-  { id:'manchetes', nome:'Manchetes' },
-  { id:'analises', nome:'Análises' },
-  { id:'entrevistas', nome:'Entrevistas' },
-  { id:'lancamentos', nome:'Lançamentos' },
-  { id:'podcast', nome:'Podcast' },
-  { id:'futebol', nome:'Futebol' },
-  { id:'tecnologia', nome:'Tecnologia' },
-  { id:'reviews', nome:'Reviews' },
-  { id:'trailers', nome:'Trailers' },
-  { id:'streaming', nome:'Streaming' },
-  { id:'cosplay', nome:'Cosplay' },
-  { id:'eventos', nome:'Eventos' },
-  { id:'esports', nome:'eSports' },
-  { id:'cinema', nome:'Cinema' },
-  { id:'tv', nome:'TV & Séries' },
-  { id:'comunidade', nome:'Comunidade' },
-  { id:'ranking', nome:'Ranking' }
-];
-
-/* ===========================
    LÓGICA CORE
 =========================== */
 function load(k,d){ try{ return JSON.parse(localStorage.getItem(k)) ?? d }catch(e){ return d } }
 function save(k,v){ localStorage.setItem(k,JSON.stringify(v)); }
-
 function getMode(){ return localStorage.getItem(KEY_MODE) || 'dynamic'; }
-function setMode(m){ localStorage.setItem(KEY_MODE,m); renderDrawer(); }
+function getOrder(){ return load(KEY_ORDER, SECOES.slice(0,7).map(s=>s.id)); }
 
-function getOrder(){
-  const saved = load(KEY_ORDER,null);
-  return saved ? saved : SECOES.slice(0,7).map(s=>s.id);
-}
-
-function track(id){
-  const stats = getStats();
-  stats[id] = (stats[id] || 0) + 1;
-  save(KEY_STATS,stats);
-  if(getMode()==='dynamic') autoReorder();
-}
-
-function getStats(){ return load(KEY_STATS,{}); }
-
-function autoReorder(){
-  const stats = getStats();
-  const order = getOrder();
-  order.sort((a,b)=>(stats[b]||0)-(stats[a]||0));
-  save(KEY_ORDER,order);
+function toggleDrawer(){
+    const d = document.getElementById('ag-drawer');
+    d.classList.toggle('open');
+    if(d.classList.contains('open')) renderDrawer();
 }
 
 /* ===========================
-   RENDERIZAÇÃO DA BARRA PRINCIPAL
+   RENDERIZAÇÃO
 =========================== */
 function renderBar(){
-  const bar = document.getElementById('filterScroller');
-  if(!bar) return;
+    const bar = document.getElementById('filterScroller');
+    if(!bar) return;
+    
+    let drawer = document.getElementById('ag-drawer');
+    if(!drawer) {
+        drawer = document.createElement('div');
+        drawer.id = 'ag-drawer';
+        bar.parentNode.insertBefore(drawer, bar.nextSibling);
+    }
 
-  let drawer = document.getElementById('ag-drawer');
-  if(!drawer) {
-    drawer = document.createElement('div');
-    drawer.id = 'ag-drawer';
-    bar.parentNode.insertBefore(drawer, bar.nextSibling);
-  }
+    const order = getOrder();
+    const mode = getMode();
+    bar.innerHTML = '';
 
-  const order = getOrder();
-  bar.innerHTML = '';
+    order.forEach(id => {
+        const sec = SECOES.find(s => s.id === id);
+        if(!sec) return;
+        const btn = document.createElement('button');
+        btn.className = `filter-tag ${mode === 'fixed' ? 'mode-fixed-dots' : ''}`;
+        btn.innerHTML = `<span>${sec.nome}</span>`;
+        bar.appendChild(btn);
+    });
 
-  order.forEach(id=>{
-    const sec = SECOES.find(s=>s.id===id);
-    if(!sec) return;
-
-    const btn = document.createElement('button');
-    btn.className='filter-tag';
-    btn.textContent=sec.nome;
-
-    btn.onclick=()=>{
-      document.querySelectorAll('#filterScroller .filter-tag').forEach(b=>b.classList.remove('active'));
-      btn.classList.add('active');
-      track(id);
-      document.getElementById('ag-drawer').classList.remove('open');
-      if(window.carregarSecao) window.carregarSecao(id);
-    };
-    bar.appendChild(btn);
-  });
-
-  const cfg = document.createElement('button');
-  cfg.className = 'filter-tag cfg-btn';
-  cfg.innerHTML = '⚙';
-  cfg.onclick = toggleDrawer;
-  bar.appendChild(cfg);
+    const cfg = document.createElement('button');
+    cfg.className = 'filter-tag cfg-btn';
+    cfg.innerHTML = '⚙';
+    cfg.onclick = toggleDrawer;
+    bar.appendChild(cfg);
 }
 
-/* ===========================
-   LÓGICA DA GAVETA
-=========================== */
-function toggleDrawer(){
-  const drawer = document.getElementById('ag-drawer');
-  if(!drawer) return;
-  
-  if(drawer.classList.contains('open')){
-    drawer.classList.remove('open');
-  } else {
-    renderDrawer();
-    drawer.classList.add('open');
-  }
-}
+function renderDrawer(filter = ""){
+    const drawer = document.getElementById('ag-drawer');
+    const order = getOrder();
+    const mode = getMode();
 
-function renderDrawer(filterText = ""){
-  const drawer = document.getElementById('ag-drawer');
-  const currentOrder = getOrder();
-  const currentMode = getMode();
-
-  drawer.innerHTML = `
-    <div class="ag-drawer-content">
-      <div class="ag-drawer-header">
-        <div class="ag-search-wrapper">
-          <span class="ag-search-icon">🔍</span>
-          <input type="text" class="ag-search-input" id="ag-search" placeholder="Pesquisar categoria..." value="${filterText}">
+    drawer.innerHTML = `
+        <div class="ag-drawer-container">
+            <div class="ag-drawer-header">
+                <div class="ag-search-wrapper">
+                    <div class="ag-search-icon"></div>
+                    <input type="text" class="ag-search-input" id="ag-search" placeholder="Pesquisar categoria ou subcategoria..." value="${filter}">
+                </div>
+                <div class="ag-mode-toggle" style="display:flex; justify-content:center; gap:10px; margin-bottom:20px;">
+                    <button class="mode-btn ${mode==='fixed'?'active':''}" onclick="localStorage.setItem('ag_sections_mode','fixed'); location.reload()">FIXO</button>
+                    <button class="mode-btn ${mode==='dynamic'?'active':''}" onclick="localStorage.setItem('ag_sections_mode','dynamic'); location.reload()">DINÂMICO</button>
+                </div>
+            </div>
+            <div id="ag-sessions-list"></div>
         </div>
+    `;
+
+    const list = drawer.querySelector('#ag-sessions-list');
+    const search = drawer.querySelector('#ag-search');
+    search.focus();
+    search.oninput = (e) => renderDrawer(e.target.value);
+
+    ESTRUTURA.forEach(sessao => {
+        const subsFiltradas = sessao.sub.filter(s => s.toLowerCase().includes(filter.toLowerCase()));
+        if(subsFiltradas.length === 0) return;
+
+        const block = document.createElement('div');
+        block.className = 'ag-session-block';
+        block.innerHTML = `<div class="ag-session-title">${sessao.titulo}</div>`;
         
-        <div class="ag-mode-toggle">
-          <button id="btn-fixo" class="mode-btn ${currentMode==='fixed'?'active':''}">FIXO</button>
-          <button id="btn-dinamico" class="mode-btn ${currentMode==='dynamic'?'active':''}">DINÂMICO</button>
-        </div>
-      </div>
-      
-      <div class="ag-tags-grid" id="drawer-grid"></div>
-      
-      <div style="text-align:center; font-size:11px; opacity:0.5; margin-top:10px;">
-        ${currentOrder.length} de ${MAX} abas selecionadas
-      </div>
-    </div>
-  `;
+        const grid = document.createElement('div');
+        grid.className = 'ag-grid-sub';
 
-  // Evento de Busca
-  const searchInput = drawer.querySelector('#ag-search');
-  searchInput.focus();
-  searchInput.oninput = (e) => renderDrawerContent(e.target.value.toLowerCase());
+        subsFiltradas.forEach(nome => {
+            const id = nome.toLowerCase().replace(/ /g, '_');
+            const isSelected = order.includes(id);
+            const btn = document.createElement('button');
+            btn.className = `filter-tag ${isSelected ? 'active is-selected' : ''}`;
+            
+            // Lógica do ícone (X para remover ou 3 pontos para mover no modo fixo)
+            let icon = "";
+            if(isSelected) {
+                icon = mode === 'fixed' ? '<span class="tag-action-icon">⋮</span>' : '<span class="tag-action-icon">✕</span>';
+            }
 
-  // Eventos de Modo
-  drawer.querySelector('#btn-fixo').onclick = () => setMode('fixed');
-  drawer.querySelector('#btn-dinamico').onclick = () => setMode('dynamic');
-
-  renderDrawerContent(filterText.toLowerCase());
+            btn.innerHTML = `<span>${nome}</span>${icon}`;
+            
+            btn.onclick = () => {
+                let current = getOrder();
+                if(isSelected) {
+                    current = current.filter(i => i !== id);
+                } else {
+                    if(current.length < MAX) current.push(id);
+                }
+                save(KEY_ORDER, current);
+                renderBar();
+                renderDrawer(search.value);
+            };
+            grid.appendChild(btn);
+        });
+        
+        block.appendChild(grid);
+        list.appendChild(block);
+    });
 }
 
-function renderDrawerContent(term){
-  const grid = document.getElementById('drawer-grid');
-  const currentOrder = getOrder();
-  grid.innerHTML = "";
-
-  const filtradas = SECOES.filter(s => s.nome.toLowerCase().includes(term));
-
-  filtradas.forEach(sec => {
-    const isSelected = currentOrder.includes(sec.id);
-    const btn = document.createElement('button');
-    btn.className = `filter-tag ${isSelected ? 'is-selected active' : ''}`;
-    btn.innerHTML = isSelected ? `${sec.nome} <b>✕</b>` : sec.nome;
-
-    btn.onclick = () => {
-      let newOrder = getOrder();
-      if(isSelected) {
-        newOrder = newOrder.filter(id => id !== sec.id);
-      } else {
-        if(newOrder.length < MAX) newOrder.push(sec.id);
-        else return alert("Limite de abas atingido");
-      }
-      save(KEY_ORDER, newOrder);
-      renderBar();
-      renderDrawer(document.getElementById('ag-search').value);
-    };
-    grid.appendChild(btn);
-  });
-}
-
-/* Inicialização */
 document.addEventListener('DOMContentLoaded', renderBar);
 
 })();
