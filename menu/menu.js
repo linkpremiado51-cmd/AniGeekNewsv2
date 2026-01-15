@@ -24,15 +24,42 @@ export async function inicializarMegaMenu() {
         document.body.style.overflow = 'hidden';
     };
 
-    btnFechar.onclick = () => {
+    const fecharMegaMenu = () => {
         overlay.classList.remove('active');
         document.body.style.overflow = '';
     };
 
+    btnFechar.onclick = fecharMegaMenu;
+
     overlay.onclick = (e) => {
         if (e.target === overlay) {
-            overlay.classList.remove('active');
-            document.body.style.overflow = '';
+            fecharMegaMenu();
         }
     };
+
+    /* =====================================================
+       🔥 CONEXÃO DO MEGA MENU COM carregarSecao()
+       ===================================================== */
+
+    const linksSecao = overlay.querySelectorAll('[data-secao]');
+
+    linksSecao.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            const secao = link.dataset.secao;
+            if (!secao) return;
+
+            // Usa o motor principal do site
+            if (typeof window.carregarSecao === 'function') {
+                window.carregarSecao(secao);
+            }
+
+            // Fecha o Mega Menu
+            fecharMegaMenu();
+
+            // Scroll para o topo
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    });
 }
