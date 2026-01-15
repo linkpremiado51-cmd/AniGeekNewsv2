@@ -1,167 +1,200 @@
 /**
- * AniGeekNews – Enterprise Section System
- * • Abas com prioridade
- * • Busca dentro do modal
- * • Limite máximo de 12 seções
- * • Ordem personalizada
+ * @fileoverview AniGeek News - Enterprise Section Management System
+ * Versão: 2.0.0
+ * Descrição: Gerenciamento dinâmico de seções com persistência e UI otimizada.
  */
 
-(function () {
+class SectionManager {
+    constructor(config = {}) {
+        this.STORAGE_KEY = 'anigeek_secoes_order';
+        this.MAX_SECTIONS = 12;
+        this.DEFAULT_LIMIT = 7;
+        
+        this.sections = config.sections || [];
+        this.activeOrderId = this._loadOrder();
+        
+        this.init();
+    }
 
-const MAX_SECOES = 12;
-const STORAGE_KEY = 'anigeek_secoes_order';
+    /* ===========================
+       LÓGICA DE DADOS (CORE)
+    =========================== */
 
-/* ===========================
-   TODAS AS SEÇÕES DISPONÍVEIS
-=========================== */
-const SECOES = [
-  { id: 'manchetes', nome: 'Manchetes' },
-  { id: 'analises', nome: 'Análises' },
-  { id: 'entrevistas', nome: 'Entrevistas' },
-  { id: 'lancamentos', nome: 'Lançamentos' },
-  { id: 'podcast', nome: 'Podcast' },
-  { id: 'futebol', nome: 'Futebol' },
-  { id: 'tecnologia', nome: 'Tecnologia' },
+    _loadOrder() {
+        try {
+            const stored = localStorage.getItem(this.STORAGE_KEY);
+            const parsed = stored ? JSON.parse(stored) : null;
+            return Array.isArray(parsed) ? parsed : this.sections.slice(0, this.DEFAULT_LIMIT).map(s => s.id);
+        } catch (error) {
+            console.error("Critical Error loading sections:", error);
+            return this.sections.slice(0, this.DEFAULT_LIMIT).map(s => s.id);
+        }
+    }
 
-  /* NOVAS 10 */
-  { id: 'reviews', nome: 'Reviews' },
-  { id: 'trailers', nome: 'Trailers' },
-  { id: 'streaming', nome: 'Streaming' },
-  { id: 'cosplay', nome: 'Cosplay' },
-  { id: 'eventos', nome: 'Eventos' },
-  { id: 'esports', nome: 'eSports' },
-  { id: 'cinema', nome: 'Cinema' },
-  { id: 'tv', nome: 'TV & Séries' },
-  { id: 'comunidade', nome: 'Comunidade' },
-  { id: 'ranking', nome: 'Ranking' }
+    _saveOrder(newOrder) {
+        this.activeOrderId = newOrder;
+        localStorage.setItem(this.STORAGE_KEY, JSON.stringify(newOrder));
+    }
+
+    toggleSection(id) {
+        let currentOrder = [...this.activeOrderId];
+        const index = currentOrder.indexOf(id);
+
+        if (index > -1) {
+            currentOrder.splice(index, 1);
+        } else if (currentOrder.length < this.MAX_SECTIONS) {
+            currentOrder.push(id);
+        } else {
+            this._notifyUser("Limite máximo de seções atingido.");
+            return false;
+        }
+
+        this._saveOrder(currentOrder);
+        return true;
+    }
+
+    /* ===========================
+       COMPONENTES DE INTERFACE
+    =========================== */
+
+    renderBar() {
+        const container = document.getElementById('filterScroller');
+        if (!container) return;
+
+        container.innerHTML = '';
+        const fragment = document.createDocumentFragment();
+
+        this.activeOrderId.forEach(id => {
+            const section = this.sections.find(s => s.id === id);
+            if (!section) return;
+
+            const btn = this._createTag(section.nome, () => this._handleSectionClick(id, btn));
+            fragment.appendChild(btn);
+        });
+
+        // Botão de Configuração (Aparência Executiva)
+        const settingsBtn = this._createTag('⚙ Personalizar', () => this.openModal(), 'config-tag');
+        fragment.appendChild(settingsBtn);
+
+        container.appendChild(fragment);
+        this._autoSelectFirst(container);
+    }
+
+    _createTag(label, onClick, extraClass = '') {
+        const btn = document.createElement('button');
+        btn.className = `filter-tag ${extraClass}`;
+        btn.textContent = label;
+        btn.addEventListener('click', onClick);
+        return btn;
+    }
+
+    _handleSectionClick(id, element) {
+        document.querySelectorAll('.filter-tag').forEach(b => b.classList.remove('active'));
+        element.classList.add('active');
+        window.carregarSecao?.(id);
+    }
+
+    _autoSelectFirst(container) {
+        const first = container.querySelector('.filter-tag:not(.config-tag)');
+        if (first && this.activeOrderId[0]) {
+            first.classList.add('active');
+            window.carregarSecao?.(this.activeOrderId[0]);
+        }
+    }
+
+    /* ===========================
+       SISTEMA DE MODAL (UI/UX)
+    =========================== */
+
+    openModal() {
+        if (document.getElementById('sec-modal')) return;
+
+        const modalOverlay = document.createElement('div');
+        modalOverlay.id = 'sec-modal';
+        modalOverlay.className = 'modal-overlay';
+        
+        modalOverlay.innerHTML = `
+            <div class="modal-content">
+                <header class="modal-header">
+                    <h3>Gerenciar Seções</h3>
+                    <p>Selecione até ${this.MAX_SECTIONS} categorias para sua home.</p>
+                </header>
+                <div class="modal-body">
+                    <input type="text" id="sec-search" placeholder="Pesquisar categoria..." class="modal-input">
+                    <div id="sec-list" class="section-grid"></div>
+                </div>
+                <footer class="modal-footer">
+                    <button id="sec-close" class="btn-secondary">Cancelar</button>
+                    <button id="sec-save" class="btn-primary">Aplicar Alterações</button>
+                </footer>
+            </div>
+        `;
+
+        document.body.appendChild(modalOverlay);
+        
+        // Bindings
+        document.getElementById('sec-close').onclick = () => modalOverlay.remove();
+        document.getElementById('sec-save').onclick = () => { modalOverlay.remove(); this.renderBar(); };
+        document.getElementById('sec-search').oninput = (e) => this._renderModalList(e.target.value);
+
+        this._renderModalList();
+    }
+
+    _renderModalList(filter = '') {
+        const listContainer = document.getElementById('sec-list');
+        if (!listContainer) return;
+
+        listContainer.innerHTML = '';
+        const searchLower = filter.toLowerCase();
+
+        this.sections
+            .filter(s => s.nome.toLowerCase().includes(searchLower))
+            .forEach(sec => {
+                const isActive = this.activeOrderId.includes(sec.id);
+                const item = document.createElement('div');
+                item.className = `section-item ${isActive ? 'selected' : ''}`;
+                
+                item.innerHTML = `
+                    <span>${sec.nome}</span>
+                    <button class="action-btn">${isActive ? 'Remover' : 'Adicionar'}</button>
+                `;
+
+                item.onclick = () => {
+                    if (this.toggleSection(sec.id)) this._renderModalList(filter);
+                };
+
+                listContainer.appendChild(item);
+            });
+    }
+
+    _notifyUser(msg) {
+        alert(msg); // Em um sistema real, use um Toast/Snackbar
+    }
+
+    init() {
+        document.addEventListener('DOMContentLoaded', () => this.renderBar());
+    }
+}
+
+// Inicialização
+const sectionsData = [
+    { id: 'manchetes', nome: 'Manchetes' },
+    { id: 'analises', nome: 'Análises' },
+    { id: 'entrevistas', nome: 'Entrevistas' },
+    { id: 'lancamentos', nome: 'Lançamentos' },
+    { id: 'podcast', nome: 'Podcast' },
+    { id: 'futebol', nome: 'Futebol' },
+    { id: 'tecnologia', nome: 'Tecnologia' },
+    { id: 'reviews', nome: 'Reviews' },
+    { id: 'trailers', nome: 'Trailers' },
+    { id: 'streaming', nome: 'Streaming' },
+    { id: 'cosplay', nome: 'Cosplay' },
+    { id: 'eventos', nome: 'Eventos' },
+    { id: 'esports', nome: 'eSports' },
+    { id: 'cinema', nome: 'Cinema' },
+    { id: 'tv', nome: 'TV & Séries' },
+    { id: 'comunidade', nome: 'Comunidade' },
+    { id: 'ranking', nome: 'Ranking' }
 ];
 
-/* ===========================
-   CARREGAMENTO
-=========================== */
-function getOrder(){
-  const s = localStorage.getItem(STORAGE_KEY);
-  if(s){
-    try{
-      const arr = JSON.parse(s);
-      if(Array.isArray(arr)) return arr;
-    }catch(e){}
-  }
-  return SECOES.slice(0,7).map(s=>s.id);
-}
-
-function saveOrder(arr){
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
-}
-
-/* ===========================
-   RENDERIZA FILTER BAR
-=========================== */
-function renderBar(){
-  const wrap = document.getElementById('filterScroller');
-  if(!wrap) return;
-
-  const order = getOrder();
-  wrap.innerHTML = '';
-
-  order.forEach(id=>{
-    const sec = SECOES.find(s=>s.id===id);
-    if(!sec) return;
-
-    const btn = document.createElement('button');
-    btn.className = 'filter-tag';
-    btn.textContent = sec.nome;
-    btn.onclick = ()=>{
-      document.querySelectorAll('.filter-tag').forEach(b=>b.classList.remove('active'));
-      btn.classList.add('active');
-      window.carregarSecao?.(sec.id);
-    };
-    wrap.appendChild(btn);
-  });
-
-  const cfg = document.createElement('button');
-  cfg.className = 'filter-tag';
-  cfg.innerHTML = '⚙';
-  cfg.onclick = openModal;
-  wrap.appendChild(cfg);
-
-  const first = wrap.querySelector('.filter-tag');
-  if(first){ first.classList.add('active'); window.carregarSecao?.(order[0]); }
-}
-
-/* ===========================
-   MODAL
-=========================== */
-function openModal(){
-  if(document.getElementById('sec-modal')) return;
-
-  const modal = document.createElement('div');
-  modal.id = 'sec-modal';
-  modal.style.cssText = `position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9999;display:flex;align-items:center;justify-content:center`;
-
-  modal.innerHTML = `
-  <div style="width:90%;max-width:520px;background:#fff;padding:20px;">
-    <input id="sec-search" placeholder="Buscar seção..." style="width:100%;padding:10px;border:1px solid #ccc;margin-bottom:10px;">
-    <div id="sec-list" style="max-height:50vh;overflow:auto;"></div>
-    <div style="display:flex;gap:10px;margin-top:15px">
-      <button id="sec-save" style="flex:1;background:#c00;color:#fff;padding:10px">Salvar</button>
-      <button id="sec-close" style="flex:1">Cancelar</button>
-    </div>
-  </div>
-  `;
-
-  document.body.appendChild(modal);
-
-  document.getElementById('sec-close').onclick = ()=>modal.remove();
-  document.getElementById('sec-save').onclick = saveModal;
-  document.getElementById('sec-search').oninput = renderModal;
-
-  renderModal();
-}
-
-/* ===========================
-   MODAL LIST
-=========================== */
-function renderModal(){
-  const list = document.getElementById('sec-list');
-  const search = document.getElementById('sec-search').value.toLowerCase();
-  const order = getOrder();
-
-  list.innerHTML = '';
-
-  SECOES.filter(s=>s.nome.toLowerCase().includes(search)).forEach(sec=>{
-    const active = order.includes(sec.id);
-
-    const row = document.createElement('div');
-    row.style.cssText = `display:flex;justify-content:space-between;padding:8px;border-bottom:1px solid #ddd`;
-
-    const btn = document.createElement('button');
-    btn.textContent = active?'Remover':'Adicionar';
-    btn.onclick = ()=>{
-      let arr = getOrder();
-      if(active) arr = arr.filter(i=>i!==sec.id);
-      else if(arr.length<MAX_SECOES) arr.push(sec.id);
-      saveOrder(arr);
-      renderModal();
-    };
-
-    row.innerHTML = `<b>${sec.nome}</b>`;
-    row.appendChild(btn);
-    list.appendChild(row);
-  });
-}
-
-/* ===========================
-   SALVAR
-=========================== */
-function saveModal(){
-  document.getElementById('sec-modal').remove();
-  renderBar();
-}
-
-/* ===========================
-   START
-=========================== */
-document.addEventListener('DOMContentLoaded', renderBar);
-
-})();
+const NewsApp = new SectionManager({ sections: sectionsData });
