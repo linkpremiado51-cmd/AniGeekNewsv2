@@ -8,12 +8,11 @@
     adsRoot.id = 'industrial-ads-system';
     document.body.appendChild(adsRoot);
 
-    // === 3. ESTILIZAÇÃO INDUSTRIAL DARK (ZERO ROUND / FULL BLACK) ===
+    // === 3. ESTILIZAÇÃO (mantida igual) ===
     const style = document.createElement('style');
     style.textContent = `
         #industrial-ads-system { font-family: 'Helvetica', 'Arial', sans-serif; pointer-events: none; -webkit-font-smoothing: antialiased; }
         #industrial-ads-system * { pointer-events: auto; box-sizing: border-box; }
-
         .ind-shimmer { background: #111 linear-gradient(90deg, #111 0%, #222 50%, #111 100%); background-size: 200% 100%; animation: ind-shimmer-anim 1.5s infinite linear; }
         @keyframes ind-shimmer-anim { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 
@@ -87,7 +86,7 @@
         </div>
     `;
 
-    // === 5. LÓGICA DE EXECUÇÃO (ENGINE) ===
+    // === 5. LÓGICA DE EXECUÇÃO ===
     const b1 = document.getElementById('ind-block-1');
     const b2Overlay = document.getElementById('ind-block-2-overlay');
     const b2Modal = b2Overlay.querySelector('.ind-modal');
@@ -99,16 +98,16 @@
     // Bloco 1 (inferior)
     document.getElementById('ind-close-1').onclick = () => {
         b1.style.bottom = '-600px';
-        setTimeout(openB1, 80000); // 80s até reaparecer
+        setTimeout(openB1, 80000);
     };
 
     // Bloco 3 (superior)
     document.getElementById('ind-close-3').onclick = () => {
         b3.style.top = '-600px';
-        setTimeout(openB3, 10000); // 10s até reaparecer
+        setTimeout(openB3, 10000);
     };
 
-    // Bloco 2 (centralizado / interstitial) - tranquilo
+    // Bloco 2 (centralizado / interstitial) - corrigido
     function startInterstitial() {
         setTimeout(() => {
             b2Overlay.style.display = 'flex';
@@ -117,7 +116,7 @@
                 b2Modal.style.transform = 'translateY(0)';
             }, 50);
 
-            let timeLeft = 15; // 15s de espera
+            let timeLeft = 15; // 15 segundos de espera
             const totalDuration = 15;
             const btn = document.getElementById('ind-close-2');
             const prog = document.getElementById('ind-prog-2');
@@ -146,7 +145,7 @@
                 b2Modal.style.transform = 'translateY(20px)';
                 setTimeout(() => {
                     b2Overlay.style.display = 'none';
-                    setTimeout(startInterstitial, 60000); // reaparecimento em 60s
+                    setTimeout(startInterstitial, 60000); // reaparece 60s depois
                 }, 500);
 
                 timeLeft = 15;
@@ -155,12 +154,12 @@
                 btn.innerText = "Aguarde";
                 prog.style.width = "0%";
             };
-        }, 10000); // delay inicial 10s para exibir
+        }, 5000); // delay inicial para exibir anúncio
     }
 
     // Inicialização
-    setTimeout(openB1, 2000); // B1 aparece em 2s
-    setTimeout(openB3, 4000); // B3 aparece em 4s
+    setTimeout(openB1, 2000);
+    setTimeout(openB3, 4000);
     startInterstitial();
 
 })();
