@@ -154,7 +154,7 @@ const CATALOGO = [
     id: 'tecnologia',
     cor: "#4682B4",
     itens: [
-      { id: 'tech_smart', label: 'Smartphones' },
+      { id: 'smartphones', label: 'Smartphones' },
       { id: 'tech_hard', label: 'Hardware' },
       { id: 'tech_soft', label: 'Software' },
       { id: 'tech_ai', label: 'Inteligência Artificial' },
