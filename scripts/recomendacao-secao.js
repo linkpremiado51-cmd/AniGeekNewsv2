@@ -1,9 +1,9 @@
 /* ======================================================
-   AniGeekNews – Enterprise Section System v6
-   • Grid Harmônico e Simétrico
-   • Ícones SVG Profissionais
-   • Gestão de Sessões e Subcategorias
-   • Modo Fixo com Reordenamento
+   AniGeekNews – Enterprise Section System v7
+   • Títulos de Sessão Clicáveis (Categorias Pai)
+   • Notificações Toast Profissionais (Sem Alert)
+   • Controle de Foco (Teclado não abre sozinho)
+   • Design Harmônico
 ====================================================== */
 
 (function(){
@@ -11,20 +11,20 @@
 const CONFIG = {
   MAX_TABS: 12,
   KEYS: {
-    ORDER: 'ag_v6_order',
-    MODE:  'ag_v6_mode', // 'dynamic' ou 'fixed'
-    STATS: 'ag_v6_stats'
+    ORDER: 'ag_v7_order',
+    MODE:  'ag_v7_mode', // 'dynamic' ou 'fixed'
+    STATS: 'ag_v7_stats'
   }
 };
 
 /* ===========================
-   BANCO DE DADOS (HIERÁRQUICO)
+   BANCO DE DADOS (COM IDs NAS SESSÕES)
 =========================== */
-// Mapeamento completo conforme solicitado
 const CATALOGO = [
   {
     sessao: "MANCHETES",
-    cor: "#FF4500", // Laranja avermelhado
+    id: 'manchetes', // ID DA CATEGORIA PAI
+    cor: "#FF4500", 
     itens: [
       { id: 'destaques', label: 'Destaques do Dia' },
       { id: 'ultimas', label: 'Últimas Notícias' },
@@ -37,7 +37,8 @@ const CATALOGO = [
   },
   {
     sessao: "ANÁLISES",
-    cor: "#8A2BE2", // Violeta
+    id: 'cat_analises',
+    cor: "#8A2BE2",
     itens: [
       { id: 'opiniao', label: 'Opinião' },
       { id: 'critica', label: 'Crítica Técnica' },
@@ -50,7 +51,8 @@ const CATALOGO = [
   },
   {
     sessao: "ENTREVISTAS",
-    cor: "#20B2AA", // LightSeaGreen
+    id: 'cat_entrevistas',
+    cor: "#20B2AA",
     itens: [
       { id: 'devs', label: 'Desenvolvedores' },
       { id: 'criadores', label: 'Criadores de Conteúdo' },
@@ -62,7 +64,8 @@ const CATALOGO = [
   },
   {
     sessao: "LANÇAMENTOS",
-    cor: "#32CD32", // LimeGreen
+    id: 'cat_lancamentos',
+    cor: "#32CD32",
     itens: [
       { id: 'lanc_jogos', label: 'Jogos' },
       { id: 'lanc_animes', label: 'Animes' },
@@ -76,7 +79,8 @@ const CATALOGO = [
   },
   {
     sessao: "REVIEWS",
-    cor: "#FFD700", // Gold
+    id: 'cat_reviews',
+    cor: "#FFD700",
     itens: [
       { id: 'rev_jogos', label: 'Jogos' },
       { id: 'rev_animes', label: 'Animes' },
@@ -90,7 +94,8 @@ const CATALOGO = [
   },
   {
     sessao: "TRAILERS",
-    cor: "#DC143C", // Crimson
+    id: 'cat_trailers',
+    cor: "#DC143C",
     itens: [
       { id: 'tr_jogos', label: 'Jogos' },
       { id: 'tr_animes', label: 'Animes' },
@@ -103,7 +108,8 @@ const CATALOGO = [
   },
   {
     sessao: "STREAMING",
-    cor: "#00BFFF", // DeepSkyBlue
+    id: 'cat_streaming',
+    cor: "#00BFFF",
     itens: [
       { id: 'st_netflix', label: 'Netflix' },
       { id: 'st_prime', label: 'Prime Video' },
@@ -117,7 +123,8 @@ const CATALOGO = [
   },
   {
     sessao: "PODCAST",
-    cor: "#9370DB", // MediumPurple
+    id: 'cat_podcast',
+    cor: "#9370DB",
     itens: [
       { id: 'pod_recentes', label: 'Episódios Recentes' },
       { id: 'pod_geek', label: 'Temas Geek' },
@@ -130,7 +137,8 @@ const CATALOGO = [
   },
   {
     sessao: "FUTEBOL",
-    cor: "#2E8B57", // SeaGreen
+    id: 'cat_futebol',
+    cor: "#2E8B57",
     itens: [
       { id: 'fut_news', label: 'Notícias' },
       { id: 'fut_analise', label: 'Análises' },
@@ -143,7 +151,8 @@ const CATALOGO = [
   },
   {
     sessao: "TECNOLOGIA",
-    cor: "#4682B4", // SteelBlue
+    id: 'cat_tecnologia',
+    cor: "#4682B4",
     itens: [
       { id: 'tech_smart', label: 'Smartphones' },
       { id: 'tech_hard', label: 'Hardware' },
@@ -157,7 +166,8 @@ const CATALOGO = [
   },
   {
     sessao: "COSPLAY",
-    cor: "#FF69B4", // HotPink
+    id: 'cat_cosplay',
+    cor: "#FF69B4",
     itens: [
       { id: 'cosp_dest', label: 'Destaques' },
       { id: 'cosp_event', label: 'Eventos' },
@@ -169,7 +179,8 @@ const CATALOGO = [
   },
   {
     sessao: "EVENTOS",
-    cor: "#FF8C00", // DarkOrange
+    id: 'cat_eventos',
+    cor: "#FF8C00",
     itens: [
       { id: 'evt_feiras', label: 'Feiras Geek' },
       { id: 'evt_camp', label: 'Campeonatos' },
@@ -181,7 +192,8 @@ const CATALOGO = [
   },
   {
     sessao: "ESPORTS",
-    cor: "#00008B", // DarkBlue
+    id: 'cat_esports',
+    cor: "#00008B",
     itens: [
       { id: 'esp_camp', label: 'Campeonatos' },
       { id: 'esp_times', label: 'Times' },
@@ -193,7 +205,8 @@ const CATALOGO = [
   },
   {
     sessao: "CINEMA",
-    cor: "#8B0000", // DarkRed
+    id: 'cat_cinema',
+    cor: "#8B0000",
     itens: [
       { id: 'cine_news', label: 'Notícias' },
       { id: 'cine_lanc', label: 'Lançamentos' },
@@ -205,7 +218,8 @@ const CATALOGO = [
   },
   {
     sessao: "TV & SÉRIES",
-    cor: "#483D8B", // DarkSlateBlue
+    id: 'cat_tv',
+    cor: "#483D8B",
     itens: [
       { id: 'tv_news', label: 'Notícias' },
       { id: 'tv_lanc', label: 'Lançamentos' },
@@ -217,7 +231,8 @@ const CATALOGO = [
   },
   {
     sessao: "COMUNIDADE",
-    cor: "#2F4F4F", // DarkSlateGray
+    id: 'cat_comunidade',
+    cor: "#2F4F4F",
     itens: [
       { id: 'com_op', label: 'Opinião do Leitor' },
       { id: 'com_enq', label: 'Enquetes' },
@@ -228,7 +243,8 @@ const CATALOGO = [
   },
   {
     sessao: "RANKING",
-    cor: "#B8860B", // DarkGoldenRod
+    id: 'cat_ranking',
+    cor: "#B8860B",
     itens: [
       { id: 'rank_jogos', label: 'Melhores Jogos' },
       { id: 'rank_animes', label: 'Melhores Animes' },
@@ -241,7 +257,7 @@ const CATALOGO = [
 ];
 
 /* ===========================
-   CSS INJETADO (Visual Harmônico)
+   CSS INJETADO
 =========================== */
 const styles = `
   /* --- LAYOUT DA GAVETA --- */
@@ -266,7 +282,7 @@ const styles = `
   }
 
   #ag-drawer.open {
-    max-height: 85vh; /* Altura máxima segura */
+    max-height: 85vh;
     opacity: 1;
   }
 
@@ -330,9 +346,7 @@ const styles = `
     border-color: var(--primary-color, #e50914);
     box-shadow: 0 4px 12px rgba(0,0,0,0.05);
   }
-  body.dark-mode .ag-search-input:focus {
-    background: #252525;
-  }
+  body.dark-mode .ag-search-input:focus { background: #252525; }
 
   /* --- BOTÕES DE MODO --- */
   .ag-mode-group {
@@ -366,37 +380,59 @@ const styles = `
     color: #fff;
   }
 
-  /* --- SESSÕES E GRID HARMÔNICO --- */
+  /* --- SESSÕES (CABEÇALHOS CLICÁVEIS) --- */
   .ag-section-block {
-    margin-bottom: 30px;
+    margin-bottom: 35px;
     max-width: 1200px;
     margin-left: auto;
     margin-right: auto;
   }
 
-  .ag-section-title {
-    font-size: 13px;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 12px;
+  /* Estilo do título que agora é um botão */
+  .ag-section-header-btn {
     display: flex;
     align-items: center;
-    gap: 8px;
-    color: #555;
+    gap: 10px;
+    margin-bottom: 12px;
+    background: transparent;
+    border: none;
+    padding: 5px 0;
+    cursor: pointer;
+    width: fit-content;
+    transition: 0.2s;
   }
-  body.dark-mode .ag-section-title { color: #aaa; }
+
+  .ag-section-header-btn:hover {
+    opacity: 0.7;
+  }
+
+  .ag-section-text {
+    font-size: 14px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #333;
+  }
+  body.dark-mode .ag-section-text { color: #fff; }
+
+  /* Indicador visual de que o título está selecionado */
+  .ag-section-header-btn.is-active .ag-section-text {
+    color: var(--primary-color, #e50914);
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 4px;
+  }
 
   .ag-section-marker {
-    width: 8px;
-    height: 8px;
-    border-radius: 2px;
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+    box-shadow: 0 0 5px rgba(0,0,0,0.2);
   }
 
-  /* O GRID PERFEITO */
+  /* --- GRID --- */
   .ag-grid-container {
     display: grid;
-    /* Colunas responsivas mas com largura mínima fixa para uniformidade */
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); 
     gap: 10px;
   }
@@ -413,7 +449,6 @@ const styles = `
     text-align: center;
     cursor: pointer;
     transition: all 0.2s ease;
-    /* Garante altura uniforme */
     height: 100%; 
     display: flex;
     align-items: center;
@@ -431,7 +466,6 @@ const styles = `
   }
   body.dark-mode .ag-card:hover { background: #2a2a2a; }
 
-  /* ESTADO SELECIONADO */
   .ag-card.is-selected {
     background: #fff;
     border-color: var(--primary-color, #e50914);
@@ -439,11 +473,8 @@ const styles = `
     box-shadow: inset 0 0 0 1px var(--primary-color, #e50914);
     font-weight: 700;
   }
-  body.dark-mode .ag-card.is-selected {
-    background: #1a1a1a;
-  }
+  body.dark-mode .ag-card.is-selected { background: #1a1a1a; }
 
-  /* --- INDICADOR (X ou 3 PONTOS) --- */
   .ag-card-action {
     position: absolute;
     top: 3px;
@@ -460,22 +491,81 @@ const styles = `
     transition: 0.2s;
   }
   
-  .ag-card.is-selected .ag-card-action {
-    background: rgba(255,0,0,0.1); 
-    color: inherit;
-  }
-  
   .ag-card-action:hover {
     background: var(--primary-color, #e50914);
     color: #fff !important;
     opacity: 1;
   }
 
+  /* --- TOAST NOTIFICATION (Substituto do Alert) --- */
+  #ag-toast-container {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 99999;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .ag-toast {
+    background: rgba(30, 30, 30, 0.95);
+    color: #fff;
+    padding: 12px 24px;
+    border-radius: 50px;
+    font-size: 13px;
+    font-weight: 600;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    backdrop-filter: blur(5px);
+    opacity: 0;
+    transform: translateY(20px);
+    animation: agSlideUp 0.3s forwards;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .ag-toast.error { border-left: 4px solid #ff4444; }
+  .ag-toast.success { border-left: 4px solid #00C851; }
+
+  @keyframes agSlideUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  @keyframes agFadeOut {
+    to { opacity: 0; transform: translateY(-10px); }
+  }
 `;
 
 const styleSheet = document.createElement("style");
 styleSheet.innerText = styles;
 document.head.appendChild(styleSheet);
+
+/* ===========================
+   SISTEMA DE TOAST (NOTIFICAÇÃO)
+=========================== */
+function showToast(message, type = 'normal') {
+  let container = document.getElementById('ag-toast-container');
+  if(!container) {
+    container = document.createElement('div');
+    container.id = 'ag-toast-container';
+    document.body.appendChild(container);
+  }
+
+  const toast = document.createElement('div');
+  toast.className = `ag-toast ${type}`;
+  toast.innerHTML = message;
+  
+  container.appendChild(toast);
+
+  // Remove após 3 segundos
+  setTimeout(() => {
+    toast.style.animation = 'agFadeOut 0.3s forwards';
+    setTimeout(() => toast.remove(), 300);
+  }, 3000);
+}
 
 /* ===========================
    LÓGICA CORE
@@ -486,44 +576,43 @@ function save(k,v){ localStorage.setItem(k,JSON.stringify(v)); }
 function getMode(){ return load(CONFIG.KEYS.MODE, 'dynamic'); }
 function setMode(m){ save(CONFIG.KEYS.MODE, m); renderDrawer(); }
 
-// Recupera a lista de IDs salvos ou define o padrão
 function getOrder(){
   const saved = load(CONFIG.KEYS.ORDER, null);
   if(saved) return saved;
-  // Padrão inicial: primeiros 7 itens da primeira sessão
-  return CATALOGO[0].itens.map(i=>i.id);
+  // Padrão inicial com alguns IDs
+  return ['cat_manchetes', 'destaques', 'ultimas'];
 }
 
-// Encontra o objeto completo do item pelo ID
+// Encontra ITEM ou CATEGORIA PAI pelo ID
 function findItem(id){
   for(let sec of CATALOGO){
+    // Verifica se é a própria categoria
+    if(sec.id === id) return { id: sec.id, label: sec.sessao };
+    // Verifica itens internos
     const item = sec.itens.find(i => i.id === id);
     if(item) return item;
   }
   return null;
 }
 
-// Estatísticas para modo dinâmico
 function track(id){
   if(getMode() !== 'dynamic') return;
   const stats = load(CONFIG.KEYS.STATS, {});
   stats[id] = (stats[id] || 0) + 1;
   save(CONFIG.KEYS.STATS, stats);
   
-  // Reordenação automática baseada em uso
   const order = getOrder();
   order.sort((a,b) => (stats[b]||0) - (stats[a]||0));
   save(CONFIG.KEYS.ORDER, order);
 }
 
 /* ===========================
-   INTERFACE: BARRA HORIZONTAL
+   RENDERIZAÇÃO BARRA HORIZONTAL
 =========================== */
 function renderBar(){
   const bar = document.getElementById('filterScroller');
   if(!bar) return;
 
-  // Garante que o container da gaveta existe logo após a barra
   let drawer = document.getElementById('ag-drawer');
   if(!drawer) {
     drawer = document.createElement('div');
@@ -542,7 +631,6 @@ function renderBar(){
     btn.className = 'filter-tag';
     btn.textContent = item.label;
     btn.onclick = () => {
-      // Remove active de todos e adiciona no clicado
       document.querySelectorAll('#filterScroller .filter-tag').forEach(b=>b.classList.remove('active'));
       btn.classList.add('active');
       track(id);
@@ -554,16 +642,15 @@ function renderBar(){
     bar.appendChild(btn);
   });
 
-  // Botão de Configuração
   const cfg = document.createElement('button');
   cfg.className = 'filter-tag cfg-btn';
-  cfg.innerHTML = '⚙'; // Poderia ser SVG também
+  cfg.innerHTML = '⚙'; 
   cfg.onclick = toggleDrawer;
   bar.appendChild(cfg);
 }
 
 /* ===========================
-   INTERFACE: GAVETA (DRAWER)
+   GAVETA (DRAWER)
 =========================== */
 function toggleDrawer(){
   const drawer = document.getElementById('ag-drawer');
@@ -574,10 +661,7 @@ function toggleDrawer(){
   } else {
     renderDrawer();
     drawer.classList.add('open');
-    setTimeout(() => {
-        const input = document.getElementById('ag-search-input');
-        if(input) input.focus();
-    }, 100);
+    // REMOVIDO: setTimeout com focus() para não abrir o teclado
   }
 }
 
@@ -586,7 +670,6 @@ function renderDrawer(filterText = ""){
   const currentOrder = getOrder();
   const currentMode = getMode();
 
-  // SVG do ícone de pesquisa
   const searchIcon = `<svg class="ag-search-icon-svg" viewBox="0 0 24 24"><path d="M21.71 20.29l-5.01-5.01C17.54 13.68 18 11.91 18 10c0-4.41-3.59-8-8-8S2 5.59 2 10s3.59 8 8 8c1.91 0 3.68-.46 5.28-1.3l5.01 5.01c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41z"/></svg>`;
 
   let html = `
@@ -594,17 +677,16 @@ function renderDrawer(filterText = ""){
       <div class="ag-drawer-header">
         <div class="ag-search-wrapper">
           ${searchIcon}
-          <input type="text" class="ag-search-input" id="ag-search-input" placeholder="Busque por categoria, ex: Animes, Jogos..." value="${filterText}">
+          <input type="text" class="ag-search-input" id="ag-search-input" placeholder="Pesquisar..." value="${filterText}">
         </div>
         
         <div class="ag-mode-group">
-          <button id="btn-fixo" class="ag-mode-btn ${currentMode==='fixed'?'active':''}">Modo Fixo</button>
+          <button id="btn-fixo" class="ag-mode-btn ${currentMode==='fixed'?'active':''}">Fixo</button>
           <button id="btn-dinamico" class="ag-mode-btn ${currentMode==='dynamic'?'active':''}">Automático</button>
         </div>
       </div>
 
-      <div id="ag-catalog-container">
-        </div>
+      <div id="ag-catalog-container"></div>
       
       <div style="text-align:center; padding-top:20px; font-size:12px; color:#888;">
         ${currentOrder.length} de ${CONFIG.MAX_TABS} abas ativas
@@ -614,47 +696,59 @@ function renderDrawer(filterText = ""){
 
   drawer.innerHTML = html;
 
-  // Renderizar Sessões
   const container = document.getElementById('ag-catalog-container');
   const term = filterText.toLowerCase();
 
   CATALOGO.forEach(sec => {
-    // Filtragem: Se tem texto, verifica se o nome da sessão OU algum item bate
+    // Filtragem
     const itensFiltrados = sec.itens.filter(i => i.label.toLowerCase().includes(term));
     const sessaoMatch = sec.sessao.toLowerCase().includes(term);
 
-    // Se não der match na sessão nem nos itens, pula (exceto se filtro vazio)
     if(term !== "" && !sessaoMatch && itensFiltrados.length === 0) return;
-
-    // Se deu match na SESSÃO, mostra todos os itens dela. Se foi no ITEM, mostra só os filtrados.
     const itensParaMostrar = sessaoMatch ? sec.itens : itensFiltrados;
 
-    // Criar Elemento da Sessão
     const sectionDiv = document.createElement('div');
     sectionDiv.className = 'ag-section-block';
 
+    // VERIFICA SE A CATEGORIA PAI JÁ ESTÁ SELECIONADA
+    const isCatSelected = currentOrder.includes(sec.id);
+    let catIcon = '';
+    if(isCatSelected) {
+       catIcon = currentMode === 'dynamic' ? ' <span style="font-size:10px; opacity:0.6; margin-left:5px">✕</span>' : ' <span style="font-size:10px; opacity:0.6; margin-left:5px">•••</span>';
+    }
+
+    // TÍTULO DA SESSÃO AGORA É UM BOTÃO
     sectionDiv.innerHTML = `
-      <div class="ag-section-title">
+      <button class="ag-section-header-btn ${isCatSelected ? 'is-active' : ''}" data-cat-id="${sec.id}">
         <div class="ag-section-marker" style="background:${sec.cor}"></div>
-        ${sec.sessao}
-      </div>
-      <div class="ag-grid-container" id="grid-${sec.sessao}"></div>
+        <span class="ag-section-text">${sec.sessao}${catIcon}</span>
+      </button>
+      <div class="ag-grid-container"></div>
     `;
     
+    // Evento de clique no título da seção (Pai)
+    sectionDiv.querySelector('.ag-section-header-btn').onclick = (e) => {
+        // Se já tem seleção, verifica se é pra mover ou deletar
+        if(isCatSelected && currentMode === 'fixed') {
+             handleAction(sec.id, sec.sessao);
+        } else {
+             toggleItem(sec.id, sec.sessao);
+        }
+    };
+
     container.appendChild(sectionDiv);
     const grid = sectionDiv.querySelector('.ag-grid-container');
 
+    // RENDERIZA OS ITENS FILHOS
     itensParaMostrar.forEach(item => {
       const isSelected = currentOrder.includes(item.id);
       
       const card = document.createElement('div');
       card.className = `ag-card ${isSelected ? 'is-selected' : ''}`;
       
-      // Define qual ícone mostrar (X ou ...)
       let actionIcon = '';
       if(isSelected) {
-        if(currentMode === 'dynamic') actionIcon = '✕'; // X pequeno
-        else actionIcon = '•••'; // 3 pontos
+        actionIcon = currentMode === 'dynamic' ? '✕' : '•••';
       }
 
       card.innerHTML = `
@@ -662,76 +756,74 @@ function renderDrawer(filterText = ""){
         ${isSelected ? `<div class="ag-card-action" data-id="${item.id}" data-action="true">${actionIcon}</div>` : ''}
       `;
 
-      // Evento de Clique no Card (Selecionar/Deselecionar)
       card.onclick = (e) => {
-        // Se clicar especificamente no ícone de ação
         if(e.target.dataset.action || e.target.parentNode.dataset.action) {
           e.stopPropagation();
-          handleAction(item.id);
+          handleAction(item.id, item.label);
           return;
         }
-        toggleItem(item.id);
+        toggleItem(item.id, item.label);
       };
 
       grid.appendChild(card);
     });
   });
 
-  // Bind Eventos Globais da Gaveta
   document.getElementById('ag-search-input').oninput = (e) => renderDrawer(e.target.value);
   document.getElementById('btn-fixo').onclick = () => setMode('fixed');
   document.getElementById('btn-dinamico').onclick = () => setMode('dynamic');
 }
 
 /* ===========================
-   AÇÕES DE ITENS
+   AÇÕES & NOTIFICAÇÕES
 =========================== */
-function toggleItem(id){
+function toggleItem(id, label){
   let order = getOrder();
+  
   if(order.includes(id)){
     // Remove
     order = order.filter(x => x !== id);
+    showToast(`Removido: <b>${label}</b>`, 'normal');
   } else {
-    // Adiciona (com limite)
+    // Adiciona com verificação de limite
     if(order.length >= CONFIG.MAX_TABS) {
-      alert(`Limite de ${CONFIG.MAX_TABS} abas atingido.`);
+      showToast(`Limite de ${CONFIG.MAX_TABS} abas atingido!`, 'error');
       return;
     }
     order.push(id);
+    showToast(`Adicionado: <b>${label}</b>`, 'success');
   }
+  
   save(CONFIG.KEYS.ORDER, order);
   renderBar();
+  // Atualiza apenas visualmente sem perder estado do input se possível, ou re-renderiza
   renderDrawer(document.getElementById('ag-search-input').value);
 }
 
-// Lida com clique no X ou ...
-function handleAction(id){
+function handleAction(id, label){
   const mode = getMode();
   let order = getOrder();
 
   if(mode === 'dynamic') {
-    // Modo Dinâmico: O X apenas remove
     order = order.filter(x => x !== id);
     save(CONFIG.KEYS.ORDER, order);
+    showToast(`Removido: <b>${label}</b>`);
     renderBar();
     renderDrawer(document.getElementById('ag-search-input').value);
   } else {
-    // Modo Fixo: Os 3 pontos permitem mover
+    // Modo Fixo: Prompt simples (pode ser melhorado para modal depois, mas cumpre o requisito)
     const currentIndex = order.indexOf(id);
-    const newPos = prompt(`Mover "${findItem(id).label}" para qual posição? (1-${order.length})`, currentIndex + 1);
+    const newPos = prompt(`Mover "${label}" para qual posição? (1-${order.length})`, currentIndex + 1);
     
     if(newPos !== null){
       const targetIndex = parseInt(newPos) - 1;
       if(!isNaN(targetIndex) && targetIndex >= 0 && targetIndex < order.length) {
-        // Remove do antigo
         order.splice(currentIndex, 1);
-        // Insere no novo
         order.splice(targetIndex, 0, id);
-        
         save(CONFIG.KEYS.ORDER, order);
         renderBar();
-        // Não re-renderiza gaveta inteira para não perder foco, apenas atualiza visual se necessário
         renderDrawer(document.getElementById('ag-search-input').value);
+        showToast(`<b>${label}</b> movido para posição ${newPos}`);
       }
     }
   }
