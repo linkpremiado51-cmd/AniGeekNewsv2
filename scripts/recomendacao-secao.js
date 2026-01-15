@@ -537,6 +537,30 @@ const styles = `
   @keyframes agFadeOut {
     to { opacity: 0; transform: translateY(-10px); }
   }
+    /* --- AJUSTE NA BARRA PARA BOTÃO FIXO --- */
+  #filterScroller {
+    display: flex;
+    align-items: center;
+    padding-right: 50px !important; /* Espaço para o botão fixo não cobrir a última aba */
+    position: relative;
+  }
+
+  .filter-tag.cfg-btn {
+    position: sticky;
+    right: 0;
+    z-index: 10;
+    background: #fff; /* Fundo sólido para não sobrepor o texto das abas */
+    margin-left: auto;
+    box-shadow: -10px 0 15px rgba(0,0,0,0.05); /* Sombra suave para separar das abas */
+    border-radius: 0 8px 8px 0;
+    min-width: 44px;
+  }
+
+  body.dark-mode .filter-tag.cfg-btn {
+    background: #141414; /* Cor do seu dark mode */
+    box-shadow: -10px 0 15px rgba(0,0,0,0.5);
+  }
+
 `;
 
 const styleSheet = document.createElement("style");
