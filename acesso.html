@@ -253,10 +253,6 @@
 
 </div>
 
-<!-- FIREBASE BASE -->
-<script type="module" src="../scripts/config-firebase.js"></script>
-
-<!-- AUTH ACESSO -->
 <script type="module">
 import {
     getAuth,
@@ -266,42 +262,73 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
 const auth = window.auth || getAuth();
+
+// ELEMENTOS
 const msg = document.getElementById('mensagem');
 
+// LOGIN
+const loginEmail = document.getElementById('login-email');
+const loginSenha = document.getElementById('login-senha');
+const loginBtn = document.getElementById('login-btn');
+
+// CADASTRO
+const signupNome = document.getElementById('signup-nome');
+const signupEmail = document.getElementById('signup-email');
+const signupSenha = document.getElementById('signup-senha');
+const signupBtn = document.getElementById('signup-btn');
+
+// TROCA DE TELA
 window.showTab = function(tab) {
-    document.getElementById('login-section').classList.toggle('hidden', tab !== 'login');
-    document.getElementById('signup-section').classList.toggle('hidden', tab !== 'signup');
+    document
+        .getElementById('login-section')
+        .classList.toggle('hidden', tab !== 'login');
+
+    document
+        .getElementById('signup-section')
+        .classList.toggle('hidden', tab !== 'signup');
+
     msg.textContent = '';
 };
 
-document.getElementById('login-btn').addEventListener('click', async () => {
+// LOGIN
+loginBtn.addEventListener('click', async () => {
+    msg.textContent = '';
+
     try {
         await signInWithEmailAndPassword(
             auth,
-            login-email.value,
-            login-senha.value
+            loginEmail.value,
+            loginSenha.value
         );
+
         window.location.href = "../index.html";
+
     } catch (e) {
-        msg.textContent = "Erro ao entrar. Verifique os dados.";
+        console.error(e);
+        msg.textContent = "❌ E-mail ou senha inválidos.";
     }
 });
 
-document.getElementById('signup-btn').addEventListener('click', async () => {
+// CADASTRO
+signupBtn.addEventListener('click', async () => {
+    msg.textContent = '';
+
     try {
         const cred = await createUserWithEmailAndPassword(
             auth,
-            signup-email.value,
-            signup-senha.value
+            signupEmail.value,
+            signupSenha.value
         );
 
         await updateProfile(cred.user, {
-            displayName: signup-nome.value
+            displayName: signupNome.value
         });
 
         window.location.href = "../index.html";
+
     } catch (e) {
-        msg.textContent = "Erro ao criar conta.";
+        console.error(e);
+        msg.textContent = "❌ Erro ao criar conta.";
     }
 });
 </script>
