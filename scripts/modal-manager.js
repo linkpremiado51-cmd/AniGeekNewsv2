@@ -1,40 +1,56 @@
 /* scripts/modal-manager.js */
 
-// 1. Injeta a estrutura HTML do modal no Body assim que o script carrega
+// 1. Injeta a estrutura HTML moderna
 const estruturaHTML = `
 <div id="modal-noticia-global">
     <div class="modal-content">
-        <button class="close-modal" onclick="window.fecharModalGlobal()">&times;</button>
-        <div id="m-categoria"></div>
-        <h2 id="m-titulo"></h2>
-        <p id="m-resumo"></p>
-        <div id="m-ficha"></div>
-        <iframe id="m-video" src="" allowfullscreen></iframe>
-        <div style="text-align: center; margin-top: 10px;">
-            <a id="m-link" href="#" target="_blank" class="btn-ver-artigo-modal">LER ARTIGO COMPLETO</a>
+        <div class="video-header">
+            <button class="close-modal" onclick="window.fecharModalGlobal()">&times;</button>
+            <iframe id="m-video" src="" allow="autoplay; fullscreen"></iframe>
+        </div>
+        
+        <div class="modal-body">
+            <div id="m-categoria"></div>
+            <h2 id="m-titulo"></h2>
+            <p id="m-resumo"></p>
+            
+            <div id="m-ficha"></div>
+
+            <a id="m-link" href="#" target="_blank" class="btn-ver-artigo-modal">
+                Ler Artigo Completo
+            </a>
         </div>
     </div>
 </div>`;
 
 document.body.insertAdjacentHTML('beforeend', estruturaHTML);
 
-// 2. Funções do Modal
+// 2. Funções de Controle
 export const abrirModalNoticia = (noticia) => {
     const modal = document.getElementById('modal-noticia-global');
     if (!modal) return;
 
-    const corNoticia = noticia.cor || "#ff0055";
+    // Define a cor do tema (vermelho por padrão conforme seu teste)
+    const corNoticia = noticia.cor || "#ff0000";
     modal.style.setProperty('--tema-cor', corNoticia);
 
-    document.getElementById('m-categoria').innerText = noticia.categoria || "Geek";
+    // Preenchimento de Dados
+    document.getElementById('m-categoria').innerText = noticia.categoria || "Destaque";
     document.getElementById('m-titulo').innerText = noticia.titulo;
     document.getElementById('m-resumo').innerText = noticia.resumo || "";
-    document.getElementById('m-video').src = noticia.videoPrincipal || "";
+    
+    // Tratamento de URL do Vídeo (Auto-Embed)
+    let videoUrl = noticia.videoPrincipal || "";
+    if(videoUrl.includes("watch?v=")) {
+        videoUrl = videoUrl.replace("watch?v=", "embed/") + "?autoplay=1&mute=1&modestbranding=1";
+    }
+    document.getElementById('m-video').src = videoUrl;
+    
     document.getElementById('m-link').href = noticia.linkArtigo || "#";
 
+    // Ficha Técnica (Horizontal Pills)
     const fichaContainer = document.getElementById('m-ficha');
     if (noticia.ficha && noticia.ficha.length > 0) {
-        fichaContainer.style.display = 'grid';
         fichaContainer.innerHTML = noticia.ficha.map(item => `
             <div class="info-item">
                 <span class="info-label">${item.label}</span>
@@ -42,12 +58,17 @@ export const abrirModalNoticia = (noticia) => {
             </div>
         `).join('');
     } else {
-        fichaContainer.style.display = 'none';
+        // Caso não tenha ficha, coloca info padrão
+        fichaContainer.innerHTML = `
+            <div class="info-item"><span class="info-label">Tipo</span><span class="info-valor">Notícia</span></div>
+            <div class="info-item"><span class="info-label">Leitura</span><span class="info-valor">2 min</span></div>
+        `;
     }
 
     modal.style.display = 'block';
     document.body.style.overflow = 'hidden';
 
+    // Atualiza URL para SEO/Compartilhamento
     if (noticia.id) {
         const url = new URL(window.location);
         url.searchParams.set('id', noticia.id);
@@ -68,11 +89,11 @@ export const fecharModalGlobal = () => {
     window.history.pushState({}, '', url);
 };
 
-// 3. Exporta para o escopo global (para funcionar com os cliques do resultado de busca)
+// 3. Vincula ao Window para acesso via busca.js
 window.abrirModalNoticia = abrirModalNoticia;
 window.fecharModalGlobal = fecharModalGlobal;
 
-// Fechar ao clicar fora
+// Fecha ao clicar fora (no desktop)
 window.onclick = function(event) {
     const modal = document.getElementById('modal-noticia-global');
     if (event.target == modal) {
