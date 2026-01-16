@@ -1,19 +1,18 @@
 /* estilos/modal-pesquisa.css */
 
-/* Overlay - Fundo escuro e desfoque */
 #modal-noticia-global {
     display: none;
     position: fixed;
     inset: 0;
     z-index: 10000;
-    background: #000;
-    overflow: hidden; /* Proibe scroll para manter o foco */
+    background: rgba(0, 0, 0, 0.95);
+    overflow: hidden;
+    backdrop-filter: blur(10px);
 }
 
-/* Container que simula um App */
 #modal-noticia-global .modal-content {
     width: 100%;
-    height: 100dvh; /* Ocupa a altura dinâmica do celular */
+    height: 100dvh;
     background: #ffffff;
     display: flex;
     flex-direction: column;
@@ -21,130 +20,88 @@
     font-family: 'Inter', sans-serif;
 }
 
-/* Área do Vídeo: Ocupa o topo (Cabeçalho Visual) */
+/* Player no Topo */
 .video-header {
     width: 100%;
     aspect-ratio: 16 / 9;
     background: #000;
-    position: relative;
 }
 
-#m-video {
-    width: 100%;
-    height: 100%;
-    border: none;
-    display: block;
-}
+#m-video { width: 100%; height: 100%; border: none; }
 
-/* Botão Fechar flutuante sobre o vídeo */
-.close-modal {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    background: rgba(0, 0, 0, 0.5);
-    border: none;
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    color: #fff;
-    font-size: 20px;
-    cursor: pointer;
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* Corpo do Modal - Estilo Card Bottom Sheet */
+/* Corpo com Ficha Técnica */
 .modal-body {
     flex: 1;
-    padding: 25px;
-    margin-top: -20px; /* Sobrepõe levemente o vídeo */
-    background: #fff;
-    border-radius: 20px 20px 0 0;
+    padding: 30px;
+    overflow-y: auto; /* Permite scroll apenas se o texto for gigante */
     display: flex;
     flex-direction: column;
-    box-shadow: 0 -10px 30px rgba(0,0,0,0.1);
 }
 
 #m-categoria {
-    color: var(--tema-cor, #ff0000);
+    color: var(--tema-cor);
     font-size: 11px;
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 2px;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
 }
 
 #m-titulo {
-    font-size: 24px;
+    font-size: 26px;
     font-weight: 800;
-    line-height: 1.2;
-    color: #121212;
+    line-height: 1.1;
     margin-bottom: 15px;
-    letter-spacing: -0.5px;
 }
 
-#m-resumo {
-    font-size: 15px;
-    line-height: 1.5;
-    color: #555;
-    margin-bottom: 20px;
-    /* Garante que o texto não empurre o botão para fora da tela */
-    display: -webkit-box;
-    -webkit-line-clamp: 4;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-/* Ficha Técnica: Pills Horizontais (Estilo Google Play) */
+/* Ficha Técnica (A que você gostou) */
 #m-ficha {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 15px;
+    background: #f8f9fa;
+    padding: 15px;
+    border-left: 4px solid var(--tema-cor);
+    margin: 15px 0;
+}
+
+.info-item { display: flex; flex-direction: column; }
+.info-label { font-size: 10px; text-transform: uppercase; font-weight: 700; color: #888; }
+.info-valor { font-size: 13px; font-weight: 600; color: #121212; }
+
+/* Navegação entre notícias */
+.modal-nav-footer {
     display: flex;
     gap: 10px;
-    overflow-x: auto;
-    padding-bottom: 10px;
-    margin-bottom: 20px;
-    scrollbar-width: none;
+    padding: 20px 30px;
+    background: #fff;
+    border-top: 1px solid #eee;
 }
-#m-ficha::-webkit-scrollbar { display: none; }
 
-.info-item {
-    background: #f5f5f5;
-    padding: 8px 15px;
-    border-radius: 50px;
-    white-space: nowrap;
-    border: 1px solid #eee;
+.btn-nav {
+    flex: 1;
+    padding: 15px;
+    border: 1px solid #ddd;
+    background: #fff;
+    font-weight: 700;
+    cursor: pointer;
+    border-radius: 8px;
 }
-.info-label { font-size: 10px; font-weight: 700; color: #888; text-transform: uppercase; margin-right: 5px; }
-.info-valor { font-size: 11px; font-weight: 700; color: #121212; }
 
-/* BOTÃO VERMELHO EXECUTIVO (FIXO NA BASE) */
+/* Botão Principal Dinâmico */
 .btn-ver-artigo-modal {
-    margin-top: auto; /* Empurra para o fim do card */
-    background: #ff0000;
+    flex: 2;
+    background: var(--tema-cor);
     color: #fff;
-    text-decoration: none;
-    padding: 20px;
-    border-radius: 12px;
     text-align: center;
+    text-decoration: none;
+    padding: 15px;
+    border-radius: 8px;
     font-weight: 800;
-    font-size: 14px;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    box-shadow: 0 10px 20px rgba(255, 0, 0, 0.2);
-    transition: 0.3s;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
-.btn-ver-artigo-modal:hover { background: #cc0000; transform: translateY(-2px); }
-
-/* Desktop: Ajuste para não ficar gigante */
 @media (min-width: 768px) {
-    #modal-noticia-global { background: rgba(0,0,0,0.85); display: flex; align-items: center; justify-content: center; }
-    #modal-noticia-global .modal-content {
-        max-width: 450px;
-        height: auto;
-        max-height: 90vh;
-        border-radius: 25px;
-        overflow: hidden;
-    }
+    #modal-noticia-global .modal-content { max-width: 500px; margin: auto; height: 90vh; border-radius: 20px; top: 5vh; }
 }
