@@ -8,7 +8,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;700&family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Cormorant+Garamond:wght@400;700&family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <link rel="stylesheet" href="estilos/geral.css">
@@ -16,52 +16,124 @@
     <link rel="stylesheet" href="estilos/componentes.css">
 
     <style>
-        /* Estilos básicos para o Modal funcionar visualmente */
+        /* ============================================================
+           INTEGRAÇÃO: ESTILO EXCLUSIVO MANCHETES (CSS FORNECIDO)
+           ============================================================ */
+        
         #modal-noticia-global {
             display: none;
             position: fixed;
-            z-index: 10000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.95);
+            top: 0; left: 0; 
+            width: 100vw; height: 100vh;
+            background: rgba(0,0,0,0.9);
+            z-index: 99999;
+            padding: 20px;
             overflow-y: auto;
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(8px);
         }
-        .modal-content {
-            background-color: var(--bg, #1a1a1a);
-            margin: 2% auto;
-            padding: 30px;
-            border: 1px solid #333;
-            width: 90%;
+
+        .modal-conteudo-manchete {
+            background: white;
+            color: #121212;
             max-width: 900px;
-            border-radius: 12px;
+            margin: 40px auto;
+            padding: 40px;
+            border-radius: 8px;
             position: relative;
-            color: var(--text-main, #eee);
+            font-family: 'Inter', sans-serif;
         }
-        .close-modal {
+
+        .modal-fechar-btn {
             position: absolute;
+            top: 20px;
             right: 20px;
-            top: 15px;
-            font-size: 35px;
+            background: #f0f0f0;
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            font-size: 20px;
             cursor: pointer;
-            opacity: 0.7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
         }
-        #m-ficha {
+        .modal-fechar-btn:hover { background: #e0e0e0; }
+
+        /* Estilos de Tipografia do Modal (Manchetes) */
+        .destaque-categoria { 
+            color: var(--tema-cor, #ff0055); 
+            font-size: 11px; 
+            font-weight: 800; 
+            text-transform: uppercase; 
+            letter-spacing: 2px; 
+            margin-bottom: 15px; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+        }
+
+        .destaque-titulo { 
+            font-size: clamp(26px, 5vw, 44px); 
+            font-weight: 800; 
+            line-height: 1.1; 
+            letter-spacing: -1px; 
+            margin: 0 0 15px 0; 
+            color: #121212;
+        }
+
+        .destaque-resumo { 
+            font-size: clamp(16px, 2vw, 19px); 
+            line-height: 1.6; 
+            color: #444; 
+            margin-bottom: 25px; 
+        }
+
+        /* Grid da Ficha Técnica */
+        .destaque-info-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 15px;
-            margin: 20px 0;
-            background: rgba(255,255,255,0.03);
-            padding: 15px;
-            border-radius: 8px;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px; 
+            background: #f8f9fa; 
+            padding: 20px;
+            border-left: 4px solid var(--tema-cor, #ff0055); 
+            margin-bottom: 25px;
         }
-        #m-video {
-            width: 100%;
-            aspect-ratio: 16/9;
-            border-radius: 8px;
-            margin-bottom: 20px;
+
+        .info-item { display: flex; flex-direction: column; gap: 4px; }
+        .info-label { font-size: 10px; text-transform: uppercase; font-weight: 700; color: #888; }
+        .info-valor { font-size: 13px; font-weight: 600; color: #121212; }
+
+        .destaque-media iframe { 
+            width: 100%; 
+            aspect-ratio: 16 / 9; 
+            border: none; 
+            border-radius: 4px;
+            display: block; 
+            margin-bottom: 25px;
+        }
+
+        .btn-ver-artigo { 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 8px; 
+            background: #121212;
+            color: #fff; 
+            text-decoration: none; 
+            font-size: 13px; 
+            font-weight: 800; 
+            text-transform: uppercase; 
+            padding: 15px 30px;
+            border-radius: 4px;
+            cursor: pointer; 
+            transition: opacity 0.2s;
+        }
+        .btn-ver-artigo:hover { opacity: 0.9; }
+
+        @media (max-width: 768px) {
+            .modal-conteudo-manchete { padding: 20px; margin: 10px; }
+            .destaque-info-grid { grid-template-columns: 1fr 1fr; }
         }
     </style>
 </head>
@@ -106,20 +178,23 @@
 </main>
 
 <div id="modal-noticia-global">
-    <div class="modal-content">
-        <span class="close-modal" onclick="fecharModalGlobal()">&times;</span>
+    <div class="modal-conteudo-manchete">
+        <button class="modal-fechar-btn" onclick="fecharModalGlobal()">&times;</button>
         
-        <div id="m-categoria" style="font-weight: 800; text-transform: uppercase; font-size: 12px; letter-spacing: 1px; margin-bottom: 10px;"></div>
-        <h2 id="m-titulo" style="font-family: 'Cormorant Garamond', serif; font-size: 2.5rem; margin-bottom: 15px;"></h2>
-        <p id="m-resumo" style="font-size: 1.1rem; line-height: 1.6; opacity: 0.9; margin-bottom: 20px;"></p>
+        <div id="m-categoria" class="destaque-categoria"></div>
+        <h2 id="m-titulo" class="destaque-titulo"></h2>
+        
+        <p id="m-resumo" class="destaque-resumo"></p>
 
-        <div id="m-ficha"></div>
+        <div id="m-ficha" class="destaque-info-grid"></div>
 
-        <iframe id="m-video" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        <div class="destaque-media">
+            <iframe id="m-video" src="" allowfullscreen></iframe>
+        </div>
 
-        <div style="text-align: center; margin-top: 30px;">
-            <a id="m-link" href="#" target="_blank" class="btn-leitura" style="padding: 15px 30px; background: var(--text-main); color: var(--bg); text-decoration: none; font-weight: bold; border-radius: 5px;">
-                LER ARTIGO COMPLETO
+        <div style="text-align: center; margin-top: 20px;">
+            <a id="m-link" href="#" target="_blank" class="btn-ver-artigo">
+                <i class="fa-solid fa-book-open"></i> LER ARTIGO COMPLETO
             </a>
         </div>
     </div>
@@ -145,43 +220,45 @@
 </script>
 
 <script>
+    // FUNÇÃO PRINCIPAL DO MODAL
     window.abrirModalNoticia = (noticia) => {
         const modal = document.getElementById('modal-noticia-global');
-        
-        if (!modal) {
-            console.error("ERRO: O HTML do modal não foi encontrado.");
-            return;
-        }
+        if (!modal) return;
 
-        // 1. Preenchimento de textos e cores
+        // 1. Cores e Categoria
+        const corPrimaria = noticia.cor || "#ff0055";
         const catEl = document.getElementById('m-categoria');
         catEl.innerText = noticia.categoria || "Geek";
-        catEl.style.color = noticia.cor || "var(--primary)";
-        
+        catEl.style.setProperty('--tema-cor', corPrimaria);
+        catEl.style.color = corPrimaria;
+
+        // 2. Textos
         document.getElementById('m-titulo').innerText = noticia.titulo;
         document.getElementById('m-resumo').innerText = noticia.resumo || "";
+        
+        // 3. Mídia e Links
         document.getElementById('m-video').src = noticia.videoPrincipal || "";
         document.getElementById('m-link').href = noticia.linkArtigo || "#";
 
-        // 2. Ficha Técnica
+        // 4. Ficha Técnica Dinâmica (CSS Manchete)
         const fichaContainer = document.getElementById('m-ficha');
         if (noticia.ficha && noticia.ficha.length > 0) {
             fichaContainer.style.display = 'grid';
+            fichaContainer.style.borderLeftColor = corPrimaria;
             fichaContainer.innerHTML = noticia.ficha.map(item => `
-                <div style="border-left: 3px solid ${noticia.cor || '#eee'}; padding-left: 10px;">
-                    <div style="font-size: 9px; text-transform: uppercase; font-weight: 800; opacity: 0.5;">${item.label}</div>
-                    <div style="font-size: 13px; font-weight: 700;">${item.valor}</div>
+                <div class="info-item">
+                    <span class="info-label">${item.label}</span>
+                    <span class="info-valor">${item.valor}</span>
                 </div>
             `).join('');
         } else {
             fichaContainer.style.display = 'none';
         }
 
-        // 3. Exibição e Travamento de Scroll
+        // 5. Visual e URL
         modal.style.display = 'block';
         document.body.style.overflow = 'hidden';
 
-        // 4. Atualização da URL (SEO/Compartilhamento)
         if (noticia.id) {
             const url = new URL(window.location);
             url.searchParams.set('id', noticia.id);
@@ -192,10 +269,12 @@
     window.fecharModalGlobal = () => {
         const modal = document.getElementById('modal-noticia-global');
         modal.style.display = 'none';
-        document.getElementById('m-video').src = ""; // Para o vídeo
-        document.body.style.overflow = 'auto'; // Destrava o scroll
+        document.body.style.overflow = 'auto';
         
-        // Limpa a URL ao fechar
+        // Segurança: Mata o processo do vídeo para parar o som
+        document.getElementById('m-video').src = "";
+
+        // Limpa a URL
         const url = new URL(window.location);
         url.searchParams.delete('id');
         window.history.pushState({}, '', url);
@@ -211,29 +290,29 @@
 </script>
 
 <script>
-(function () {
-    function aplicarEstadoUsuario(user) {
-        const areaUsuario = document.getElementById("area-usuario");
-        if (!areaUsuario) return;
+    // ESTADO DO USUÁRIO
+    (function () {
+        function aplicarEstadoUsuario(user) {
+            const areaUsuario = document.getElementById("area-usuario");
+            if (!areaUsuario) return;
 
-        if (user) {
-            areaUsuario.innerHTML = `
-                <div class="usuario-logado">
-                    <span class="usuario-nome">${user.nome || "Usuário"}</span>
-                    <button class="logout-btn" onclick="window.logoutAniGeek && window.logoutAniGeek()">
-                        <i class="fa-solid fa-right-from-bracket"></i>
-                    </button>
-                </div>
-            `;
-        } else {
-            areaUsuario.innerHTML = `<a href="acesso.html" class="link-login">Entrar / Criar conta</a>`;
+            if (user) {
+                areaUsuario.innerHTML = `
+                    <div class="usuario-logado">
+                        <span class="usuario-nome">${user.nome || "Usuário"}</span>
+                        <button class="logout-btn" onclick="window.logoutAniGeek && window.logoutAniGeek()">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                        </button>
+                    </div>
+                `;
+            } else {
+                areaUsuario.innerHTML = `<a href="acesso.html" class="link-login">Entrar / Criar conta</a>`;
+            }
         }
-    }
-
-    if (window.AniGeekUser !== undefined) aplicarEstadoUsuario(window.AniGeekUser);
-    document.addEventListener("user:login", (e) => aplicarEstadoUsuario(e.detail));
-    document.addEventListener("user:logout", () => aplicarEstadoUsuario(null));
-})();
+        if (window.AniGeekUser !== undefined) aplicarEstadoUsuario(window.AniGeekUser);
+        document.addEventListener("user:login", (e) => aplicarEstadoUsuario(e.detail));
+        document.addEventListener("user:logout", () => aplicarEstadoUsuario(null));
+    })();
 </script>
 
 </body>
