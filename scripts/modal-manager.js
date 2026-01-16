@@ -1,8 +1,5 @@
 /* scripts/modal-manager.js */
 
-// O Firebase já está inicializado no config-firebase.js, usamos o window.db se necessário,
-// mas para performance, usaremos o cache global window.noticiasFirebase.
-
 let noticiasDaSessao = []; 
 let indiceAtual = 0;
 
@@ -31,13 +28,39 @@ const estruturaHTML = `
     </div>
 </div>`;
 
-// Injeção da estrutura se não existir
 if (!document.getElementById('modal-noticia-global')) {
     document.body.insertAdjacentHTML('beforeend', estruturaHTML);
 }
 
 /**
- * Renderiza os dados no Modal com suporte a cores dinâmicas
+ * Atualiza as Meta Tags para SEO dinâmico e Título da Aba
+ */
+const atualizarSEO = (noticia) => {
+    // 1. Atualiza o título da aba do navegador
+    document.title = `${noticia.titulo} | AniGeekNews`;
+
+    // 2. Função auxiliar para atualizar ou criar meta tags
+    const setMeta = (property, content) => {
+        let el = document.querySelector(`meta[property="${property}"]`) || 
+                 document.querySelector(`meta[name="${property}"]`);
+        if (!el) {
+            el = document.createElement('meta');
+            el.setAttribute('property', property);
+            document.head.appendChild(el);
+        }
+        el.setAttribute('content', content);
+    };
+
+    // 3. Tags Open Graph (Facebook/Instagram/WhatsApp) e Twitter
+    setMeta('og:title', noticia.titulo);
+    setMeta('og:description', noticia.resumo ? noticia.resumo.substring(0, 160) : "");
+    setMeta('og:image', noticia.thumb);
+    setMeta('og:url', window.location.href);
+    setMeta('twitter:card', 'summary_large_image');
+};
+
+/**
+ * Renderiza os dados no Modal
  */
 const renderizarDadosNoModal = (noticia) => {
     if (!noticia) return;
@@ -46,20 +69,14 @@ const renderizarDadosNoModal = (noticia) => {
     const modal = document.getElementById('modal-noticia-global');
     modal.style.setProperty('--tema-cor', cor);
 
-    // Título e Categoria
     document.getElementById('m-categoria').innerText = noticia.categoria || "GEEK";
     document.getElementById('m-titulo').innerText = noticia.titulo;
     document.getElementById('m-resumo').innerText = noticia.resumo || "";
     document.getElementById('m-link').href = noticia.linkArtigo || "#";
 
-    // Tratamento de Vídeo
-    let vUrl = noticia.videoPrincipal || "";
-    if (vUrl.includes("watch?v=")) {
-        vUrl = vUrl.replace("watch?v=", "embed/") + "?autoplay=1&mute=1&modestbranding=1";
-    }
-    document.getElementById('m-video').src = vUrl;
+    // O vídeo já vem formatado pelo config-firebase.js (normalizarNoticia)
+    document.getElementById('m-video').src = noticia.videoPrincipal;
 
-    // Ficha Técnica (Grid Executivo)
     const fichaContainer = document.getElementById('m-ficha');
     if (noticia.ficha && noticia.ficha.length > 0) {
         fichaContainer.style.display = 'grid';
@@ -73,44 +90,31 @@ const renderizarDadosNoModal = (noticia) => {
         fichaContainer.style.display = 'none';
     }
     
-    // Atualiza a URL para permitir compartilhamento da notícia atual na navegação
+    // Atualiza a URL e o SEO
     const url = new URL(window.location);
     url.searchParams.set('id', noticia.id);
     window.history.pushState({}, '', url);
+    
+    atualizarSEO(noticia);
 };
 
-/**
- * Abre o modal usando o objeto da notícia já carregado (mais rápido que buscar no Firebase de novo)
- */
 window.abrirModalNoticia = (noticia) => {
     if (!noticia) return;
-
     const modal = document.getElementById('modal-noticia-global');
     
-    // 1. Define a "Playlist" baseada na mesma coleção/origem da notícia aberta
-    // Isso garante que os botões Próximo/Anterior funcionem corretamente
     noticiasDaSessao = (window.noticiasFirebase || []).filter(n => n.origem === noticia.origem);
-    
-    // 2. Localiza o índice da notícia atual
     indiceAtual = noticiasDaSessao.findIndex(n => n.id === noticia.id);
 
-    // 3. Renderiza e mostra
     renderizarDadosNoModal(noticia);
     modal.style.display = 'block';
     document.body.style.overflow = 'hidden';
 };
 
-/**
- * Navegação interna: Troca o conteúdo sem fechar o modal
- */
 window.navegarNoticia = (direcao) => {
     const novoIndice = indiceAtual + direcao;
-    
     if (novoIndice >= 0 && novoIndice < noticiasDaSessao.length) {
         indiceAtual = novoIndice;
         renderizarDadosNoModal(noticiasDaSessao[indiceAtual]);
-    } else {
-        console.log("Fim da lista nesta categoria.");
     }
 };
 
@@ -120,7 +124,9 @@ window.fecharModalGlobal = () => {
     document.getElementById('m-video').src = "";
     document.body.style.overflow = 'auto';
 
-    // Limpa o ID da URL ao fechar
+    // Restaura o título padrão do site
+    document.title = "AniGeekNews | Jornalismo Geek";
+
     const url = new URL(window.location);
     url.searchParams.delete('id');
     window.history.pushState({}, '', url);
