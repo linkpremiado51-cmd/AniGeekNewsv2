@@ -68,8 +68,15 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { 
-      getFirestore, collection, onSnapshot, addDoc, updateDoc, doc, 
-      increment, serverTimestamp, query, where, orderBy, collectionGroup 
+      getFirestore, 
+      collection, 
+      onSnapshot, 
+      addDoc, 
+      serverTimestamp, 
+      query, 
+      where, 
+      orderBy,
+      collectionGroup 
     } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
@@ -93,7 +100,6 @@
     let playerAlvo = '';
     let urlAlvo = '';
     let noticiaAtualId = null;
-    let respondendoA = null;
     let unsubscribeComentarios = null;
 
     // --- LÓGICA DE USUÁRIO (LOGADO OU ANÔNIMO) ---
@@ -197,17 +203,16 @@
       }
     }
 
-    // --- LÓGICA DE COMENTÁRIOS FIREBASE (MELHORADA) ---
+    // --- LÓGICA DE COMENTÁRIOS FIREBASE ---
     window.abrirComentarios = (idNoticia) => {
       noticiaAtualId = idNoticia;
-      respondendoA = null;
       document.getElementById('modal-comentarios-geek').classList.add('active');
       document.body.style.overflow = 'hidden';
-      document.getElementById('input-comentario-real').placeholder = "Adicione um comentário...";
       
       const container = document.getElementById('flow-comentarios');
-      container.innerHTML = '<div class="geek-loader"></div>';
+      container.innerHTML = '<div style="padding:20px; text-align:center; opacity:0.5;">Carregando...</div>';
 
+      // Busca comentários de todas as pastas de usuários que pertençam a esta notícia
       const q = query(
         collectionGroup(db, "comentarios"),
         where("noticiaId", "==", idNoticia),
@@ -215,58 +220,35 @@
       );
 
       unsubscribeComentarios = onSnapshot(q, (snapshot) => {
-        document.getElementById('geek-count-val').innerText = `${snapshot.size} interações`;
+        document.getElementById('geek-count-val').innerText = `${snapshot.size} comentários`;
         if (snapshot.empty) {
-          container.innerHTML = '<div style="padding:40px; text-align:center; opacity:0.5;">Inicie a discussão! 🚀</div>';
+          container.innerHTML = '<div style="padding:40px; text-align:center; opacity:0.5;">Ninguém comentou ainda. Seja o primeiro!</div>';
           return;
         }
 
-        const docs = snapshot.docs.map(d => ({ id: d.id, path: d.ref.path, ...d.data() }));
-        const principais = docs.filter(c => !c.parentId);
-        
-        container.innerHTML = principais.map(c => renderCommentCard(c, docs)).join('');
+        container.innerHTML = snapshot.docs.map(doc => {
+          const c = doc.data();
+          const tempo = c.timestamp ? new Date(c.timestamp.seconds * 1000).toLocaleDateString() : 'Agora';
+          const inicial = c.autorNome ? c.autorNome.charAt(0).toUpperCase() : '?';
+          
+          return `
+            <div class="geek-comment-card">
+              <div class="geek-avatar" style="background: ${c.tipo === 'membro' ? '#e63946' : '#555'};">${inicial}</div>
+              <div class="geek-info-col">
+                <div class="geek-user-row">
+                    <span class="g-name">${c.autorNome}</span>
+                    ${c.tipo === 'membro' ? '<span class="g-badge badge-pro">PRO</span>' : ''}
+                    <span class="g-time">${tempo}</span>
+                </div>
+                <div class="geek-text">${c.texto}</div>
+                <div class="geek-actions-row">
+                    <span><i class="fa-regular fa-heart"></i> Curtir</span>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
       });
-    };
-
-    function renderCommentCard(c, allDocs) {
-      const tempo = c.timestamp ? new Date(c.timestamp.seconds * 1000).toLocaleDateString() : 'Agora';
-      const respostas = allDocs.filter(r => r.parentId === c.id);
-      
-      return `
-        <div class="geek-comment-card ${c.parentId ? 'is-reply' : ''}" id="ctx-${c.id}">
-          <div class="geek-avatar" style="background: ${c.tipo === 'membro' ? '#e63946' : '#555'};">${c.autorNome.charAt(0).toUpperCase()}</div>
-          <div class="geek-info-col">
-            <div class="geek-user-row">
-                <span class="g-name">${c.autorNome}</span>
-                ${c.tipo === 'membro' ? '<span class="g-badge badge-pro">PRO</span>' : ''}
-                <span class="g-time">${tempo}</span>
-            </div>
-            <div class="geek-text">${c.texto}</div>
-            <div class="geek-actions-row">
-                <span onclick="window.interagirComentario('${c.path}', 'likes')"><i class="fa-solid fa-heart"></i> ${c.likes || 0}</span>
-                <span onclick="window.prepararResposta('${c.id}', '${c.autorNome}')"><i class="fa-solid fa-reply"></i> Responder</span>
-                <span onclick="window.interagirComentario('${c.path}', 'denuncias')" class="btn-report"><i class="fa-solid fa-flag"></i></span>
-            </div>
-            <div class="replies-container">
-                ${respostas.map(r => renderCommentCard(r, allDocs)).join('')}
-            </div>
-          </div>
-        </div>
-      `;
-    }
-
-    window.prepararResposta = (id, nome) => {
-      respondendoA = id;
-      const input = document.getElementById('input-comentario-real');
-      input.placeholder = `Respondendo a ${nome}...`;
-      input.focus();
-    };
-
-    window.interagirComentario = async (caminho, tipo) => {
-      try {
-        const docRef = doc(db, caminho);
-        await updateDoc(docRef, { [tipo]: increment(1) });
-      } catch (e) { console.error("Erro na interação:", e); }
     };
 
     window.fecharComentarios = () => {
@@ -283,21 +265,17 @@
       const iden = getIdentidade();
       
       try {
+        // Coleção: usuarios -> {id_user} -> comentarios
         const colRef = collection(db, "usuarios", iden.id, "comentarios");
         await addDoc(colRef, {
           noticiaId: noticiaAtualId,
-          parentId: respondendoA,
           texto: texto,
           autorNome: iden.nome,
           tipo: iden.tipo,
-          likes: 0,
-          denuncias: 0,
           timestamp: serverTimestamp()
         });
         input.value = "";
-        input.placeholder = "Adicione um comentário...";
-        respondendoA = null;
-      } catch(e) { alert("Erro ao enviar. Verifique o Índice do Firebase."); }
+      } catch(e) { console.error(e); }
     }
 
     document.getElementById('btn-enviar-comentario').onclick = enviarComentario;
@@ -565,13 +543,6 @@
     
     .geek-text { font-size: 14px; color: #444; line-height: 1.4; margin-bottom: 8px; }
     .geek-actions-row { display: flex; gap: 15px; font-size: 12px; color: #666; font-weight: 600; cursor: pointer; }
-    .geek-actions-row span { transition: color 0.2s; cursor: pointer; }
-    .geek-actions-row span:hover { color: #e63946; }
-    .btn-report { opacity: 0.3; float: right; }
-    .btn-report:hover { opacity: 1; color: #ff9800 !important; }
-    
-    .is-reply { margin-left: 30px; border-left: 2px solid #eee; padding-left: 15px; margin-top: 10px; }
-    .replies-container { margin-top: 15px; }
 
     .modal-geek-footer { padding: 15px; border-top: 1px solid #eee; background: white; }
     .input-wrapper-geek {
@@ -588,13 +559,5 @@
       font-size: 13px; z-index: 100000; display: none;
     }
     #toast-copiado.mostrar { display: block; }
-    
-    .geek-loader {
-      width: 30px; height: 30px; border: 3px solid #f3f3f3;
-      border-top: 3px solid #e63946; border-radius: 50%;
-      margin: 50px auto; animation: spin 1s linear infinite;
-    }
-    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
   </style>
 </div>
-
