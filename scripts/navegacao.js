@@ -1,5 +1,6 @@
 /* scripts/navegacao.js */
 
+
 const displayPrincipal = document.getElementById('conteudo_de_destaque');
 
 /**
