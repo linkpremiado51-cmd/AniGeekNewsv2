@@ -68,7 +68,7 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { 
       getFirestore, collection, onSnapshot, addDoc, updateDoc, doc, 
-      increment, serverTimestamp, query, where, orderBy 
+      increment, serverTimestamp, query, where, orderBy, collectionGroup 
     } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
@@ -131,6 +131,7 @@
       } catch (err) { console.error("Erro copiar:", err); }
     };
 
+    // Troca de Vídeo Relacionado
     window.pedirTroca = (idPlayer, idVideo, titulo, cor) => {
       playerAlvo = idPlayer;
       urlAlvo = `https://www.youtube.com/embed/${idVideo}?autoplay=1`;
@@ -151,6 +152,7 @@
         };
     }
 
+    // Modal de Notícia
     window.fecharModal = () => {
       document.getElementById('modal-noticia').style.display = 'none';
       document.getElementById('modal-video').src = "";
@@ -179,7 +181,7 @@
       }
     }
 
-       // --- LÓGICA DE COMENTÁRIOS (CORRIGIDA) ---
+    // Lógica de Comentários
     window.abrirComentarios = (idNoticia) => {
       noticiaAtualId = idNoticia;
       respondendoA = null;
@@ -190,14 +192,11 @@
       const container = document.getElementById('flow-comentarios');
       container.innerHTML = '<div class="geek-loader"></div>';
 
-      // Removido o orderBy para carregar instantaneamente sem erro de índice
       const q = query(
-        collection(db, "comunidade"),
-        where("noticiaId", "==", idNoticia)
+        collectionGroup(db, "comentarios"),
+        where("noticiaId", "==", idNoticia),
+        orderBy("timestamp", "desc")
       );
-
-
-      if(unsubscribeComentarios) unsubscribeComentarios();
 
       unsubscribeComentarios = onSnapshot(q, (snapshot) => {
         document.getElementById('geek-count-val').innerText = `${snapshot.size} interações`;
@@ -210,20 +209,16 @@
         const principais = docs.filter(c => !c.parentId);
         
         container.innerHTML = principais.map(c => renderCommentCard(c, docs)).join('');
-      }, (error) => {
-          console.error("Erro Firestore:", error);
-          container.innerHTML = '<div style="padding:20px; text-align:center; color:red;">Erro ao carregar. Verifique as Regras do Banco.</div>';
       });
     };
 
     function renderCommentCard(c, allDocs) {
-      const dataObj = c.timestamp ? new Date(c.timestamp.seconds * 1000) : new Date();
-      const tempo = dataObj.toLocaleDateString();
+      const tempo = c.timestamp ? new Date(c.timestamp.seconds * 1000).toLocaleDateString() : 'Agora';
       const respostas = allDocs.filter(r => r.parentId === c.id).sort((a,b) => (a.timestamp?.seconds || 0) - (b.timestamp?.seconds || 0));
       
       return `
         <div class="geek-comment-card ${c.parentId ? 'is-reply' : ''}">
-          <div class="geek-avatar" style="background: ${c.tipo === 'membro' ? '#e63946' : '#555'};">${c.autorNome ? c.autorNome.charAt(0).toUpperCase() : '?'}</div>
+          <div class="geek-avatar" style="background: ${c.tipo === 'membro' ? '#e63946' : '#555'};">${c.autorNome.charAt(0).toUpperCase()}</div>
           <div class="geek-info-col">
             <div class="geek-user-row">
                 <span class="g-name">${c.autorNome}</span>
@@ -232,8 +227,9 @@
             </div>
             <div class="geek-text">${c.texto}</div>
             <div class="geek-actions-row">
-                <span onclick="window.interagirComentario('${c.id}', 'likes')"><i class="fa-solid fa-heart"></i> ${c.likes || 0}</span>
+                <span onclick="window.interagirComentario('${c.path}', 'likes')"><i class="fa-solid fa-heart"></i> ${c.likes || 0}</span>
                 <span onclick="window.prepararResposta('${c.id}', '${c.autorNome}')"><i class="fa-solid fa-reply"></i> Responder</span>
+                <span onclick="window.interagirComentario('${c.path}', 'denuncias')" class="btn-report"><i class="fa-solid fa-flag"></i></span>
             </div>
             ${respostas.length > 0 ? `<div class="replies-container">${respostas.map(r => renderCommentCard(r, allDocs)).join('')}</div>` : ''}
           </div>
@@ -248,9 +244,9 @@
       input.focus();
     };
 
-    window.interagirComentario = async (id, tipo) => {
+    window.interagirComentario = async (caminho, tipo) => {
       try {
-        const docRef = doc(db, "comunidade", id);
+        const docRef = doc(db, caminho);
         await updateDoc(docRef, { [tipo]: increment(1) });
       } catch (e) { console.error("Erro na interação:", e); }
     };
@@ -268,13 +264,12 @@
 
       const iden = getIdentidade();
       try {
-        const colRef = collection(db, "comunidade");
+        const colRef = collection(db, "usuarios", iden.id, "comentarios");
         await addDoc(colRef, {
           noticiaId: noticiaAtualId,
           parentId: respondendoA || null,
           texto: texto,
           autorNome: iden.nome,
-          autorId: iden.id,
           tipo: iden.tipo,
           likes: 0,
           denuncias: 0,
@@ -283,16 +278,13 @@
         input.value = "";
         input.placeholder = "Adicione um comentário...";
         respondendoA = null;
-      } catch(e) { 
-          console.error("Erro ao enviar:", e); 
-          alert("Erro ao enviar. Verifique as Regras de Segurança no console do Firebase.");
-      }
+      } catch(e) { console.error(e); }
     }
 
     document.getElementById('btn-enviar-comentario').onclick = enviarComentario;
     document.getElementById('input-comentario-real').onkeyup = (e) => { if(e.key === 'Enter') enviarComentario(); };
 
-    // Renderização de Notícias
+    // Renderização
     function renderizarNoticias() {
       const container = document.getElementById('container-principal');
       const btnPaginacao = document.getElementById('pagination-control');
@@ -359,10 +351,7 @@
       onSnapshot(q, (snapshot) => {
         todasAsNoticias = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         todasAsNoticias.sort((a, b) => (b.data || 0) - (a.data || 0));
-        if(todasAsNoticias.length > 0) { 
-            const tituloDestaque = document.getElementById('novo-artigo-titulo');
-            if(tituloDestaque) tituloDestaque.innerText = todasAsNoticias[0].titulo; 
-        }
+        if(todasAsNoticias.length > 0) { document.getElementById('novo-artigo-titulo').innerText = todasAsNoticias[0].titulo; }
         renderizarNoticias();
         verificarNoticiaNaUrl();
       });
@@ -371,7 +360,7 @@
   </script>
 
   <style>
-    /* Estilos Mantidos do Usuário */
+    /* Estilos Modal e Layout */
     #modal-noticia { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.9); z-index: 99999; padding: 20px; overflow-y: auto; }
     #modal-conteudo { background: white; color: #121212; max-width: 900px; margin: 40px auto; padding: 30px; border-radius: 8px; position: relative; }
     #modal-fechar { position: absolute; top: 15px; right: 15px; background: #eee; border: none; width: 32px; height: 32px; border-radius: 50%; font-size: 18px; cursor: pointer; }
