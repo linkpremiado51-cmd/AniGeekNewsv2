@@ -179,7 +179,7 @@
       }
     }
 
-    // --- LÓGICA DE COMENTÁRIOS (EDITADA) ---
+       // --- LÓGICA DE COMENTÁRIOS (CORRIGIDA) ---
     window.abrirComentarios = (idNoticia) => {
       noticiaAtualId = idNoticia;
       respondendoA = null;
@@ -190,12 +190,12 @@
       const container = document.getElementById('flow-comentarios');
       container.innerHTML = '<div class="geek-loader"></div>';
 
-      // Uso de coleção simples para evitar erros de índice
+      // Removido o orderBy para carregar instantaneamente sem erro de índice
       const q = query(
         collection(db, "comunidade"),
-        where("noticiaId", "==", idNoticia),
-        orderBy("timestamp", "desc")
+        where("noticiaId", "==", idNoticia)
       );
+
 
       if(unsubscribeComentarios) unsubscribeComentarios();
 
