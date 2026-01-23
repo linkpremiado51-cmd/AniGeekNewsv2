@@ -1,17 +1,8 @@
-import { 
-    getFirestore, 
-    collection, 
-    addDoc, 
-    serverTimestamp, 
-    query, 
-    orderBy, 
-    onSnapshot 
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, collection, addDoc, serverTimestamp, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-// Pegamos a instância do banco (O app já foi inicializado no HTML)
+// Pegamos a instância do banco (O app já foi inicializado no analises.html)
 const db = getFirestore();
 
-// Estilos CSS da interface de comentários
 const estilosComentarios = `
 <style>
     .comments-trigger-bar { background: rgba(241, 243, 245, 0.8); border: 1px solid #e9ecef; border-radius: 16px; padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: all 0.3s ease; margin: 10px 0; }
@@ -41,7 +32,6 @@ const estilosComentarios = `
 </style>
 `;
 
-// HTML base da interface
 const htmlBase = `
     ${estilosComentarios}
     <div class="comments-trigger-bar">
@@ -83,12 +73,11 @@ function inicializarComentarios() {
     const containers = document.querySelectorAll('.container-comentarios-dinamico');
 
     containers.forEach(container => {
-        // Evita duplicar a interface
+        // ESSENCIAL: Evita duplicar a interface se a função for chamada múltiplas vezes
         if (container.getAttribute('data-loaded') === 'true') return;
 
         const noticiaId = container.getAttribute('data-noticia-id');
-        const colecao = container.getAttribute('data-colecao'); // <- Dinâmico
-        if (!noticiaId || !colecao) return;
+        if (!noticiaId) return;
 
         container.innerHTML = htmlBase;
         container.setAttribute('data-loaded', 'true');
@@ -109,11 +98,9 @@ function inicializarComentarios() {
             document.body.style.overflow = 'auto';
         };
 
-        // Caminho dinâmico: coleção / documento / subcoleção comentarios
-        const path = `${colecao}/${noticiaId}/comentarios`;
+        const path = `analises/${noticiaId}/comentarios`;
         const q = query(collection(db, path), orderBy("data", "asc"));
 
-        // Escuta em tempo real
         onSnapshot(q, (snapshot) => {
             container.querySelector('.txt-contagem').innerText = `${snapshot.size} comentários`;
             listaFluxo.innerHTML = snapshot.docs.map(doc => {
@@ -142,11 +129,9 @@ function inicializarComentarios() {
                 await addDoc(collection(db, path), {
                     texto: texto,
                     data: serverTimestamp(),
-                    usuario: "Geek User"
+                    usuario: "Geek User" 
                 });
-            } catch (e) {
-                console.error("Erro ao enviar:", e);
-            }
+            } catch (e) { console.error("Erro ao enviar:", e); }
         };
 
         btnSend.onclick = enviarComentario;
@@ -154,7 +139,7 @@ function inicializarComentarios() {
     });
 }
 
-// Torna acessível globalmente
+// Expõe para o window para que o navegacao.js possa reativar
 window.inicializarComentarios = inicializarComentarios;
 
 // Execução inicial
