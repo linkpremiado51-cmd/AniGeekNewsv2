@@ -131,6 +131,7 @@
       document.getElementById('modal-resumo').innerText = noticia.resumo;
       document.getElementById('modal-link').href = noticia.linkArtigo;
 
+      // Renderizar ficha original (se existir)
       let fichaHtml = "";
       if (noticia.ficha) {
           fichaHtml = noticia.ficha.map(item =>
@@ -138,6 +139,24 @@
           ).join('');
       }
       document.getElementById('modal-ficha').innerHTML = fichaHtml;
+
+      // Renderizar ficha da categoria (se existir)
+      if (noticia.fichaCategoria) {
+        const modalFichaCat = `
+        <div class="ficha-categoria" style="border-left: 4px solid ${noticia.fichaCategoria.cor};">
+            <img src="${limparEspacos(noticia.fichaCategoria.perfilImg)}" alt="Imagem do editor">
+            <div class="ficha-info">
+                ${noticia.fichaCategoria.info.map(item => `
+                    <div class="info-item">
+                        <span class="info-label">${item.label}:</span>
+                        <span class="info-valor">${item.valor}</span>
+                    </div>
+                `).join('')}
+            </div>
+        </div>`;
+        document.getElementById('modal-ficha').insertAdjacentHTML('beforebegin', modalFichaCat);
+      }
+
       document.getElementById('modal-video').src = limparEspacos(noticia.videoPrincipal);
       document.getElementById('modal-noticia').style.display = 'block';
 
@@ -146,7 +165,6 @@
 
     window.curtirNoticia = async (idNoticia) => {
       try {
-        // Atualização OTIMISTA
         const spanCurtidas = document.querySelector(`#btn-curtir-${idNoticia} .num-like`);
         if(spanCurtidas) {
            let atual = parseInt(spanCurtidas.innerText) || 0;
@@ -192,8 +210,6 @@
         const shareUrl = `${baseUrl}?id=${encodeURIComponent(news.id)}`;
 
         if (artigoExistente) {
-            // --- MODO ATUALIZAÇÃO ---
-            // Atualiza apenas os números, mantendo o iframe intacto
             const spanLike = artigoExistente.querySelector('.num-like');
             if(spanLike) spanLike.innerText = news.curtidas || 0;
 
@@ -201,7 +217,22 @@
             if(spanView) spanView.innerText = news.visualizacoes || 0;
 
         } else {
-            // --- MODO CRIAÇÃO ---
+            let fichaCategoriaHtml = '';
+            if (news.fichaCategoria) {
+                fichaCategoriaHtml = `
+                <div class="ficha-categoria" style="border-left: 4px solid ${news.fichaCategoria.cor};">
+                    <img src="${limparEspacos(news.fichaCategoria.perfilImg)}" alt="Imagem do editor">
+                    <div class="ficha-info">
+                        ${news.fichaCategoria.info.map(item => `
+                            <div class="info-item">
+                                <span class="info-label">${item.label}:</span>
+                                <span class="info-valor">${item.valor}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>`;
+            }
+
             const html = `
             <article class="destaque-secao" id="artigo-${news.id}" style="--tema-cor: ${news.cor}">
               <div class="destaque-padding">
@@ -217,6 +248,8 @@
                     </div>
                   </div>
                 </div>
+
+                ${fichaCategoriaHtml}
 
                 <p class="destaque-resumo">${news.resumo}</p>
                 <a href="${news.linkArtigo}" class="btn-ver-artigo"><i class="fa-solid fa-book-open"></i> Ver artigo completo</a>
@@ -340,7 +373,7 @@
     }
     #modal-video { width: 100%; aspect-ratio: 16 / 9; margin: 14px 0; border: none; }
 
-    /* Dropdowns gerais (mantidos para o header, removidos do botão útil) */
+    /* Dropdowns gerais */
     .destaque-acoes .dropdown-conteudo, 
     .menu-opcoes-container .dropdown-conteudo {
         display: none;
@@ -403,6 +436,46 @@
 
     .container-comentarios-dinamico {
         margin: 7px 10.5px 17.5px 10.5px;
+    }
+
+    /* --- FICHA DA CATEGORIA --- */
+    .ficha-categoria {
+        background: #fff9f0;
+        border-radius: 6px;
+        margin: 6px 0;
+        padding: 7px 10px;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 9px;
+        border-left: 4px solid; /* Cor definida inline — não precisa de !important */
+    }
+
+    .ficha-categoria img {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .ficha-categoria .ficha-info {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        max-width: 100%;
+        overflow-x: auto;
+        padding-bottom: 2px;
+    }
+
+    .ficha-categoria .info-item {
+        display: flex;
+        align-items: baseline;
+        gap: 3px;
+        white-space: nowrap;
+    }
+
+    .ficha-categoria .info-label {
+        font-weight: 600;
     }
   </style>
 </div>
