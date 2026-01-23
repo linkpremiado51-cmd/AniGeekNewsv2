@@ -23,7 +23,6 @@ const estilosComentarios = `
     .input-wrapper-geek input { flex: 1; background: transparent; border: none; outline: none; font-size: 15px; }
     .btn-send-geek { background: none; border: none; color: var(--tema-cor, #e63946); cursor: pointer; font-size: 18px; }
     
-    /* Card de Comentário Real */
     .comment-card { display: flex; gap: 12px; margin-bottom: 20px; animation: fadeIn 0.3s ease; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     .user-avatar { width: 35px; height: 35px; border-radius: 50%; background: #ddd; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; flex-shrink: 0; }
@@ -74,21 +73,31 @@ function inicializarComentarios() {
     const containers = document.querySelectorAll('.container-comentarios-dinamico');
 
     containers.forEach(container => {
-        if (container.children.length > 0) return;
+        // ESSENCIAL: Evita duplicar a interface se a função for chamada múltiplas vezes
+        if (container.getAttribute('data-loaded') === 'true') return;
 
         const noticiaId = container.getAttribute('data-noticia-id');
+        if (!noticiaId) return;
+
         container.innerHTML = htmlBase;
+        container.setAttribute('data-loaded', 'true');
 
         const modal = container.querySelector('.modal-geek-overlay');
         const listaFluxo = container.querySelector('.lista-comentarios-fluxo');
         const input = container.querySelector('.input-comentario-real');
         const btnSend = container.querySelector('.btn-send-geek');
 
-        // 1. Abrir/Fechar Modal
-        container.querySelector('.comments-trigger-bar').onclick = () => modal.classList.add('active');
-        container.querySelector('.btn-geek-close').onclick = () => modal.classList.remove('active');
+        container.querySelector('.comments-trigger-bar').onclick = (e) => {
+            e.preventDefault();
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        };
 
-        // 2. Ouvir Comentários do Firebase (Sub-coleção)
+        container.querySelector('.btn-geek-close').onclick = () => {
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        };
+
         const path = `analises/${noticiaId}/comentarios`;
         const q = query(collection(db, path), orderBy("data", "asc"));
 
@@ -101,23 +110,21 @@ function inicializarComentarios() {
                         <div class="user-avatar" style="background: #555">G</div>
                         <div class="comment-content">
                             <strong class="user-name">Geek Anonimo</strong>
-                            <p class="user-text">${c.texto}</p>
+                            <p class="user-text">${c.texto || ""}</p>
                         </div>
                     </div>
                 `;
             }).join('') || '<p style="text-align:center; color:#999; margin-top:20px;">Ninguém comentou ainda.</p>';
             
-            // Scroll para o final quando chegar novo comentário
             const body = container.querySelector('.modal-geek-body');
             body.scrollTop = body.scrollHeight;
         });
 
-        // 3. Função para Enviar
         const enviarComentario = async () => {
             const texto = input.value.trim();
             if (!texto) return;
 
-            input.value = ""; // Limpa campo
+            input.value = "";
             try {
                 await addDoc(collection(db, path), {
                     texto: texto,
@@ -132,4 +139,8 @@ function inicializarComentarios() {
     });
 }
 
+// Expõe para o window para que o navegacao.js possa reativar
+window.inicializarComentarios = inicializarComentarios;
+
+// Execução inicial
 inicializarComentarios();
