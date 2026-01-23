@@ -143,6 +143,21 @@
       }
     }
 
+    // --- LÓGICA DE INJEÇÃO DO MÓDULO EXTERNO ---
+    async function injetarComentariosDinamicos() {
+      const containers = document.querySelectorAll('.container-comentarios-dinamico');
+      if (containers.length === 0) return;
+      
+      try {
+        // Importa o script de comentários como um módulo
+        await import('./comentarios/comentarios.js');
+        console.log("Módulo de comentários carregado.");
+      } catch (err) {
+        console.error("Erro ao carregar o script de comentários:", err);
+      }
+    }
+
+    // --- RENDERIZAÇÃO PRINCIPAL ---
     function renderizarNoticias() {
       const container = document.getElementById('container-principal');
       const btnPaginacao = document.getElementById('pagination-control');
@@ -228,6 +243,9 @@
         </article>
       `;
       }).join('');
+
+      // Aciona o carregamento do script externo após gerar o HTML
+      injetarComentariosDinamicos();
 
       if (noticiasExibidas < todasAsNoticias.length) {
           btnPaginacao.style.display = 'block';
