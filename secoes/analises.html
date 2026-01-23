@@ -44,7 +44,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, collection, onSnapshot, doc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBC_ad4X9OwCHKvcG_pNQkKEl76Zw2tu6o",
@@ -115,6 +115,24 @@
       window.history.pushState({}, '', url);
     };
 
+    async function incrementarVisualizacao(idNoticia) {
+      try {
+        const noticiaRef = doc(db, "analises", idNoticia);
+        await updateDoc(noticiaRef, { visualizacoes: increment(1) });
+
+        // Atualiza o DOM
+        const spanViews = document.querySelector(`#visualizacoes-${idNoticia} .num`);
+        if(spanViews){
+          let viewsAtual = parseInt(spanViews.innerText) || 0;
+          viewsAtual++;
+          spanViews.innerText = viewsAtual;
+        }
+
+      } catch(err) {
+        console.error("Erro ao incrementar visualizações:", err);
+      }
+    }
+
     function abrirNoticiaEmModal(noticia) {
       document.getElementById('modal-titulo').innerText = noticia.titulo;
       document.getElementById('modal-categoria').innerHTML = `<i class="fa-solid fa-video"></i> ${noticia.categoria}`;
@@ -130,7 +148,28 @@
       document.getElementById('modal-ficha').innerHTML = fichaHtml;
       document.getElementById('modal-video').src = limparEspacos(noticia.videoPrincipal);
       document.getElementById('modal-noticia').style.display = 'block';
+
+      // Incrementa visualizações com pequeno delay para garantir que o DOM esteja pronto
+      setTimeout(() => incrementarVisualizacao(noticia.id), 50);
     }
+
+    window.curtirNoticia = async (idNoticia) => {
+      try {
+        const noticiaRef = doc(db, "analises", idNoticia);
+        await updateDoc(noticiaRef, { curtidas: increment(1) });
+
+        // Atualiza o número de curtidas na tela
+        const spanCurtidas = document.querySelector(`#curtidas-${idNoticia} .num`);
+        if(spanCurtidas){
+          let curtidasAtual = parseInt(spanCurtidas.innerText) || 0;
+          curtidasAtual++;
+          spanCurtidas.innerText = curtidasAtual;
+        }
+
+      } catch(err) {
+        console.error("Erro ao curtir:", err);
+      }
+    };
 
     function verificarNoticiaNaUrl() {
       const urlParams = new URLSearchParams(window.location.search);
@@ -197,7 +236,7 @@
           
           <div class="premium-actions-bar">
               <div class="menu-opcoes-container" tabindex="0" style="position: relative;">
-                <button class="btn-premium-icon">
+                <button class="btn-premium-icon" onclick="curtirNoticia('${news.id}')">
                   <i class="fa-regular fa-thumbs-up"></i> Útil
                 </button>
                 <div class="dropdown-conteudo dropdown-up">
@@ -236,6 +275,11 @@
           </div>
 
           <div class="container-comentarios-dinamico" data-noticia-id="${news.id}"></div>
+
+          <div class="stats-container" style="padding: 7px 10.5px; color: #666; font-size: 8.4px;">
+            <span id="curtidas-${news.id}"><span class="num">${news.curtidas || 0}</span> curtidas</span> |   
+            <span id="visualizacoes-${news.id}"><span class="num">${news.visualizacoes || 0}</span> visualizações</span>
+          </div>
 
         </article>
       `;
