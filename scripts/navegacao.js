@@ -1,20 +1,24 @@
 /* scripts/navegacao.js */
 
-
 const displayPrincipal = document.getElementById('conteudo_de_destaque');
 
 /**
- * Abre a notícia garantindo que o motor de renderização da seção seja injetado corretamente.
- * Utilizado para visualização em "página cheia" (Full Page View).
+ * Ajuste Pro: Garante que o módulo de comentários seja reiniciado
+ * sempre que um novo conteúdo HTML é injetado.
  */
+function reiniciarModuloComentarios() {
+    // Se a função existir globalmente (vinda do comentarios.js), nós a chamamos
+    if (typeof window.inicializarComentarios === 'function') {
+        window.inicializarComentarios();
+    }
+}
+
 async function abrirNoticiaUnica(item) {
     if (!displayPrincipal) return;
 
     try {
-        // 1. Carrega o CSS da seção de origem
         gerenciarCSSDaSecao(item.origem || 'manchetes');
 
-        // 2. Prepara o layout com o botão de Voltar
         displayPrincipal.innerHTML = `
             <div class="foco-noticia-wrapper" style="animation: fadeIn 0.4s ease; max-width: var(--container-w); margin: 0 auto; padding: 20px;">
                 <div class="barra-ferramentas-foco" style="display: flex; justify-content: flex-start; padding-bottom: 20px; border-bottom: 1px dashed var(--border); margin-bottom: 30px;">
@@ -29,7 +33,6 @@ async function abrirNoticiaUnica(item) {
             </div>
         `;
 
-        // 3. Busca o HTML da seção silenciosamente
         const response = await fetch(`./secoes/${item.origem || 'manchetes'}.html`);
         if (!response.ok) throw new Error("Falha ao carregar motor de renderização.");
         const htmlBase = await response.text();
@@ -61,6 +64,9 @@ async function abrirNoticiaUnica(item) {
                 if (container) container.innerHTML = "";
                 window.renderizarNoticias([item]);
                 window.scrollTo({ top: 0, behavior: 'smooth' });
+                
+                // IMPORTANTE: Chama os comentários após renderizar a notícia única
+                setTimeout(reiniciarModuloComentarios, 500); 
             } else if (tentativas < 20) {
                 tentativas++;
                 setTimeout(tentarRenderizar, 150);
@@ -74,75 +80,6 @@ async function abrirNoticiaUnica(item) {
     }
 }
 
-/**
- * Vigia de URL para Links Compartilhados (?id=...)
- * Agora integrado com o Modal Global do index.html
- */
-function verificarLinkCompartilhado() {
-    const params = new URLSearchParams(window.location.search);
-    const idNoticia = params.get('id');
-
-    if (idNoticia) {
-        // Mostra um loader enquanto o Firebase sincroniza
-        if (displayPrincipal) {
-            displayPrincipal.innerHTML = '<div style="text-align: center; padding: 120px; color: var(--text-muted); font-family: sans-serif; letter-spacing: 1px;">BUSCANDO NOTÍCIA...</div>';
-        }
-
-        const checkData = setInterval(() => {
-            if (window.noticiasFirebase && window.noticiasFirebase.length > 0) {
-                const item = window.noticiasFirebase.find(n => n.id === idNoticia);
-                if (item) {
-                    // PRIORIDADE: Abre no Modal Global para não quebrar a navegação de fundo
-                    if (typeof window.abrirModalNoticia === 'function') {
-                        window.abrirModalNoticia(item);
-                        // Carrega a seção de fundo padrão (manchetes) para o site não ficar vazio atrás do modal
-                        carregarSecao('manchetes');
-                    } else {
-                        // Fallback para página cheia caso o modal falhe
-                        abrirNoticiaUnica(item);
-                    }
-                } else {
-                    carregarSecao('manchetes');
-                }
-                clearInterval(checkData);
-            }
-        }, 100);
-        
-        setTimeout(() => clearInterval(checkData), 5000);
-    }
-}
-
-/**
- * Limpa o ID da URL e restaura a visualização da lista
- */
-window.voltarParaLista = function() {
-    const url = new URL(window.location);
-    url.searchParams.delete('id');
-    window.history.pushState({}, '', url);
-
-    const tagAtiva = document.querySelector('.filter-tag.active');
-    const secaoDestino = tagAtiva ? tagAtiva.dataset.section : 'manchetes';
-    
-    carregarSecao(secaoDestino);
-};
-
-/**
- * Gerencia o carregamento de CSS específico
- */
-function gerenciarCSSDaSecao(nome) {
-    const linkAntigo = document.getElementById('css-secao-dinamica');
-    if (linkAntigo) linkAntigo.remove();
-
-    const novoLink = document.createElement('link');
-    novoLink.id = 'css-secao-dinamica';
-    novoLink.rel = 'stylesheet';
-    novoLink.href = `./estilos/secoes/${nome}.css`;
-    document.head.appendChild(novoLink);
-}
-
-/**
- * Carrega dinamicamente o feed de uma seção
- */
 async function carregarSecao(nome) {
     if (!displayPrincipal) return;
 
@@ -157,7 +94,6 @@ async function carregarSecao(nome) {
         const html = await response.text();
         displayPrincipal.innerHTML = html;
 
-        // Re-executa os scripts da seção para renderizar os dados do Firebase
         const scripts = displayPrincipal.querySelectorAll("script");
         scripts.forEach(oldScript => {
             const newScript = document.createElement("script");
@@ -169,12 +105,18 @@ async function carregarSecao(nome) {
 
         window.scrollTo({ top: 0, behavior: 'smooth' });
 
+        /**
+         * AJUSTE PARA COMENTÁRIOS:
+         * Aguarda um pouco a renderização do Firebase para reativar o módulo
+         */
+        setTimeout(reiniciarModuloComentarios, 800);
+
     } catch (err) {
         displayPrincipal.innerHTML = `<div style="text-align:center; padding:100px;">Erro: ${nome} não carregado.</div>`;
     }
 }
 
-// Eventos de clique nas categorias (Filtros)
+// Eventos de clique nas categorias
 document.querySelectorAll('.filter-tag').forEach(tag => {
     tag.addEventListener('click', () => {
         document.querySelectorAll('.filter-tag').forEach(t => t.classList.remove('active'));
@@ -183,21 +125,44 @@ document.querySelectorAll('.filter-tag').forEach(tag => {
     });
 });
 
-window.toggleMobileMenu = function() {
-    const menu = document.getElementById('mobileMenu');
-    if (menu) menu.classList.toggle('active');
-};
-
-// Inicialização
+/**
+ * Inicialização com Simulação de Clique
+ */
 window.addEventListener('DOMContentLoaded', () => {
     const params = new URLSearchParams(window.location.search);
     if (params.has('id')) {
         verificarLinkCompartilhado();
     } else {
-        carregarSecao('manchetes');
+        // AJUSTE: Procura a primeira aba e simula o clique real
+        const primeiraAba = document.querySelector('.filter-tag');
+        if (primeiraAba) {
+            primeiraAba.click();
+        } else {
+            // Fallback caso não ache a tag
+            carregarSecao('manchetes');
+        }
     }
 });
 
-// Exposição global para integração entre arquivos
+// Funções de apoio mantidas
+function gerenciarCSSDaSecao(nome) {
+    const linkAntigo = document.getElementById('css-secao-dinamica');
+    if (linkAntigo) linkAntigo.remove();
+    const novoLink = document.createElement('link');
+    novoLink.id = 'css-secao-dinamica';
+    novoLink.rel = 'stylesheet';
+    novoLink.href = `./estilos/secoes/${nome}.css`;
+    document.head.appendChild(novoLink);
+}
+
+window.voltarParaLista = function() {
+    const url = new URL(window.location);
+    url.searchParams.delete('id');
+    window.history.pushState({}, '', url);
+    const tagAtiva = document.querySelector('.filter-tag.active');
+    const secaoDestino = tagAtiva ? tagAtiva.dataset.section : 'manchetes';
+    carregarSecao(secaoDestino);
+};
+
 window.carregarSecao = carregarSecao;
 window.abrirNoticiaUnica = abrirNoticiaUnica;
