@@ -1,17 +1,18 @@
+<body>
 <div class="destaque-wrapper">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
   <div id="notificacao-novo-artigo">
     <i class="fa-solid fa-satellite-dish"></i>
     <div>
-      <div style="font-size: 10px; font-weight: 800; opacity: 0.8; text-transform: uppercase;">Atualização via Cloud</div>
-      <div id="novo-artigo-titulo" style="font-size: 13px; font-weight: 700;">Conectando ao AniGeek...</div>
+      <div style="font-size: 7px; font-weight: 800; opacity: 0.8; text-transform: uppercase;">Atualização via Cloud</div>
+      <div id="novo-artigo-titulo" style="font-size: 9.1px; font-weight: 700;">Conectando ao AniGeek...</div>
     </div>
   </div>
 
   <div id="container-principal"></div>
   
-  <div id="pagination-control" style="text-align: center; padding: 30px; display: none;">
+  <div id="pagination-control" style="text-align: center; padding: 21px; display: none;">
       <button id="btn-carregar-mais" class="btn-paginacao-geek">
           <i class="fa-solid fa-chevron-down"></i> Carregar mais conteúdos
       </button>
@@ -19,11 +20,11 @@
 
   <div id="notificacao-video">
     <div style="flex: 1;">
-      <div style="font-size: 10px; font-weight: 800; opacity: 0.6; text-transform: uppercase;">Deseja assistir?</div>
-      <div id="notif-titulo" style="font-size: 13px; font-weight: 700;">Título</div>
+      <div style="font-size: 7px; font-weight: 800; opacity: 0.6; text-transform: uppercase;">Deseja assistir?</div>
+      <div id="notif-titulo" style="font-size: 9.1px; font-weight: 700;">Título</div>
     </div>
     <button class="btn-confirmar-video" id="btn-confirmar">Confirmar</button>
-    <i class="fa-solid fa-xmark" style="cursor:pointer; padding: 5px;" onclick="window.fecharNotif()"></i>
+    <i class="fa-solid fa-xmark" style="cursor:pointer; padding: 3.5px;" onclick="window.fecharNotif()"></i>
   </div>
 
   <div id="toast-copiado">Link copiado!</div>
@@ -44,7 +45,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, collection, onSnapshot, doc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBC_ad4X9OwCHKvcG_pNQkKEl76Zw2tu6o",
@@ -115,12 +116,22 @@
       window.history.pushState({}, '', url);
     };
 
+    async function incrementarVisualizacao(idNoticia) {
+      try {
+        const noticiaRef = doc(db, "futebol", idNoticia);
+        await updateDoc(noticiaRef, { visualizacoes: increment(1) });
+      } catch(err) {
+        console.error("Erro ao incrementar visualizações:", err);
+      }
+    }
+
     function abrirNoticiaEmModal(noticia) {
       document.getElementById('modal-titulo').innerText = noticia.titulo;
       document.getElementById('modal-categoria').innerHTML = `<i class="fa-solid fa-video"></i> ${noticia.categoria}`;
       document.getElementById('modal-resumo').innerText = noticia.resumo;
       document.getElementById('modal-link').href = noticia.linkArtigo;
 
+      // Renderizar ficha original (se existir)
       let fichaHtml = "";
       if (noticia.ficha) {
           fichaHtml = noticia.ficha.map(item =>
@@ -128,9 +139,44 @@
           ).join('');
       }
       document.getElementById('modal-ficha').innerHTML = fichaHtml;
+
+      // Renderizar ficha da categoria (se existir)
+      if (noticia.fichaCategoria) {
+        const modalFichaCat = `
+        <div class="ficha-categoria" style="border-left: 4px solid ${noticia.fichaCategoria.cor};">
+            <img src="${limparEspacos(noticia.fichaCategoria.perfilImg)}" alt="Imagem do editor">
+            <div class="ficha-info">
+                ${noticia.fichaCategoria.info.map(item => `
+                    <div class="info-item">
+                        <span class="info-label">${item.label}:</span>
+                        <span class="info-valor">${item.valor}</span>
+                    </div>
+                `).join('')}
+            </div>
+        </div>`;
+        document.getElementById('modal-ficha').insertAdjacentHTML('beforebegin', modalFichaCat);
+      }
+
       document.getElementById('modal-video').src = limparEspacos(noticia.videoPrincipal);
       document.getElementById('modal-noticia').style.display = 'block';
+
+      setTimeout(() => incrementarVisualizacao(noticia.id), 50);
     }
+
+    window.curtirNoticia = async (idNoticia) => {
+      try {
+        const spanCurtidas = document.querySelector(`#btn-curtir-${idNoticia} .num-like`);
+        if(spanCurtidas) {
+           let atual = parseInt(spanCurtidas.innerText) || 0;
+           spanCurtidas.innerText = atual + 1;
+        }
+
+        const noticiaRef = doc(db, "futebol", idNoticia);
+        await updateDoc(noticiaRef, { curtidas: increment(1) });
+      } catch(err) {
+        console.error("Erro ao curtir:", err);
+      }
+    };
 
     function verificarNoticiaNaUrl() {
       const urlParams = new URLSearchParams(window.location.search);
@@ -143,21 +189,14 @@
       }
     }
 
-    // --- LÓGICA DE INJEÇÃO DO MÓDULO EXTERNO ---
     async function injetarComentariosDinamicos() {
       const containers = document.querySelectorAll('.container-comentarios-dinamico');
       if (containers.length === 0) return;
-      
       try {
-        // Importa o script de comentários como um módulo
         await import('./comentarios/comentarios.js');
-        console.log("Módulo de comentários carregado.");
-      } catch (err) {
-        console.error("Erro ao carregar o script de comentários:", err);
-      }
+      } catch (err) { console.error("Erro scripts comentarios", err); }
     }
 
-    // --- RENDERIZAÇÃO PRINCIPAL ---
     function renderizarNoticias() {
       const container = document.getElementById('container-principal');
       const btnPaginacao = document.getElementById('pagination-control');
@@ -166,85 +205,102 @@
       const baseUrl = window.location.origin + window.location.pathname;
       const listaParaExibir = todasAsNoticias.slice(0, noticiasExibidas);
 
-      container.innerHTML = listaParaExibir.map(news => {
+      listaParaExibir.forEach(news => {
+        const artigoExistente = document.getElementById(`artigo-${news.id}`);
         const shareUrl = `${baseUrl}?id=${encodeURIComponent(news.id)}`;
-        const viewCount = Math.floor(Math.random() * 900) + 100 + "K";
 
-        return `
-        <article class="destaque-secao" id="artigo-${news.id}" style="--tema-cor: ${news.cor}">
-          <div class="destaque-padding">
-            <div class="destaque-categoria"><i class="fa-solid fa-hashtag"></i> ${news.categoria}</div>
-            
-            <div class="destaque-header">
-              <h2 class="destaque-titulo">${news.titulo}</h2>
-              <div class="menu-opcoes-container" tabindex="0">
-                <button class="btn-tres-pontos"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-                <div class="dropdown-conteudo header-dropdown">
-                  <a href="#"><i class="fa-regular fa-bookmark"></i> Salvar</a>
-                  <a href="#" onclick="event.preventDefault(); window.copiarLink('${shareUrl}');"><i class="fa-regular fa-copy"></i> Copiar Link</a>
+        if (artigoExistente) {
+            const spanLike = artigoExistente.querySelector('.num-like');
+            if(spanLike) spanLike.innerText = news.curtidas || 0;
+
+            const spanView = artigoExistente.querySelector('.num-view');
+            if(spanView) spanView.innerText = news.visualizacoes || 0;
+
+        } else {
+            let fichaCategoriaHtml = '';
+            if (news.fichaCategoria) {
+                fichaCategoriaHtml = `
+                <div class="ficha-categoria" style="border-left: 4px solid ${news.fichaCategoria.cor};">
+                    <img src="${limparEspacos(news.fichaCategoria.perfilImg)}" alt="Imagem do editor">
+                    <div class="ficha-info">
+                        ${news.fichaCategoria.info.map(item => `
+                            <div class="info-item">
+                                <span class="info-label">${item.label}:</span>
+                                <span class="info-valor">${item.valor}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>`;
+            }
+
+            const html = `
+            <article class="destaque-secao" id="artigo-${news.id}" style="--tema-cor: ${news.cor}">
+              <div class="destaque-padding">
+                <div class="destaque-categoria"><i class="fa-solid fa-hashtag"></i> ${news.categoria}</div>
+                
+                <div class="destaque-header">
+                  <h2 class="destaque-titulo">${news.titulo}</h2>
+                  <div class="menu-opcoes-container" tabindex="0">
+                    <button class="btn-tres-pontos"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                    <div class="dropdown-conteudo header-dropdown">
+                      <a href="#"><i class="fa-regular fa-bookmark"></i> Salvar</a>
+                      <a href="#" onclick="event.preventDefault(); window.copiarLink('${shareUrl}');"><i class="fa-regular fa-copy"></i> Copiar Link</a>
+                    </div>
+                  </div>
+                </div>
+
+                ${fichaCategoriaHtml}
+
+                <p class="destaque-resumo">${news.resumo}</p>
+                <a href="${news.linkArtigo}" class="btn-ver-artigo"><i class="fa-solid fa-book-open"></i> Ver artigo completo</a>
+                
+                <div class="destaque-info-grid">
+                  ${news.ficha ? news.ficha.map(item => `<div class="info-item"><span class="info-label">${item.label}</span><span class="info-valor">${item.valor}</span></div>`).join('') : ''}
                 </div>
               </div>
-            </div>
+              
+              <div class="destaque-media">
+                <iframe id="player-${news.id}" src="${limparEspacos(news.videoPrincipal)}" allowfullscreen></iframe>
+              </div>
+              
+              <div class="premium-actions-bar">
+                  
+                  <button class="btn-premium-icon" id="btn-curtir-${news.id}" onclick="curtirNoticia('${news.id}')">
+                    <i class="fa-regular fa-thumbs-up"></i> Útil (<span class="num-like">${news.curtidas || 0}</span>)
+                  </button>
 
-            <p class="destaque-resumo">${news.resumo}</p>
-            <a href="${news.linkArtigo}" class="btn-ver-artigo"><i class="fa-solid fa-book-open"></i> Ver artigo completo</a>
-            
-            <div class="destaque-info-grid">
-              ${news.ficha ? news.ficha.map(item => `<div class="info-item"><span class="info-label">${item.label}</span><span class="info-valor">${item.valor}</span></div>`).join('') : ''}
-            </div>
-          </div>
-          
-          <div class="destaque-media">
-            <iframe id="player-${news.id}" src="${limparEspacos(news.videoPrincipal)}" allowfullscreen></iframe>
-          </div>
-          
-          <div class="premium-actions-bar">
-              <div class="menu-opcoes-container" tabindex="0" style="position: relative;">
-                <button class="btn-premium-icon">
-                  <i class="fa-regular fa-thumbs-up"></i> Útil
-                </button>
-                <div class="dropdown-conteudo dropdown-up">
-                  <a href="#"><i class="fa-solid fa-circle-play"></i> Curti vídeo</a>
-                  <a href="#"><i class="fa-solid fa-newspaper"></i> Curti artigo</a>
-                  <a href="#"><i class="fa-solid fa-user-pen"></i> Curti editor</a>
-                  <hr>
-                  <a href="#"><i class="fa-solid fa-minus"></i> Ver menos</a>
-                  <a href="#"><i class="fa-solid fa-plus"></i> Ver mais</a>
-                </div>
+                  <button class="btn-premium-icon" onclick="event.preventDefault(); window.shareNews('${news.titulo.replace(/'/g, "\\'")}', '${shareUrl}')">
+                    <i class="fa-solid fa-share-nodes"></i> Compartilhar
+                  </button>
+
+                  <button class="btn-premium-icon btn-stats">
+                    <i class="fa-solid fa-chart-column"></i>
+                    <span class="stats-num num-view">${news.visualizacoes || 0}</span>
+                  </button>
+
+                  <button class="btn-premium-icon btn-monetize">
+                    <i class="fa-regular fa-gem"></i>
+                  </button>
               </div>
 
-              <button class="btn-premium-icon" onclick="event.preventDefault(); window.shareNews('${news.titulo.replace(/'/g, "\\'")}', '${shareUrl}')">
-                <i class="fa-solid fa-share-nodes"></i> Compartilhar
-              </button>
+              <div class="carrossel-temas">
+                <div class="carrossel-header"><span class="temas-label">Vídeos Relacionados</span></div>
+                <div class="temas-scroll-wrapper"><div class="temas-container">
+                    ${news.relacionados ? news.relacionados.map(rel => `
+                      <div class="tema-card" onclick="window.pedirTroca('player-${news.id}', '${rel.idVid}', '${rel.titulo.replace(/'/g, "\\'")}', '${news.cor}')">
+                        <img src="${limparEspacos(rel.thumb)}" class="tema-thumb">
+                        <div class="tema-titulo">${rel.titulo}</div>
+                      </div>`).join('') : ''}
+                </div></div>
+              </div>
 
-              <button class="btn-premium-icon btn-stats" onclick="alert('${viewCount} visualizações')">
-                <i class="fa-solid fa-chart-column"></i>
-                <span class="stats-num">${viewCount}</span>
-              </button>
+              <div class="container-comentarios-dinamico" data-noticia-id="${news.id}"></div>
+            </article>
+            `;
+            container.insertAdjacentHTML('beforeend', html);
+        }
+      });
 
-              <button class="btn-premium-icon btn-monetize" onclick="alert('Você ganhou pontos Geek!')">
-                <i class="fa-regular fa-gem"></i>
-              </button>
-          </div>
-
-          <div class="carrossel-temas">
-            <div class="carrossel-header"><span class="temas-label">Vídeos Relacionados</span></div>
-            <div class="temas-scroll-wrapper"><div class="temas-container">
-                ${news.relacionados ? news.relacionados.map(rel => `
-                  <div class="tema-card" onclick="window.pedirTroca('player-${news.id}', '${rel.idVid}', '${rel.titulo.replace(/'/g, "\\'")}', '${news.cor}')">
-                    <img src="${limparEspacos(rel.thumb)}" class="tema-thumb">
-                    <div class="tema-titulo">${rel.titulo}</div>
-                  </div>`).join('') : ''}
-            </div></div>
-          </div>
-
-          <div class="container-comentarios-dinamico" data-noticia-id="${news.id}"></div>
-
-        </article>
-      `;
-      }).join('');
-
-      // Aciona o carregamento do script externo após gerar o HTML
       injetarComentariosDinamicos();
 
       if (noticiasExibidas < todasAsNoticias.length) {
@@ -284,63 +340,67 @@
   </script>
 
   <style>
-    /* --- CSS DO MODAL DE PESQUISA --- */
+    /* Estilo Ajustado para Stats mais visíveis */
+    .btn-stats .stats-num { 
+        font-size: 9.8px; 
+        font-weight: 800; 
+        opacity: 1; 
+        color: #333;
+    }
+
     #modal-noticia {
       display: none;
       position: fixed;
       top: 0; left: 0; width: 100vw; height: 100vh;
       background: rgba(0,0,0,0.9);
       z-index: 99999;
-      padding: 20px;
+      padding: 14px;
       overflow-y: auto;
     }
     #modal-conteudo {
       background: white;
       color: #121212;
-      max-width: 900px;
-      margin: 40px auto;
-      padding: 30px;
-      border-radius: 8px;
+      max-width: 630px;
+      margin: 28px auto;
+      padding: 21px;
+      border-radius: 5.6px;
       position: relative;
     }
     #modal-fechar {
-      position: absolute; top: 15px; right: 15px;
-      background: #eee; border: none; width: 32px; height: 32px;
-      border-radius: 50%; font-size: 18px; cursor: pointer;
+      position: absolute; top: 10.5px; right: 10.5px;
+      background: #eee; border: none; width: 22.4px; height: 22.4px;
+      border-radius: 50%; font-size: 12.6px; cursor: pointer;
     }
-    #modal-video { width: 100%; aspect-ratio: 16 / 9; margin: 20px 0; border: none; }
+    #modal-video { width: 100%; aspect-ratio: 16 / 9; margin: 14px 0; border: none; }
 
-    /* --- CSS GLOBAL --- */
+    /* Dropdowns gerais */
     .destaque-acoes .dropdown-conteudo, 
     .menu-opcoes-container .dropdown-conteudo {
         display: none;
         position: absolute;
         background: white;
-        min-width: 170px;
-        box-shadow: 0px 8px 20px rgba(0,0,0,0.15);
+        min-width: 119px;
+        box-shadow: 0px 5.6px 14px rgba(0,0,0,0.15);
         z-index: 100;
-        border-radius: 12px;
+        border-radius: 8.4px;
         overflow: hidden;
         border: 1px solid #eee;
     }
-    .header-dropdown { top: 100%; right: 0; margin-top: 5px; }
-    .dropdown-up { bottom: 110%; top: auto; left: 0; margin-bottom: 8px; }
+    .header-dropdown { top: 100%; right: 0; margin-top: 3.5px; }
     .menu-opcoes-container:focus-within .dropdown-conteudo { display: block; }
     
     .dropdown-conteudo a {
-        color: #333; padding: 12px 16px; text-decoration: none;
-        display: flex; align-items: center; gap: 10px; font-size: 13px;
+        color: #333; padding: 8.4px 11.2px; text-decoration: none;
+        display: flex; align-items: center; gap: 7px; font-size: 9.1px;
         border-bottom: 1px solid #f5f5f5; font-weight: 500;
     }
-    .dropdown-conteudo a:hover { background-color: #f9f9f9; color: var(--primary); }
-    .dropdown-conteudo hr { margin: 0; border: none; border-top: 1px solid #eee; }
+    .dropdown-conteudo a:hover { background-color: #f9f9f9; color: var(--tema-cor); }
 
-    /* --- BARRA PREMIUM DE AÇÕES --- */
     .premium-actions-bar {
         display: flex;
         align-items: center;
-        padding: 12px 15px;
-        gap: 10px;
+        padding: 8.4px 10.5px;
+        gap: 7px;
         border-top: 1px solid #f0f0f0;
         background: #fff;
         overflow-x: auto;
@@ -349,36 +409,74 @@
     .btn-premium-icon {
         background: #f8f9fa;
         border: 1px solid transparent;
-        padding: 8px 14px;
-        border-radius: 20px;
-        font-size: 12px;
+        padding: 5.6px 9.8px;
+        border-radius: 14px;
+        font-size: 8.4px;
         font-weight: 700;
         color: #444;
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 5.6px;
         cursor: pointer;
         transition: all 0.2s ease;
         white-space: nowrap;
     }
     .btn-premium-icon:hover { background: #e9ecef; border-color: #dee2e6; }
     
-    .btn-stats { background: transparent; border: 1px solid #eee; }
-    .btn-stats .stats-num { font-size: 11px; opacity: 0.8; }
+    .btn-stats { background: transparent; border: 1px solid #eee; cursor: default; }
     .btn-monetize { color: #d4af37; background: #fffcf0; border: 1px solid #fae19d; }
 
-    /* --- PAGINAÇÃO ESTILIZADA --- */
     .btn-paginacao-geek {
         background: #212529; color: white; border: none;
-        padding: 12px 30px; border-radius: 30px;
-        font-weight: bold; cursor: pointer; font-size: 13px;
-        text-transform: uppercase; letter-spacing: 0.5px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        padding: 8.4px 21px; border-radius: 21px;
+        font-weight: bold; cursor: pointer; font-size: 9.1px;
+        text-transform: uppercase; letter-spacing: 0.35px;
+        box-shadow: 0 2.8px 7px rgba(0,0,0,0.2);
     }
 
-    /* CONTAINER DINÂMICO DE COMENTÁRIOS */
     .container-comentarios-dinamico {
-        margin: 10px 15px 25px 15px;
+        margin: 7px 10.5px 17.5px 10.5px;
+    }
+
+    /* --- FICHA DA CATEGORIA --- */
+    .ficha-categoria {
+        background: #fff9f0;
+        border-radius: 6px;
+        margin: 6px 0;
+        padding: 7px 10px;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 9px;
+        border-left: 4px solid; /* Cor definida inline — não precisa de !important */
+    }
+
+    .ficha-categoria img {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .ficha-categoria .ficha-info {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        max-width: 100%;
+        overflow-x: auto;
+        padding-bottom: 2px;
+    }
+
+    .ficha-categoria .info-item {
+        display: flex;
+        align-items: baseline;
+        gap: 3px;
+        white-space: nowrap;
+    }
+
+    .ficha-categoria .info-label {
+        font-weight: 600;
     }
   </style>
 </div>
+</body>
