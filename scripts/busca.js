@@ -1,5 +1,4 @@
 
-          
                               /* scripts/busca.js */
 
 const inputBusca = document.getElementById('input-busca-global');
