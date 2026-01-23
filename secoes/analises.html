@@ -131,7 +131,6 @@
       document.getElementById('modal-resumo').innerText = noticia.resumo;
       document.getElementById('modal-link').href = noticia.linkArtigo;
 
-      // Renderizar ficha original (se existir)
       let fichaHtml = "";
       if (noticia.ficha) {
           fichaHtml = noticia.ficha.map(item =>
@@ -140,7 +139,6 @@
       }
       document.getElementById('modal-ficha').innerHTML = fichaHtml;
 
-      // Renderizar ficha da categoria (se existir)
       if (noticia.fichaCategoria) {
         const modalFichaCat = `
         <div class="ficha-categoria" style="border-left: 4px solid ${noticia.fichaCategoria.cor};">
@@ -212,10 +210,8 @@
         if (artigoExistente) {
             const spanLike = artigoExistente.querySelector('.num-like');
             if(spanLike) spanLike.innerText = news.curtidas || 0;
-
             const spanView = artigoExistente.querySelector('.num-view');
             if(spanView) spanView.innerText = news.visualizacoes || 0;
-
         } else {
             let fichaCategoriaHtml = '';
             if (news.fichaCategoria) {
@@ -264,20 +260,16 @@
               </div>
               
               <div class="premium-actions-bar">
-                  
                   <button class="btn-premium-icon" id="btn-curtir-${news.id}" onclick="curtirNoticia('${news.id}')">
                     <i class="fa-regular fa-thumbs-up"></i> Útil (<span class="num-like">${news.curtidas || 0}</span>)
                   </button>
-
                   <button class="btn-premium-icon" onclick="event.preventDefault(); window.shareNews('${news.titulo.replace(/'/g, "\\'")}', '${shareUrl}')">
                     <i class="fa-solid fa-share-nodes"></i> Compartilhar
                   </button>
-
                   <button class="btn-premium-icon btn-stats">
                     <i class="fa-solid fa-chart-column"></i>
                     <span class="stats-num num-view">${news.visualizacoes || 0}</span>
                   </button>
-
                   <button class="btn-premium-icon btn-monetize">
                     <i class="fa-regular fa-gem"></i>
                   </button>
@@ -294,19 +286,20 @@
                 </div></div>
               </div>
 
-              <div class="carrossel-produtos">
-                <div class="carrossel-header"><span class="produtos-label"><i class="fa-solid fa-cart-shopping"></i> Produtos Recomendados</span></div>
-                <div class="produtos-scroll-wrapper">
-                  <div class="produtos-container">
+              <div class="secao-produtos-banner">
+                <div class="banner-header"><i class="fa-solid fa-cart-shopping"></i> Produtos Recomendados</div>
+                <div class="banner-lista">
                     ${news.produtos ? news.produtos.map(prod => `
-                      <a href="${limparEspacos(prod.link)}" target="_blank" class="produto-card">
-                        <img src="${limparEspacos(prod.img)}" class="produto-thumb">
-                        <div class="produto-info">
-                          <div class="produto-titulo">${prod.nome}</div>
-                          <div class="btn-comprar">Ver Preço</div>
+                      <a href="${limparEspacos(prod.link)}" target="_blank" class="banner-produto-item">
+                        <div class="banner-img-box">
+                          <img src="${limparEspacos(prod.img)}" class="banner-thumb">
+                        </div>
+                        <div class="banner-info">
+                          <div class="banner-titulo">${prod.nome}</div>
+                          <div class="banner-desc">${prod.desc || 'Item selecionado especialmente para você pela nossa equipe Geek.'}</div>
+                          <div class="banner-link-fake">Ver na loja <i class="fa-solid fa-chevron-right"></i></div>
                         </div>
                       </a>`).join('') : ''}
-                  </div>
                 </div>
               </div>
 
@@ -389,8 +382,6 @@
     }
     #modal-video { width: 100%; aspect-ratio: 16 / 9; margin: 14px 0; border: none; }
 
-    /* Dropdowns gerais */
-    .destaque-acoes .dropdown-conteudo, 
     .menu-opcoes-container .dropdown-conteudo {
         display: none;
         position: absolute;
@@ -454,7 +445,6 @@
         margin: 7px 10.5px 17.5px 10.5px;
     }
 
-    /* --- FICHA DA CATEGORIA --- */
     .ficha-categoria {
         background: #fff9f0;
         border-radius: 6px;
@@ -490,20 +480,102 @@
         white-space: nowrap;
     }
 
-    .ficha-categoria .info-label {
-        font-weight: 600;
+    .ficha-categoria .info-label { font-weight: 600; }
+
+    /* --- NOVOS ESTILOS: PRODUTOS TIPO BANNER --- */
+    .secao-produtos-banner {
+        margin: 14px 10.5px;
+        padding: 12px;
+        background: #fff;
+        border: 1px solid #f0f0f0;
+        border-radius: 12px;
+    }
+    .banner-header {
+        font-size: 10px;
+        font-weight: 800;
+        color: #999;
+        text-transform: uppercase;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .banner-lista { display: flex; flex-direction: column; gap: 10px; }
+    
+    .banner-produto-item {
+        display: flex;
+        text-decoration: none;
+        background: #fafafa;
+        border: 1px solid #eee;
+        border-radius: 10px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+    .banner-produto-item:hover {
+        transform: translateY(-2px);
+        background: #fff;
+        border-color: var(--tema-cor);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+    
+    .banner-img-box {
+        width: 95px;
+        min-width: 95px;
+        height: 95px;
+        background: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 8px;
+    }
+    .banner-thumb {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+    
+    .banner-info {
+        padding: 10px 14px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        flex: 1;
+    }
+    .banner-titulo {
+        font-size: 11.5px;
+        font-weight: 800;
+        color: #1a1a1a;
+        margin-bottom: 3px;
+        line-height: 1.2;
+    }
+    .banner-desc {
+        font-size: 9px;
+        color: #777;
+        margin-bottom: 8px;
+        line-height: 1.4;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    .banner-link-fake {
+        font-size: 9px;
+        font-weight: 700;
+        color: var(--tema-cor);
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        text-transform: uppercase;
     }
 
-    /* --- CARROSSEL DE PRODUTOS --- */
-    .carrossel-produtos { margin: 10px 10.5px; background: #f9f9f9; border-radius: 8px; padding: 10px; }
-    .produtos-label { font-size: 10px; font-weight: 800; text-transform: uppercase; color: #333; display: flex; align-items: center; gap: 5px; margin-bottom: 8px; }
-    .produtos-container { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
-    .produto-card { min-width: 120px; max-width: 120px; background: white; border-radius: 6px; overflow: hidden; text-decoration: none; border: 1px solid #eee; transition: transform 0.2s; }
-    .produto-card:hover { transform: translateY(-3px); border-color: var(--tema-cor); }
-    .produto-thumb { width: 100%; height: 100px; object-fit: contain; background: #fff; }
-    .produto-info { padding: 6px; text-align: center; }
-    .produto-titulo { font-size: 9px; font-weight: 700; color: #222; height: 24px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; margin-bottom: 5px; }
-    .btn-comprar { background: #25d366; color: white; font-size: 8px; font-weight: 800; padding: 4px; border-radius: 4px; text-transform: uppercase; }
+    /* Carrossel de temas permanece original */
+    .carrossel-temas { margin: 10.5px; }
+    .carrossel-header { margin-bottom: 7px; }
+    .temas-label { font-size: 9.1px; font-weight: 800; text-transform: uppercase; opacity: 0.5; }
+    .temas-container { display: flex; gap: 10.5px; overflow-x: auto; scrollbar-width: none; }
+    .tema-card { min-width: 105px; cursor: pointer; }
+    .tema-thumb { width: 105px; height: 59.5px; border-radius: 5.6px; object-fit: cover; }
+    .tema-titulo { font-size: 8.4px; font-weight: 700; margin-top: 3.5px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
   </style>
 </div>
 </body>
