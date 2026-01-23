@@ -1,4 +1,15 @@
-/* ======================================================
+
+                        <!DOCTYPE html>
+                        <html lang="en">
+                        <head>
+                            <meta charset="UTF-8">
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <style>
+                body {
+                  background-color: white; /* Ensure the iframe has a white background */
+                }
+
+                /* ======================================================
    SEARCH & FILTER BAR — ENTERPRISE MEDIA GRADE
 ====================================================== */
 
@@ -14,7 +25,7 @@
 .search-bar-inner {
     max-width: var(--container-w);
     margin: 0 auto;
-    padding: 14px 24px 10px;
+    padding: 9.8px 16.8px 7px;
 }
 
 /* ======================================================
@@ -23,9 +34,9 @@
 .search-box {
     display: flex;
     align-items: center;
-    gap: 14px;
-    height: 48px;
-    padding: 0 16px;
+    gap: 9.8px;
+    height: 33.6px;
+    padding: 0 11.2px;
 
     background: var(--bg);
     border: 1px solid var(--border);
@@ -41,7 +52,7 @@
 
 /* Ícone */
 .search-box i {
-    font-size: 14px;
+    font-size: 9.8px;
     color: var(--text-muted);
 }
 
@@ -52,10 +63,10 @@
     border: none;
     outline: none;
     background: transparent;
-    font-size: 14px;
+    font-size: 9.8px;
     font-weight: 700;
     color: var(--text-main);
-    letter-spacing: .2px;
+    letter-spacing: .14px;
 }
 
 /* ======================================================
@@ -64,8 +75,8 @@
 #search-results-surface {
     position: absolute;
     top: 100%;
-    left: 24px;
-    right: 24px;
+    left: 16.8px;
+    right: 16.8px;
     background: var(--card-bg);
     border: 1px solid var(--border);
     border-top: none;
@@ -78,8 +89,8 @@
 /* Linha */
 .result-item-list {
     display: flex;
-    gap: 16px;
-    padding: 14px 18px;
+    gap: 11.2px;
+    padding: 9.8px 12.6px;
     cursor: pointer;
     border-bottom: 1px solid var(--border);
     transition: background .12s ease;
@@ -96,8 +107,8 @@ body.dark-mode .result-item-list:hover {
 
 /* Thumb */
 .result-img {
-    width: 96px;
-    height: 56px;
+    width: 67.2px;
+    height: 39.2px;
     object-fit: cover;
     flex-shrink: 0;
 }
@@ -111,16 +122,16 @@ body.dark-mode .result-item-list:hover {
 
 /* Categoria */
 .result-cat {
-    font-size: 10px;
+    font-size: 7px;
     font-weight: 900;
-    letter-spacing: 1px;
+    letter-spacing: 0.7px;
     text-transform: uppercase;
     color: var(--primary);
 }
 
 /* Título */
 .result-title {
-    font-size: 14px;
+    font-size: 9.8px;
     font-weight: 800;
     color: var(--text-main);
     line-height: 1.25;
@@ -132,9 +143,9 @@ body.dark-mode .result-item-list:hover {
 .filter-scroller {
     max-width: var(--container-w);
     margin: 0 auto;
-    padding: 10px 24px 14px;
+    padding: 7px 16.8px 9.8px;
     display: flex;
-    gap: 10px;
+    gap: 7px;
     overflow-x: auto;
     border-bottom: 1px solid var(--border);
     background: var(--card-bg);
@@ -144,10 +155,10 @@ body.dark-mode .result-item-list:hover {
 .filter-tag {
     background: transparent;
     border: 1px solid var(--border);
-    padding: 8px 14px;
-    font-size: 11px;
+    padding: 5.6px 9.8px;
+    font-size: 7.7px;
     font-weight: 900;
-    letter-spacing: .7px;
+    letter-spacing: .49px;
     text-transform: uppercase;
     cursor: pointer;
     color: var(--text-main);
@@ -167,3 +178,16 @@ body.dark-mode .result-item-list:hover {
     border-color: var(--primary);
     color: #fff;
 }
+
+
+              </style>
+                        </head>
+                        <body>
+                            
+
+              <script>
+                              
+              </script>
+                        </body>
+                        </html>
+                    
