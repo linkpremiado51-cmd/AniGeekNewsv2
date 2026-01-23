@@ -1,4 +1,15 @@
-/* --- CONFIGURAÇÕES GLOBAIS E VARIÁVEIS --- */
+
+                        <!DOCTYPE html>
+                        <html lang="en">
+                        <head>
+                            <meta charset="UTF-8">
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <style>
+                body {
+                  background-color: white; /* Ensure the iframe has a white background */
+                }
+
+                /* --- CONFIGURAÇÕES GLOBAIS E VARIÁVEIS --- */
 :root {
     --nyt-black: #121212;
     --nyt-ink: #202020;
@@ -17,9 +28,9 @@
     --border: #ddd;
     --img-filter: grayscale(15%) contrast(95%) sepia(5%);
     --img-hover: grayscale(0%) contrast(100%) sepia(0%);
-    --header-h: 70px;
+    --header-h: 49px;
     --radius: 0px;
-    --container-w: 1200px;
+    --container-w: 840px;
     --ease-editorial: cubic-bezier(0.25, 0.46, 0.45, 0.94);
     --duration: 0.4s;
     --font-serif: "Merriweather", Georgia, serif;
@@ -28,7 +39,7 @@
     --font-logo: "Franklin Gothic", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
-/* --- MODo ESCURO --- */
+/* --- MODO ESCURO --- */
 body.dark-mode {
     --bg: #111;
     --card-bg: #111;
@@ -65,7 +76,7 @@ body {
     position: fixed;
     top: 0;
     left: 0;
-    height: 3px;
+    height: 2.1px;
     background: var(--primary);
     width: 0%;
     z-index: 1001;
@@ -74,9 +85,9 @@ body {
 
 .back-to-top {
     position: fixed;
-    bottom: 30px;
-    right: 30px;
-    padding: 15px;
+    bottom: 21px;
+    right: 21px;
+    padding: 10.5px;
     background: var(--text-main);
     color: var(--bg);
     border: none;
@@ -86,3 +97,15 @@ body {
     z-index: 100;
 }
 
+
+              </style>
+                        </head>
+                        <body>
+                            
+
+              <script>
+                              
+              </script>
+                        </body>
+                        </html>
+                    
