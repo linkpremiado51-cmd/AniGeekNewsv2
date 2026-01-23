@@ -1,4 +1,22 @@
-(function() {
+
+                        <!DOCTYPE html>
+                        <html lang="en">
+                        <head>
+                            <meta charset="UTF-8">
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <style>
+                body {
+                  background-color: white; /* Ensure the iframe has a white background */
+                }
+
+                
+              </style>
+                        </head>
+                        <body>
+                            
+
+              <script>
+                              (function() {
     // === 1. CONFIGURAÇÃO E ESTADO ===
     let isTabActive = true;
     let interstitialCycle = 0;
@@ -90,9 +108,9 @@
     const b2Modal = b2Overlay.querySelector('.premium-modal');
     const b3 = document.getElementById('p-block-3');
 
-    // === 4. LÓGICA DE EXIBIÇÃO (TEMPOS AJUSTADOS) ===
+    // === 4. LÓGICA DE EXIBIÇÃO (TEMPOS SIGNIFICATIVAMENTE AUMENTADOS) ===
 
-    // Banner Inferior
+    // Banner Inferior - agora fica visível por 45 segundos e reaparece após 10 minutos
     const openB1 = () => {
         b1.style.bottom = '0px';
         setTimeout(() => {
@@ -101,22 +119,22 @@
                 s1.className = 'ad-slot-placeholder slot-leaderboard';
                 b1.style.bottom = '0px';
             }, 800);
-        }, 20000); // Fica visível por 20s
+        }, 45000); // Fica visível por 45s (era 20s)
     };
 
     document.getElementById('p-close-1').onclick = () => {
         b1.style.bottom = '-100%';
-        setTimeout(openB1, 180000); // 3 minutos para reaparecer
+        setTimeout(openB1, 600000); // 10 minutos para reaparecer (era 3 minutos)
     };
 
-    // Banner Superior
+    // Banner Superior - agora reaparece após 15 minutos
     const openB3 = () => { b3.style.top = '0px'; };
     document.getElementById('p-close-3').onclick = () => {
         b3.style.top = '-100%';
-        setTimeout(openB3, 240000); // 4 minutos para reaparecer
+        setTimeout(openB3, 900000); // 15 minutos para reaparecer (era 4 minutos)
     };
 
-    // Interstitial (O mais invasivo)
+    // Interstitial (O mais invasivo) - agora aparece após 5 minutos, dura 15 segundos e reaparece após 30 minutos
     function startInterstitial() {
         setTimeout(() => {
             b2Overlay.style.display = 'flex';
@@ -125,7 +143,7 @@
                 b2Modal.style.transform = 'translateY(0)';
             }, 50);
 
-            let timeLeft = 8; // Tempo fixo mais curto e menos frustrante
+            let timeLeft = 15; // Tempo aumentado para 15 segundos (era 8 segundos)
             const totalDuration = timeLeft;
             
             const btn = document.getElementById('p-close-2');
@@ -158,15 +176,21 @@
                     btn.disabled = true;
                     btn.classList.remove('ready');
                     btn.innerText = "Aguarde";
-                    setTimeout(startInterstitial, 300000); // 5 minutos entre as janelas
+                    setTimeout(startInterstitial, 1800000); // 30 minutos entre as janelas (era 5 minutos)
                 }, 500);
             };
-        }, 120000); // Primeira aparição após 2 minutos
+        }, 300000); // Primeira aparição após 5 minutos (era 2 minutos)
     }
 
-    // === 5. START (DELAY INICIAL) ===
-    setTimeout(openB1, 15000); // 15 segundos após abrir a página
-    setTimeout(openB3, 10000); // 10 segundos após abrir a página
+    // === 5. START (DELAY INICIAL AUMENTADO) ===
+    setTimeout(openB1, 60000); // 1 minuto após abrir a página (era 15 segundos)
+    setTimeout(openB3, 45000); // 45 segundos após abrir a página (era 10 segundos)
     startInterstitial();
 
 })();
+
+
+              </script>
+                        </body>
+                        </html>
+                    
