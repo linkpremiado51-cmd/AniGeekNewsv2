@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Master AniGeek v2.9 - Capa Hero</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee; --secondary: #121212;
+            --success: #28a745; --danger: #dc3545; --bg: #f4f7f6; --warning: #ffc107;
+            --ecommerce: #25d366; --hero: #6366f1;
+        }
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: var(--bg); margin: 0; padding: 10px; color: #333; }
+        
+        .painel-container { max-width: 800px; margin: 0 auto; background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+        
+        .header-painel { background: var(--secondary); color: white; padding: 20px; text-align: center; }
+        .config-bar { background: var(--primary); padding: 15px; display: flex; flex-direction: column; gap: 8px; }
+        .config-bar label { color: white; font-weight: bold; font-size: 14px; }
+        select, input, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; outline: none; }
+        
+        /* SEÇÃO CAPA HERO */
+        .secao-hero { background: #f5f3ff; border: 2px solid var(--hero); padding: 15px; border-radius: 12px; margin-bottom: 20px; margin-top: 10px; }
+        .secao-hero h3 { margin-top: 0; color: var(--hero); font-size: 15px; display: flex; align-items: center; gap: 8px; }
+
+        .replicar-box { background: #fff3cd; padding: 12px; border-radius: 8px; display: flex; align-items: center; gap: 10px; border: 1px solid #ffeeba; margin-top: 5px; }
+        .replicar-box input { width: 22px; height: 22px; cursor: pointer; }
+
+        .secao-especial { background: #eef2ff; border: 2px solid var(--primary); padding: 15px; border-radius: 12px; margin-bottom: 20px; margin-top: 10px; }
+        .secao-especial h3 { margin-top: 0; color: var(--primary); font-size: 15px; display: flex; align-items: center; gap: 8px; }
+
+        .secao-ecommerce { background: #f0fff4; border: 2px solid var(--ecommerce); padding: 15px; border-radius: 12px; margin-bottom: 20px; margin-top: 10px; }
+        .secao-ecommerce h3 { margin-top: 0; color: #1e7e34; font-size: 15px; display: flex; align-items: center; gap: 8px; }
+
+        .lixeira-container { background: #fff5f5; border: 2px solid #feb2b2; padding: 15px; border-radius: 12px; margin-top: 20px; }
+        .lixeira-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; flex-wrap: wrap; gap: 10px; }
+        .lixeira-busca { margin-bottom: 10px; border: 1px solid #feb2b2 !important; }
+        .lista-lixeira { max-height: 200px; overflow-y: auto; background: white; border-radius: 8px; border: 1px solid #eee; padding: 5px; }
+        .item-lixeira { display: flex; align-items: center; justify-content: space-between; padding: 8px; border-bottom: 1px solid #f9f9f9; font-size: 13px; }
+        .item-lixeira:hover { background: #fffafa; }
+        
+        .global-trash-option { background: #fee2e2; padding: 8px; border-radius: 6px; border: 1px solid #ef4444; display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: bold; color: #b91c1c; margin-bottom: 10px; cursor: pointer; }
+
+        .search-box { padding: 15px; background: #fff; border-bottom: 2px solid var(--bg); position: relative; }
+        #sugestoes { position: absolute; width: calc(100% - 30px); background: white; border: 1px solid #ddd; z-index: 100; max-height: 200px; overflow-y: auto; display: none; border-radius: 0 0 8px 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .sugestao-item { padding: 12px; cursor: pointer; border-bottom: 1px solid #eee; font-size: 14px; }
+
+        .doc-list-container { padding: 15px; background: #f9f9f9; }
+        .doc-item { display: flex; justify-content: space-between; align-items: center; background: white; padding: 10px; margin-bottom: 5px; border-radius: 6px; border-left: 4px solid var(--primary); font-size: 13px; }
+        .btn-carregar-pelo-item { background: none; border: 1px solid var(--primary); color: var(--primary); padding: 4px 8px; border-radius: 4px; cursor: pointer; }
+
+        .form-corpo { padding: 20px; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .campo-grupo { margin-bottom: 15px; }
+        .campo-grupo label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #555; }
+        
+        .secao-dinamica { background: #f8f9fa; padding: 12px; border-radius: 10px; border: 1px dotted #ccc; margin-bottom: 15px; }
+        .item-flex { display: flex; gap: 5px; margin-bottom: 8px; }
+        .btn-add { background: var(--secondary); color: white; border: none; padding: 10px; border-radius: 6px; width: 100%; cursor: pointer; font-weight: bold; margin-bottom: 20px; }
+        .btn-remover { background: var(--danger); color: white; border: none; width: 35px; border-radius: 6px; cursor: pointer; }
+
+        .acoes { display: flex; flex-direction: column; gap: 10px; padding: 20px; }
+        .btn-main { padding: 18px; border: none; border-radius: 10px; font-weight: bold; font-size: 16px; cursor: pointer; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-save { background: var(--success); color: white; }
+        .btn-delete { background: var(--danger); color: white; }
+        
+        .status { padding: 15px; text-align: center; font-weight: bold; border-radius: 8px; margin: 10px; display: none; }
+
+        @media (min-width: 600px) { .acoes { flex-direction: row; } .btn-main { flex: 1; } }
+    </style>
+</head>
+<body>
+
+<div class="painel-container">
+    <div class="header-painel">
+        <h2 style="margin:0"><i class="fa-solid fa-gears"></i> Painel Master AniGeek</h2>
+    </div>
+
+   <div class="config-bar">
+    <label>1. Selecione a Coleção de Trabalho:</label>
+    <select id="colecaoAlvo">
+        <option value="analises">Análises Técnicas (Principal)</option>
+        <option value="noticias">Manchetes (Notícias)</option>
+        <option value="futebol">Futebol (Nova)</option>
+        <option value="entrevistas">Entrevistas</option>
+        <option value="lancamentos">Lançamentos</option>
+        <option value="podcast">Podcast</option>
+        <option value="tecnologia">Tecnologia</option>
+        <option value="smartphones">Smartphones</option>
+        <option value="comunidade_ent">Comunidade</option>
+        <option value="analisemercado">analisemercado</option>
+        <option value="manchetes">manchetes</option>
+        <option value="opiniao">opiniao</option>
+        <option value="atores">atores</option>
+        <option value="pod_back">pod_back</option>
+        <option value="cine_bast">cine_bast</option>
+        <option value="pod_ent">pod_ent</option>
+        <option value="cine_bilh">cine_bilh</option>
+        <option value="pod_games">pod_games</option>
+        <option value="cine_lanc">cine_lanc</option>
+        <option value="pod_geek">pod_geek</option>
+        <option value="cine_news">cine_news</option>
+        <option value="pod_pop">pod_pop</option>
+        <option value="cine_prem">cine_prem</option>
+        <option value="pod_recentes">pod_recentes</option>
+        <option value="cine_rev">cine_rev</option>
+        <option value="pod_tech">pod_tech</option>
+        <option value="cinema">cinema</option>
+        <option value="com_dest">com_dest</option>
+        <option value="pro_industria">pro_industria</option>
+        <option value="com_enq">com_enq</option>
+        <option value="rank_animes">rank_animes</option>
+        <option value="rank_ano">rank_ano</option>
+        <option value="com_fan">com_fan</option>
+        <option value="com_op">com_op</option>
+        <option value="rank_filmes">rank_filmes</option>
+        <option value="com_teo">com_teo</option>
+        <option value="rank_jogos">rank_jogos</option>
+        <option value="comparativos">comparativos</option>
+        <option value="rank_series">rank_series</option>
+        <option value="rank_voto">rank_voto</option>
+        <option value="cosp_com">cosp_com</option>
+        <option value="ranking">ranking</option>
+        <option value="cosp_dest">cosp_dest</option>
+        <option value="rev_animes">rev_animes</option>
+        <option value="cosp_ent">cosp_ent</option>
+        <option value="rev_eventos">rev_eventos</option>
+        <option value="cosp_event">cosp_event</option>
+        <option value="rev_filmes">rev_filmes</option>
+        <option value="cosp_fotos">cosp_fotos</option>
+        <option value="rev_geek">rev_geek</option>
+        <option value="cosp_guias">cosp_guias</option>
+        <option value="rev_jogos">rev_jogos</option>
+        <option value="cosplay">cosplay</option>
+        <option value="rev_series">rev_series</option>
+        <option value="criadores">criadores</option>
+        <option value="rev_stream">rev_stream</option>
+        <option value="critica">critica</option>
+        <option value="rev_tech">rev_tech</option>
+        <option value="datas">datas</option>
+        <option value="destaques">destaques</option>
+        <option value="rumores">rumores</option>
+        <option value="devs">devs</option>
+        <option value="editorpick">editorpick</option>
+        <option value="st_apple">st_apple</option>
+        <option value="st_crunchy">st_crunchy</option>
+        <option value="esp_agd">esp_agd</option>
+        <option value="st_disney">st_disney</option>
+        <option value="esp_ana">esp_ana</option>
+        <option value="st_hbo">st_hbo</option>
+        <option value="esp_camp">esp_camp</option>
+        <option value="st_netflix">st_netflix</option>
+        <option value="esp_jog">esp_jog</option>
+        <option value="st_prime">st_prime</option>
+        <option value="esp_res">esp_res</option>
+        <option value="st_semana">st_semana</option>
+        <option value="esp_times">esp_times</option>
+        <option value="st_star">st_star</option>
+        <option value="esports">esports</option>
+        <option value="streaming">streaming</option>
+        <option value="tech_ai">tech_ai</option>
+        <option value="evt_cal">evt_cal</option>
+        <option value="tech_gamestech">tech_gamestech</option>
+        <option value="evt_camp">evt_camp</option>
+        <option value="tech_hard">tech_hard</option>
+        <option value="evt_conv">evt_conv</option>
+        <option value="tech_inov">tech_inov</option>
+        <option value="evt_feiras">evt_feiras</option>
+        <option value="tech_sec">tech_sec</option>
+        <option value="evt_lanc">evt_lanc</option>
+        <option value="tech_soft">tech_soft</option>
+        <option value="evt_live">evt_live</option>
+        <option value="tech_start">tech_start</option>
+        <option value="exclusivos">exclusivos</option>
+        <option value="explicacoes">explicacoes</option>
+        <option value="teorias">teorias</option>
+        <option value="fut_analise">fut_analise</option>
+        <option value="tr_animes">tr_animes</option>
+        <option value="fut_estat">fut_estat</option>
+        <option value="tr_filmes">tr_filmes</option>
+        <option value="fut_inter">fut_inter</option>
+        <option value="tr_gameplay">tr_gameplay</option>
+        <option value="fut_mercado">fut_mercado</option>
+        <option value="tr_jogos">tr_jogos</option>
+        <option value="fut_nacional">fut_nacional</option>
+        <option value="tr_oficiais">tr_oficiais</option>
+        <option value="fut_news">fut_news</option>
+        <option value="tr_series">tr_series</option>
+        <option value="fut_opiniao">fut_opiniao</option>
+        <option value="tr_teasers">tr_teasers</option>
+        <option value="trailers">trailers</option>
+        <option value="impacto">impacto</option>
+        <option value="trending">trending</option>
+        <option value="influencers">influencers</option>
+        <option value="tv">tv</option>
+        <option value="lanc_animes">lanc_animes</option>
+        <option value="tv_bast">tv_bast</option>
+        <option value="lanc_filmes">lanc_filmes</option>
+        <option value="tv_eps">tv_eps</option>
+        <option value="lanc_jogos">lanc_jogos</option>
+        <option value="tv_lanc">tv_lanc</option>
+        <option value="lanc_mangas">lanc_mangas</option>
+        <option value="tv_news">tv_news</option>
+        <option value="lanc_series">lanc_series</option>
+        <option value="tv_renov">tv_renov</option>
+        <option value="lanc_tech">lanc_tech</option>
+        <option value="tv_rev">tv_rev</option>
+        <option value="ultimas">ultimas</option>
+        <option value="maislidas">maislidas</option>
+        <option value="urgente">urgente</option>
+    </select>
+
+    <div class="replicar-box">
+        <input type="checkbox" id="checkReplicar">
+        <label for="checkReplicar"><strong>MODO REPLICAR:</strong> Salvar esta notícia em TODAS as coleções acima.</label>
+    </div>
+</div>
+
+    <div class="search-box">
+        <label style="font-size: 11px; font-weight: bold;">🔍 BUSCA RÁPIDA PARA EDIÇÃO</label>
+        <input type="text" id="inputBusca" placeholder="Pesquisar ID na coleção atual..." autocomplete="off">
+        <div id="sugestoes"></div>
+    </div>
+
+    <div class="doc-list-container">
+        <div id="listaDocumentos"></div>
+        <button id="btnVerMais" class="btn-add" style="background:#eee; color:#333; margin-top:10px; display:none;">Ver mais...</button>
+        
+        <div class="lixeira-container">
+            <div class="lixeira-header">
+                <h4 style="margin:0; color:var(--danger)"><i class="fa-solid fa-trash-can"></i> Lixeira Inteligente</h4>
+                <span><input type="checkbox" id="selectAllLixeira"> <label for="selectAllLixeira" style="font-size:12px">Marcar Tudo</label></span>
+            </div>
+
+            <label class="global-trash-option">
+                <input type="checkbox" id="checkLixeiraGlobal"> 
+                <span><i class="fa-solid fa-earth-americas"></i> MODO GLOBAL: Procurar e apagar em TODAS as coleções</span>
+            </label>
+
+            <input type="text" id="buscaLixeira" class="lixeira-busca" placeholder="Digite o ID exato ou termo para buscar na lixeira...">
+            
+            <div id="listaLixeira" class="lista-lixeira"></div>
+            
+            <button class="btn-main btn-delete" style="margin-top:10px; padding:10px; font-size:13px;" onclick="deletarMarcadosLixeira()">
+                <i class="fa-solid fa-fire"></i> EXCLUIR SELECIONADOS
+            </button>
+        </div>
+    </div>
+
+    <div class="form-corpo">
+        <div class="campo-grupo">
+            <label>ID do Documento:</label>
+            <input type="text" id="docId" placeholder="ex: id-da-noticia-01">
+        </div>
+
+        <div class="secao-hero">
+            <h3><i class="fa-solid fa-image"></i> Capa do Topo (Hero Horizontal)</h3>
+            <div class="campo-grupo">
+                <label>URL da Imagem da Capa:</label>
+                <input type="text" id="capaUrl" placeholder="Link da imagem que pega a horizontal completa...">
+            </div>
+            <div class="campo-grupo">
+                <label>Descrição da Capa (Abaixo da imagem):</label>
+                <textarea id="capaDesc" placeholder="Texto que aparecerá logo abaixo da capa de topo..." rows="2"></textarea>
+            </div>
+        </div>
+
+        <div class="secao-especial">
+            <h3><i class="fa-solid fa-id-badge"></i> Ficha Especial (Auto-preenchimento)</h3>
+            <div class="grid-2">
+                <div class="campo-grupo">
+                    <label>Cor da Ficha:</label>
+                    <input type="color" id="cat-cor" value="#ff0000">
+                </div>
+                <div class="campo-grupo">
+                    <label>URL Imagem Perfil:</label>
+                    <input type="text" id="cat-perfilImg" placeholder="Link da foto do editor...">
+                </div>
+            </div>
+            <label style="font-size: 11px; font-weight: bold; color: var(--primary);">Itens da Ficha (Ex: Seção: Análise):</label>
+            <div id="container-cat-info" class="secao-dinamica" style="border-color: var(--primary); border-style: solid;"></div>
+            <button class="btn-add" style="background: var(--primary); margin-bottom: 5px;" onclick="adicionarCatInfo()">+ Item na Ficha Especial</button>
+        </div>
+
+        <div class="secao-ecommerce">
+            <h3><i class="fa-solid fa-cart-shopping"></i> Produtos Relacionados (Afiliados)</h3>
+            <div id="container-produtos" class="secao-dinamica" style="border-color: var(--ecommerce); border-style: solid;"></div>
+            <button class="btn-add" style="background: var(--ecommerce); margin-bottom: 5px;" onclick="adicionarProduto()">+ Adicionar Produto</button>
+        </div>
+
+        <div class="grid-2">
+            <div class="campo-grupo"><label>Categoria:</label><input type="text" id="categoria"></div>
+            <div class="campo-grupo"><label>Cor Tema:</label><input type="color" id="cor" value="#121212"></div>
+        </div>
+
+        <div class="campo-grupo"><label>Título:</label><input type="text" id="titulo"></div>
+        <div class="campo-grupo"><label>Resumo:</label><textarea id="resumo" rows="2"></textarea></div>
+        <div class="campo-grupo"><label>Link do Artigo:</label><input type="text" id="linkArtigo"></div>
+        <div class="campo-grupo"><label>Vídeo Embed:</label><input type="text" id="videoPrincipal"></div>
+
+        <h3>Ficha Técnica Lateral</h3>
+        <div id="container-ficha" class="secao-dinamica"></div>
+        <button class="btn-add" onclick="adicionarFicha()">+ Ficha</button>
+
+        <h3>Vídeos Relacionados</h3>
+        <div id="container-relacionados" class="secao-dinamica"></div>
+        <button class="btn-add" onclick="adicionarRelacionado()">+ Vídeo</button>
+    </div>
+
+    <div id="msgStatus" class="status"></div>
+
+    <div class="acoes">
+        <button class="btn-main btn-save" onclick="salvarGeral()"><i class="fa-solid fa-cloud-arrow-up"></i> SALVAR TUDO</button>
+        <button class="btn-main btn-delete" onclick="deletarDocumento()"><i class="fa-solid fa-trash"></i> APAGAR DOC</button>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, doc, setDoc, getDoc, deleteDoc, collection, query, getDocs, limit, startAfter, writeBatch } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBC_ad4X9OwCHKvcG_pNQkKEl76Zw2tu6o",
+      authDomain: "anigeeknews.firebaseapp.com",
+      projectId: "anigeeknews",
+      storageBucket: "anigeeknews.firebasestorage.app",
+      messagingSenderId: "769322939926",
+      appId: "1:769322939926:web:6eb91a96a3f74670882737"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    let ultimoDocListado = null;
+    let todosDocumentosIds = []; 
+
+    window.adicionarProduto = (nome = '', link = '', img = '', desc = '') => {
+        const container = document.getElementById('container-produtos');
+        const div = document.createElement('div');
+        div.className = 'secao-dinamica';
+        div.style.border = "1px solid var(--ecommerce)";
+        div.innerHTML = `
+            <div class="campo-grupo"><input type="text" class="p-nome" value="${nome}" placeholder="Nome do Produto"></div>
+            <div class="campo-grupo"><textarea class="p-desc" placeholder="Breve descrição para o banner..." rows="2">${desc}</textarea></div>
+            <div class="campo-grupo"><input type="text" class="p-link" value="${link}" placeholder="Link (Shopee/Amazon)"></div>
+            <div class="item-flex">
+                <input type="text" class="p-img" value="${img}" placeholder="URL da Imagem" style="flex:1">
+                <button class="btn-remover" onclick="this.parentElement.parentElement.remove()">X</button>
+            </div>
+        `;
+        container.appendChild(div);
+    };
+
+    window.adicionarCatInfo = (label = '', valor = '') => {
+        const container = document.getElementById('container-cat-info');
+        const div = document.createElement('div');
+        div.className = 'item-flex';
+        div.innerHTML = `<input type="text" class="cat-label" value="${label}" placeholder="Ex: Seção"><input type="text" class="cat-valor" value="${valor}" placeholder="Ex: Análises"><button class="btn-remover" onclick="this.parentElement.remove()">X</button>`;
+        container.appendChild(div);
+    };
+
+    window.adicionarFicha = (label = '', valor = '') => {
+        const container = document.getElementById('container-ficha');
+        const div = document.createElement('div');
+        div.className = 'item-flex';
+        div.innerHTML = `<input type="text" class="f-label" value="${label}" placeholder="Label"><input type="text" class="f-valor" value="${valor}" placeholder="Valor"><button class="btn-remover" onclick="this.parentElement.remove()">X</button>`;
+        container.appendChild(div);
+    };
+
+    window.adicionarRelacionado = (idVid = '', titulo = '', thumb = '') => {
+        const container = document.getElementById('container-relacionados');
+        const div = document.createElement('div');
+        div.className = 'secao-dinamica';
+        div.innerHTML = `<input type="text" placeholder="ID YouTube" class="r-id" value="${idVid}"><input type="text" placeholder="Título" class="r-titulo" value="${titulo}"><div class="item-flex"><input type="text" placeholder="Thumb" class="r-thumb" value="${thumb}" style="flex:1"><button class="btn-remover" onclick="this.parentElement.parentElement.remove()">X</button></div>`;
+        container.appendChild(div);
+    };
+
+    const buscaLixeira = document.getElementById('buscaLixeira');
+    const checkLixeiraGlobal = document.getElementById('checkLixeiraGlobal');
+    const listaLixeiraDiv = document.getElementById('listaLixeira');
+
+    async function buscarNaLixeira() {
+        const termo = buscaLixeira.value.trim().toLowerCase();
+        const isGlobal = checkLixeiraGlobal.checked;
+        const colecaoAtual = document.getElementById('colecaoAlvo').value;
+        const todasColecoes = Array.from(document.getElementById('colecaoAlvo').options).map(opt => opt.value);
+
+        if (termo.length < 3) {
+            listaLixeiraDiv.innerHTML = '<div style="padding:10px; font-size:11px; color:gray">Digite pelo menos 3 caracteres...</div>';
+            return;
+        }
+
+        listaLixeiraDiv.innerHTML = '<div style="padding:10px; font-size:11px;">Buscando...</div>';
+        let html = '';
+
+        if (isGlobal) {
+            for (const col of todasColecoes) {
+                const docRef = doc(db, col, termo);
+                const snap = await getDoc(docRef);
+                if (snap.exists()) {
+                    html += `<div class="item-lixeira"><span><b>[${col}]</b> ${termo}</span><input type="checkbox" class="check-lixeira" data-id="${termo}" data-col="${col}"></div>`;
+                }
+            }
+        } else {
+            const filtrados = todosDocumentosIds.filter(id => id.includes(termo));
+            filtrados.forEach(id => {
+                html += `<div class="item-lixeira"><span>${id}</span><input type="checkbox" class="check-lixeira" data-id="${id}" data-col="${colecaoAtual}"></div>`;
+            });
+        }
+        listaLixeiraDiv.innerHTML = html || '<div style="padding:10px; font-size:11px;">Nenhum resultado.</div>';
+    }
+
+    buscaLixeira.addEventListener('input', buscarNaLixeira);
+
+    window.deletarMarcadosLixeira = async () => {
+        const selecionados = Array.from(document.querySelectorAll('.check-lixeira:checked'));
+        const todasColecoes = Array.from(document.getElementById('colecaoAlvo').options).map(opt => opt.value);
+        if(selecionados.length === 0) return;
+        if(confirm("Deseja apagar permanentemente?")) {
+            const batch = writeBatch(db);
+            selecionados.forEach(check => {
+                const id = check.getAttribute('data-id');
+                const colOrigem = check.getAttribute('data-col');
+                if(checkLixeiraGlobal.checked) { todasColecoes.forEach(col => batch.delete(doc(db, col, id))); }
+                else { batch.delete(doc(db, colOrigem, id)); }
+            });
+            await batch.commit();
+            mostrarStatus("Excluído!", "var(--danger)");
+            listaLixeiraDiv.innerHTML = ''; carregarLista(true);
+        }
+    };
+
+    const inputBusca = document.getElementById('inputBusca');
+    const sugestoesDiv = document.getElementById('sugestoes');
+
+    inputBusca.addEventListener('input', () => {
+        const termo = inputBusca.value.toLowerCase();
+        if(termo.length < 1) { sugestoesDiv.style.display = 'none'; return; }
+        const filtrados = todosDocumentosIds.filter(id => id.includes(termo)).slice(0, 8);
+        if(filtrados.length > 0) {
+            sugestoesDiv.innerHTML = filtrados.map(id => `<div class="sugestao-item" onclick="carregarPorID('${id}')">${id}</div>`).join('');
+            sugestoesDiv.style.display = 'block';
+        } else { sugestoesDiv.style.display = 'none'; }
+    });
+
+    async function carregarLista(reset = true) {
+        const colecao = document.getElementById('colecaoAlvo').value;
+        const listaDiv = document.getElementById('listaDocumentos');
+        if(reset) { listaDiv.innerHTML = 'Carregando...'; ultimoDocListado = null; todosDocumentosIds = []; }
+        try {
+            const q = reset ? query(collection(db, colecao), limit(20)) : query(collection(db, colecao), startAfter(ultimoDocListado), limit(20));
+            const snap = await getDocs(q);
+            if(reset) listaDiv.innerHTML = '';
+            snap.forEach(d => {
+                todosDocumentosIds.push(d.id);
+                const item = document.createElement('div');
+                item.className = 'doc-item';
+                item.innerHTML = `<span>${d.id}</span> <button class="btn-carregar-pelo-item" onclick="carregarPorID('${d.id}')">Editar</button>`;
+                listaDiv.appendChild(item);
+                ultimoDocListado = d;
+            });
+            document.getElementById('btnVerMais').style.display = snap.size < 20 ? 'none' : 'block';
+        } catch(e) { console.error(e); }
+    }
+
+    window.carregarPorID = async (id) => {
+        const colecao = document.getElementById('colecaoAlvo').value;
+        sugestoesDiv.style.display = 'none';
+        const snap = await getDoc(doc(db, colecao, id));
+        if(snap.exists()){
+            const data = snap.data();
+            document.getElementById('docId').value = id;
+            document.getElementById('categoria').value = data.categoria || '';
+            document.getElementById('titulo').value = data.titulo || '';
+            document.getElementById('resumo').value = data.resumo || '';
+            document.getElementById('cor').value = data.cor || '#121212';
+            document.getElementById('linkArtigo').value = data.linkArtigo || '';
+            document.getElementById('videoPrincipal').value = data.videoPrincipal || '';
+            
+            // CARREGAR CAMPOS HERO
+            document.getElementById('capaUrl').value = data.capaUrl || '';
+            document.getElementById('capaDesc').value = data.capaDesc || '';
+
+            document.getElementById('container-cat-info').innerHTML = '';
+            if(data.fichaCategoria) {
+                document.getElementById('cat-cor').value = data.fichaCategoria.cor || '#ff0000';
+                document.getElementById('cat-perfilImg').value = data.fichaCategoria.perfilImg || '';
+                data.fichaCategoria.info?.forEach(i => adicionarCatInfo(i.label, i.valor));
+            }
+
+            document.getElementById('container-produtos').innerHTML = '';
+            data.produtos?.forEach(p => adicionarProduto(p.nome, p.link, p.img, p.desc));
+
+            document.getElementById('container-ficha').innerHTML = '';
+            data.ficha?.forEach(f => adicionarFicha(f.label, f.valor));
+
+            document.getElementById('container-relacionados').innerHTML = '';
+            data.relacionados?.forEach(r => adicionarRelacionado(r.idVid, r.titulo, r.thumb));
+
+            mostrarStatus("Editando: " + id, "var(--primary)");
+            window.scrollTo({ top: document.getElementById('docId').offsetTop - 50, behavior: 'smooth' });
+        }
+    };
+
+    window.salvarGeral = async () => {
+        const id = document.getElementById('docId').value.trim();
+        const colecaoAtual = document.getElementById('colecaoAlvo').value;
+        if(!id) return alert("ID obrigatório!");
+
+        const dados = {
+            categoria: document.getElementById('categoria').value,
+            titulo: document.getElementById('titulo').value,
+            resumo: document.getElementById('resumo').value,
+            cor: document.getElementById('cor').value,
+            linkArtigo: document.getElementById('linkArtigo').value,
+            videoPrincipal: document.getElementById('videoPrincipal').value,
+            capaUrl: document.getElementById('capaUrl').value, // SALVANDO HERO
+            capaDesc: document.getElementById('capaDesc').value, // SALVANDO DESC HERO
+            fichaCategoria: {
+                cor: document.getElementById('cat-cor').value,
+                perfilImg: document.getElementById('cat-perfilImg').value,
+                info: Array.from(document.querySelectorAll('#container-cat-info .item-flex')).map(el => ({
+                    label: el.querySelector('.cat-label').value,
+                    valor: el.querySelector('.cat-valor').value
+                }))
+            },
+            produtos: Array.from(document.querySelectorAll('#container-produtos .secao-dinamica')).map(el => ({
+                nome: el.querySelector('.p-nome').value,
+                link: el.querySelector('.p-link').value,
+                img: el.querySelector('.p-img').value,
+                desc: el.querySelector('.p-desc').value
+            })),
+            ficha: Array.from(document.querySelectorAll('#container-ficha .item-flex')).map(el => ({ label: el.querySelector('.f-label').value, valor: el.querySelector('.f-valor').value })),
+            relacionados: Array.from(document.querySelectorAll('#container-relacionados .secao-dinamica')).map(el => ({ idVid: el.querySelector('.r-id').value, titulo: el.querySelector('.r-titulo').value, thumb: el.querySelector('.r-thumb').value })),
+            timestamp: new Date().getTime()
+        };
+
+        try {
+            if(document.getElementById('checkReplicar').checked) {
+                const batch = writeBatch(db);
+                Array.from(document.getElementById('colecaoAlvo').options).forEach(opt => {
+                    batch.set(doc(db, opt.value, id), dados, { merge: true });
+                });
+                await batch.commit();
+                mostrarStatus("Replicado!", "var(--success)");
+            } else {
+                await setDoc(doc(db, colecaoAtual, id), dados, { merge: true });
+                mostrarStatus("Salvo!", "var(--success)");
+            }
+            carregarLista(true);
+        } catch (e) { alert("Erro: " + e.message); }
+    };
+
+    window.deletarDocumento = async () => {
+        const id = document.getElementById('docId').value.trim();
+        const colecao = document.getElementById('colecaoAlvo').value;
+        if(!id) return;
+        if(confirm("Deseja apagar este documento?")) {
+            await deleteDoc(doc(db, colecao, id));
+            mostrarStatus("Apagado!", "var(--danger)");
+            carregarLista(true);
+        }
+    };
+
+    function mostrarStatus(txt, cor) {
+        const s = document.getElementById('msgStatus');
+        s.style.display = "block"; s.style.background = cor; s.innerText = txt;
+        setTimeout(() => s.style.display = "none", 3000);
+    }
+
+    document.getElementById('colecaoAlvo').onchange = () => carregarLista(true);
+    document.getElementById('btnVerMais').onclick = () => carregarLista(false);
+    carregarLista(true);
+</script>
+
+</body>
+</html>
