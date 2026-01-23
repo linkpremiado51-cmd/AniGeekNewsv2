@@ -1,4 +1,5 @@
-/* scripts/modal-manager.js */
+
+                              /* scripts/modal-manager.js */
 
 // 1. Injeta a estrutura HTML do modal no Body assim que o script carrega
 const estruturaHTML = `
@@ -10,7 +11,7 @@ const estruturaHTML = `
         <p id="m-resumo"></p>
         <div id="m-ficha"></div>
         <iframe id="m-video" src="" allowfullscreen></iframe>
-        <div style="text-align: center; margin-top: 10px;">
+        <div style="text-align: center; margin-top: 7px;">
             <a id="m-link" href="#" target="_blank" class="btn-ver-artigo-modal">LER ARTIGO COMPLETO</a>
         </div>
     </div>
@@ -79,3 +80,9 @@ window.onclick = function(event) {
         fecharModalGlobal();
     }
 };
+
+
+              </script>
+                        </body>
+                        </html>
+                    
