@@ -118,13 +118,22 @@ async function carregarSecao(nome) {
 
 // Eventos de clique nas categorias
 document.querySelectorAll('.filter-tag').forEach(tag => {
-    tag.addEventListener('click', () => {
-        document.querySelectorAll('.filter-tag').forEach(t => t.classList.remove('active'));
-        tag.classList.add('active');
-        carregarSecao(tag.dataset.section);
-    });
-});
+tag.addEventListener('click', () => {
+document.querySelectorAll('.filter-tag').forEach(t => t.classList.remove('active'));
+tag.classList.add('active');
 
+// Ajusta a coleção do container de comentários
+const container = document.querySelector('.container-comentarios-dinamico');
+if (container) {
+container.setAttribute('data-colecao', tag.dataset.section);
+}
+
+carregarSecao(tag.dataset.section);
+
+// Reinicia os comentários para a aba correta
+setTimeout(reiniciarModuloComentarios, 500);
+});
+});
 /**
  * Inicialização com Simulação de Clique
  */
