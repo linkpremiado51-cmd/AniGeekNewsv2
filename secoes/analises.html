@@ -1,3 +1,4 @@
+<body>
 <div class="destaque-wrapper">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
@@ -115,19 +116,11 @@
       window.history.pushState({}, '', url);
     };
 
+    // Função simplificada para atualizar visualizações sem mexer no DOM complexo aqui
     async function incrementarVisualizacao(idNoticia) {
       try {
         const noticiaRef = doc(db, "analises", idNoticia);
         await updateDoc(noticiaRef, { visualizacoes: increment(1) });
-
-        // Atualiza o DOM
-        const spanViews = document.querySelector(`#visualizacoes-${idNoticia} .num`);
-        if(spanViews){
-          let viewsAtual = parseInt(spanViews.innerText) || 0;
-          viewsAtual++;
-          spanViews.innerText = viewsAtual;
-        }
-
       } catch(err) {
         console.error("Erro ao incrementar visualizações:", err);
       }
@@ -149,23 +142,21 @@
       document.getElementById('modal-video').src = limparEspacos(noticia.videoPrincipal);
       document.getElementById('modal-noticia').style.display = 'block';
 
-      // Incrementa visualizações com pequeno delay para garantir que o DOM esteja pronto
       setTimeout(() => incrementarVisualizacao(noticia.id), 50);
     }
 
+    // Ação de Curtir
     window.curtirNoticia = async (idNoticia) => {
       try {
-        const noticiaRef = doc(db, "analises", idNoticia);
-        await updateDoc(noticiaRef, { curtidas: increment(1) });
-
-        // Atualiza o número de curtidas na tela
-        const spanCurtidas = document.querySelector(`#curtidas-${idNoticia} .num`);
-        if(spanCurtidas){
-          let curtidasAtual = parseInt(spanCurtidas.innerText) || 0;
-          curtidasAtual++;
-          spanCurtidas.innerText = curtidasAtual;
+        // Atualização OTIMISTA (Muda a tela antes do banco de dados responder)
+        const spanCurtidas = document.querySelector(`#btn-curtir-${idNoticia} .num-like`);
+        if(spanCurtidas) {
+           let atual = parseInt(spanCurtidas.innerText) || 0;
+           spanCurtidas.innerText = atual + 1;
         }
 
+        const noticiaRef = doc(db, "analises", idNoticia);
+        await updateDoc(noticiaRef, { curtidas: increment(1) });
       } catch(err) {
         console.error("Erro ao curtir:", err);
       }
@@ -185,15 +176,13 @@
     async function injetarComentariosDinamicos() {
       const containers = document.querySelectorAll('.container-comentarios-dinamico');
       if (containers.length === 0) return;
-      
       try {
         await import('./comentarios/comentarios.js');
-        console.log("Módulo de comentários carregado.");
-      } catch (err) {
-        console.error("Erro ao carregar o script de comentários:", err);
-      }
+      } catch (err) { console.error("Erro scripts comentarios", err); }
     }
 
+    // --- NOVA LÓGICA DE RENDERIZAÇÃO INTELIGENTE ---
+    // Evita recarregar o iframe do YouTube se a notícia já existe
     function renderizarNoticias() {
       const container = document.getElementById('container-principal');
       const btnPaginacao = document.getElementById('pagination-control');
@@ -202,88 +191,105 @@
       const baseUrl = window.location.origin + window.location.pathname;
       const listaParaExibir = todasAsNoticias.slice(0, noticiasExibidas);
 
-      container.innerHTML = listaParaExibir.map(news => {
+      // 1. Limpar notícias que sumiram (opcional, mas seguro)
+      // Se houvesse lógica de deletar, faríamos aqui.
+
+      // 2. Iterar sobre as notícias para criar ou atualizar
+      listaParaExibir.forEach(news => {
+        const artigoExistente = document.getElementById(`artigo-${news.id}`);
         const shareUrl = `${baseUrl}?id=${encodeURIComponent(news.id)}`;
-        const viewCount = Math.floor(Math.random() * 900) + 100 + "K";
 
-        return `
-        <article class="destaque-secao" id="artigo-${news.id}" style="--tema-cor: ${news.cor}">
-          <div class="destaque-padding">
-            <div class="destaque-categoria"><i class="fa-solid fa-hashtag"></i> ${news.categoria}</div>
+        if (artigoExistente) {
+            // --- MODO ATUALIZAÇÃO ---
+            // Se já existe, atualiza SÓ os números. O iframe fica intacto.
             
-            <div class="destaque-header">
-              <h2 class="destaque-titulo">${news.titulo}</h2>
-              <div class="menu-opcoes-container" tabindex="0">
-                <button class="btn-tres-pontos"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-                <div class="dropdown-conteudo header-dropdown">
-                  <a href="#"><i class="fa-regular fa-bookmark"></i> Salvar</a>
-                  <a href="#" onclick="event.preventDefault(); window.copiarLink('${shareUrl}');"><i class="fa-regular fa-copy"></i> Copiar Link</a>
+            // Atualiza likes
+            const spanLike = artigoExistente.querySelector('.num-like');
+            if(spanLike) spanLike.innerText = news.curtidas || 0;
+
+            // Atualiza visualizações
+            const spanView = artigoExistente.querySelector('.num-view');
+            if(spanView) spanView.innerText = news.visualizacoes || 0;
+
+        } else {
+            // --- MODO CRIAÇÃO ---
+            // Se não existe, cria o HTML e adiciona ao final
+            
+            const html = `
+            <article class="destaque-secao" id="artigo-${news.id}" style="--tema-cor: ${news.cor}">
+              <div class="destaque-padding">
+                <div class="destaque-categoria"><i class="fa-solid fa-hashtag"></i> ${news.categoria}</div>
+                
+                <div class="destaque-header">
+                  <h2 class="destaque-titulo">${news.titulo}</h2>
+                  <div class="menu-opcoes-container" tabindex="0">
+                    <button class="btn-tres-pontos"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                    <div class="dropdown-conteudo header-dropdown">
+                      <a href="#"><i class="fa-regular fa-bookmark"></i> Salvar</a>
+                      <a href="#" onclick="event.preventDefault(); window.copiarLink('${shareUrl}');"><i class="fa-regular fa-copy"></i> Copiar Link</a>
+                    </div>
+                  </div>
+                </div>
+
+                <p class="destaque-resumo">${news.resumo}</p>
+                <a href="${news.linkArtigo}" class="btn-ver-artigo"><i class="fa-solid fa-book-open"></i> Ver artigo completo</a>
+                
+                <div class="destaque-info-grid">
+                  ${news.ficha ? news.ficha.map(item => `<div class="info-item"><span class="info-label">${item.label}</span><span class="info-valor">${item.valor}</span></div>`).join('') : ''}
                 </div>
               </div>
-            </div>
+              
+              <div class="destaque-media">
+                <iframe id="player-${news.id}" src="${limparEspacos(news.videoPrincipal)}" allowfullscreen></iframe>
+              </div>
+              
+              <div class="premium-actions-bar">
+                  <div class="menu-opcoes-container" tabindex="0" style="position: relative;">
+                    <button class="btn-premium-icon" id="btn-curtir-${news.id}" onclick="curtirNoticia('${news.id}')">
+                      <i class="fa-regular fa-thumbs-up"></i> Útil (<span class="num-like">${news.curtidas || 0}</span>)
+                    </button>
+                    
+                    <div class="dropdown-conteudo dropdown-up">
+                      <a href="#"><i class="fa-solid fa-circle-play"></i> Curti vídeo</a>
+                      <a href="#"><i class="fa-solid fa-newspaper"></i> Curti artigo</a>
+                      <hr>
+                      <a href="#"><i class="fa-solid fa-minus"></i> Ver menos</a>
+                    </div>
+                  </div>
 
-            <p class="destaque-resumo">${news.resumo}</p>
-            <a href="${news.linkArtigo}" class="btn-ver-artigo"><i class="fa-solid fa-book-open"></i> Ver artigo completo</a>
-            
-            <div class="destaque-info-grid">
-              ${news.ficha ? news.ficha.map(item => `<div class="info-item"><span class="info-label">${item.label}</span><span class="info-valor">${item.valor}</span></div>`).join('') : ''}
-            </div>
-          </div>
-          
-          <div class="destaque-media">
-            <iframe id="player-${news.id}" src="${limparEspacos(news.videoPrincipal)}" allowfullscreen></iframe>
-          </div>
-          
-          <div class="premium-actions-bar">
-              <div class="menu-opcoes-container" tabindex="0" style="position: relative;">
-                <button class="btn-premium-icon" onclick="curtirNoticia('${news.id}')">
-                  <i class="fa-regular fa-thumbs-up"></i> Útil
-                </button>
-                <div class="dropdown-conteudo dropdown-up">
-                  <a href="#"><i class="fa-solid fa-circle-play"></i> Curti vídeo</a>
-                  <a href="#"><i class="fa-solid fa-newspaper"></i> Curti artigo</a>
-                  <a href="#"><i class="fa-solid fa-user-pen"></i> Curti editor</a>
-                  <hr>
-                  <a href="#"><i class="fa-solid fa-minus"></i> Ver menos</a>
-                  <a href="#"><i class="fa-solid fa-plus"></i> Ver mais</a>
-                </div>
+                  <button class="btn-premium-icon" onclick="event.preventDefault(); window.shareNews('${news.titulo.replace(/'/g, "\\'")}', '${shareUrl}')">
+                    <i class="fa-solid fa-share-nodes"></i> Compartilhar
+                  </button>
+
+                  <button class="btn-premium-icon btn-stats">
+                    <i class="fa-solid fa-chart-column"></i>
+                    <span class="stats-num num-view">${news.visualizacoes || 0}</span>
+                  </button>
+
+                  <button class="btn-premium-icon btn-monetize">
+                    <i class="fa-regular fa-gem"></i>
+                  </button>
               </div>
 
-              <button class="btn-premium-icon" onclick="event.preventDefault(); window.shareNews('${news.titulo.replace(/'/g, "\\'")}', '${shareUrl}')">
-                <i class="fa-solid fa-share-nodes"></i> Compartilhar
-              </button>
+              <div class="carrossel-temas">
+                <div class="carrossel-header"><span class="temas-label">Vídeos Relacionados</span></div>
+                <div class="temas-scroll-wrapper"><div class="temas-container">
+                    ${news.relacionados ? news.relacionados.map(rel => `
+                      <div class="tema-card" onclick="window.pedirTroca('player-${news.id}', '${rel.idVid}', '${rel.titulo.replace(/'/g, "\\'")}', '${news.cor}')">
+                        <img src="${limparEspacos(rel.thumb)}" class="tema-thumb">
+                        <div class="tema-titulo">${rel.titulo}</div>
+                      </div>`).join('') : ''}
+                </div></div>
+              </div>
 
-              <button class="btn-premium-icon btn-stats" onclick="alert('${viewCount} visualizações')">
-                <i class="fa-solid fa-chart-column"></i>
-                <span class="stats-num">${viewCount}</span>
-              </button>
-
-              <button class="btn-premium-icon btn-monetize" onclick="alert('Você ganhou pontos Geek!')">
-                <i class="fa-regular fa-gem"></i>
-              </button>
-          </div>
-
-          <div class="carrossel-temas">
-            <div class="carrossel-header"><span class="temas-label">Vídeos Relacionados</span></div>
-            <div class="temas-scroll-wrapper"><div class="temas-container">
-                ${news.relacionados ? news.relacionados.map(rel => `
-                  <div class="tema-card" onclick="window.pedirTroca('player-${news.id}', '${rel.idVid}', '${rel.titulo.replace(/'/g, "\\'")}', '${news.cor}')">
-                    <img src="${limparEspacos(rel.thumb)}" class="tema-thumb">
-                    <div class="tema-titulo">${rel.titulo}</div>
-                  </div>`).join('') : ''}
-            </div></div>
-          </div>
-
-          <div class="container-comentarios-dinamico" data-noticia-id="${news.id}"></div>
-
-          <div class="stats-container" style="padding: 7px 10.5px; color: #666; font-size: 8.4px;">
-            <span id="curtidas-${news.id}"><span class="num">${news.curtidas || 0}</span> curtidas</span> |   
-            <span id="visualizacoes-${news.id}"><span class="num">${news.visualizacoes || 0}</span> visualizações</span>
-          </div>
-
-        </article>
-      `;
-      }).join('');
+              <div class="container-comentarios-dinamico" data-noticia-id="${news.id}"></div>
+              </article>
+            `;
+            
+            // Adiciona ao final do container sem destruir o que já existe
+            container.insertAdjacentHTML('beforeend', html);
+        }
+      });
 
       injetarComentariosDinamicos();
 
@@ -296,6 +302,9 @@
 
     document.getElementById('btn-carregar-mais').onclick = () => {
         noticiasExibidas += 5;
+        // Limpa o container se for recarregar paginação para garantir ordem (opcional)
+        // Mas para manter vídeo tocando, apenas chamamos renderizar, 
+        // a lógica de "Modo Criação" vai adicionar os novos.
         renderizarNoticias();
     };
 
@@ -309,6 +318,7 @@
         });
         
         todasAsNoticias = [...noticiasFB];
+        // Ordenação por data (assumindo campo data numérico ou timestamp)
         todasAsNoticias.sort((a, b) => (b.data || 0) - (a.data || 0));
 
         if(todasAsNoticias.length > 0) {
@@ -324,7 +334,10 @@
   </script>
 
   <style>
-    /* --- CSS DO MODAL DE PESQUISA --- */
+    /* Seus estilos CSS originais continuam aqui.
+       Adicionei apenas uma correção para o botão estatística */
+    .btn-stats .stats-num { font-size: 8.4px; font-weight: 700; }
+
     #modal-noticia {
       display: none;
       position: fixed;
@@ -350,7 +363,6 @@
     }
     #modal-video { width: 100%; aspect-ratio: 16 / 9; margin: 14px 0; border: none; }
 
-    /* --- CSS GLOBAL --- */
     .destaque-acoes .dropdown-conteudo, 
     .menu-opcoes-container .dropdown-conteudo {
         display: none;
@@ -372,10 +384,9 @@
         display: flex; align-items: center; gap: 7px; font-size: 9.1px;
         border-bottom: 1px solid #f5f5f5; font-weight: 500;
     }
-    .dropdown-conteudo a:hover { background-color: #f9f9f9; color: var(--primary); }
+    .dropdown-conteudo a:hover { background-color: #f9f9f9; color: var(--tema-cor); }
     .dropdown-conteudo hr { margin: 0; border: none; border-top: 1px solid #eee; }
 
-    /* --- BARRA PREMIUM DE AÇÕES --- */
     .premium-actions-bar {
         display: flex;
         align-items: center;
@@ -403,11 +414,10 @@
     }
     .btn-premium-icon:hover { background: #e9ecef; border-color: #dee2e6; }
     
-    .btn-stats { background: transparent; border: 1px solid #eee; }
+    .btn-stats { background: transparent; border: 1px solid #eee; cursor: default; }
     .btn-stats .stats-num { font-size: 7.7px; opacity: 0.8; }
     .btn-monetize { color: #d4af37; background: #fffcf0; border: 1px solid #fae19d; }
 
-    /* --- PAGINAÇÃO ESTILIZADA --- */
     .btn-paginacao-geek {
         background: #212529; color: white; border: none;
         padding: 8.4px 21px; border-radius: 21px;
@@ -416,10 +426,9 @@
         box-shadow: 0 2.8px 7px rgba(0,0,0,0.2);
     }
 
-    /* CONTAINER DINÂMICO DE COMENTÁRIOS */
     .container-comentarios-dinamico {
         margin: 7px 10.5px 17.5px 10.5px;
     }
   </style>
 </div>
-
+</body>
