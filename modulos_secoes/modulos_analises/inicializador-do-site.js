@@ -1,10 +1,9 @@
-
 /**
  * modulos_secoes/modulos_analises/inicializador-do-site.js
  * O Chefe: Orquestra a inicialização de todos os módulos.
  */
 
-// 1. Importações de Configuração e Banco
+// 1. Importações de Configuração e Banco (Caminhos relativos corretos)
 import { db } from "./01-conexao-com-servidor/configuracao-firebase.js";
 import { iniciarEscutaNoticias } from "./03-banco-de-dados/buscar-noticias-ao-vivo.js";
 import { configurarCurtidas } from "./03-banco-de-dados/salvar-curtidas.js";
@@ -23,8 +22,7 @@ let todasAsNoticias = [];
 let noticiasExibidas = 5;
 
 /**
- * Getters e Setters para que outros módulos possam 
- * ler/alterar o estado de forma controlada.
+ * Getters e Setters para controle de estado
  */
 const getNoticias = () => todasAsNoticias;
 const setNoticias = (novasNoticias) => { todasAsNoticias = novasNoticias; };
@@ -34,7 +32,7 @@ const setExibidas = (valor) => { noticiasExibidas = valor; };
 /**
  * Função principal de inicialização
  */
-function inicializarApp() {
+export function inicializarApp() {
     // A. Inicia a escuta em tempo real do Firestore
     iniciarEscutaNoticias(db, (noticias) => {
         setNoticias(noticias);
@@ -53,9 +51,13 @@ function inicializarApp() {
     configurarBotaoCarregarMais(getNoticias, getExibidas, setExibidas);
     configurarConfirmacaoVideo();
     
-    // D. Inicializa sistema de curtidas (delegado)
+    // D. Inicializa sistema de curtidas
     configurarCurtidas(db);
 }
 
-// Executa o play!
-document.addEventListener('DOMContentLoaded', inicializarApp);
+// Executa automaticamente ao carregar o script
+if (document.readyState === 'complete') {
+    inicializarApp();
+} else {
+    document.addEventListener('DOMContentLoaded', inicializarApp);
+}
