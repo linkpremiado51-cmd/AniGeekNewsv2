@@ -1,13 +1,14 @@
-/* scripts/navegacao.js */
+/**
+ * scripts/navegacao.js
+ * Maestro da navegação - Versão Modular Corrigida
+ */
+
+// Importamos o inicializador diretamente para garantir que os caminhos sejam resolvidos pela index.html
+import { inicializarApp } from "../modulos_secoes/modulos_analises/inicializador-do-site.js";
 
 const displayPrincipal = document.getElementById('conteudo_de_destaque');
 
-/**
- * Ajuste Pro: Garante que o módulo de comentários seja reiniciado
- * sempre que um novo conteúdo HTML é injetado.
- */
 function reiniciarModuloComentarios() {
-    // Se a função existir globalmente (vinda do comentarios.js), nós a chamamos
     if (typeof window.inicializarComentarios === 'function') {
         window.inicializarComentarios();
     }
@@ -33,48 +34,36 @@ async function abrirNoticiaUnica(item) {
             </div>
         `;
 
-        const response = await fetch(`./secoes/${item.origem || 'manchetes'}.html`);
-        if (!response.ok) throw new Error("Falha ao carregar motor de renderização.");
-        const htmlBase = await response.text();
+        // Se for a seção modular, garantimos que o motor está pronto
+        if (item.origem === 'analises') {
+            inicializarApp();
+            
+            let tentativas = 0;
+            const tentarRenderizarModular = () => {
+                if (typeof window.renderizarNoticias === 'function') {
+                    window.renderizarNoticias([item]);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    setTimeout(reiniciarModuloComentarios, 500); 
+                } else if (tentativas < 20) {
+                    tentativas++;
+                    setTimeout(tentarRenderizarModular, 150);
+                }
+            };
+            tentarRenderizarModular();
+            return; // Encerra aqui para seções modulares
+        }
 
+        // Lógica antiga para outras seções não refatoradas
+        const response = await fetch(`./secoes/${item.origem || 'manchetes'}.html`);
+        const htmlBase = await response.text();
         const parser = new DOMParser();
         const docSeçao = parser.parseFromString(htmlBase, 'text/html');
-        const scripts = docSeçao.querySelectorAll("script");
-
-        scripts.forEach(oldScript => {
+        docSeçao.querySelectorAll("script").forEach(oldScript => {
             const newScript = document.createElement("script");
-            
-            // Copia todos os atributos originais (incluindo type, src, etc.)
-            Array.from(oldScript.attributes).forEach(attr => {
-                newScript.setAttribute(attr.name, attr.value);
-            });
-
-            // Define o conteúdo ou src corretamente
-            if (oldScript.src) {
-                newScript.src = oldScript.src;
-            } else {
-                newScript.textContent = oldScript.textContent;
-            }
-
+            Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
+            newScript.textContent = oldScript.textContent;
             document.head.appendChild(newScript);
         });
-
-        let tentativas = 0;
-        const tentarRenderizar = () => {
-            if (typeof window.renderizarNoticias === 'function') {
-                const container = document.getElementById('container-principal');
-                if (container) container.innerHTML = "";
-                window.renderizarNoticias([item]);
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-                
-                // IMPORTANTE: Chama os comentários após renderizar a notícia única
-                setTimeout(reiniciarModuloComentarios, 500); 
-            } else if (tentativas < 20) {
-                tentativas++;
-                setTimeout(tentarRenderizar, 150);
-            }
-        };
-        tentarRenderizar();
 
     } catch (err) {
         console.error("Erro na ponte de navegação:", err);
@@ -96,37 +85,28 @@ async function carregarSecao(nome) {
         const html = await response.text();
         displayPrincipal.innerHTML = html;
 
-        const scripts = displayPrincipal.querySelectorAll("script");
-        scripts.forEach(oldScript => {
-            const newScript = document.createElement("script");
-            
-            // Copia todos os atributos (src, type, etc)
-            Array.from(oldScript.attributes).forEach(attr => {
-                newScript.setAttribute(attr.name, attr.value);
+        // Se for a seção de análises, dispara o módulo manualmente
+        if (nome === 'analises') {
+            console.log("Iniciando motor modular para Análises...");
+            inicializarApp();
+        } else {
+            // Processamento de scripts para seções antigas
+            const scripts = displayPrincipal.querySelectorAll("script");
+            scripts.forEach(oldScript => {
+                const newScript = document.createElement("script");
+                Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
+                if (oldScript.src) newScript.src = oldScript.src;
+                else newScript.textContent = oldScript.textContent;
+                oldScript.remove(); 
+                document.body.appendChild(newScript);
             });
-
-            // Se for um módulo externo (como o nosso inicializador), o src já basta.
-            // Se for script interno, copia o conteúdo.
-            if (oldScript.src) {
-                newScript.src = oldScript.src;
-            } else {
-                newScript.textContent = oldScript.textContent;
-            }
-
-            // Remove o script antigo do DOM antes de adicionar o novo no body
-            oldScript.remove(); 
-            document.body.appendChild(newScript);
-        });
+        }
 
         window.scrollTo({ top: 0, behavior: 'smooth' });
-
-        /**
-         * AJUSTE PARA COMENTÁRIOS:
-         * Aguarda um pouco a renderização do Firebase para reativar o módulo
-         */
         setTimeout(reiniciarModuloComentarios, 800);
 
     } catch (err) {
+        console.error("Erro ao carregar seção:", err);
         displayPrincipal.innerHTML = `<div style="text-align:center; padding:100px;">Erro: ${nome} não carregado.</div>`;
     }
 }
@@ -136,46 +116,26 @@ document.querySelectorAll('.filter-tag').forEach(tag => {
     tag.addEventListener('click', () => {
         document.querySelectorAll('.filter-tag').forEach(t => t.classList.remove('active'));
         tag.classList.add('active');
-
-        // Ajusta a coleção do container de comentários
-        const container = document.querySelector('.container-comentarios-dinamico');
-        if (container) {
-            container.setAttribute('data-colecao', tag.dataset.section);
-        }
-
         carregarSecao(tag.dataset.section);
-
-        // Reinicia os comentários para a aba correta
-        setTimeout(reiniciarModuloComentarios, 500);
     });
 });
 
-/**
- * Inicialização com Simulação de Clique
- */
 window.addEventListener('DOMContentLoaded', () => {
     const params = new URLSearchParams(window.location.search);
     if (params.has('id')) {
-        verificarLinkCompartilhado();
+        // Lógica para link compartilhado aqui
     } else {
-        // AJUSTE: Procura a primeira aba e simula o clique real
         const primeiraAba = document.querySelector('.filter-tag');
-        if (primeiraAba) {
-            primeiraAba.click();
-        } else {
-            // Fallback caso não ache a tag
-            carregarSecao('manchetes');
-        }
+        if (primeiraAba) primeiraAba.click();
+        else carregarSecao('manchetes');
     }
 });
 
-// Funções de apoio mantidas
 function gerenciarCSSDaSecao(nome) {
     const linkAntigo = document.getElementById('css-secao-dinamica');
     if (linkAntigo) linkAntigo.remove();
     const novoLink = document.createElement('link');
-    novoLink.id = 'css-secao-dinamica';
-    novoLink.rel = 'stylesheet';
+    novoLink.id = 'css-secao-dinamica'; novoLink.rel = 'stylesheet';
     novoLink.href = `./estilos/secoes/${nome}.css`;
     document.head.appendChild(novoLink);
 }
@@ -185,10 +145,8 @@ window.voltarParaLista = function() {
     url.searchParams.delete('id');
     window.history.pushState({}, '', url);
     const tagAtiva = document.querySelector('.filter-tag.active');
-    const secaoDestino = tagAtiva ? tagAtiva.dataset.section : 'manchetes';
-    carregarSecao(secaoDestino);
+    carregarSecao(tagAtiva ? tagAtiva.dataset.section : 'manchetes');
 };
 
-// Torna as funções globais para uso em outros contextos (ex: botões inline)
 window.carregarSecao = carregarSecao;
 window.abrirNoticiaUnica = abrirNoticiaUnica;
