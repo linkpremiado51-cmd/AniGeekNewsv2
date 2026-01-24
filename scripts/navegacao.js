@@ -43,17 +43,19 @@ async function abrirNoticiaUnica(item) {
 
         scripts.forEach(oldScript => {
             const newScript = document.createElement("script");
-            if (oldScript.type === 'module' || !oldScript.type) {
-                let conteudo = oldScript.textContent;
-                if (conteudo.includes('function renderizarNoticias')) {
-                    conteudo += `\n window.renderizarNoticias = renderizarNoticias;`;
-                }
-                newScript.type = 'module';
-                newScript.textContent = conteudo;
+            
+            // Copia todos os atributos originais (incluindo type, src, etc.)
+            Array.from(oldScript.attributes).forEach(attr => {
+                newScript.setAttribute(attr.name, attr.value);
+            });
+
+            // Define o conteúdo ou src corretamente
+            if (oldScript.src) {
+                newScript.src = oldScript.src;
             } else {
-                if (oldScript.src) newScript.src = oldScript.src;
                 newScript.textContent = oldScript.textContent;
             }
+
             document.head.appendChild(newScript);
         });
 
@@ -97,9 +99,22 @@ async function carregarSecao(nome) {
         const scripts = displayPrincipal.querySelectorAll("script");
         scripts.forEach(oldScript => {
             const newScript = document.createElement("script");
-            newScript.type = oldScript.type || "text/javascript";
-            if (oldScript.src) newScript.src = oldScript.src;
-            newScript.textContent = oldScript.textContent;
+            
+            // Copia todos os atributos (src, type, etc)
+            Array.from(oldScript.attributes).forEach(attr => {
+                newScript.setAttribute(attr.name, attr.value);
+            });
+
+            // Se for um módulo externo (como o nosso inicializador), o src já basta.
+            // Se for script interno, copia o conteúdo.
+            if (oldScript.src) {
+                newScript.src = oldScript.src;
+            } else {
+                newScript.textContent = oldScript.textContent;
+            }
+
+            // Remove o script antigo do DOM antes de adicionar o novo no body
+            oldScript.remove(); 
             document.body.appendChild(newScript);
         });
 
@@ -118,22 +133,23 @@ async function carregarSecao(nome) {
 
 // Eventos de clique nas categorias
 document.querySelectorAll('.filter-tag').forEach(tag => {
-tag.addEventListener('click', () => {
-document.querySelectorAll('.filter-tag').forEach(t => t.classList.remove('active'));
-tag.classList.add('active');
+    tag.addEventListener('click', () => {
+        document.querySelectorAll('.filter-tag').forEach(t => t.classList.remove('active'));
+        tag.classList.add('active');
 
-// Ajusta a coleção do container de comentários
-const container = document.querySelector('.container-comentarios-dinamico');
-if (container) {
-container.setAttribute('data-colecao', tag.dataset.section);
-}
+        // Ajusta a coleção do container de comentários
+        const container = document.querySelector('.container-comentarios-dinamico');
+        if (container) {
+            container.setAttribute('data-colecao', tag.dataset.section);
+        }
 
-carregarSecao(tag.dataset.section);
+        carregarSecao(tag.dataset.section);
 
-// Reinicia os comentários para a aba correta
-setTimeout(reiniciarModuloComentarios, 500);
+        // Reinicia os comentários para a aba correta
+        setTimeout(reiniciarModuloComentarios, 500);
+    });
 });
-});
+
 /**
  * Inicialização com Simulação de Clique
  */
@@ -173,5 +189,6 @@ window.voltarParaLista = function() {
     carregarSecao(secaoDestino);
 };
 
+// Torna as funções globais para uso em outros contextos (ex: botões inline)
 window.carregarSecao = carregarSecao;
 window.abrirNoticiaUnica = abrirNoticiaUnica;
