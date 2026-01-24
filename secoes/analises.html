@@ -35,8 +35,8 @@
     <div id="modal-conteudo">
       <button id="modal-fechar" onclick="window.fecharModal()">×</button>
       
-      <div id="modal-capa-container" style="margin-bottom: 15px; display: none;">
-          <img id="modal-capa-img" src="" style="width: 100%; border-radius: 12px; height: 200px; object-fit: cover;">
+      <div id="modal-capa-container" style="margin: -20px -20px 15px -20px; display: none;">
+          <img id="modal-capa-img" src="" style="width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 12px 12px 0 0;">
       </div>
 
       <div id="modal-header-layout">
@@ -46,7 +46,7 @@
       <p id="modal-resumo" class="destaque-resumo"></p>
       <a id="modal-link" class="btn-ver-artigo" target="_blank"><i class="fa-solid fa-book-open"></i> Ler artigo completo</a>
       <div id="modal-ficha" class="destaque-info-grid"></div>
-      <iframe id="modal-video" allowfullscreen></iframe>
+      <iframe id="modal-video" allowfullscreen style="width: 100%; aspect-ratio: 16/9; border: none; border-radius: 8px; margin-top: 15px;"></iframe>
     </div>
   </div>
 
@@ -69,8 +69,6 @@
 
     let todasAsNoticias = [];
     let noticiasExibidas = 5;
-    let playerAlvo = '';
-    let urlAlvo = '';
 
     function limparEspacos(url) {
       return url ? url.trim() : url;
@@ -94,19 +92,6 @@
       } catch (err) { console.error("Erro copiar:", err); }
     };
 
-    window.pedirTroca = (idPlayer, idVideo, titulo, cor) => {
-      playerAlvo = idPlayer;
-      urlAlvo = `https://www.youtube.com/embed/${idVideo}?autoplay=1`;
-      const notif = document.getElementById('notificacao-video');
-      document.getElementById('notif-titulo').innerText = titulo;
-      notif.style.setProperty('--notif-cor', cor);
-      notif.classList.add('visivel');
-    };
-
-    window.fecharNotif = () => {
-      document.getElementById('notificacao-video').classList.remove('visivel');
-    };
-
     window.fecharModal = () => {
       document.getElementById('modal-noticia').style.display = 'none';
       document.getElementById('modal-video').src = ""; 
@@ -125,7 +110,7 @@
 
     window.curtirNoticia = async (idNoticia) => {
       try {
-        const spanCurtidas = document.querySelector(`#btn-curtir-${idNoticia} .num-like`);
+        const spanCurtidas = document.querySelector(`#artigo-${idNoticia} .num-like`);
         if(spanCurtidas) {
            let atual = parseInt(spanCurtidas.innerText) || 0;
            spanCurtidas.innerText = atual + 1;
@@ -136,17 +121,19 @@
     };
 
     // --- RENDERIZAÇÃO ---
-    function abrirNoticiaEmModal(noticia) {
+    window.abrirNoticiaEmModal = (noticia) => {
       document.getElementById('modal-titulo').innerText = noticia.titulo;
       document.getElementById('modal-categoria').innerHTML = `<i class="fa-solid fa-video"></i> ${noticia.categoria}`;
       document.getElementById('modal-resumo').innerText = noticia.resumo;
       document.getElementById('modal-link').href = noticia.linkArtigo;
 
-      // Capa no Modal
+      // Logica de imagem separada no Modal (Prioriza capaNoticia)
       const modalCapaContainer = document.getElementById('modal-capa-container');
       const modalCapaImg = document.getElementById('modal-capa-img');
-      if(noticia.capaUrl) {
-          modalCapaImg.src = limparEspacos(noticia.capaUrl);
+      const imagemParaExibir = noticia.capaNoticia || noticia.capaUrl;
+
+      if(imagemParaExibir) {
+          modalCapaImg.src = limparEspacos(imagemParaExibir);
           modalCapaContainer.style.display = 'block';
       } else {
           modalCapaContainer.style.display = 'none';
@@ -192,10 +179,11 @@
 
         const shareUrl = `${baseUrl}?id=${encodeURIComponent(news.id)}`;
         
-        // Capa individual da notícia
-        const capaHTML = news.capaUrl ? `
-            <div class="noticia-capa" style="margin-bottom: 14px;">
-                <img src="${limparEspacos(news.capaUrl)}" style="width: 100%; border-radius: 8px; max-height: 250px; object-fit: cover;">
+        // Prioridade capaNoticia e Proporção 16:9 Horizontal Total
+        const imagemDestaque = news.capaNoticia || news.capaUrl;
+        const capaHTML = imagemDestaque ? `
+            <div class="noticia-capa" style="margin: -15px -15px 15px -15px;">
+                <img src="${limparEspacos(imagemDestaque)}" style="width: 100%; aspect-ratio: 16 / 9; border-radius: 12px 12px 0 0; object-fit: cover; display: block;">
             </div>` : '';
 
         const html = `
@@ -205,7 +193,7 @@
             <div class="destaque-categoria"><i class="fa-solid fa-hashtag"></i> ${news.categoria}</div>
             
             <div class="destaque-header">
-              <h2 class="destaque-titulo" onclick='abrirNoticiaEmModal(${JSON.stringify(news).replace(/'/g, "&apos;")})' style="cursor:pointer">${news.titulo}</h2>
+              <h2 class="destaque-titulo" onclick='window.abrirNoticiaEmModal(${JSON.stringify(news).replace(/'/g, "&apos;")})' style="cursor:pointer">${news.titulo}</h2>
               <div class="menu-opcoes-container" tabindex="0">
                 <button class="btn-tres-pontos"><i class="fa-solid fa-ellipsis-vertical"></i></button>
                 <div class="dropdown-conteudo header-dropdown">
@@ -219,7 +207,7 @@
           </div>
           
           <div class="destaque-media">
-            <iframe id="player-${news.id}" src="${limparEspacos(news.videoPrincipal)}" allowfullscreen></iframe>
+            <iframe id="player-${news.id}" src="${limparEspacos(news.videoPrincipal)}" allowfullscreen style="aspect-ratio: 16/9; width: 100%; border: none;"></iframe>
           </div>
           
           <div class="premium-actions-bar">
@@ -258,11 +246,10 @@
         }
         renderizarNoticias();
         
-        // Verifica se há ID na URL para abrir modal direto
         const idUrl = new URLSearchParams(window.location.search).get('id');
         if(idUrl) {
             const n = todasAsNoticias.find(x => x.id === idUrl);
-            if(n) abrirNoticiaEmModal(n);
+            if(n) window.abrirNoticiaEmModal(n);
         }
       });
     }
