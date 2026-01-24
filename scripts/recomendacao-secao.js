@@ -1,8 +1,9 @@
 /* ======================================================
-   AniGeekNews – Enterprise Section System v7.1 (Final)
-   • Integração Total com Firebase (analises.html)
-   • Catálogo Completo
-   • Design High-End
+   AniGeekNews – Enterprise Section System v7
+   • Títulos de Sessão Clicáveis (Categorias Pai)
+   • Notificações Toast Profissionais (Sem Alert)
+   • Controle de Foco (Teclado não abre sozinho)j
+   • Design Harmônico
 ====================================================== */
 
 (function(){
@@ -17,12 +18,12 @@ const CONFIG = {
 };
 
 /* ===========================
-   BANCO DE DADOS COMPLETO
+   BANCO DE DADOS (COM IDs NAS SESSÕES)
 =========================== */
 const CATALOGO = [
   {
     sessao: "MANCHETES",
-    id: 'manchetes',
+    id: 'manchetes', // ID DA CATEGORIA PAI
     cor: "#FF4500", 
     itens: [
       { id: 'destaques', label: 'Destaques do Dia' },
@@ -255,7 +256,7 @@ const CATALOGO = [
   }
 ];
 
-/* ===========================
+                /* ===========================
    CSS INJETADO
 =========================== */
 const styles = `
@@ -292,7 +293,7 @@ const styles = `
     scrollbar-width: thin;
   }
 
-  /* --- HEADER: PESQUISA E MODOS --- */
+  /* --- HEADER: PESQUISA E MODOS (ESTÉTICA HIGH-END) --- */
   .ag-drawer-header {
     display: flex;
     justify-content: space-between;
@@ -300,11 +301,14 @@ const styles = `
     gap: 14px;
     flex-wrap: wrap;
     max-width: 840px;
+    
+    /* Fixação no topo com efeito vidro */
     position: sticky;
-    top: -21px; 
+    top: -21px; /* Alinhado ao topo do container */
     z-index: 100;
     margin: -21px auto 21px auto; 
     padding: 17.5px 0;
+    
     background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(8.4px);
     -webkit-backdrop-filter: blur(8.4px);
@@ -317,6 +321,7 @@ const styles = `
     border-color: rgba(255, 255, 255, 0.08);
   }
 
+  /* Efeito de degradê inferior para suavizar a rolagem dos itens */
   .ag-drawer-header::after {
     content: '';
     position: absolute;
@@ -332,91 +337,170 @@ const styles = `
     background: linear-gradient(to bottom, rgba(20, 20, 20, 0.9), transparent);
   }
 
-  .ag-search-wrapper { position: relative; flex: 1; min-width: 196px; }
+  .ag-search-wrapper {
+    position: relative;
+    flex: 1;
+    min-width: 196px;
+  }
 
   .ag-search-icon-svg {
-    position: absolute; left: 9.8px; top: 50%; transform: translateY(-50%);
-    width: 12.6px; height: 12.6px; fill: #999; pointer-events: none;
+    position: absolute;
+    left: 9.8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 12.6px;
+    height: 12.6px;
+    fill: #999;
+    pointer-events: none;
   }
 
   .ag-search-input {
-    width: 100%; padding: 7.7px 10.5px 7.7px 31.5px;
-    border-radius: 7px; border: 1px solid rgba(0,0,0,0.1);
-    background: rgba(0,0,0,0.04); font-size: 9.8px; font-weight: 500;
-    outline: none; transition: all 0.3s ease;
+    width: 100%;
+    padding: 7.7px 10.5px 7.7px 31.5px;
+    border-radius: 7px;
+    border: 1px solid rgba(0,0,0,0.1);
+    background: rgba(0,0,0,0.04);
+    font-size: 9.8px;
+    font-weight: 500;
+    outline: none;
+    transition: all 0.3s ease;
   }
 
   body.dark-mode .ag-search-input {
-    background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); color: #fff;
+    background: rgba(255,255,255,0.05);
+    border-color: rgba(255,255,255,0.1);
+    color: #fff;
   }
   
   .ag-search-input:focus {
-    background: #fff; border-color: var(--primary-color, #e50914);
+    background: #fff;
+    border-color: var(--primary-color, #e50914);
     box-shadow: 0 2.8px 10.5px rgba(0,0,0,0.08);
   }
   body.dark-mode .ag-search-input:focus { background: #252525; }
 
+  /* --- BOTÕES DE MODO --- */
   .ag-mode-group {
-    background: rgba(0,0,0,0.05); padding: 2.8px; border-radius: 7px; display: flex;
+    background: rgba(0,0,0,0.05);
+    padding: 2.8px;
+    border-radius: 7px;
+    display: flex;
   }
   body.dark-mode .ag-mode-group { background: rgba(255,255,255,0.08); }
 
   .ag-mode-btn {
-    padding: 5.6px 11.2px; border: none; background: transparent;
-    border-radius: 4.9px; font-size: 7.7px; font-weight: 800;
-    color: #888; cursor: pointer; text-transform: uppercase; transition: all 0.2s;
+    padding: 5.6px 11.2px;
+    border: none;
+    background: transparent;
+    border-radius: 4.9px;
+    font-size: 7.7px;
+    font-weight: 800;
+    color: #888;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.2s;
   }
 
   .ag-mode-btn.active {
-    background: #fff; color: #000; box-shadow: 0 1.4px 5.6px rgba(0,0,0,0.12);
+    background: #fff;
+    color: #000;
+    box-shadow: 0 1.4px 5.6px rgba(0,0,0,0.12);
   }
-  body.dark-mode .ag-mode-btn.active { background: #333; color: #fff; }
+  body.dark-mode .ag-mode-btn.active {
+    background: #333;
+    color: #fff;
+  }
 
+
+  /* --- SESSÕES (CABEÇALHOS CLICÁVEIS) --- */
   .ag-section-block {
-    margin-bottom: 24.5px; max-width: 840px; margin-left: auto; margin-right: auto;
+    margin-bottom: 24.5px;
+    max-width: 840px;
+    margin-left: auto;
+    margin-right: auto;
   }
 
+  /* Estilo do título que agora é um botão */
   .ag-section-header-btn {
-    display: flex; align-items: center; gap: 7px; margin-bottom: 8.4px;
-    background: transparent; border: none; padding: 3.5px 0;
-    cursor: pointer; width: fit-content; transition: 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-bottom: 8.4px;
+    background: transparent;
+    border: none;
+    padding: 3.5px 0;
+    cursor: pointer;
+    width: fit-content;
+    transition: 0.2s;
   }
 
-  .ag-section-header-btn:hover { opacity: 0.7; }
+  .ag-section-header-btn:hover {
+    opacity: 0.7;
+  }
 
   .ag-section-text {
-    font-size: 9.8px; font-weight: 900; text-transform: uppercase;
-    letter-spacing: 0.7px; color: #333;
+    font-size: 9.8px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    color: #333;
   }
   body.dark-mode .ag-section-text { color: #fff; }
 
+  /* Indicador visual de que o título está selecionado */
   .ag-section-header-btn.is-active .ag-section-text {
     color: var(--primary-color, #e50914);
-    text-decoration: underline; text-decoration-thickness: 1.4px; text-underline-offset: 2.8px;
+    text-decoration: underline;
+    text-decoration-thickness: 1.4px;
+    text-underline-offset: 2.8px;
   }
 
   .ag-section-marker {
-    width: 7px; height: 7px; border-radius: 2.1px; box-shadow: 0 0 3.5px rgba(0,0,0,0.2);
+    width: 7px;
+    height: 7px;
+    border-radius: 2.1px;
+    box-shadow: 0 0 3.5px rgba(0,0,0,0.2);
   }
 
+  /* --- GRID --- */
   .ag-grid-container {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(105px, 1fr)); gap: 7px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(105px, 1fr)); 
+    gap: 7px;
   }
 
   .ag-card {
-    position: relative; background: #f9f9f9; border: 1px solid transparent;
-    border-radius: 4.2px; padding: 8.4px 7px; font-size: 9.1px; font-weight: 500;
-    color: #444; text-align: center; cursor: pointer; transition: all 0.2s ease;
-    height: 100%; display: flex; align-items: center; justify-content: center;
+    position: relative;
+    background: #f9f9f9;
+    border: 1px solid transparent;
+    border-radius: 4.2px;
+    padding: 8.4px 7px;
+    font-size: 9.1px;
+    font-weight: 500;
+    color: #444;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    height: 100%; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
-  body.dark-mode .ag-card { background: #1e1e1e; color: #ccc; }
+  body.dark-mode .ag-card {
+    background: #1e1e1e;
+    color: #ccc;
+  }
 
-  .ag-card:hover { background: #ececec; transform: translateY(-1.4px); }
+  .ag-card:hover {
+    background: #ececec;
+    transform: translateY(-1.4px);
+  }
   body.dark-mode .ag-card:hover { background: #2a2a2a; }
 
   .ag-card.is-selected {
-    background: #fff; border-color: var(--primary-color, #e50914);
+    background: #fff;
+    border-color: var(--primary-color, #e50914);
     color: var(--primary-color, #e50914);
     box-shadow: inset 0 0 0 0.7px var(--primary-color, #e50914);
     font-weight: 700;
@@ -424,58 +508,122 @@ const styles = `
   body.dark-mode .ag-card.is-selected { background: #1a1a1a; }
 
   .ag-card-action {
-    position: absolute; top: 2.1px; right: 2.8px; width: 11.2px; height: 11.2px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 7px; border-radius: 50%; color: inherit; opacity: 0.6; transition: 0.2s;
+    position: absolute;
+    top: 2.1px;
+    right: 2.8px;
+    width: 11.2px;
+    height: 11.2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 7px;
+    border-radius: 50%;
+    color: inherit;
+    opacity: 0.6;
+    transition: 0.2s;
   }
   
   .ag-card-action:hover {
-    background: var(--primary-color, #e50914); color: #fff !important; opacity: 1;
+    background: var(--primary-color, #e50914);
+    color: #fff !important;
+    opacity: 1;
   }
 
+  /* --- TOAST NOTIFICATION (Substituto do Alert) --- */
   #ag-toast-container {
-    position: fixed; bottom: 21px; left: 50%; transform: translateX(-50%);
-    z-index: 99999; pointer-events: none; display: flex; flex-direction: column; gap: 7px;
+    position: fixed;
+    bottom: 21px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 99999;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
   }
 
   .ag-toast {
-    background: rgba(30, 30, 30, 0.95); color: #fff; padding: 8.4px 16.8px;
-    border-radius: 35px; font-size: 9.1px; font-weight: 600;
-    box-shadow: 0 3.5px 10.5px rgba(0,0,0,0.3); backdrop-filter: blur(3.5px);
-    opacity: 0; transform: translateY(14px); animation: agSlideUp 0.3s forwards;
-    display: flex; align-items: center; gap: 7px;
+    background: rgba(30, 30, 30, 0.95);
+    color: #fff;
+    padding: 8.4px 16.8px;
+    border-radius: 35px;
+    font-size: 9.1px;
+    font-weight: 600;
+    box-shadow: 0 3.5px 10.5px rgba(0,0,0,0.3);
+    backdrop-filter: blur(3.5px);
+    opacity: 0;
+    transform: translateY(14px);
+    animation: agSlideUp 0.3s forwards;
+    display: flex;
+    align-items: center;
+    gap: 7px;
   }
   
   .ag-toast.error { border-left: 2.8px solid #ff4444; }
   .ag-toast.success { border-left: 2.8px solid #00C851; }
 
-  @keyframes agSlideUp { to { opacity: 1; transform: translateY(0); } }
-  @keyframes agFadeOut { to { opacity: 0; transform: translateY(-7px); } }
-
-  #filterScroller {
-    display: flex; align-items: center; position: relative; gap: 5.6px;
-    padding-right: 0 !important; overflow-x: auto; scrollbar-width: none;
+  @keyframes agSlideUp {
+    to { opacity: 1; transform: translateY(0); }
   }
-  #filterScroller::-webkit-scrollbar { display: none; }
+  
+  @keyframes agFadeOut {
+    to { opacity: 0; transform: translateY(-7px); }
+  }
+     /* --- AJUSTE PARA BOTÃO PROFISSIONAL E FIXO --- */
+  #filterScroller {
+    display: flex;
+    align-items: center;
+    position: relative;
+    gap: 5.6px;
+    padding-right: 0 !important;
+    overflow-x: auto;
+    scrollbar-width: none; /* Esconde scroll no Firefox */
+  }
+  #filterScroller::-webkit-scrollbar { display: none; } /* Esconde scroll no Chrome/Safari */
 
   .filter-tag.cfg-btn {
-    position: sticky; right: 0 !important; z-index: 99;
-    background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(5.6px);
-    -webkit-backdrop-filter: blur(5.6px); min-width: 33.6px; height: 23.8px;
-    margin-left: auto; display: flex; align-items: center; justify-content: center;
-    border: none; border-left: 1px solid rgba(0, 0, 0, 0.05);
-    box-shadow: -7px 0 14px rgba(0, 0, 0, 0.05); cursor: pointer;
-    font-size: 12.6px; transition: all 0.3s ease;
+    position: sticky;
+    right: 0 !important;
+    z-index: 99;
+    
+    /* Estética Profissional: Glassmorphism */
+    background: rgba(255, 255, 255, 0.9); 
+    backdrop-filter: blur(5.6px);
+    -webkit-backdrop-filter: blur(5.6px);
+    
+    min-width: 33.6px;
+    height: 23.8px;
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    /* Borda e Sombra refinadas */
+    border: none;
+    border-left: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: -7px 0 14px rgba(0, 0, 0, 0.05);
+    
+    cursor: pointer;
+    font-size: 12.6px;
+    transition: all 0.3s ease;
   }
 
+  /* Efeito de degradê para as abas sumirem suavemente atrás do botão */
   .filter-tag.cfg-btn::before {
-    content: ''; position: absolute; left: -14px; top: 0; width: 14px; height: 100%;
+    content: '';
+    position: absolute;
+    left: -14px;
+    top: 0;
+    width: 14px;
+    height: 100%;
     background: linear-gradient(to right, transparent, rgba(255,255,255,0.9));
     pointer-events: none;
   }
 
+  /* Ajustes para o Dark Mode */
   body.dark-mode .filter-tag.cfg-btn {
-    background: rgba(20, 20, 20, 0.9); border-left: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(20, 20, 20, 0.9);
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: -10.5px 0 17.5px rgba(0, 0, 0, 0.5);
   }
 
@@ -483,7 +631,14 @@ const styles = `
     background: linear-gradient(to right, transparent, rgba(20, 20, 20, 0.9));
   }
 
-  .filter-tag.cfg-btn:active { transform: scale(0.9); opacity: 0.8; }
+  /* Feedback visual ao tocar/clicar */
+  .filter-tag.cfg-btn:active {
+    transform: scale(0.9);
+    opacity: 0.8;
+  }
+
+
+
 `;
 
 const styleSheet = document.createElement("style");
@@ -491,7 +646,7 @@ styleSheet.innerText = styles;
 document.head.appendChild(styleSheet);
 
 /* ===========================
-   SISTEMA DE TOAST
+   SISTEMA DE TOAST (NOTIFICAÇÃO)
 =========================== */
 function showToast(message, type = 'normal') {
   let container = document.getElementById('ag-toast-container');
@@ -506,6 +661,8 @@ function showToast(message, type = 'normal') {
   toast.innerHTML = message;
   
   container.appendChild(toast);
+
+  // Remove após 3 segundos
   setTimeout(() => {
     toast.style.animation = 'agFadeOut 0.3s forwards';
     setTimeout(() => toast.remove(), 300);
@@ -524,57 +681,32 @@ function setMode(m){ save(CONFIG.KEYS.MODE, m); renderDrawer(); }
 function getOrder(){
   const saved = load(CONFIG.KEYS.ORDER, null);
   if(saved) return saved;
+  // Padrão inicial com alguns IDs
   return ['manchetes', 'destaques', 'ultimas'];
 }
 
+// Encontra ITEM ou CATEGORIA PAI pelo ID
 function findItem(id){
   for(let sec of CATALOGO){
+    // Verifica se é a própria categoria
     if(sec.id === id) return { id: sec.id, label: sec.sessao };
+    // Verifica itens internos
     const item = sec.itens.find(i => i.id === id);
     if(item) return item;
   }
   return null;
 }
 
-// --- FUNÇÃO DE RASTREIO GLOBAL (PONTE COM ANALISES.HTML) ---
 function track(id){
-  // 1. Atualiza Estatísticas
+  if(getMode() !== 'dynamic') return;
   const stats = load(CONFIG.KEYS.STATS, {});
   stats[id] = (stats[id] || 0) + 1;
   save(CONFIG.KEYS.STATS, stats);
   
-  let order = getOrder();
-
-  // 2. Se a aba não existe na barra, tenta adicionar
-  if(!order.includes(id)) {
-     const itemExiste = findItem(id);
-     // Só adiciona se o item existir no catálogo e houver espaço
-     if(itemExiste && order.length < CONFIG.MAX_TABS) {
-        order.push(id);
-     }
-  }
-
-  // 3. Se for dinâmico, reordena
-  if(getMode() === 'dynamic'){
-    order.sort((a,b) => (stats[b]||0) - (stats[a]||0));
-  }
-
+  const order = getOrder();
+  order.sort((a,b) => (stats[b]||0) - (stats[a]||0));
   save(CONFIG.KEYS.ORDER, order);
-  
-  // 4. Renderiza e ativa visualmente
-  renderBar();
-  const btn = document.querySelectorAll('#filterScroller .filter-tag');
-  btn.forEach(b => {
-     if(b.textContent === (findItem(id)?.label || '')) {
-         b.classList.add('active');
-     } else {
-         b.classList.remove('active');
-     }
-  });
 }
-
-// EXPOSIÇÃO DA FUNÇÃO PARA O NAVEGADOR (IMPORTANTE!)
-window.track = track;
 
 /* ===========================
    RENDERIZAÇÃO BARRA HORIZONTAL
@@ -603,7 +735,7 @@ function renderBar(){
     btn.onclick = () => {
       document.querySelectorAll('#filterScroller .filter-tag').forEach(b=>b.classList.remove('active'));
       btn.classList.add('active');
-      track(id); // Chama a função track interna
+      track(id);
       document.getElementById('ag-drawer').classList.remove('open');
       
       if(window.carregarSecao) window.carregarSecao(id);
@@ -631,6 +763,7 @@ function toggleDrawer(){
   } else {
     renderDrawer();
     drawer.classList.add('open');
+    // REMOVIDO: setTimeout com focus() para não abrir o teclado
   }
 }
 
@@ -669,6 +802,7 @@ function renderDrawer(filterText = ""){
   const term = filterText.toLowerCase();
 
   CATALOGO.forEach(sec => {
+    // Filtragem
     const itensFiltrados = sec.itens.filter(i => i.label.toLowerCase().includes(term));
     const sessaoMatch = sec.sessao.toLowerCase().includes(term);
 
@@ -678,12 +812,14 @@ function renderDrawer(filterText = ""){
     const sectionDiv = document.createElement('div');
     sectionDiv.className = 'ag-section-block';
 
+    // VERIFICA SE A CATEGORIA PAI JÁ ESTÁ SELECIONADA
     const isCatSelected = currentOrder.includes(sec.id);
     let catIcon = '';
     if(isCatSelected) {
        catIcon = currentMode === 'dynamic' ? ' <span style="font-size:10px; opacity:0.6; margin-left:5px">✕</span>' : ' <span style="font-size:10px; opacity:0.6; margin-left:5px">•••</span>';
     }
 
+    // TÍTULO DA SESSÃO AGORA É UM BOTÃO
     sectionDiv.innerHTML = `
       <button class="ag-section-header-btn ${isCatSelected ? 'is-active' : ''}" data-cat-id="${sec.id}">
         <div class="ag-section-marker" style="background:${sec.cor}"></div>
@@ -692,7 +828,9 @@ function renderDrawer(filterText = ""){
       <div class="ag-grid-container"></div>
     `;
     
+    // Evento de clique no título da seção (Pai)
     sectionDiv.querySelector('.ag-section-header-btn').onclick = (e) => {
+        // Se já tem seleção, verifica se é pra mover ou deletar
         if(isCatSelected && currentMode === 'fixed') {
              handleAction(sec.id, sec.sessao);
         } else {
@@ -703,6 +841,7 @@ function renderDrawer(filterText = ""){
     container.appendChild(sectionDiv);
     const grid = sectionDiv.querySelector('.ag-grid-container');
 
+    // RENDERIZA OS ITENS FILHOS
     itensParaMostrar.forEach(item => {
       const isSelected = currentOrder.includes(item.id);
       
@@ -737,13 +876,18 @@ function renderDrawer(filterText = ""){
   document.getElementById('btn-dinamico').onclick = () => setMode('dynamic');
 }
 
+/* ===========================
+   AÇÕES & NOTIFICAÇÕES
+=========================== */
 function toggleItem(id, label){
   let order = getOrder();
   
   if(order.includes(id)){
+    // Remove
     order = order.filter(x => x !== id);
     showToast(`Removido: <b>${label}</b>`, 'normal');
   } else {
+    // Adiciona com verificação de limite
     if(order.length >= CONFIG.MAX_TABS) {
       showToast(`Limite de ${CONFIG.MAX_TABS} abas atingido!`, 'error');
       return;
@@ -754,6 +898,7 @@ function toggleItem(id, label){
   
   save(CONFIG.KEYS.ORDER, order);
   renderBar();
+  // Atualiza apenas visualmente sem perder estado do input se possível, ou re-renderiza
   renderDrawer(document.getElementById('ag-search-input').value);
 }
 
@@ -768,6 +913,7 @@ function handleAction(id, label){
     renderBar();
     renderDrawer(document.getElementById('ag-search-input').value);
   } else {
+    // Modo Fixo: Prompt simples (pode ser melhorado para modal depois, mas cumpre o requisito)
     const currentIndex = order.indexOf(id);
     const newPos = prompt(`Mover "${label}" para qual posição? (1-${order.length})`, currentIndex + 1);
     
