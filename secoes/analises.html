@@ -11,6 +11,7 @@
   </div>
 
   <div id="hero-area"></div>
+
   <div id="container-principal"></div>
   
   <div id="pagination-control" style="text-align: center; padding: 21px; display: none;">
@@ -70,16 +71,6 @@
     let noticiasExibidas = 5;
     let playerAlvo = '';
     let urlAlvo = '';
-
-    // --- NOVA FUNÇÃO: NOTIFICAR O SISTEMA DE ABAS ---
-    function syncAbas(categoria) {
-      if (!categoria) return;
-      // Normaliza para o ID usado no recomendacao-secao.js (ex: Opinião -> opiniao)
-      const idLimpo = categoria.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
-      if (typeof window.track === 'function') {
-        window.track(idLimpo);
-      }
-    }
 
     function limparEspacos(url) {
       return url ? url.trim() : url;
@@ -145,6 +136,7 @@
       document.getElementById('modal-resumo').innerText = noticia.resumo;
       document.getElementById('modal-link').href = noticia.linkArtigo;
 
+      // LOGICA DE CAPA NO MODAL (Prioriza capaNoticia)
       const modalCapaContainer = document.getElementById('modal-capa-container');
       const modalCapaImg = document.getElementById('modal-capa-img');
       const imgCapa = noticia.capaNoticia || noticia.capaUrl;
@@ -183,9 +175,6 @@
       document.getElementById('modal-video').src = limparEspacos(noticia.videoPrincipal);
       document.getElementById('modal-noticia').style.display = 'block';
 
-      // Sincroniza a aba ao abrir o modal
-      syncAbas(noticia.categoria);
-      
       setTimeout(() => incrementarVisualizacao(noticia.id), 50);
     }
 
@@ -254,6 +243,7 @@
             const spanView = artigoExistente.querySelector('.num-view');
             if(spanView) spanView.innerText = news.visualizacoes || 0;
         } else {
+            // LOGICA DA CAPA DO CARD: 16:9 SANGREADA (LARGURA TOTAL)
             const imgFeed = news.capaNoticia || news.capaUrl;
             const capaHTML = imgFeed ? `
                 <div class="noticia-capa" style="margin: -15px -15px 15px -15px;">
@@ -280,12 +270,10 @@
             <article class="destaque-secao" id="artigo-${news.id}" style="--tema-cor: ${news.cor}">
               <div class="destaque-padding">
                 ${capaHTML}
-                <div class="destaque-categoria" onclick="window.track('${news.categoria.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')}')" style="cursor:pointer">
-                  <i class="fa-solid fa-hashtag"></i> ${news.categoria}
-                </div>
+                <div class="destaque-categoria"><i class="fa-solid fa-hashtag"></i> ${news.categoria}</div>
                 
                 <div class="destaque-header">
-                  <h2 class="destaque-titulo" onclick='window.abrirNoticiaEmModal(${JSON.stringify(news).replace(/'/g, "'")})' style="cursor:pointer">${news.titulo}</h2>
+                  <h2 class="destaque-titulo" onclick='window.abrirNoticiaEmModal(${JSON.stringify(news).replace(/'/g, "&apos;")})' style="cursor:pointer">${news.titulo}</h2>
                   <div class="menu-opcoes-container" tabindex="0">
                     <button class="btn-tres-pontos"><i class="fa-solid fa-ellipsis-vertical"></i></button>
                     <div class="dropdown-conteudo header-dropdown">
@@ -369,13 +357,7 @@
       onSnapshot(collection(db, "analises"), (snapshot) => {
         todasAsNoticias = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         todasAsNoticias.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-        
-        if(todasAsNoticias.length > 0) { 
-            document.getElementById('novo-artigo-titulo').innerText = todasAsNoticias[0].titulo;
-            // Sincroniza a aba principal com a categoria da notícia mais recente
-            syncAbas(todasAsNoticias[0].categoria);
-        }
-        
+        if(todasAsNoticias.length > 0) { document.getElementById('novo-artigo-titulo').innerText = todasAsNoticias[0].titulo; }
         renderizarNoticias();
         verificarNoticiaNaUrl();
       });
