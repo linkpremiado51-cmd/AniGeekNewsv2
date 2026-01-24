@@ -36,7 +36,7 @@ const CATALOGO = [
     ]
   },
   {
-    sessao: "ANÁLISES",
+    sessao: "ANIGEEKNEWS",
     id: 'analises',
     cor: "#8A2BE2",
     itens: [
