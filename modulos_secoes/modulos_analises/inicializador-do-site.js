@@ -3,7 +3,7 @@
  * O Chefe: Orquestra a inicialização de todos os módulos.
  */
 
-// 1. Importações de Configuração e Banco (Caminhos relativos corretos)
+// 1. Importações de Configuração e Banco
 import { db } from "./01-conexao-com-servidor/configuracao-firebase.js";
 import { iniciarEscutaNoticias } from "./03-banco-de-dados/buscar-noticias-ao-vivo.js";
 import { configurarCurtidas } from "./03-banco-de-dados/salvar-curtidas.js";
@@ -21,9 +21,6 @@ import "./06-cliques-do-usuario/fechar-janelas.js";
 let todasAsNoticias = [];
 let noticiasExibidas = 5;
 
-/**
- * Getters e Setters para controle de estado
- */
 const getNoticias = () => todasAsNoticias;
 const setNoticias = (novasNoticias) => { todasAsNoticias = novasNoticias; };
 const getExibidas = () => noticiasExibidas;
@@ -31,33 +28,36 @@ const setExibidas = (valor) => { noticiasExibidas = valor; };
 
 /**
  * Função principal de inicialização
+ * Exportada para ser chamada manualmente pelo navegacao.js
  */
 export function inicializarApp() {
+    console.log("Módulo de Análises: Inicializando componentes...");
+    
     // A. Inicia a escuta em tempo real do Firestore
     iniciarEscutaNoticias(db, (noticias) => {
         setNoticias(noticias);
         
-        // Atualiza o título da última atualização no topo
         if(noticias.length > 0) {
             const labelNovo = document.getElementById('novo-artigo-titulo');
             if(labelNovo) labelNovo.innerText = noticias[0].titulo;
         }
 
-        // B. Verifica se há um ID na URL para abrir o modal automaticamente
         verificarNoticiaNaUrl(noticias);
     }, getExibidas);
 
-    // C. Configura os eventos de botões fixos na tela
+    // B. Configura os eventos de botões
     configurarBotaoCarregarMais(getNoticias, getExibidas, setExibidas);
     configurarConfirmacaoVideo();
     
-    // D. Inicializa sistema de curtidas
+    // C. Inicializa sistema de curtidas
     configurarCurtidas(db);
 }
 
-// Executa automaticamente ao carregar o script
-if (document.readyState === 'complete') {
+/**
+ * AUTO-EXECUÇÃO INTELIGENTE:
+ * Só executa sozinho se o container principal já existir no DOM.
+ * Caso contrário, ele aguarda o chamado do navegacao.js
+ */
+if (document.getElementById('container-principal')) {
     inicializarApp();
-} else {
-    document.addEventListener('DOMContentLoaded', inicializarApp);
 }
