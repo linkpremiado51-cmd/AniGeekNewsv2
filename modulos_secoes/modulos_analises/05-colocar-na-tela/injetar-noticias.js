@@ -1,4 +1,3 @@
-
 /**
  * modulos_secoes/modulos_analises/05-colocar-na-tela/injetar-noticias.js
  * Montador: Orquestra a exibição dos cards no container principal.
@@ -42,33 +41,31 @@ export async function renderizarNoticias(todasAsNoticias, noticiasExibidas) {
         renderizarHero(todasAsNoticias[0]); 
     }
 
-    // 2. Filtra apenas a quantidade permitida pela paginação
-    const listaParaExibir = todasAsNoticias.slice(0, noticiasExibidas);
+    // Se o argumento noticiasExibidas não for passado (ex: vindo do abrirNoticiaUnica), 
+    // assumimos que queremos mostrar todas da lista enviada.
+    const limite = noticiasExibidas || todasAsNoticias.length;
+    const listaParaExibir = todasAsNoticias.slice(0, limite);
 
     listaParaExibir.forEach(news => {
         const artigoExistente = document.getElementById(`artigo-${news.id}`);
         const shareUrl = `${baseUrl}?id=${encodeURIComponent(news.id)}`;
 
         if (artigoExistente) {
-            // Se o card já existe, apenas atualizamos os números (Performance)
             const spanLike = artigoExistente.querySelector('.num-like');
             if (spanLike) spanLike.innerText = news.curtidas || 0;
             
             const spanView = artigoExistente.querySelector('.num-view');
             if (spanView) spanView.innerText = news.visualizacoes || 0;
         } else {
-            // Se o card é novo, gera o HTML usando o molde e injeta
             const html = criarTemplateCard(news, shareUrl);
             container.insertAdjacentHTML('beforeend', html);
         }
     });
 
-    // 3. Gerencia a visibilidade do botão "Carregar Mais"
     if (btnPaginacao) {
-        btnPaginacao.style.display = noticiasExibidas < todasAsNoticias.length ? 'block' : 'none';
+        btnPaginacao.style.display = limite < todasAsNoticias.length ? 'block' : 'none';
     }
 
-    // 4. Aciona o carregamento dos comentários (Dinamismo extra)
     try {
         const containersComentarios = document.querySelectorAll('.container-comentarios-dinamico');
         if (containersComentarios.length > 0) {
@@ -78,3 +75,8 @@ export async function renderizarNoticias(todasAsNoticias, noticiasExibidas) {
         console.error("Erro ao carregar script de comentários:", err);
     }
 }
+
+// PONTE DE COMPATIBILIDADE:
+// Expõe a função para o objeto window para que o navegacao.js 
+// possa disparar a renderização de notícias únicas ou seções.
+window.renderizarNoticias = renderizarNoticias;
