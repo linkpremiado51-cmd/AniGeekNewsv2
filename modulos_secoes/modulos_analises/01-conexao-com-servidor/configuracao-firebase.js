@@ -1,11 +1,8 @@
-
-// modulos_secoes/modulos_analises/01-conexao-com-servidor/configuracao-firebase.js
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 /**
- * Configurações de acesso ao Firebase extraídas do analises.html.
+ * Configurações de acesso ao Firebase.
  */
 const firebaseConfig = {
   apiKey: "AIzaSyBC_ad4X9OwCHKvcG_pNQkKEl76Zw2tu6o",
@@ -17,8 +14,14 @@ const firebaseConfig = {
   measurementId: "G-G5T8CCRGZT"
 };
 
-// Inicializa o aplicativo Firebase.
-const app = initializeApp(firebaseConfig);
+// 1. Inicializa o Firebase (Protegido contra múltiplas inicializações)
+let app;
+try {
+    app = initializeApp(firebaseConfig);
+    console.log("🔥 Firebase: Conectado com sucesso.");
+} catch (error) {
+    console.error("🔥 Firebase: Erro na inicialização:", error);
+}
 
-// Exporta o banco de dados Firestore para uso nos demais módulos.
+// 2. Exporta o Firestore
 export const db = getFirestore(app);
