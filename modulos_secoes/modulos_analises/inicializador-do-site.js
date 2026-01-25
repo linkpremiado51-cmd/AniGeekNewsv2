@@ -1,6 +1,6 @@
 /**
  * modulos_analises/inicializador-do-site.js
- * O Chefe Autônomo: Revisado para suportar componentes assíncronos.
+ * O Chefe Autônomo: Revisado para suportar componentes assíncronos e o novo Gerenciador de Abas.
  */
 console.log("🔥 inicializador-do-site.js foi carregado");
 
@@ -17,6 +17,9 @@ import { verificarNoticiaNaUrl } from "./05-colocar-na-tela/mostrar-no-modal.js"
 import "./06-cliques-do-usuario/gerenciar-compartilhamento.js";
 import { configurarConfirmacaoVideo } from "./06-cliques-do-usuario/gerenciar-videos.js";
 import "./06-cliques-do-usuario/fechar-janelas.js";
+
+// 4. Importação do Gerenciador de Abas (Novo)
+import { inicializarSistemaAbas } from "./sub_modulos_analises/gerenciador_de_abas/gerenciador-abas.js";
 
 // ESTADO GLOBAL DO MÓDULO
 let todasAsNoticias = [];
@@ -63,7 +66,10 @@ export async function inicializarApp() {
     configurarBotaoCarregarMais(getNoticias, getExibidas, setExibidas);
     configurarConfirmacaoVideo();
     
-    // C. Ativação de Backend (Curtidas)
+    // C. Ativação do Sistema de Abas (Interface Dinâmica)
+    inicializarSistemaAbas();
+    
+    // D. Ativação de Backend (Curtidas)
     configurarCurtidas(db);
     
     console.log("✅ [Sistema] Todos os módulos e componentes de UI estão sincronizados.");
