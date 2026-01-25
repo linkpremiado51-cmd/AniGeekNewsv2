@@ -1,6 +1,6 @@
 /**
- * modulos_secoes/modulos_analises/inicializador-do-site.js
- * O Chefe: Orquestra a inicialização de todos os módulos.
+ * modulos_analises/inicializador-do-site.js
+ * O Chefe Autônomo: Agora roda de forma independente.
  */
 
 // 1. Importações de Configuração e Banco
@@ -8,56 +8,65 @@ import { db } from "./01-conexao-com-servidor/configuracao-firebase.js";
 import { iniciarEscutaNoticias } from "./03-banco-de-dados/buscar-noticias-ao-vivo.js";
 import { configurarCurtidas } from "./03-banco-de-dados/salvar-curtidas.js";
 
-// 2. Importações de Interface
+// 2. Importações de Interface (Renderização)
 import { configurarBotaoCarregarMais } from "./05-colocar-na-tela/carregar-mais-conteudo.js";
 import { verificarNoticiaNaUrl } from "./05-colocar-na-tela/mostrar-no-modal.js";
 
-// 3. Importações de Interação
+// 3. Importações de Interação (Eventos de Clique)
+// Nota: Ao importar arquivos sem 'export', o JS executa o conteúdo deles imediatamente
 import "./06-cliques-do-usuario/gerenciar-compartilhamento.js";
 import { configurarConfirmacaoVideo } from "./06-cliques-do-usuario/gerenciar-videos.js";
 import "./06-cliques-do-usuario/fechar-janelas.js";
 
-// ESTADO GLOBAL DO MÓDULO
+// ESTADO GLOBAL DO MÓDULO (Private State)
 let todasAsNoticias = [];
 let noticiasExibidas = 5;
 
+// Helpers para os módulos filhos acessarem os dados sem bagunçar o global
 const getNoticias = () => todasAsNoticias;
 const setNoticias = (novasNoticias) => { todasAsNoticias = novasNoticias; };
 const getExibidas = () => noticiasExibidas;
 const setExibidas = (valor) => { noticiasExibidas = valor; };
 
 /**
- * Função principal de inicialização
- * Exportada para ser chamada manualmente pelo navegacao.js
+ * Função de Inicialização Total
  */
 export function inicializarApp() {
-    console.log("Módulo de Análises: Inicializando componentes...");
+    console.log("🚀 Motor de Análises iniciado em modo Independente.");
     
-    // A. Inicia a escuta em tempo real do Firestore
+    // A. Conexão em Tempo Real (Radar)
+    // Passamos o DB e as funções de estado para o buscador
     iniciarEscutaNoticias(db, (noticias) => {
         setNoticias(noticias);
         
-        if(noticias.length > 0) {
-            const labelNovo = document.getElementById('novo-artigo-titulo');
-            if(labelNovo) labelNovo.innerText = noticias[0].titulo;
+        // Atualiza a barra de "Última Atualização" se ela existir no novo index
+        const labelNovo = document.getElementById('novo-artigo-titulo');
+        if(labelNovo && noticias.length > 0) {
+            labelNovo.innerText = noticias[0].titulo;
         }
 
+        // Verifica se o usuário veio de um link direto (?id=...)
         verificarNoticiaNaUrl(noticias);
     }, getExibidas);
 
-    // B. Configura os eventos de botões
+    // B. Ativação de Botões e UX
     configurarBotaoCarregarMais(getNoticias, getExibidas, setExibidas);
     configurarConfirmacaoVideo();
     
-    // C. Inicializa sistema de curtidas
+    // C. Ativação de Backend (Curtidas)
     configurarCurtidas(db);
 }
 
 /**
- * AUTO-EXECUÇÃO INTELIGENTE:
- * Só executa sozinho se o container principal já existir no DOM.
- * Caso contrário, ele aguarda o chamado do navegacao.js
+ * DISPARO AUTOMÁTICO
+ * Como este index.html é dedicado ao módulo, o script executa 
+ * imediatamente assim que o DOM estiver pronto.
  */
-if (document.getElementById('container-principal')) {
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', inicializarApp);
+} else {
     inicializarApp();
 }
+
+// Expõe para o console caso precise debugar manualmente
+window.recarregarAppGeek = inicializarApp;
