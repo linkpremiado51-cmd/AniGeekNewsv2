@@ -1,11 +1,16 @@
-
 // modulos_secoes/modulos_analises/03-banco-de-dados/salvar-curtidas.js
 import { doc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 import { db } from "../01-conexao-com-servidor/configuracao-firebase.js";
 
 /**
- * Coração: Gerencia os likes das notícias.
- * @param {string} idNoticia - O ID único do documento no Firestore.
+ * Nova função para satisfazer o inicializador-do-site.js
+ */
+export function configurarCurtidas() {
+  console.log("👍 Módulo de curtidas configurado e pronto.");
+}
+
+/**
+ * Gerencia os likes das notícias.
  */
 export async function curtirNoticia(idNoticia) {
   try {
