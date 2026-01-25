@@ -1,5 +1,5 @@
 /**
- * modulos_secoes/modulos_analises/05-colocar-na-tela/injetar-noticias.js
+ * modulos_analises/05-colocar-na-tela/injetar-noticias.js
  * Montador: Orquestra a exibição dos cards no container principal.
  */
 
@@ -32,17 +32,20 @@ export function renderizarHero(primeiraNoticia) {
 export async function renderizarNoticias(todasAsNoticias, noticiasExibidas) {
     const container = document.getElementById('container-principal');
     const btnPaginacao = document.getElementById('pagination-control');
+    
     if (!container) return;
+
+    // LIMPEZA INICIAL: Remove o texto "Iniciando motor modular..." no primeiro carregamento
+    if (container.innerHTML.includes("Iniciando motor modular...")) {
+        container.innerHTML = "";
+    }
 
     const baseUrl = window.location.origin + window.location.pathname;
 
-    // 1. Atualiza o Hero com a notícia mais recente
     if (todasAsNoticias.length > 0) { 
         renderizarHero(todasAsNoticias[0]); 
     }
 
-    // Se o argumento noticiasExibidas não for passado (ex: vindo do abrirNoticiaUnica), 
-    // assumimos que queremos mostrar todas da lista enviada.
     const limite = noticiasExibidas || todasAsNoticias.length;
     const listaParaExibir = todasAsNoticias.slice(0, limite);
 
@@ -66,17 +69,16 @@ export async function renderizarNoticias(todasAsNoticias, noticiasExibidas) {
         btnPaginacao.style.display = limite < todasAsNoticias.length ? 'block' : 'none';
     }
 
+    // Tenta carregar comentários de forma segura (Ajustado para o novo Path)
     try {
         const containersComentarios = document.querySelectorAll('.container-comentarios-dinamico');
         if (containersComentarios.length > 0) {
-            await import('../../comentarios/comentarios.js');
+            // Se o arquivo estiver fora da pasta modulos_analises, usamos o path absoluto da raiz
+            await import('/comentarios/comentarios.js'); 
         }
     } catch (err) {
-        console.error("Erro ao carregar script de comentários:", err);
+        console.warn("Aviso: Módulo de comentários não encontrado no caminho especificado.");
     }
 }
 
-// PONTE DE COMPATIBILIDADE:
-// Expõe a função para o objeto window para que o navegacao.js 
-// possa disparar a renderização de notícias únicas ou seções.
 window.renderizarNoticias = renderizarNoticias;
