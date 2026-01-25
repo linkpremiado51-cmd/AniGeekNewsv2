@@ -1,25 +1,22 @@
 /**
  * modulos_analises/inicializador-do-site.js
  * O Chefe Autônomo: Agora roda de forma independente.
- * Editado para: Funcionar corretamente quando o HTML está em uma subpasta (secoes/)
  */
-console.log("🔥 inicializador-do-site.js foi carregado com sucesso!");
-
+console.log("🔥 inicializador-do-site.js foi carregado");
 // 1. Importações de Configuração e Banco
-// Mudamos de ./ para ../ porque o script precisa "voltar" uma pasta para achar os módulos
-import { db } from "../01-conexao-com-servidor/configuracao-firebase.js";
-import { iniciarEscutaNoticias } from "../03-banco-de-dados/buscar-noticias-ao-vivo.js";
-import { configurarCurtidas } from "../03-banco-de-dados/salvar-curtidas.js";
+import { db } from "./01-conexao-com-servidor/configuracao-firebase.js";
+import { iniciarEscutaNoticias } from "./03-banco-de-dados/buscar-noticias-ao-vivo.js";
+import { configurarCurtidas } from "./03-banco-de-dados/salvar-curtidas.js";
 
 // 2. Importações de Interface (Renderização)
-import { configurarBotaoCarregarMais } from "../05-colocar-na-tela/carregar-mais-conteudo.js";
-import { verificarNoticiaNaUrl } from "../05-colocar-na-tela/mostrar-no-modal.js";
+import { configurarBotaoCarregarMais } from "./05-colocar-na-tela/carregar-mais-conteudo.js";
+import { verificarNoticiaNaUrl } from "./05-colocar-na-tela/mostrar-no-modal.js";
 
 // 3. Importações de Interação (Eventos de Clique)
 // Nota: Ao importar arquivos sem 'export', o JS executa o conteúdo deles imediatamente
-import "../06-cliques-do-usuario/gerenciar-compartilhamento.js";
-import { configurarConfirmacaoVideo } from "../06-cliques-do-usuario/gerenciar-videos.js";
-import "../06-cliques-do-usuario/fechar-janelas.js";
+import "./06-cliques-do-usuario/gerenciar-compartilhamento.js";
+import { configurarConfirmacaoVideo } from "./06-cliques-do-usuario/gerenciar-videos.js";
+import "./06-cliques-do-usuario/fechar-janelas.js";
 
 // ESTADO GLOBAL DO MÓDULO (Private State)
 let todasAsNoticias = [];
@@ -35,7 +32,7 @@ const setExibidas = (valor) => { noticiasExibidas = valor; };
  * Função de Inicialização Total
  */
 export function inicializarApp() {
-    console.log("🚀 Motor de Análises iniciado em modo Independente e caminhos corrigidos.");
+    console.log("🚀 Motor de Análises iniciado em modo Independente.");
     
     // A. Conexão em Tempo Real (Radar)
     // Passamos o DB e as funções de estado para o buscador
@@ -62,7 +59,8 @@ export function inicializarApp() {
 
 /**
  * DISPARO AUTOMÁTICO
- * O script executa imediatamente assim que o DOM estiver pronto.
+ * Como este index.html é dedicado ao módulo, o script executa 
+ * imediatamente assim que o DOM estiver pronto.
  */
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', inicializarApp);
