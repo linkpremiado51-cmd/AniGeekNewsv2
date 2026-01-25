@@ -1,19 +1,16 @@
 /**
  * modulos_analises/05-colocar-na-tela/injetar-noticias.js
- * Montador: Orquestra a exibição dos cards no container principal.
  */
 
 import { criarTemplateCard } from "../04-desenhos-visuais/molde-do-card-noticia.js";
 import { limparEspacos } from "../02-ajustes-de-texto/formatar-links-e-espacos.js";
 
-/**
- * Renderiza o banner de destaque (Hero) no topo da página.
- */
 export function renderizarHero(primeiraNoticia) {
     const heroArea = document.getElementById('hero-area');
     if (!heroArea || !primeiraNoticia) return;
 
     if (primeiraNoticia.capaUrl) {
+        console.log("🖼️ Injetando Hero: " + primeiraNoticia.titulo);
         heroArea.innerHTML = `
             <div class="hero-topo-container">
                 <img src="${limparEspacos(primeiraNoticia.capaUrl)}" class="hero-topo-img" alt="Capa">
@@ -26,19 +23,24 @@ export function renderizarHero(primeiraNoticia) {
     }
 }
 
-/**
- * Gerencia a injeção de notícias e atualização de contadores em tempo real.
- */
 export async function renderizarNoticias(todasAsNoticias, noticiasExibidas) {
     const container = document.getElementById('container-principal');
     const btnPaginacao = document.getElementById('pagination-control');
     
-    if (!container) return;
+    if (!container) {
+        console.error("❌ Erro: Container principal não encontrado no HTML!");
+        return;
+    }
 
-    // LIMPEZA INICIAL: Remove o texto "Iniciando motor modular..." no primeiro carregamento
+    // Limpa o status de carregamento
+    const statusMotor = document.getElementById('status-motor');
+    if (statusMotor) statusMotor.remove();
+
     if (container.innerHTML.includes("Iniciando motor modular...")) {
         container.innerHTML = "";
     }
+
+    console.log(`🏗️ Montador: Iniciando renderização de ${todasAsNoticias.length} itens.`);
 
     const baseUrl = window.location.origin + window.location.pathname;
 
@@ -50,18 +52,26 @@ export async function renderizarNoticias(todasAsNoticias, noticiasExibidas) {
     const listaParaExibir = todasAsNoticias.slice(0, limite);
 
     listaParaExibir.forEach(news => {
-        const artigoExistente = document.getElementById(`artigo-${news.id}`);
-        const shareUrl = `${baseUrl}?id=${encodeURIComponent(news.id)}`;
+        try {
+            const artigoExistente = document.getElementById(`artigo-${news.id}`);
+            const shareUrl = `${baseUrl}?id=${encodeURIComponent(news.id)}`;
 
-        if (artigoExistente) {
-            const spanLike = artigoExistente.querySelector('.num-like');
-            if (spanLike) spanLike.innerText = news.curtidas || 0;
-            
-            const spanView = artigoExistente.querySelector('.num-view');
-            if (spanView) spanView.innerText = news.visualizacoes || 0;
-        } else {
-            const html = criarTemplateCard(news, shareUrl);
-            container.insertAdjacentHTML('beforeend', html);
+            if (artigoExistente) {
+                const spanLike = artigoExistente.querySelector('.num-like');
+                if (spanLike) spanLike.innerText = news.curtidas || 0;
+                
+                const spanView = artigoExistente.querySelector('.num-view');
+                if (spanView) spanView.innerText = news.visualizacoes || 0;
+            } else {
+                console.log(`📝 Criando card para: ${news.titulo || 'Sem Título'}`);
+                const html = criarTemplateCard(news, shareUrl);
+                
+                if (!html) throw new Error("Template do card retornou vazio.");
+                
+                container.insertAdjacentHTML('beforeend', html);
+            }
+        } catch (err) {
+            console.error(`❌ Erro ao criar card do ID ${news.id}:`, err.message);
         }
     });
 
@@ -69,15 +79,16 @@ export async function renderizarNoticias(todasAsNoticias, noticiasExibidas) {
         btnPaginacao.style.display = limite < todasAsNoticias.length ? 'block' : 'none';
     }
 
-    // Tenta carregar comentários de forma segura (Ajustado para o novo Path)
+    // Carregamento de comentários com try/catch reforçado
     try {
         const containersComentarios = document.querySelectorAll('.container-comentarios-dinamico');
         if (containersComentarios.length > 0) {
-            // Se o arquivo estiver fora da pasta modulos_analises, usamos o path absoluto da raiz
-            await import('/comentarios/comentarios.js'); 
+            console.log("💬 Carregando módulo de comentários...");
+            // Caminho relativo para subir 3 níveis e entrar em /comentarios/
+            await import('../../../comentarios/comentarios.js'); 
         }
     } catch (err) {
-        console.warn("Aviso: Módulo de comentários não encontrado no caminho especificado.");
+        console.warn("⚠️ Comentários: Módulo não carregado (verifique o caminho).");
     }
 }
 
