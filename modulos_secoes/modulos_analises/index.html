@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="../../estilos/secoes/analises.css">
 
     <style>                    
-        /* Seus estilos CSS permanecem os mesmos */
+        /* Seus estilos CSS originais mantidos */
         .destaque-wrapper { width: 100vw; position: relative; left: 50%; right: 50%; margin-left: -50vw; margin-right: -50vw; font-family: 'Inter', sans-serif; background: #ffffff; color: #121212; overflow-x: hidden; box-sizing: border-box; }
         .destaque-wrapper * { box-sizing: border-box; }
         .destaque-secao { width: 100%; margin-bottom: 56px; border-bottom: 1px solid #eaeaea; padding-bottom: 14px; }
@@ -39,54 +39,27 @@
         .destaque-acoes { display: flex; padding: 10.5px 17.5px 14px; gap: 10.5px; max-width: 770px; margin: 0 auto; }
         .btn-acao { border: 1px solid #d1d1d1; background: transparent; padding: 8.4px 14px; font-weight: 700; font-size: 8.4px; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; gap: 5.6px; }
         .btn-acao:hover { background: #121212; color: #fff; border-color: #121212; }
-        .carrossel-temas { width: 100%; margin: 0 auto 28px; }
-        .carrossel-header { padding: 0 17.5px; max-width: 770px; margin: 0 auto 8.4px; display: flex; align-items: center; gap: 7px; }
-        .temas-label { font-size: 7.7px; font-weight: 900; text-transform: uppercase; color: #888; }
-        .temas-count { background: #f0f0f0; color: #121212; font-size: 6.3px; font-weight: 800; padding: 1.4px 4.2px; border-radius: 2.8px; }
-        .temas-scroll-wrapper { width: 100%; overflow-x: auto; scrollbar-width: none; padding: 0 17.5px; }
-        .temas-container { display: flex; gap: 8.4px; padding-bottom: 3.5px; width: max-content; }
-        .tema-card { flex: 0 0 112px; cursor: pointer; transition: transform 0.2s; }
-        .tema-card:hover { transform: scale(1.03); }
-        .tema-thumb { width: 100%; aspect-ratio: 16/9; border-radius: 4.2px; object-fit: cover; margin-bottom: 4.2px; }
-        .tema-titulo { font-size: 7.7px; font-weight: 700; line-height: 1.3; color: #121212; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
         #notificacao-video { position: fixed; bottom: 14px; left: 50%; transform: translateX(-50%) translateY(150%); background: #121212; color: #fff; padding: 8.4px 14px; z-index: 9999; display: flex; align-items: center; gap: 10.5px; border-radius: 2.8px; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); border-left: 2.8px solid var(--notif-cor, #fff); min-width: 196px; }
         #notificacao-video.visivel { transform: translateX(-50%) translateY(0); }
         .btn-confirmar-video { background: #fff; color: #000; border: none; padding: 4.2px 8.4px; font-weight: 800; font-size: 7px; text-transform: uppercase; cursor: pointer; }
         @media (max-width: 768px) { .destaque-info-grid { grid-template-columns: 1fr 1fr; } .destaque-acoes { flex-wrap: wrap; } .menu-opcoes-container { flex: 1; } .btn-acao { width: 100%; justify-content: center; } }
+        #notificacao-novo-artigo { position: fixed; top: 14px; right: 14px; background: #2563eb; color: #fff; padding: 10.5px 17.5px; border-radius: 5.6px; box-shadow: 0 7px 21px rgba(0,0,0,0.2); z-index: 10000; display: flex; align-items: center; gap: 8.4px; transform: translateX(150%); transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); font-family: 'Inter', sans-serif; }
+        #notificacao-novo-artigo.mostrar { transform: translateX(0); }
         #toast-copiado { position: fixed; bottom: 14px; left: 50%; transform: translateX(-50%) translateY(150%); background: #4caf50; color: white; padding: 7px 14px; border-radius: 2.8px; font-size: 9.1px; font-weight: 600; z-index: 9999; opacity: 0; transition: transform 0.3s, opacity 0.3s; }
         #toast-copiado.mostrar { transform: translateX(-50%) translateY(0); opacity: 1; }
-        .hero-topo-container { width: 100%; background: #fff; margin-bottom: 15px; overflow: hidden; }
-        .hero-topo-img { width: 100%; height: auto; display: block; object-fit: cover; max-height: 450px; }
-        .hero-topo-desc { padding: 15px; font-size: 13px; color: #555; line-height: 1.6; background: #fdfdfd; border-bottom: 1px solid #eee; font-style: italic; }
-        .premium-actions-bar { display: flex; align-items: center; padding: 8.4px 10.5px; gap: 7px; border-top: 1px solid #f0f0f0; background: #fff; overflow-x: auto; }
-        .btn-premium-icon { background: #f8f9fa; border: 1px solid transparent; padding: 5.6px 9.8px; border-radius: 14px; font-size: 8.4px; font-weight: 700; color: #444; display: flex; align-items: center; gap: 5.6px; cursor: pointer; transition: all 0.2s ease; white-space: nowrap; }
-        .btn-premium-icon:hover { background: #e9ecef; border-color: #dee2e6; }
-        .btn-stats { background: transparent; border: 1px solid #eee; cursor: default; }
-        .container-comentarios-dinamico { margin: 7px 10.5px 17.5px 10.5px; }
-        .ficha-categoria { background: #fff9f0; border-radius: 6px; margin: 6px 0; padding: 7px 10px; display: flex; align-items: center; gap: 7px; font-size: 9px; border-left: 4px solid; }
-        .ficha-categoria img { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; }
-        .ficha-categoria .ficha-info { display: flex; gap: 12px; flex-wrap: wrap; max-width: 100%; overflow-x: auto; padding-bottom: 2px; }
-        .ficha-categoria .info-item { display: flex; align-items: baseline; gap: 3px; white-space: nowrap; }
-        .secao-produtos-banner { margin: 14px 10.5px; padding: 12px; background: #fff; border: 1px solid #f0f0f0; border-radius: 12px; }
-        .banner-header { font-size: 10px; font-weight: 800; color: #999; text-transform: uppercase; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
-        .banner-lista { display: flex; flex-direction: column; gap: 10px; }
-        .banner-produto-item { display: flex; text-decoration: none; background: #fafafa; border: 1px solid #eee; border-radius: 10px; overflow: hidden; transition: all 0.3s ease; }
-        .banner-img-box { width: 95px; min-width: 95px; height: 95px; background: #fff; display: flex; align-items: center; justify-content: center; padding: 8px; }
-        .banner-thumb { width: 100%; height: 100%; object-fit: contain; }
-        .banner-info { padding: 10px 14px; display: flex; flex-direction: column; justify-content: center; flex: 1; }
-        .banner-titulo { font-size: 11.5px; font-weight: 800; color: #1a1a1a; margin-bottom: 3px; line-height: 1.2; }
-        .banner-desc { font-size: 9px; color: #777; margin-bottom: 8px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .banner-link-fake { font-size: 9px; font-weight: 700; color: var(--tema-cor); display: flex; align-items: center; gap: 4px; text-transform: uppercase; }
-
         body { background-color: var(--bg, #0a0a0a); color: var(--text-main, #ffffff); font-family: 'Merriweather', serif; margin: 0; padding: 0; }
         .container-app { max-width: 900px; margin: 0 auto; padding: 20px; }
-        #hero-area { margin-bottom: 40px; }
-        #notificacao-novo-artigo { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.05); padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px; }
-        #toast-copiado { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #e63946; color: white; padding: 10px 20px; border-radius: 50px; display: none; z-index: 9999; }
-        #toast-copiado.mostrar { display: block; }
+        #container-principal { min-height: 300px; }
     </style>
 </head>
 <body>
+
+    <script>
+        window.onerror = function(msg, url, line) {
+            alert("🚨 ERRO NO MOTOR:\n" + msg + "\nLinha: " + line + "\nArquivo: " + url.split('/').pop());
+            return false;
+        };
+    </script>
 
     <div class="container-app">
         <div id="notificacao-novo-artigo">
@@ -100,7 +73,10 @@
         <div id="hero-area"></div>
 
         <div id="container-principal">
-            <p style="text-align: center; padding: 100px; opacity: 0.5;">Iniciando motor modular...</p>
+            <p id="status-motor" style="text-align: center; padding: 100px; opacity: 0.5;">
+                <i class="fa-solid fa-gear fa-spin"></i><br>
+                Iniciando motor modular...
+            </p>
         </div>
 
         <div id="pagination-control" style="text-align: center; padding: 40px; display: none;">
@@ -118,10 +94,6 @@
     </div>
 
     <div id="toast-copiado">Copiado com sucesso!</div>
-
-    <script>
-        console.log("🌐 Sistema: Index HTML carregado. Tentando chamar o Chefe...");
-    </script>
 
     <script type="module" src="./inicializador-do-site.js"></script>
 
