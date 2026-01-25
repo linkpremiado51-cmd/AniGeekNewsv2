@@ -1,20 +1,19 @@
-
 /**
- * modulos_secoes/modulos_analises/04-desenhos-visuais/molde-do-card-noticia.js
+ * modulos_analises/04-desenhos-visuais/molde-do-card-noticia.js
  * Esqueleto: Define como o post aparece no feed principal.
  */
 
 import { limparEspacos } from "../02-ajustes-de-texto/formatar-links-e-espacos.js";
 
 export function criarTemplateCard(news, shareUrl) {
-    // Lógica de Capa (16:9 Sangrada)
+    // 1. Lógica de Capa (16:9 Sangrada)
     const imgFeed = news.capaNoticia || news.capaUrl;
     const capaHTML = imgFeed ? `
         <div class="noticia-capa" style="margin: -15px -15px 15px -15px;">
             <img src="${limparEspacos(imgFeed)}" style="width: 100%; aspect-ratio: 16 / 9; border-radius: 12px 12px 0 0; object-fit: cover; display: block;">
         </div>` : '';
 
-    // Lógica da Ficha do Editor (Se existir)
+    // 2. Lógica da Ficha do Editor
     let fichaCategoriaHtml = '';
     if (news.fichaCategoria) {
         fichaCategoriaHtml = `
@@ -31,6 +30,9 @@ export function criarTemplateCard(news, shareUrl) {
         </div>`;
     }
 
+    // 3. Tratamento de segurança para o JSON (Evita quebrar o HTML)
+    const newsDataEncoded = btoa(JSON.stringify(news));
+
     // Retorno do HTML completo do artigo
     return `
     <article class="destaque-secao" id="artigo-${news.id}" style="--tema-cor: ${news.cor}">
@@ -39,7 +41,7 @@ export function criarTemplateCard(news, shareUrl) {
         <div class="destaque-categoria"><i class="fa-solid fa-hashtag"></i> ${news.categoria}</div>
         
         <div class="destaque-header">
-          <h2 class="destaque-titulo" onclick='window.abrirNoticiaEmModal(${JSON.stringify(news).replace(/'/g, "&apos;")})' style="cursor:pointer">${news.titulo}</h2>
+          <h2 class="destaque-titulo" onclick="window.abrirModalGeek('${newsDataEncoded}')" style="cursor:pointer">${news.titulo}</h2>
           <div class="menu-opcoes-container" tabindex="0">
             <button class="btn-tres-pontos"><i class="fa-solid fa-ellipsis-vertical"></i></button>
             <div class="dropdown-conteudo header-dropdown">
@@ -107,3 +109,11 @@ export function criarTemplateCard(news, shareUrl) {
     </article>
     `;
 }
+
+// Ponte de decodificação para o modal não travar
+window.abrirModalGeek = (encodedData) => {
+    const news = JSON.parse(atob(encodedData));
+    if (window.abrirNoticiaEmModal) {
+        window.abrirNoticiaEmModal(news);
+    }
+};
