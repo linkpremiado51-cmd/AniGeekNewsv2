@@ -12,15 +12,28 @@
       box-sizing: border-box;
     }
 
+    :root {
+      --base-font-size: 16px;
+      --space-xs: 0.25rem;   /* 4px */
+      --space-sm: 0.5rem;    /* 8px */
+      --space-md: 0.75rem;   /* 12px */
+      --space-lg: 1rem;      /* 16px */
+      --space-xl: 1.5rem;    /* 24px */
+      --space-xxl: 2rem;     /* 32px */
+      --border-radius: 0.375rem; /* 6px */
+      --btn-min-height: 2.75rem; /* 44px */
+    }
+
     body {
       background-color: #ffffff;
       font-family: 'Inter', sans-serif;
       color: #121212;
-      line-height: 1.5;
+      line-height: 1.6;
+      font-size: var(--base-font-size);
     }
 
     header {
-      padding: 12px 17.5px;
+      padding: var(--space-md) var(--space-lg);
       background: white;
       position: sticky;
       top: 0;
@@ -36,89 +49,90 @@
     }
 
     .logo {
-      font-size: 20px;
+      font-size: clamp(1.25rem, 4vw, 1.5rem); /* 20px–24px */
       font-weight: 800;
       text-decoration: none;
       color: #121212;
     }
 
     .destaque-secao {
-      margin-bottom: 56px;
+      margin-bottom: var(--space-xxl);
       border-bottom: 1px solid #eaeaea;
-      padding-bottom: 14px;
+      padding-bottom: var(--space-md);
     }
 
     .destaque-padding {
-      padding: 0 17.5px;
+      padding: 0 var(--space-lg);
       max-width: 770px;
       margin: 0 auto;
     }
 
     .destaque-titulo {
-      font-size: clamp(18.2px, 3.5vw, 30.8px);
+      font-size: clamp(1.25rem, 4.5vw, 1.9rem); /* ~20px–30px */
       font-weight: 800;
-      line-height: 1.1;
-      letter-spacing: -0.7px;
+      line-height: 1.2;
+      letter-spacing: -0.5px;
       margin: 0;
       cursor: pointer;
+      color: #121212;
     }
 
     .destaque-categoria {
       color: var(--tema-cor);
-      font-size: 7.7px;
+      font-size: clamp(0.625rem, 2.5vw, 0.75rem); /* 10px–12px */
       font-weight: 800;
       text-transform: uppercase;
-      letter-spacing: 1.4px;
-      margin-bottom: 10.5px;
+      letter-spacing: 1.2px;
+      margin-bottom: var(--space-sm);
       display: flex;
       align-items: center;
-      gap: 5.6px;
+      gap: var(--space-sm);
     }
 
     .destaque-resumo {
-      font-size: clamp(11.2px, 1.4vw, 13.3px);
+      font-size: clamp(0.875rem, 3.2vw, 1rem); /* 14px–16px */
       line-height: 1.6;
       color: #444;
-      margin-bottom: 7px;
+      margin-bottom: var(--space-sm);
     }
 
     .btn-ver-artigo {
       display: inline-flex;
       align-items: center;
-      gap: 5.6px;
+      gap: var(--space-sm);
       color: var(--tema-cor);
       text-decoration: none;
-      font-size: 9.1px;
-      font-weight: 800;
+      font-size: clamp(0.75rem, 2.8vw, 0.875rem); /* 12px–14px */
+      font-weight: 700;
       text-transform: uppercase;
-      margin-bottom: 17.5px;
+      margin-bottom: var(--space-md);
     }
 
     .destaque-info-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(105px, 1fr));
-      gap: 14px;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: var(--space-md);
       background: #f8f9fa;
-      padding: 10.5px;
-      border-left: 2.8px solid var(--tema-cor);
-      margin-bottom: 17.5px;
+      padding: var(--space-sm);
+      border-left: 3px solid var(--tema-cor);
+      margin-bottom: var(--space-md);
     }
 
     .info-item {
       display: flex;
       flex-direction: column;
-      gap: 2.8px;
+      gap: var(--space-xs);
     }
 
     .info-label {
-      font-size: 7px;
+      font-size: clamp(0.625rem, 2.4vw, 0.75rem); /* 10px–12px */
       text-transform: uppercase;
       font-weight: 700;
       color: #888;
     }
 
     .info-valor {
-      font-size: 9.1px;
+      font-size: clamp(0.75rem, 2.8vw, 0.875rem); /* 12px–14px */
       font-weight: 600;
     }
 
@@ -128,37 +142,46 @@
       aspect-ratio: 16 / 9;
       border: none;
       display: block;
+      border-radius: var(--border-radius);
     }
 
     .premium-actions-bar {
       display: flex;
       align-items: center;
-      padding: 8.4px 10.5px;
-      gap: 7px;
+      padding: var(--space-sm) var(--space-md);
+      gap: var(--space-md);
       border-top: 1px solid #f0f0f0;
       background: #fff;
+      flex-wrap: wrap;
     }
 
     .btn-premium-icon {
       background: #f8f9fa;
-      border: 1px solid transparent;
-      padding: 5.6px 9.8px;
-      border-radius: 14px;
-      font-size: 8.4px;
+      border: 1px solid #ddd;
+      padding: var(--space-sm) var(--space-md);
+      border-radius: 50px;
+      font-size: clamp(0.75rem, 2.8vw, 0.875rem);
       font-weight: 700;
       color: #444;
       display: flex;
       align-items: center;
-      gap: 5.6px;
+      gap: var(--space-sm);
       cursor: pointer;
       white-space: nowrap;
+      min-height: var(--btn-min-height);
+      transition: background 0.2s;
+    }
+
+    .btn-premium-icon:hover {
+      background: #eee;
     }
 
     .hero-topo-container {
       width: 100%;
       background: #fff;
-      margin-bottom: 15px;
+      margin-bottom: var(--space-xl);
       overflow: hidden;
+      border-radius: var(--border-radius);
     }
 
     .hero-topo-img {
@@ -166,12 +189,12 @@
       height: auto;
       display: block;
       object-fit: cover;
-      max-height: 450px;
+      max-height: 45vh;
     }
 
     .hero-topo-desc {
-      padding: 15px;
-      font-size: 13px;
+      padding: var(--space-md) var(--space-lg);
+      font-size: clamp(0.875rem, 3.2vw, 1rem);
       color: #555;
       line-height: 1.6;
       background: #fdfdfd;
@@ -181,7 +204,7 @@
 
     #pagination-control {
       text-align: center;
-      padding: 21px;
+      padding: var(--space-xl);
       display: none;
     }
 
@@ -189,38 +212,40 @@
       background: #212529;
       color: white;
       border: none;
-      padding: 8.4px 21px;
-      border-radius: 21px;
+      padding: var(--space-sm) var(--space-xl);
+      border-radius: 50px;
       font-weight: bold;
       cursor: pointer;
-      font-size: 9.1px;
+      font-size: clamp(0.875rem, 3.2vw, 1rem);
       text-transform: uppercase;
-      letter-spacing: 0.35px;
-      box-shadow: 0 2.8px 7px rgba(0,0,0,0.2);
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      min-height: var(--btn-min-height);
     }
 
     .ficha-categoria {
       background: #fff9f0;
-      border-radius: 6px;
-      margin: 6px 0;
-      padding: 7px 10px;
+      border-radius: var(--border-radius);
+      margin: var(--space-xs) 0;
+      padding: var(--space-sm) var(--space-md);
       display: flex;
       align-items: center;
-      gap: 7px;
-      font-size: 9px;
+      gap: var(--space-md);
+      font-size: clamp(0.8125rem, 3vw, 0.875rem); /* ~13px–14px */
       border-left: 4px solid;
     }
 
     .ficha-categoria img {
-      width: 24px;
-      height: 24px;
+      width: 2.5rem; /* 40px */
+      height: 2.5rem;
       border-radius: 50%;
       object-fit: cover;
+      flex-shrink: 0;
     }
 
     .ficha-categoria .ficha-info {
       display: flex;
-      gap: 12px;
+      gap: 1rem;
       flex-wrap: wrap;
       overflow-x: auto;
       padding-bottom: 2px;
@@ -229,7 +254,7 @@
     .ficha-categoria .info-item {
       display: flex;
       align-items: baseline;
-      gap: 3px;
+      gap: 0.25rem;
       white-space: nowrap;
     }
 
@@ -240,19 +265,19 @@
     /* NOTIFICAÇÕES */
     #notificacao-novo-artigo {
       position: fixed;
-      top: 14px;
-      right: 14px;
+      top: 1rem;
+      right: 1rem;
       background: #2563eb;
       color: #fff;
-      padding: 10.5px 17.5px;
-      border-radius: 5.6px;
-      box-shadow: 0 7px 21px rgba(0,0,0,0.2);
+      padding: var(--space-md) var(--space-lg);
+      border-radius: 0.5rem;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.2);
       z-index: 10000;
       display: flex;
       align-items: center;
-      gap: 8.4px;
+      gap: var(--space-md);
       transform: translateX(150%);
-      transition: transform 0.5s;
+      transition: transform 0.5s ease;
     }
 
     #notificacao-novo-artigo.mostrar {
@@ -261,14 +286,14 @@
 
     #toast-copiado {
       position: fixed;
-      bottom: 14px;
+      bottom: 1rem;
       left: 50%;
       transform: translateX(-50%) translateY(150%);
       background: #4caf50;
       color: white;
-      padding: 7px 14px;
-      border-radius: 2.8px;
-      font-size: 9.1px;
+      padding: var(--space-sm) var(--space-md);
+      border-radius: 0.25rem;
+      font-size: 0.875rem;
       font-weight: 600;
       z-index: 9999;
       opacity: 0;
@@ -288,9 +313,9 @@
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: rgba(0,0,0,0.9);
+      background: rgba(0,0,0,0.92);
       z-index: 99999;
-      padding: 14px;
+      padding: 1rem;
       overflow-y: auto;
     }
 
@@ -298,53 +323,74 @@
       background: white;
       color: #121212;
       max-width: 630px;
-      margin: 28px auto;
-      padding: 21px;
-      border-radius: 5.6px;
+      margin: 2rem auto;
+      padding: 1.5rem;
+      border-radius: 0.75rem;
       position: relative;
     }
 
     #modal-fechar {
       position: absolute;
-      top: 10.5px;
-      right: 10.5px;
+      top: 1rem;
+      right: 1rem;
       background: #eee;
       border: none;
-      width: 22.4px;
-      height: 22.4px;
+      width: 2rem;
+      height: 2rem;
       border-radius: 50%;
-      font-size: 12.6px;
+      font-size: 1.125rem;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     #modal-video {
       width: 100%;
       aspect-ratio: 16 / 9;
-      margin: 14px 0;
+      margin: 1rem 0;
       border: none;
+      border-radius: var(--border-radius);
     }
 
     .noticia-completa {
-      margin-top: 20px;
-      font-size: 14px;
+      margin-top: var(--space-xl);
+      font-size: clamp(0.9375rem, 3.5vw, 1.125rem); /* 15px–18px */
       line-height: 1.7;
     }
 
     .noticia-completa h3 {
-      font-size: 18px;
+      font-size: clamp(1.25rem, 4.5vw, 1.5rem); /* 20px–24px */
       font-weight: 700;
-      margin: 24px 0 12px;
+      margin: 1.5rem 0 0.75rem;
       color: #1a1a1a;
     }
 
     .noticia-completa p {
-      margin-bottom: 16px;
+      margin-bottom: 1rem;
       color: #333;
     }
 
     @media (max-width: 768px) {
       .destaque-info-grid {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1fr;
+      }
+      .premium-actions-bar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--space-sm);
+      }
+      .btn-premium-icon {
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .ficha-categoria .ficha-info {
+        gap: 0.75rem;
+      }
+      .destaque-titulo {
+        font-size: clamp(1.125rem, 5vw, 1.5rem);
       }
     }
   </style>
@@ -362,8 +408,8 @@
   <div id="notificacao-novo-artigo">
     <i class="fa-solid fa-satellite-dish"></i>
     <div>
-      <div style="font-size: 7px; font-weight: 800; opacity: 0.8; text-transform: uppercase;">Atualização via Cloud</div>
-      <div id="novo-artigo-titulo" style="font-size: 9.1px; font-weight: 700;">Conectando ao AniGeek...</div>
+      <div style="font-size: 0.625rem; font-weight: 800; opacity: 0.8; text-transform: uppercase;">Atualização via Cloud</div>
+      <div id="novo-artigo-titulo" style="font-size: 0.875rem; font-weight: 700;">Conectando ao AniGeek...</div>
     </div>
   </div>
 
@@ -388,8 +434,8 @@
     <div id="modal-conteudo">
       <button id="modal-fechar" onclick="window.fecharModal()">×</button>
 
-      <div id="modal-capa-container" style="margin: -20px -20px 15px -20px; display: none;">
-        <img id="modal-capa-img" src="" style="width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 12px 12px 0 0;" />
+      <div id="modal-capa-container" style="margin: -1.25rem -1.25rem 1rem -1.25rem; display: none;">
+        <img id="modal-capa-img" src="" style="width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 0.75rem 0.75rem 0 0;" />
       </div>
 
       <div id="modal-header-layout">
@@ -399,7 +445,7 @@
       <p id="modal-resumo" class="destaque-resumo"></p>
       <a id="modal-link" class="btn-ver-artigo" target="_blank"><i class="fa-solid fa-book-open"></i> Ler artigo completo</a>
       <div id="modal-ficha" class="destaque-info-grid"></div>
-      <iframe id="modal-video" allowfullscreen style="width: 100%; aspect-ratio: 16 / 9; border: none; border-radius: 8px; margin-top: 15px;"></iframe>
+      <iframe id="modal-video" allowfullscreen style="width: 100%; aspect-ratio: 16 / 9; border: none; border-radius: 0.5rem; margin-top: 1rem;"></iframe>
       <div id="modal-noticia-completa" class="noticia-completa"></div>
     </div>
   </div>
@@ -507,7 +553,6 @@
 
       document.getElementById('modal-video').src = limparEspacos(noticia.videoPrincipal);
       
-      // Renderizar noticia_completa no modal
       const noticiaCompletaEl = document.getElementById('modal-noticia-completa');
       if (noticia.noticia_completa) {
         noticiaCompletaEl.innerHTML = noticia.noticia_completa;
@@ -574,8 +619,8 @@
 
         const imgFeed = news.capaNoticia || news.capaUrl;
         const capaHTML = imgFeed ? `
-          <div class="noticia-capa" style="margin: -15px -15px 15px -15px;">
-            <img src="${limparEspacos(imgFeed)}" style="width: 100%; aspect-ratio: 16 / 9; border-radius: 12px 12px 0 0; object-fit: cover; display: block;">
+          <div class="noticia-capa" style="margin: -1rem -1rem 1rem -1rem;">
+            <img src="${limparEspacos(imgFeed)}" style="width: 100%; aspect-ratio: 16 / 9; border-radius: 0.75rem 0.75rem 0 0; object-fit: cover; display: block;">
           </div>` : '';
 
         let fichaCategoriaHtml = '';
