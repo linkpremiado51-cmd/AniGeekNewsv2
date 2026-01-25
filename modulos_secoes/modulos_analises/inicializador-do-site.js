@@ -2,7 +2,7 @@
  * modulos_analises/inicializador-do-site.js
  * O Chefe Autônomo: Agora roda de forma independente.
  */
-
+console.log("🔥 inicializador-do-site.js foi carregado");
 // 1. Importações de Configuração e Banco
 import { db } from "./01-conexao-com-servidor/configuracao-firebase.js";
 import { iniciarEscutaNoticias } from "./03-banco-de-dados/buscar-noticias-ao-vivo.js";
