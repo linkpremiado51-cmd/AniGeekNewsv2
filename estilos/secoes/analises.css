@@ -618,4 +618,223 @@
     .tema-card { min-width: 105px; cursor: pointer; }
     .tema-thumb { width: 105px; height: 59.5px; border-radius: 5.6px; object-fit: cover; }
     .tema-titulo { font-size: 8.4px; font-weight: 700; margin-top: 3.5px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* CABEÇALHO E RODAPÉ*/
+.sticky-header-group {
+    position: sticky;
+    top: 0;
+    z-index: 5000; /* acima do conteúdo, abaixo do menu mobile */
+    background: var(--card-bg);
+    border-bottom: 1px solid var(--border);
+}
+
+/* Header */
+header {
+    background: var(--card-bg);
+    position: relative; /* garante stacking correto */
+    z-index: 5000;
+}
+
+/* Nav Container */
+.nav-container {
+    max-width: var(--container-w);
+    margin: 0 auto;
+    height: var(--header-h);
+    padding: 0 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* Logo */
+.logo {
+    font-size: 14px;
+    font-weight: 900;
+    letter-spacing: -0.21px;
+    color: var(--text-main);
+    text-transform: uppercase;
+}
+
+.logo span {
+    font-weight: 400;
+    opacity: 0.6;
+}
+
+/* Menu Desktop */
+.nav-menu {
+    display: flex;
+    align-items: center;
+    gap: 19.6px;
+    list-style: none;
+}
+
+.nav-item a {
+    font-size: 8.4px;
+    font-weight: 700;
+    letter-spacing: 0.7px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding: 4.2px 0;
+    transition: 0.2s;
+}
+
+.nav-item a:hover {
+    color: var(--primary);
+}
+
+/* Linha de ativo */
+.nav-item a::after {
+    content: "";
+    display: block;
+    height: 1.4px;
+    width: 0%;
+    background: var(--primary);
+    transition: 0.25s ease;
+    margin-top: 4.2px;
+}
+
+.nav-item:hover a::after {
+    width: 100%;
+}
+
+/* Header Actions */
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8.4px;
+}
+
+/* Botões */
+.sections-btn,
+.menu-toggle {
+    background: transparent;
+    border: 1px solid var(--border);
+    padding: 5.6px 8.4px;
+    cursor: pointer;
+    font-size: 8.4px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--text-main);
+}
+
+.sections-btn:hover,
+.menu-toggle:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+/* Mobile Toggle */
+.menu-toggle {
+    display: none;
+}
+
+/* Mobile Menu */
+.mobile-menu {
+    position: fixed;
+    top: var(--header-h);
+    right: -100%;
+    width: 100%;
+    height: calc(100vh - var(--header-h));
+    background: var(--card-bg);
+    z-index: 6000; /* acima do sticky header */
+    padding: 21px;
+    overflow-y: auto;
+    transition: 0.35s ease;
+}
+
+.mobile-menu.active {
+    right: 0;
+}
+
+/* Mobile Items */
+.mobile-menu-item {
+    padding: 11.2px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 9.1px;
+    font-weight: 700;
+    letter-spacing: 0.7px;
+    text-transform: uppercase;
+    color: var(--text-main);
+}
+
+/* Close Button */
+.close-menu {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    background: transparent;
+    border: 1px solid var(--border);
+    width: 25.2px;
+    height: 25.2px;
+    font-size: 12.6px;
+    cursor: pointer;
+}
+
+/* Botão Voltar */
+.btn-voltar-estilizado {
+    background: transparent;
+    border: 1px solid var(--border);
+    padding: 7px 12.6px !important;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-voltar-estilizado:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+/* ======================================================
+   FOOTER
+====================================================== */
+footer {
+    position: relative;
+    z-index: 100; /* abaixo do header e search bar */
+    background: var(--card-bg);
+    padding: 21px 0;
+    border-top: 1px solid var(--border);
+}
+
+/* Footer logo */
+footer .logo {
+    font-size: 14px;
+}
+
+/* Mobile */
+@media (max-width: 900px) {
+    .nav-menu { display: none; }
+    .menu-toggle { display: block; }
+}
+
+
+              
+
+
   
