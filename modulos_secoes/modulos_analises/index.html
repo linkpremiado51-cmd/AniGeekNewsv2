@@ -5,154 +5,151 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Análises | AniGeekNews</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@700&family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     
-    <link rel="stylesheet" href="../../estilos/geral.css">
-    <link rel="stylesheet" href="../../estilos/secoes/analises.css">
+    <style>
+        /* 1. RESET E BASE (MANTENDO FUNDO BRANCO CONFORME SEU ESTILO) */
+        body {
+            background-color: #ffffff;
+            color: #121212;
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
 
-    <style>                    
-        /* --- SEUS ESTILOS ORIGINAIS MANTIDOS --- */
-        .destaque-wrapper { width: 100vw; position: relative; left: 50%; right: 50%; margin-left: -50vw; margin-right: -50vw; font-family: 'Inter', sans-serif; background: #ffffff; color: #121212; overflow-x: hidden; box-sizing: border-box; }
-        .destaque-wrapper * { box-sizing: border-box; }
+        /* 2. O SEU ESTILO "MANCHETES" COMPLETO E ORGANIZADO */
+        .destaque-wrapper {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding-bottom: 200px; /* Espaço para o console */
+        }
+
         .destaque-secao { width: 100%; margin-bottom: 56px; border-bottom: 1px solid #eaeaea; padding-bottom: 14px; }
         .destaque-padding { padding: 0 17.5px; max-width: 770px; margin: 0 auto; }
         .destaque-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 14px; margin-bottom: 10.5px; }
         .destaque-titulo { font-size: clamp(18.2px, 3.5vw, 30.8px); font-weight: 800; line-height: 1.1; letter-spacing: -0.7px; margin: 0; }
+        
         .menu-opcoes-container { position: relative; display: inline-block; }
-        .btn-tres-pontos { background: none; border: none; font-size: 16.8px; cursor: pointer; color: #888; padding: 3.5px 7px; line-height: 1; }
-        .dropdown-conteudo { display: none; position: absolute; background-color: #ffffff; min-width: 154px; box-shadow: 0px 5.6px 17.5px rgba(0,0,0,0.15); z-index: 20; border: 1px solid #eaeaea; border-radius: 5.6px; overflow: hidden; top: 100%; margin-top: 3.5px; }
-        .header-dropdown { right: 0; }
-        .acoes-dropdown { left: 0; top: auto; bottom: 100%; margin-bottom: 7px; }
-        .menu-opcoes-container:hover .dropdown-conteudo, .menu-opcoes-container:focus-within .dropdown-conteudo { display: block; animation: fadeIn 0.2s ease-out; }
+        .btn-tres-pontos { background: none; border: none; font-size: 16.8px; cursor: pointer; color: #888; padding: 3.5px 7px; }
+        
+        .dropdown-conteudo { display: none; position: absolute; background-color: #ffffff; min-width: 154px; box-shadow: 0px 5.6px 17.5px rgba(0,0,0,0.15); z-index: 100; border: 1px solid #eaeaea; border-radius: 5.6px; top: 100%; right: 0; }
+        .menu-opcoes-container:focus-within .dropdown-conteudo { display: block; animation: fadeIn 0.2s ease-out; }
+        
         @keyframes fadeIn { from { opacity: 0; transform: translateY(3.5px); } to { opacity: 1; transform: translateY(0); } }
-        .dropdown-conteudo a { color: #121212; padding: 8.4px 14px; text-decoration: none; display: flex; align-items: center; gap: 8.4px; font-size: 9.1px; font-weight: 600; border-bottom: 1px solid #f9f9f9; }
-        .dropdown-conteudo a:hover { background-color: #f8f9fa; color: var(--tema-cor); padding-left: 16.8px; }
-        .destaque-categoria { color: var(--tema-cor); font-size: 7.7px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.4px; margin-bottom: 10.5px; display: flex; align-items: center; gap: 5.6px; }
-        .destaque-resumo { font-size: clamp(11.2px, 1.4vw, 13.3px); line-height: 1.6; color: #444; margin-bottom: 7px; max-width: 595px; }
-        .btn-ver-artigo { display: inline-flex; align-items: center; gap: 5.6px; color: var(--tema-cor); text-decoration: none; font-size: 9.1px; font-weight: 800; text-transform: uppercase; margin-bottom: 17.5px; cursor: pointer; }
-        .destaque-info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(105px, 1fr)); gap: 14px; background: #f8f9fa; padding: 10.5px; border-left: 2.8px solid var(--tema-cor); margin-bottom: 17.5px; }
-        .info-item { display: flex; flex-direction: column; gap: 2.8px; }
-        .info-label { font-size: 7px; text-transform: uppercase; font-weight: 700; color: #888; }
-        .info-valor { font-size: 9.1px; font-weight: 600; display: flex; align-items: center; gap: 4.2px; position: relative; }
-        .destaque-media iframe { width: 100%; aspect-ratio: 16 / 9; border: none; display: block; }
-        .destaque-acoes { display: flex; padding: 10.5px 17.5px 14px; gap: 10.5px; max-width: 770px; margin: 0 auto; }
-        .btn-acao { border: 1px solid #d1d1d1; background: transparent; padding: 8.4px 14px; font-weight: 700; font-size: 8.4px; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; gap: 5.6px; }
-        .btn-acao:hover { background: #121212; color: #fff; border-color: #121212; }
-        #notificacao-video { position: fixed; bottom: 14px; left: 50%; transform: translateX(-50%) translateY(150%); background: #121212; color: #fff; padding: 8.4px 14px; z-index: 9999; display: flex; align-items: center; gap: 10.5px; border-radius: 2.8px; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); border-left: 2.8px solid var(--notif-cor, #fff); min-width: 196px; }
-        #notificacao-video.visivel { transform: translateX(-50%) translateY(0); }
-        .btn-confirmar-video { background: #fff; color: #000; border: none; padding: 4.2px 8.4px; font-weight: 800; font-size: 7px; text-transform: uppercase; cursor: pointer; }
-        @media (max-width: 768px) { .destaque-info-grid { grid-template-columns: 1fr 1fr; } .destaque-acoes { flex-wrap: wrap; } .menu-opcoes-container { flex: 1; } .btn-acao { width: 100%; justify-content: center; } }
-        #notificacao-novo-artigo { position: fixed; top: 14px; right: 14px; background: #2563eb; color: #fff; padding: 10.5px 17.5px; border-radius: 5.6px; box-shadow: 0 7px 21px rgba(0,0,0,0.2); z-index: 10000; display: flex; align-items: center; gap: 8.4px; transform: translateX(150%); transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); font-family: 'Inter', sans-serif; }
-        #notificacao-novo-artigo.mostrar { transform: translateX(0); }
-        #toast-copiado { position: fixed; bottom: 14px; left: 50%; transform: translateX(-50%) translateY(150%); background: #4caf50; color: white; padding: 7px 14px; border-radius: 2.8px; font-size: 9.1px; font-weight: 600; z-index: 9999; opacity: 0; transition: transform 0.3s, opacity 0.3s; }
-        #toast-copiado.mostrar { transform: translateX(-50%) translateY(0); opacity: 1; }
-        body { background-color: var(--bg, #0a0a0a); color: var(--text-main, #ffffff); font-family: 'Merriweather', serif; margin: 0; padding: 0; }
-        .container-app { max-width: 900px; margin: 0 auto; padding: 20px; padding-bottom: 200px; } /* Espaço para o log */
-        #container-principal { min-height: 300px; }
 
-        /* --- ESTILOS DO CONSOLE VIRTUAL --- */
+        .destaque-categoria { color: var(--tema-cor, #e63946); font-size: 7.7px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.4px; margin-bottom: 10.5px; display: flex; align-items: center; gap: 5.6px; }
+        .destaque-resumo { font-size: clamp(11.2px, 1.4vw, 13.3px); line-height: 1.6; color: #444; margin-bottom: 7px; }
+        .btn-ver-artigo { display: inline-flex; align-items: center; gap: 5.6px; color: var(--tema-cor, #e63946); text-decoration: none; font-size: 9.1px; font-weight: 800; text-transform: uppercase; margin-bottom: 17.5px; }
+
+        .destaque-media iframe { width: 100%; aspect-ratio: 16 / 9; border: none; display: block; }
+
+        /* Estilos Premium Actions, Banner e Carrossel */
+        .premium-actions-bar { display: flex; align-items: center; padding: 8.4px 10.5px; gap: 7px; border-top: 1px solid #f0f0f0; background: #fff; }
+        .btn-premium-icon { background: #f8f9fa; border: 1px solid transparent; padding: 5.6px 9.8px; border-radius: 14px; font-size: 8.4px; font-weight: 700; color: #444; display: flex; align-items: center; gap: 5.6px; cursor: pointer; }
+        
+        .secao-produtos-banner { margin: 14px 10.5px; padding: 12px; background: #fff; border: 1px solid #f0f0f0; border-radius: 12px; }
+        .banner-produto-item { display: flex; text-decoration: none; background: #fafafa; border: 1px solid #eee; border-radius: 10px; margin-bottom: 10px; }
+        .banner-img-box { width: 95px; min-width: 95px; height: 95px; padding: 8px; }
+        .banner-thumb { width: 100%; height: 100%; object-fit: contain; }
+
+        .carrossel-temas { margin: 10.5px; }
+        .temas-container { display: flex; gap: 10.5px; overflow-x: auto; scrollbar-width: none; }
+        .tema-card { min-width: 105px; cursor: pointer; }
+        .tema-thumb { width: 105px; height: 59.5px; border-radius: 5.6px; object-fit: cover; }
+
+        /* 3. CONSOLE DE DEBUG (MANTIDO PARA MONITORAMENTO) */
         #painel-debug-geek {
-            position: fixed; bottom: 0; left: 0; width: 100%; height: 160px;
-            background: rgba(0,0,0,0.9); border-top: 2px solid #e63946;
+            position: fixed; bottom: 0; left: 0; width: 100%; height: 120px;
+            background: rgba(0,0,0,0.95); border-top: 2px solid #2563eb;
             z-index: 99999; font-family: monospace; font-size: 10px; color: #0f0;
             overflow-y: scroll; padding: 10px; box-sizing: border-box;
-            pointer-events: auto;
         }
-        .log-entry { margin-bottom: 4px; border-bottom: 1px solid #222; padding-bottom: 2px; }
-        .log-error { color: #ff4d4d; font-weight: bold; }
-        .log-warn { color: #ffcc00; }
-        .log-info { color: #00ccff; }
+        .log-entry { margin-bottom: 4px; border-bottom: 1px solid #222; }
+        .log-error { color: #ff4d4d; }
         #btn-limpar-log {
-            position: fixed; bottom: 165px; right: 10px;
-            background: #e63946; color: white; border: none;
+            position: fixed; bottom: 125px; right: 10px;
+            background: #2563eb; color: white; border: none;
             padding: 5px 10px; border-radius: 4px; font-size: 10px;
             z-index: 100000; cursor: pointer;
         }
+
+        /* 4. MODAL E TOAST */
+        #modal-noticia { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.9); z-index: 99999; overflow-y: auto; }
+        #modal-conteudo { background: white; color: #121212; max-width: 630px; margin: 28px auto; padding: 21px; border-radius: 8px; position: relative; }
+        #toast-copiado { position: fixed; bottom: 130px; left: 50%; transform: translateX(-50%); background: #4caf50; color: white; padding: 8px 16px; border-radius: 4px; opacity: 0; transition: 0.3s; z-index: 10000; }
+        #toast-copiado.mostrar { opacity: 1; }
+
+        /* Notificação Superior */
+        #notificacao-novo-artigo {
+            position: fixed; top: 14px; right: 14px; background: #2563eb; color: #fff;
+            padding: 10px 15px; border-radius: 8px; z-index: 10000;
+            display: flex; align-items: center; gap: 10px;
+            transform: translateX(150%); transition: 0.5s;
+        }
+        #notificacao-novo-artigo.mostrar { transform: translateX(0); }
     </style>
 </head>
 <body>
 
     <div id="painel-debug-geek">
-        <div class="log-entry log-info">> Monitor de Sistema Ativado. Aguardando logs...</div>
+        <div class="log-entry">> Monitor de Sistema Ativado...</div>
     </div>
     <button id="btn-limpar-log" onclick="document.getElementById('painel-debug-geek').innerHTML = ''">Limpar Console</button>
 
-    <script>
-        (function() {
-            const painel = document.getElementById('painel-debug-geek');
-            
-            function addLog(msg, type = 'log') {
-                const entry = document.createElement('div');
-                entry.className = 'log-entry' + (type === 'error' ? ' log-error' : type === 'warn' ? ' log-warn' : '');
-                const time = new Date().toLocaleTimeString().split(' ')[0];
-                entry.innerHTML = `[${time}] ${msg}`;
-                painel.appendChild(entry);
-                painel.scrollTop = painel.scrollHeight;
-            }
-
-            // Intercepta logs normais
-            const oldLog = console.log;
-            console.log = function() {
-                addLog(Array.from(arguments).join(' '), 'log');
-                oldLog.apply(console, arguments);
-            };
-
-            // Intercepta erros
-            const oldError = console.error;
-            console.error = function() {
-                addLog(Array.from(arguments).join(' '), 'error');
-                oldError.apply(console, arguments);
-            };
-
-            // Intercepta avisos
-            const oldWarn = console.warn;
-            console.warn = function() {
-                addLog(Array.from(arguments).join(' '), 'warn');
-                oldWarn.apply(console, arguments);
-            };
-
-            // Captura erros globais de script
-            window.onerror = function(msg, url, line) {
-                addLog(`🚨 ERRO: ${msg} | Arquivo: ${url.split('/').pop()} | Linha: ${line}`, 'error');
-                return false;
-            };
-        })();
-    </script>
-
-    <div class="container-app">
+    <div class="destaque-wrapper">
+        
         <div id="notificacao-novo-artigo">
-            <i class="fa-solid fa-satellite-dish" style="color: #e63946;"></i>
+            <i class="fa-solid fa-bolt"></i>
             <div>
-                <div style="font-size: 8px; font-weight: 800; opacity: 0.6; text-transform: uppercase;">Sincronizado com Firebase</div>
-                <div id="novo-artigo-titulo" style="font-size: 11px; font-weight: 700;">Aguardando nova análise...</div>
+                <div style="font-size: 7px; font-weight: 800; opacity: 0.8; text-transform: uppercase;">Firebase Realtime</div>
+                <div id="novo-artigo-titulo" style="font-size: 10px; font-weight: 700;">Sincronizando...</div>
             </div>
         </div>
 
         <div id="hero-area"></div>
 
         <div id="container-principal">
-            <p id="status-motor" style="text-align: center; padding: 100px; opacity: 0.5;">
-                <i class="fa-solid fa-gear fa-spin"></i><br>
-                Iniciando motor modular...
-            </p>
+            <div id="status-motor" style="text-align: center; padding: 100px; color: #888;">
+                <i class="fa-solid fa-circle-notch fa-spin"></i><br>
+                <span style="font-size: 12px; font-weight: 600;">Iniciando motor modular...</span>
+            </div>
         </div>
 
         <div id="pagination-control" style="text-align: center; padding: 40px; display: none;">
-            <button id="btn-carregar-mais" style="cursor: pointer; padding: 15px 30px; border: 1px solid #333; background: none; color: white; border-radius: 5px; font-weight: bold; text-transform: uppercase;">
-                Carregar mais
-            </button>
+            <button class="btn-paginacao-geek" id="btn-carregar-mais">Carregar mais</button>
         </div>
     </div>
 
-    <div id="modal-noticia" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:10000; overflow-y:auto;">
-        <div id="modal-conteudo" style="background:#111; max-width:800px; margin:20px auto; padding:20px; border-radius:12px; position:relative;">
-            <button id="modal-fechar" style="position:absolute; top:10px; right:10px; background:none; border:none; color:white; font-size:30px; cursor:pointer;">&times;</button>
+    <div id="modal-noticia">
+        <div id="modal-conteudo">
+            <button id="modal-fechar" onclick="document.getElementById('modal-noticia').style.display='none'" 
+                    style="position: absolute; top: 15px; right: 15px; border: none; background: #f0f0f0; border-radius: 50%; width: 30px; height: 30px; cursor: pointer;">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
             <div id="modal-dinamico-container"></div>
         </div>
     </div>
 
     <div id="toast-copiado">Copiado com sucesso!</div>
+
+    <script>
+        (function() {
+            const painel = document.getElementById('painel-debug-geek');
+            function addLog(msg, type = 'log') {
+                const entry = document.createElement('div');
+                entry.className = 'log-entry' + (type === 'error' ? ' log-error' : '');
+                entry.innerHTML = `[${new Date().toLocaleTimeString()}] ${msg}`;
+                painel.appendChild(entry);
+                painel.scrollTop = painel.scrollHeight;
+            }
+            console.log = (m) => { addLog(m); };
+            console.error = (m) => { addLog(m, 'error'); };
+        })();
+    </script>
 
     <script type="module" src="./inicializador-do-site.js"></script>
 
