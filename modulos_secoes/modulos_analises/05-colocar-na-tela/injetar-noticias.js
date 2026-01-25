@@ -1,5 +1,6 @@
 /**
  * modulos_analises/05-colocar-na-tela/injetar-noticias.js
+ * Editado para: Ajustar caminhos de importação dinâmica para subpastas (secoes/)
  */
 
 import { criarTemplateCard } from "../04-desenhos-visuais/molde-do-card-noticia.js";
@@ -79,13 +80,13 @@ export async function renderizarNoticias(todasAsNoticias, noticiasExibidas) {
         btnPaginacao.style.display = limite < todasAsNoticias.length ? 'block' : 'none';
     }
 
-    // Carregamento de comentários com try/catch reforçado
+    // Carregamento de comentários corrigido
     try {
         const containersComentarios = document.querySelectorAll('.container-comentarios-dinamico');
         if (containersComentarios.length > 0) {
             console.log("💬 Carregando módulo de comentários...");
-            // Caminho relativo para subir 3 níveis e entrar em /comentarios/
-            await import('../../../comentarios/comentarios.js'); 
+            // AJUSTE: Subindo 4 níveis (../../../../) para sair da pasta 'secoes' e achar a raiz
+            await import('../../../../comentarios/comentarios.js'); 
         }
     } catch (err) {
         console.warn("⚠️ Comentários: Módulo não carregado (verifique o caminho).");
