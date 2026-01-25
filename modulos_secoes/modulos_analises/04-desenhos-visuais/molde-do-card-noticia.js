@@ -1,39 +1,55 @@
 /**
  * modulos_analises/04-desenhos-visuais/molde-do-card-noticia.js
- * Esqueleto: Define como o post aparece no feed principal.
+ * Esqueleto: Corrigido para aceitar acentos e caracteres especiais.
  */
 
 import { limparEspacos } from "../02-ajustes-de-texto/formatar-links-e-espacos.js";
 
+// Função auxiliar para codificar Base64 com suporte a UTF-8 (Acentos)
+function utf8_to_b64(str) {
+    return window.btoa(unescape(encodeURIComponent(str)));
+}
+
+// Função auxiliar para decodificar Base64 com suporte a UTF-8 (Acentos)
+function b64_to_utf8(str) {
+    return decodeURIComponent(escape(window.atob(str)));
+}
+
 export function criarTemplateCard(news, shareUrl) {
-    // 1. Lógica de Capa (16:9 Sangrada)
+    console.log(`🎨 Desenhando card: ${news.titulo}`);
+
+    // 1. Lógica de Capa
     const imgFeed = news.capaNoticia || news.capaUrl;
     const capaHTML = imgFeed ? `
         <div class="noticia-capa" style="margin: -15px -15px 15px -15px;">
             <img src="${limparEspacos(imgFeed)}" style="width: 100%; aspect-ratio: 16 / 9; border-radius: 12px 12px 0 0; object-fit: cover; display: block;">
         </div>` : '';
 
-    // 2. Lógica da Ficha do Editor
+    // 2. Ficha do Editor
     let fichaCategoriaHtml = '';
     if (news.fichaCategoria) {
         fichaCategoriaHtml = `
         <div class="ficha-categoria" style="border-left: 4px solid ${news.fichaCategoria.cor};">
             <img src="${limparEspacos(news.fichaCategoria.perfilImg)}" alt="Imagem do editor">
             <div class="ficha-info">
-                ${news.fichaCategoria.info.map(item => `
+                ${news.fichaCategoria.info ? news.fichaCategoria.info.map(item => `
                     <div class="info-item">
                         <span class="info-label">${item.label}:</span>
                         <span class="info-valor">${item.valor}</span>
                     </div>
-                `).join('')}
+                `).join('') : ''}
             </div>
         </div>`;
     }
 
-    // 3. Tratamento de segurança para o JSON (Evita quebrar o HTML)
-    const newsDataEncoded = btoa(JSON.stringify(news));
+    // 3. Tratamento de segurança: Agora usando a nova função UTF-8
+    let newsDataEncoded = "";
+    try {
+        newsDataEncoded = utf8_to_b64(JSON.stringify(news));
+    } catch (e) {
+        console.error("❌ Erro ao codificar dados da notícia:", e);
+    }
 
-    // Retorno do HTML completo do artigo
     return `
     <article class="destaque-secao" id="artigo-${news.id}" style="--tema-cor: ${news.cor}">
       <div class="destaque-padding">
@@ -110,10 +126,17 @@ export function criarTemplateCard(news, shareUrl) {
     `;
 }
 
-// Ponte de decodificação para o modal não travar
+// Ponte de decodificação corrigida
 window.abrirModalGeek = (encodedData) => {
-    const news = JSON.parse(atob(encodedData));
-    if (window.abrirNoticiaEmModal) {
-        window.abrirNoticiaEmModal(news);
+    try {
+        const decoded = decodeURIComponent(escape(window.atob(encodedData)));
+        const news = JSON.parse(decoded);
+        if (window.abrirNoticiaEmModal) {
+            window.abrirNoticiaEmModal(news);
+        } else {
+            console.error("❌ Erro: Função abrirNoticiaEmModal não encontrada no escopo global.");
+        }
+    } catch (e) {
+        console.error("❌ Erro ao decodificar dados para o modal:", e);
     }
 };
