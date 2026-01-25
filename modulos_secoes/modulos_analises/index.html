@@ -99,60 +99,6 @@
     </style>
 </head>
 <body>
-<div class="sticky-header-group">
-    <header>
-        <div class="nav-container">
-            <a href="./index.html" class="logo">AniGeeknewsv3.com<span></span></a>
-            <ul class="nav-menu">
-                <li class="nav-item"><a href="#">Animes</a></li>
-                <li class="nav-item"><a href="#">Games</a></li>
-                <li class="nav-item"><a href="#">Mangás</a></li>
-                <li class="nav-item" id="area-usuario"><span>Aguardando...</span></li>
-            </ul>
-            <div class="header-actions">
-                <button class="sections-btn" onclick="toggleMobileMenu()">
-                    <span class="bar"></span>
-                    <span class="bar"></span>
-                    <span class="bar"></span>
-                </button>
-            </div>
-        </div>
-    </header>
-
-    <div class="search-bar-wrapper">
-        <div class="search-box">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" id="input-busca-global" placeholder="Pesquisar notícias, animes ou análises..." autocomplete="off">
-        </div>
-        <div id="search-results-surface"></div>
-    </div>
-
-    <div class="filter-scroller" id="filterScroller">
-        </div>
-</div>
-
-<div class="mobile-menu" id="mobileMenu">
-    <button class="close-menu" onclick="toggleMobileMenu()">×</button>
-    <div id="container-menu-perfil"></div>
-    <div class="mobile-menu-item"><a href="./index.html">Início</a></div>
-    <div class="mobile-menu-item"><a href="#">Animes</a></div>
-    <div class="mobile-menu-item"><a href="#">Games</a></div>
-    <div class="mobile-menu-item"><a href="#">Mangás</a></div>
-    <div class="theme-toggle-container" style="margin-top: 20px; padding: 0 20px;">
-        <span style="font-weight: bold; font-size: 12px; color: var(--text-muted);">TEMA ESCURO</span>
-        <label class="theme-toggle">
-            <input type="checkbox" id="mobileThemeToggle">
-            <span class="slider"></span>
-        </label>
-    </div>
-</div>
-
-<script>
-    function toggleMobileMenu() {
-        const menu = document.getElementById('mobileMenu');
-        menu.classList.toggle('active');
-    }
-</script>
 
     <div id="debug-container-geek">
         <div id="painel-debug-geek">
