@@ -1,31 +1,24 @@
 /**
  * modulos_analises/04-desenhos-visuais/molde-do-card-noticia.js
- * Esqueleto: Corrigido para aceitar acentos e caracteres especiais.
+ * Esqueleto: Atualizado com Sistema de Engajamento e Trending.
  */
 
 import { limparEspacos } from "../02-ajustes-de-texto/formatar-links-e-espacos.js";
 
-// Função auxiliar para codificar Base64 com suporte a UTF-8 (Acentos)
 function utf8_to_b64(str) {
     return window.btoa(unescape(encodeURIComponent(str)));
-}
-
-// Função auxiliar para decodificar Base64 com suporte a UTF-8 (Acentos)
-function b64_to_utf8(str) {
-    return decodeURIComponent(escape(window.atob(str)));
 }
 
 export function criarTemplateCard(news, shareUrl) {
     console.log(`🎨 Desenhando card: ${news.titulo}`);
 
-    // 1. Lógica de Capa
     const imgFeed = news.capaNoticia || news.capaUrl;
     const capaHTML = imgFeed ? `
-        <div class="noticia-capa" style="margin: -15px -15px 15px -15px;">
+        <div class="noticia-capa" style="margin: -15px -15px 15px -15px; position: relative;">
             <img src="${limparEspacos(imgFeed)}" style="width: 100%; aspect-ratio: 16 / 9; border-radius: 12px 12px 0 0; object-fit: cover; display: block;">
+            <div class="trending-badge-container"></div>
         </div>` : '';
 
-    // 2. Ficha do Editor
     let fichaCategoriaHtml = '';
     if (news.fichaCategoria) {
         fichaCategoriaHtml = `
@@ -42,7 +35,6 @@ export function criarTemplateCard(news, shareUrl) {
         </div>`;
     }
 
-    // 3. Tratamento de segurança: Agora usando a nova função UTF-8
     let newsDataEncoded = "";
     try {
         newsDataEncoded = utf8_to_b64(JSON.stringify(news));
@@ -61,7 +53,9 @@ export function criarTemplateCard(news, shareUrl) {
           <div class="menu-opcoes-container" tabindex="0">
             <button class="btn-tres-pontos"><i class="fa-solid fa-ellipsis-vertical"></i></button>
             <div class="dropdown-conteudo header-dropdown">
-              <a href="#" onclick="event.preventDefault(); window.copiarLink('${shareUrl}');"><i class="fa-regular fa-copy"></i> Copiar Link</a>
+              <a href="#" onclick="event.preventDefault(); window.copiarLink('${shareUrl}', '${news.id}');">
+                <i class="fa-regular fa-copy"></i> Copiar Link
+              </a>
             </div>
           </div>
         </div>
@@ -81,14 +75,16 @@ export function criarTemplateCard(news, shareUrl) {
       </div>
       
       <div class="premium-actions-bar">
-          <button class="btn-premium-icon" onclick="window.curtirNoticia('${news.id}')">
+          <button class="btn-premium-icon btn-like" onclick="window.curtirNoticia('${news.id}')">
             <i class="fa-regular fa-thumbs-up"></i> Útil (<span class="num-like">${news.curtidas || 0}</span>)
           </button>
-          <button class="btn-premium-icon" onclick="window.shareNews('${news.titulo.replace(/'/g, "\\'")}', '${shareUrl}')">
-            <i class="fa-solid fa-share-nodes"></i> Compartilhar
+          
+          <button class="btn-premium-icon btn-share" onclick="window.shareNews('${news.titulo.replace(/'/g, "\\'")}', '${shareUrl}', '${news.id}')">
+            <i class="fa-solid fa-share-nodes"></i> <span class="num-share">${news.shares || 0}</span>
           </button>
+
           <button class="btn-premium-icon btn-stats">
-            <i class="fa-solid fa-chart-column"></i>
+            <i class="fa-solid fa-eye"></i>
             <span class="stats-num num-view">${news.visualizacoes || 0}</span>
           </button>
       </div>
@@ -126,7 +122,6 @@ export function criarTemplateCard(news, shareUrl) {
     `;
 }
 
-// Ponte de decodificação corrigida
 window.abrirModalGeek = (encodedData) => {
     try {
         const decoded = decodeURIComponent(escape(window.atob(encodedData)));
@@ -134,9 +129,9 @@ window.abrirModalGeek = (encodedData) => {
         if (window.abrirNoticiaEmModal) {
             window.abrirNoticiaEmModal(news);
         } else {
-            console.error("❌ Erro: Função abrirNoticiaEmModal não encontrada no escopo global.");
+            console.error("❌ Erro: Função abrirNoticiaEmModal não encontrada.");
         }
     } catch (e) {
-        console.error("❌ Erro ao decodificar dados para o modal:", e);
+        console.error("❌ Erro ao decodificar dados:", e);
     }
 };
