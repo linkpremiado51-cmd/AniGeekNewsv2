@@ -1,8 +1,9 @@
 /**
  * modulos_analises/inicializador-do-site.js
- * O Chefe Autônomo: Agora roda de forma independente.
+ * O Chefe Autônomo: Revisado para suportar componentes assíncronos.
  */
 console.log("🔥 inicializador-do-site.js foi carregado");
+
 // 1. Importações de Configuração e Banco
 import { db } from "./01-conexao-com-servidor/configuracao-firebase.js";
 import { iniciarEscutaNoticias } from "./03-banco-de-dados/buscar-noticias-ao-vivo.js";
@@ -13,16 +14,14 @@ import { configurarBotaoCarregarMais } from "./05-colocar-na-tela/carregar-mais-
 import { verificarNoticiaNaUrl } from "./05-colocar-na-tela/mostrar-no-modal.js";
 
 // 3. Importações de Interação (Eventos de Clique)
-// Nota: Ao importar arquivos sem 'export', o JS executa o conteúdo deles imediatamente
 import "./06-cliques-do-usuario/gerenciar-compartilhamento.js";
 import { configurarConfirmacaoVideo } from "./06-cliques-do-usuario/gerenciar-videos.js";
 import "./06-cliques-do-usuario/fechar-janelas.js";
 
-// ESTADO GLOBAL DO MÓDULO (Private State)
+// ESTADO GLOBAL DO MÓDULO
 let todasAsNoticias = [];
 let noticiasExibidas = 5;
 
-// Helpers para os módulos filhos acessarem os dados sem bagunçar o global
 const getNoticias = () => todasAsNoticias;
 const setNoticias = (novasNoticias) => { todasAsNoticias = novasNoticias; };
 const getExibidas = () => noticiasExibidas;
@@ -31,36 +30,47 @@ const setExibidas = (valor) => { noticiasExibidas = valor; };
 /**
  * Função de Inicialização Total
  */
-export function inicializarApp() {
+export async function inicializarApp() {
     console.log("🚀 Motor de Análises iniciado em modo Independente.");
-    
+
+    // AJUSTE: Aguarda um breve momento para garantir que os componentes HTML (Header/Footer) 
+    // tenham sido injetados pelo script do index.html antes de configurar os botões.
+    const aguardarComponentes = () => {
+        return new Promise((resolve) => {
+            const check = () => {
+                if (document.getElementById('btn-carregar-mais')) resolve();
+                else setTimeout(check, 50);
+            };
+            check();
+        });
+    };
+
     // A. Conexão em Tempo Real (Radar)
-    // Passamos o DB e as funções de estado para o buscador
     iniciarEscutaNoticias(db, (noticias) => {
         setNoticias(noticias);
         
-        // Atualiza a barra de "Última Atualização" se ela existir no novo index
+        // Atualiza o título da última notícia na barra de notificação
         const labelNovo = document.getElementById('novo-artigo-titulo');
         if(labelNovo && noticias.length > 0) {
             labelNovo.innerText = noticias[0].titulo;
         }
 
-        // Verifica se o usuário veio de um link direto (?id=...)
         verificarNoticiaNaUrl(noticias);
     }, getExibidas);
 
-    // B. Ativação de Botões e UX
+    // B. Ativação de Botões e UX (Agora com segurança de carregamento)
+    await aguardarComponentes();
     configurarBotaoCarregarMais(getNoticias, getExibidas, setExibidas);
     configurarConfirmacaoVideo();
     
     // C. Ativação de Backend (Curtidas)
     configurarCurtidas(db);
+    
+    console.log("✅ [Sistema] Todos os módulos e componentes de UI estão sincronizados.");
 }
 
 /**
  * DISPARO AUTOMÁTICO
- * Como este index.html é dedicado ao módulo, o script executa 
- * imediatamente assim que o DOM estiver pronto.
  */
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', inicializarApp);
@@ -68,5 +78,4 @@ if (document.readyState === 'loading') {
     inicializarApp();
 }
 
-// Expõe para o console caso precise debugar manualmente
 window.recarregarAppGeek = inicializarApp;
