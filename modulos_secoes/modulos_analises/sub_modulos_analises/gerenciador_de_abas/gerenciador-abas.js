@@ -34,7 +34,7 @@ export function inicializarSistemaAbas() {
             id: 'sessao_analises',
             cor: "#8A2BE2",
             itens: [
-                { id: 'opiniao', label: 'Opinião' }, 
+                { id: 'anigeeknews', label: 'Opinião' }, 
                 { id: 'critica', label: 'Crítica Técnica' }, 
                 { id: 'teorias', label: 'Teorias' }
             ]
