@@ -10,8 +10,11 @@ export function inicializarSistemaAbas() {
     const CONFIG = {
         MAX_TABS: 12,
         KEYS: { ORDER: 'ag_v7_order' },
-        PATH_CATEGORIAS: './categoria_analises/' 
+        // AJUSTE DE CAMINHO REALIZADO ABAIXO:
+        PATH_CATEGORIAS: './sub_modulos_analises/categoria_analises/' 
     };
+
+    console.log(`📍 [ABAS-GEEK] Configurado caminho de busca: ${CONFIG.PATH_CATEGORIAS}`);
 
     const CATALOGO = [
         { sessao: "MANCHETES", id: 'manchetes', itens: [
@@ -45,50 +48,47 @@ export function inicializarSistemaAbas() {
             </div>`;
 
         try {
+            // Se o ID for 'manchetes', o fetch buscará em ./sub_modulos_analises/categoria_analises/manchetes.html
             const endpoint = `${CONFIG.PATH_CATEGORIAS}${id}.html`;
-            console.log(`🌐 [MOTOR-ABAS] Fetching: ${endpoint}`);
+            console.log(`🌐 [MOTOR-ABAS] Tentando conexão com: ${endpoint}`);
             
             const response = await fetch(endpoint);
-            console.log(`📡 [MOTOR-ABAS] Resposta do servidor: ${response.status} ${response.statusText}`);
+            console.log(`📡 [MOTOR-ABAS] Status da requisição: ${response.status}`);
 
-            if (!response.ok) throw new Error(`Arquivo ${id}.html não encontrado no servidor.`);
+            if (!response.ok) {
+                console.error(`❌ [MOTOR-ABAS] Erro HTTP: ${response.status}. Verifique se o arquivo existe em: ${endpoint}`);
+                throw new Error(`Arquivo ${id}.html não encontrado.`);
+            }
             
             const html = await response.text();
-            console.log(`📄 [MOTOR-ABAS] HTML recebido. Tamanho do pacote: ${html.length} caracteres.`);
+            console.log(`📄 [MOTOR-ABAS] Sucesso! HTML recebido (${html.length} bytes).`);
             
-            // Injeção do conteúdo
             container.innerHTML = html;
-            console.log(`🏗️ [MOTOR-ABAS] Conteúdo injetado no DOM.`);
 
-            // REATIVADOR DE SCRIPTS
             const scripts = container.querySelectorAll("script");
             if (scripts.length > 0) {
-                console.log(`⚡ [MOTOR-ABAS] Detectados ${scripts.length} scripts na aba carregada. Reativando...`);
+                console.log(`⚡ [MOTOR-ABAS] Reativando ${scripts.length} scripts da aba...`);
                 scripts.forEach((oldScript, idx) => {
-                    console.log(`   ∟ [SCRIPT] Reativando script #${idx + 1}...`);
                     const newScript = document.createElement("script");
                     Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
                     newScript.appendChild(document.createTextNode(oldScript.innerHTML));
                     oldScript.parentNode.replaceChild(newScript, oldScript);
                 });
-                console.log(`✅ [MOTOR-ABAS] Todos os scripts foram reinjetados e executados.`);
-            } else {
-                console.warn(`⚠️ [MOTOR-ABAS] Nenhum script encontrado no arquivo ${id}.html.`);
             }
 
-            console.log(`🎉 [MOTOR-ABAS] Sucesso: Aba [${id}] está ativa e operacional.`);
+            console.log(`🎉 [MOTOR-ABAS] Aba [${id}] carregada e scripts executados.`);
         } catch (error) {
-            console.error("❌ [MOTOR-ABAS] Erro fatal no carregamento:", error.message);
+            console.error("❌ [MOTOR-ABAS] Falha crítica:", error.message);
             container.innerHTML = `
                 <div style="text-align: center; padding: 100px; color: var(--primary);">
                     <i class="fa-solid fa-triangle-exclamation"></i><br>
                     <span style="font-size: 11px; font-weight: 800;">ERRO AO CARREGAR: ${id.toUpperCase()}</span>
-                    <p style="font-size: 9px; opacity: 0.7; margin-top: 10px;">${error.message}</p>
+                    <p style="font-size: 10px; opacity: 0.6; margin-top: 5px;">Caminho tentado: ${CONFIG.PATH_CATEGORIAS}${id}.html</p>
                 </div>`;
         }
     };
 
-    // Injeção de CSS
+    // --- Restante do código (CSS, Storage, RenderBar) permanece o mesmo ---
     const styles = `
         #ag-drawer { background: var(--card-bg); border-bottom: 1px solid var(--border); overflow: hidden; max-height: 0; transition: all 0.5s ease; opacity: 0; width: 100%; position: absolute; left: 0; z-index: 1000; }
         #ag-drawer.open { max-height: 85vh; opacity: 1; padding-bottom: 20px; }
@@ -102,25 +102,15 @@ export function inicializarSistemaAbas() {
     `;
     
     if (!document.getElementById('ag-v7-styles')) {
-        console.log("🎨 [ABAS-GEEK] Injetando estilos CSS dinâmicos no <head>...");
         const styleSheet = document.createElement("style");
         styleSheet.id = 'ag-v7-styles';
         styleSheet.innerText = styles;
         document.head.appendChild(styleSheet);
     }
 
-    const load = (k, d) => {
-        const val = localStorage.getItem(k);
-        console.log(`💾 [STORAGE] Lendo chave [${k}]. Status: ${val ? 'Encontrado' : 'Vazio, usando padrão'}.`);
-        return val ? JSON.parse(val) : d;
-    };
-
-    const save = (k, v) => {
-        console.log(`💾 [STORAGE] Salvando novas preferências na chave [${k}]...`);
-        localStorage.setItem(k, JSON.stringify(v));
-    };
-
-    const getOrder = () => load(CONFIG.KEYS.ORDER, ['destaques', 'ultimas', 'opiniao']);
+    const load = (k, d) => JSON.parse(localStorage.getItem(k)) ?? d;
+    const save = (k, v) => localStorage.setItem(k, JSON.stringify(v));
+    const getOrder = () => load(CONFIG.KEYS.ORDER, ['manchetes', 'destaques', 'opiniao']);
 
     function findItem(id) {
         for (let sec of CATALOGO) {
@@ -132,33 +122,22 @@ export function inicializarSistemaAbas() {
     }
 
     window.renderBar = () => {
-        console.log("📊 [ABAS-GEEK] Renderizando barra de navegação superior...");
         const bar = document.getElementById('filterScroller');
-        if (!bar) {
-            console.error("❌ [ABAS-GEEK] Falha ao renderizar: '#filterScroller' não existe.");
-            return;
-        }
+        if (!bar) return;
         
         let drawer = document.getElementById('ag-drawer') || Object.assign(document.createElement('div'), { id: 'ag-drawer' });
-        if (!drawer.parentNode) {
-            console.log("📥 [ABAS-GEEK] Inserindo Drawer (menu de seleção) no DOM.");
-            bar.parentNode.insertBefore(drawer, bar.nextSibling);
-        }
+        if (!drawer.parentNode) bar.parentNode.insertBefore(drawer, bar.nextSibling);
 
         const order = getOrder();
         bar.innerHTML = '';
 
         order.forEach(id => {
             const item = findItem(id);
-            if (!item) {
-                console.warn(`⚠️ [ABAS-GEEK] ID de aba salvo no storage [${id}] não existe no catálogo atual.`);
-                return;
-            }
+            if (!item) return;
             const btn = document.createElement('button');
             btn.className = 'filter-tag';
             btn.textContent = item.label;
             btn.onclick = () => {
-                console.log(`🖱️ [CLIQUE] Usuário selecionou a aba: ${item.label}`);
                 document.querySelectorAll('.filter-tag').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
                 window.carregarSecao(id);
@@ -170,7 +149,6 @@ export function inicializarSistemaAbas() {
         cfg.className = 'filter-tag cfg-btn';
         cfg.innerHTML = '<i class="fa-solid fa-plus"></i>';
         cfg.onclick = () => {
-            console.log("⚙️ [CLIQUE] Abrindo/Fechando menu de configuração de abas.");
             drawer.classList.toggle('open');
             if (drawer.classList.contains('open')) renderDrawer();
         };
@@ -178,7 +156,6 @@ export function inicializarSistemaAbas() {
     };
 
     function renderDrawer(filterText = "") {
-        console.log(`🗄️ [DRAWER] Atualizando menu de seleção. Filtro atual: "${filterText}"`);
         const drawer = document.getElementById('ag-drawer');
         const order = getOrder();
         const term = filterText.toLowerCase();
@@ -200,22 +177,15 @@ export function inicializarSistemaAbas() {
             const grid = block.querySelector('.ag-grid-container');
             sec.itens.forEach(item => {
                 if (term && !item.label.toLowerCase().includes(term)) return;
-                
-                const isSelected = order.includes(item.id);
                 const card = document.createElement('div');
-                card.className = `ag-card ${isSelected ? 'is-selected' : ''}`;
+                card.className = `ag-card ${order.includes(item.id) ? 'is-selected' : ''}`;
                 card.textContent = item.label;
                 card.onclick = () => {
                     let currentOrder = getOrder();
                     if (currentOrder.includes(item.id)) {
-                        console.log(`➖ [DRAWER] Removendo aba: ${item.label}`);
                         currentOrder = currentOrder.filter(x => x !== item.id);
                     } else if (currentOrder.length < CONFIG.MAX_TABS) {
-                        console.log(`➕ [DRAWER] Adicionando aba: ${item.label}`);
                         currentOrder.push(item.id);
-                    } else {
-                        console.warn("🚫 [DRAWER] Limite máximo de abas atingido!");
-                        alert(`Máximo de ${CONFIG.MAX_TABS} abas permitidas.`);
                     }
                     save(CONFIG.KEYS.ORDER, currentOrder);
                     window.renderBar();
@@ -226,11 +196,8 @@ export function inicializarSistemaAbas() {
             if (grid.children.length > 0) content.appendChild(block);
         });
 
-        const searchInput = document.getElementById('ag-search-tabs');
-        searchInput.oninput = (e) => renderDrawer(e.target.value);
-        searchInput.focus(); // Mantém o foco durante a digitação
+        document.getElementById('ag-search-tabs').oninput = (e) => renderDrawer(e.target.value);
     }
 
     window.renderBar();
-    console.log("✅ [ABAS-GEEK] Inicialização do sistema de abas concluída.");
 }
