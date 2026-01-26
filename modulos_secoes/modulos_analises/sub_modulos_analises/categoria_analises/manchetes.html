@@ -131,7 +131,7 @@
 
     async function incrementarVisualizacao(idNoticia) {
       try {
-        const noticiaRef = doc(db, "analises", idNoticia);
+        const noticiaRef = doc(db, "opiniao", idNoticia);
         await updateDoc(noticiaRef, { visualizacoes: increment(1) });
       } catch(err) { console.error("Erro visualização:", err); }
     }
@@ -190,7 +190,7 @@
            let atual = parseInt(spanCurtidas.innerText) || 0;
            spanCurtidas.innerText = atual + 1;
         }
-        const noticiaRef = doc(db, "analises", idNoticia);
+        const noticiaRef = doc(db, "opiniao", idNoticia);
         await updateDoc(noticiaRef, { curtidas: increment(1) });
       } catch(err) { console.error("Erro curtir:", err); }
     };
@@ -360,7 +360,7 @@
 
     function carregarTudoRealTime() {
       console.log("🛰️ [GEEK-CORE] Ativando Radar Real-Time...");
-      onSnapshot(collection(db, "analises"), (snapshot) => {
+      onSnapshot(collection(db, "opiniao"), (snapshot) => {
         todasAsNoticias = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         
         // ORDENAÇÃO POR TIMESTAMP (Garantindo segurança caso o campo seja nulo)
