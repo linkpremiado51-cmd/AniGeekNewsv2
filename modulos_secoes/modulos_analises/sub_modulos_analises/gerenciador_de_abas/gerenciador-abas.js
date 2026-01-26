@@ -1,13 +1,13 @@
 /* ======================================================
    AniGeekNews – Gerenciador de Abas Enterprise v7
-   Caminho Atualizado: modulos_secoes/modulos_analises/sub_modulos_analises/gerenciador_de_abas/gerenciador-abas.js
+   Caminho: modulos_secoes/modulos_analises/sub_modulos_analises/gerenciador_de_abas/gerenciador-abas.js
 ====================================================== */
 
 export function inicializarSistemaAbas() {
     const CONFIG = {
         MAX_TABS: 12,
         KEYS: { ORDER: 'ag_v7_order' },
-        PATH_CATEGORIAS: './categoria_analises/' // Caminho para os arquivos HTML
+        PATH_CATEGORIAS: './categoria_analises/' 
     };
 
     const CATALOGO = [
@@ -23,42 +23,49 @@ export function inicializarSistemaAbas() {
     ];
 
     /**
-     * MOTOR DE CARREGAMENTO DINÂMICO
-     * Busca o HTML na pasta categoria_analises/ e injeta no container-principal
+     * MOTOR DE CARREGAMENTO DINÂMICO (CORRIGIDO)
      */
     window.carregarSecao = async (id) => {
         const container = document.getElementById('container-principal');
         if (!container) return;
 
-        // Feedback visual de carregamento
         container.innerHTML = `
-            <div style="text-align: center; padding: 50px; opacity: 0.5;">
-                <i class="fa-solid fa-circle-notch fa-spin"></i><br>
-                Carregando ${id}...
+            <div style="text-align: center; padding: 100px; opacity: 0.5; color: var(--text-main);">
+                <i class="fa-solid fa-gear fa-spin"></i><br>
+                <span style="font-size: 11px; font-weight: 800; text-transform: uppercase; margin-top: 10px; display: block;">Sincronizando ${id}...</span>
             </div>`;
 
         try {
-            // Tenta buscar o arquivo ex: ./categoria_analises/manchetes.html
             const response = await fetch(`${CONFIG.PATH_CATEGORIAS}${id}.html`);
-            
             if (!response.ok) throw new Error(`Arquivo ${id}.html não encontrado.`);
             
-            const html = await response. Neve text();
-            container.innerHTML = html;
+            // CORREÇÃO: Removido o erro "Neve"
+            const html = await response.text();
             
-            console.log(`✅ Seção [${id}] carregada com sucesso.`);
+            // Injeção do conteúdo
+            container.innerHTML = html;
+
+            // REATIVADOR DE SCRIPTS (Essencial para o Firebase funcionar)
+            const scripts = container.querySelectorAll("script");
+            scripts.forEach(oldScript => {
+                const newScript = document.createElement("script");
+                Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
+                newScript.appendChild(document.createTextNode(oldScript.innerHTML));
+                oldScript.parentNode.replaceChild(newScript, oldScript);
+            });
+
+            console.log(`✅ Aba [${id}] ativada com sucesso.`);
         } catch (error) {
-            console.error("❌ Erro ao carregar seção:", error);
+            console.error("❌ Falha no motor de abas:", error);
             container.innerHTML = `
-                <div style="text-align: center; padding: 50px; color: var(--primary);">
-                    <i class="fa-solid fa-circle-exclamation"></i><br>
-                    Erro ao carregar a seção "${id}".<br>
-                    <small>Verifique se o arquivo ${id}.html existe na pasta categoria_analises.</small>
+                <div style="text-align: center; padding: 100px; color: var(--primary);">
+                    <i class="fa-solid fa-triangle-exclamation"></i><br>
+                    <span style="font-size: 11px; font-weight: 800;">ERRO AO CARREGAR: ${id.toUpperCase()}</span>
                 </div>`;
         }
     };
 
-    // Injeção de CSS Dinâmico
+    // Injeção de CSS (Mantido conforme original)
     const styles = `
         #ag-drawer { background: var(--card-bg); border-bottom: 1px solid var(--border); overflow: hidden; max-height: 0; transition: all 0.5s ease; opacity: 0; width: 100%; position: absolute; left: 0; z-index: 1000; }
         #ag-drawer.open { max-height: 85vh; opacity: 1; padding-bottom: 20px; }
@@ -110,7 +117,7 @@ export function inicializarSistemaAbas() {
             btn.onclick = () => {
                 document.querySelectorAll('.filter-tag').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
-                window.carregarSecao(id); // Chama o motor de carregamento
+                window.carregarSecao(id);
             };
             bar.appendChild(btn);
         });
