@@ -19,36 +19,17 @@ export function inicializarSistemaAbas() {
     // --- CATALOGO ATUALIZADO COM CORES E IDs NAS SESSÕES ---
     const CATALOGO = [
         {
-            sessao: "MANCHETES",
+            sessao: "ANIGEEKNEWS",
             id: 'sessao_manchetes',
             cor: "#FF4500",
             itens: [
-                { id: 'manchetes', label: 'Manchetes' }, 
-                { id: 'destaques', label: 'Destaques' }, 
-                { id: 'ultimas', label: 'Últimas' }, 
-                { id: 'trending', label: 'Trending' }
-            ]
-        },
-        {
-            sessao: "ANIGEEKNEWS",
-            id: 'sessao_analises',
-            cor: "#8A2BE2",
-            itens: [
-                { id: 'anigeeknews', label: 'Opinião' }, 
-                { id: 'critica', label: 'Crítica Técnica' }, 
-                { id: 'teorias', label: 'Teorias' }
-            ]
-        },
-        {
-            sessao: "LANÇAMENTOS",
-            id: 'sessao_lancamentos',
-            cor: "#32CD32",
-            itens: [
-                { id: 'lanc_jogos', label: 'Jogos' }, 
-                { id: 'lanc_animes', label: 'Animes' }, 
-                { id: 'lanc_mangas', label: 'Mangás' }
+                { id: 'manchetes', label: 'Animes' }, 
+                { id: 'destaques', label: 'Cultura Geek' }, 
+                { id: 'ultimas', label: 'Japão' }, 
+                { id: 'trending', label: 'AnigeekNews' }
             ]
         }
+        
     ];
 
     /**
