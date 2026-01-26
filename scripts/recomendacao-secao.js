@@ -37,7 +37,7 @@ const CATALOGO = [
   },
   {
     sessao: "ANIGEEKNEWS",
-    id: 'analises',
+    id: 'anigeeknews',
     cor: "#8A2BE2",
     itens: [
       { id: 'opiniao', label: 'Opinião' },
