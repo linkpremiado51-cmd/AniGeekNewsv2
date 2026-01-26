@@ -20,35 +20,35 @@ export function inicializarSistemaAbas() {
     // Os IDs dos itens devem ser iguais aos nomes dos arquivos .html no GitHub
     const CATALOGO = [
         {
-            sessao: "MANCHETES",
-            id: 'sessao_manchetes',
+            sessao: "ANIGEEKNEWS",
+            id: 'sessao_anigeeknews',
             cor: "#FF4500",
             itens: [
-                { id: 'manchetes', label: 'Manchetes' }, 
-                { id: 'destaques', label: 'Destaques' }, 
-                { id: 'ultimas', label: 'Últimas' }, 
-                { id: 'trending', label: 'Trending' }
+                { id: 'manchetes', label: 'Notícias Premium' }, 
+                { id: 'destaques', label: 'Edição Especial' }, 
+                { id: 'ultimas', label: 'Top da Semana' }, 
+                { id: 'trending', label: 'Seleção do Editor' }
             ]
         },
         {
-            sessao: "ANIGEEKNEWS",
+            sessao: "ANIGEEKNEWS GAMES",
             id: 'sessao_analises',
             cor: "#8A2BE2",
             itens: [
                 // Alterado de 'anigeeknews' para 'manchetes' para encontrar o arquivo real
-                { id: 'manchetes', label: 'Opinião' }, 
-                { id: 'critica', label: 'Crítica Técnica' }, 
-                { id: 'teorias', label: 'Teorias' }
+                { id: 'manchetes', label: 'Universo Gamer' }, 
+                { id: 'critica', label: 'InfoGames Brasil' }, 
+                { id: 'teorias', label: 'Modo Desempenho' }
             ]
         },
         {
-            sessao: "LANÇAMENTOS",
-            id: 'sessao_lancamentos',
+            sessao: "ANIGEEKNEWS TECNOLOGIA",
+            id: 'sessao_tecnologia',
             cor: "#32CD32",
             itens: [
-                { id: 'lanc_jogos', label: 'Jogos' }, 
-                { id: 'lanc_animes', label: 'Animes' }, 
-                { id: 'lanc_mangas', label: 'Mangás' }
+                { id: 'lanc_jogos', label: 'Mercado Tech' }, 
+                { id: 'lanc_animes', label: 'Breaking Code' }, 
+                { id: 'lanc_mangas', label: 'YellowiShipFloW' }
             ]
         }
     ];
