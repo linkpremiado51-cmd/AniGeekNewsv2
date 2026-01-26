@@ -16,7 +16,8 @@ export function inicializarSistemaAbas() {
 
     console.log(`📍 [ABAS-GEEK] Configurado caminho de busca: ${CONFIG.PATH_CATEGORIAS}`);
 
-    // --- CATALOGO ATUALIZADO COM CORES E IDs NAS SESSÕES ---
+        // --- CATALOGO CORRIGIDO ---
+    // Os IDs dos itens devem ser iguais aos nomes dos arquivos .html no GitHub
     const CATALOGO = [
         {
             sessao: "MANCHETES",
@@ -34,7 +35,8 @@ export function inicializarSistemaAbas() {
             id: 'sessao_analises',
             cor: "#8A2BE2",
             itens: [
-                { id: 'anigeeknews', label: 'Opinião' }, 
+                // Alterado de 'anigeeknews' para 'manchetes' para encontrar o arquivo real
+                { id: 'manchetes', label: 'Opinião' }, 
                 { id: 'critica', label: 'Crítica Técnica' }, 
                 { id: 'teorias', label: 'Teorias' }
             ]
@@ -50,6 +52,7 @@ export function inicializarSistemaAbas() {
             ]
         }
     ];
+
 
     /**
      * MOTOR DE CARREGAMENTO DINÂMICO (INALTERADO – FUNCIONALIDADE CRÍTICA)
