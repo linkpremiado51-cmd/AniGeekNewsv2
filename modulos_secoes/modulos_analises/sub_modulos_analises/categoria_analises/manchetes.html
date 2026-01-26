@@ -20,9 +20,11 @@
 </div>
 
 <script type="module">
-    // Importações necessárias para esta aba funcionar sozinha
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    // Importações necessárias com verificação de instância (getApps)
+    import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    console.log("📡 [ABA-MANCHETES] Script interno iniciado.");
 
     const firebaseConfig = {
       apiKey: "AIzaSyBC_ad4X9OwCHKvcG_pNQkKEl76Zw2tu6o",
@@ -33,27 +35,30 @@
       appId: "1:769322939926:web:6eb91a96a3f74670882737"
     };
 
-    const app = initializeApp(firebaseConfig);
+    // Lógica para evitar o erro "duplicate-app"
+    const app = !getApps().length ? initializeApp(firebaseConfig) : getApps()[0];
     const db = getFirestore(app);
 
     let todasAsNoticias = [];
     let noticiasExibidas = 5;
 
     function renderizarNoticiasLocal() {
+        console.log("🎨 [ABA-MANCHETES] Renderizando lista de notícias.");
         const container = document.getElementById('feed-noticias-local');
         if (!container) return;
-        container.innerHTML = ""; // Limpa antes de renderizar
+        
+        container.innerHTML = ""; 
 
         const listaParaExibir = todasAsNoticias.slice(0, noticiasExibidas);
         
         listaParaExibir.forEach(news => {
             const html = `
-                <article class="destaque-secao" style="--tema-cor: ${news.cor}; margin-bottom: 20px; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: var(--card-bg);">
-                    <img src="${news.capaNoticia || news.capaUrl}" style="width: 100%; aspect-ratio: 16/9; object-fit: cover;">
+                <article class="destaque-secao" style="--tema-cor: ${news.cor || '#e50914'}; margin-bottom: 20px; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: var(--card-bg);">
+                    <img src="${news.capaNoticia || news.capaUrl}" style="width: 100%; aspect-ratio: 16/9; object-fit: cover;" onerror="this.src='https://placehold.co/600x400?text=Erro+Capa'">
                     <div style="padding: 15px;">
-                        <div class="destaque-categoria" style="color: ${news.cor}">${news.categoria}</div>
+                        <div class="destaque-categoria" style="color: ${news.cor || 'red'}">${news.categoria || 'Novidade'}</div>
                         <h2 style="font-size: 18px; margin: 10px 0;">${news.titulo}</h2>
-                        <p style="font-size: 13px; opacity: 0.8;">${news.resumo}</p>
+                        <p style="font-size: 13px; opacity: 0.8;">${news.resumo || ''}</p>
                     </div>
                 </article>
             `;
@@ -64,19 +69,32 @@
         if(btnPaginacao) btnPaginacao.style.display = noticiasExibidas < todasAsNoticias.length ? 'block' : 'none';
     }
 
-    // Escuta do Firebase específica para esta aba
+    // Radar de escuta específico desta aba
+    console.log("🛰️ [ABA-MANCHETES] Conectando radar Firestore...");
     onSnapshot(collection(db, "analises"), (snapshot) => {
         todasAsNoticias = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        todasAsNoticias.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+        
+        // Ordenação por timestamp (garantindo que não quebre se for nulo)
+        todasAsNoticias.sort((a, b) => {
+            const timeA = a.timestamp?.seconds || 0;
+            const timeB = b.timestamp?.seconds || 0;
+            return timeB - timeA;
+        });
         
         const label = document.getElementById('novo-artigo-titulo-local');
         if(label && todasAsNoticias.length > 0) label.innerText = todasAsNoticias[0].titulo;
         
         renderizarNoticiasLocal();
+    }, (error) => {
+        console.error("❌ [ABA-MANCHETES] Falha no onSnapshot:", error);
     });
 
-    document.getElementById('btn-carregar-mais-local').onclick = () => {
-        noticiasExibidas += 5;
-        renderizarNoticiasLocal();
-    };
+    const btnMais = document.getElementById('btn-carregar-mais-local');
+    if (btnMais) {
+        btnMais.onclick = () => {
+            console.log("➕ [ABA-MANCHETES] Carregando mais itens...");
+            noticiasExibidas += 5;
+            renderizarNoticiasLocal();
+        };
+    }
 </script>
