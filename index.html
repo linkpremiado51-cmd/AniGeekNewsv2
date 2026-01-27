@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+    <script id="aclib" type="text/javascript" src="//acscdn.com/script/aclib.js"></script>
     
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AniGeekNews | Jornalismo Geek</title>
     <meta name="description" content="Jornalismo independente sobre cultura pop, animes, games e cinema.">
@@ -50,10 +52,8 @@
             <div id="search-results-surface"></div>
         </div>
 
-        <!-- Filtros serão gerados dinamicamente pelo recomendacao-secao.js -->
         <div class="filter-scroller" id="filterScroller">
-            <!-- As abas aparecerão aqui automaticamente -->
-        </div>
+            </div>
     </div>
 
     <main id="dynamic-content">
@@ -62,8 +62,6 @@
                 <p style="text-align: center; padding-top: 100px; color: var(--text-muted);">Iniciando portal...</p>
             </div>
         </section>
-
-      
 
     <div class="mobile-menu" id="mobileMenu">
         <button class="close-menu" onclick="toggleMobileMenu()">×</button>
@@ -81,7 +79,6 @@
         </div>
     </div>
 
-    <!-- Modal Global de Notícia (mantido intacto) -->
     <div id="modal-noticia-global" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:99999; overflow-y:auto; backdrop-filter: blur(8px);">
         <div id="modal-conteudo-interno" style="background: var(--bg, #fff); color: var(--text-main, #121212); max-width: 900px; margin: 20px auto; padding: 25px; border-radius: 12px; position: relative; box-shadow: 0 10px 40px rgba(0,0,0,0.5);">
             <button onclick="window.fecharModalGlobal()" style="position: absolute; top: 15px; right: 15px; border: none; background: rgba(0,0,0,0.05); width: 35px; height: 35px; border-radius: 50%; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center;">&times;</button>
@@ -100,21 +97,16 @@
         </div>
     </div>
 
-    <!-- Scripts principais -->
     <script type="module" src="scripts/config-firebase.js"></script>
     <script type="module" src="scripts/tema.js"></script>
     <script type="module" src="scripts/navegacao.js"></script>
     <script type="module" src="scripts/busca.js"></script>
-
-    <!-- Script de recomendação e gestão de seções (NOVO) -->
     <script src="scripts/recomendacao-secao.js"></script>
 
-    <!-- Função global exigida pelo sistema -->
     <script>
         window.abrirModalNoticia = (noticia) => {
             const modal = document.getElementById('modal-noticia-global');
             if (!modal) return;
-
             document.getElementById('m-categoria').innerText = noticia.categoria || "Geek";
             document.getElementById('m-categoria').style.color = noticia.cor || "var(--primary)";
             document.getElementById('m-titulo').innerText = noticia.titulo;
@@ -134,7 +126,6 @@
             } else {
                 fichaContainer.style.display = 'none';
             }
-
             modal.style.display = 'block';
             document.body.style.overflow = 'hidden';
         };
@@ -144,7 +135,6 @@
             modal.style.display = 'none';
             document.getElementById('m-video').src = "";
             document.body.style.overflow = 'auto';
-            
             const url = new URL(window.location);
             url.searchParams.delete('id');
             window.history.pushState({}, '', url);
@@ -156,13 +146,13 @@
         };
     </script>
 
-    <!-- Script externo (não alterado) -->
     <script type="module" src="scripts/ads-industrial.js"></script>
-        <script type="text/javascript">
-    aclib.runAutoTag({
-        zoneId: '9mhglrdbus',
-    });
-        </script>
+
+    <script type="text/javascript">
+        aclib.runAutoTag({
+            zoneId: 'bcdhpng30d',
+        });
+    </script>
         
 </body>
 </html>
