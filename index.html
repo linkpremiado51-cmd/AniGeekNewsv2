@@ -52,8 +52,7 @@
             <div id="search-results-surface"></div>
         </div>
 
-        <div class="filter-scroller" id="filterScroller">
-            </div>
+        <div class="filter-scroller" id="filterScroller"></div>
     </div>
 
     <main id="dynamic-content">
@@ -62,6 +61,7 @@
                 <p style="text-align: center; padding-top: 100px; color: var(--text-muted);">Iniciando portal...</p>
             </div>
         </section>
+    </main>
 
     <div class="mobile-menu" id="mobileMenu">
         <button class="close-menu" onclick="toggleMobileMenu()">×</button>
@@ -82,15 +82,11 @@
     <div id="modal-noticia-global" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:99999; overflow-y:auto; backdrop-filter: blur(8px);">
         <div id="modal-conteudo-interno" style="background: var(--bg, #fff); color: var(--text-main, #121212); max-width: 900px; margin: 20px auto; padding: 25px; border-radius: 12px; position: relative; box-shadow: 0 10px 40px rgba(0,0,0,0.5);">
             <button onclick="window.fecharModalGlobal()" style="position: absolute; top: 15px; right: 15px; border: none; background: rgba(0,0,0,0.05); width: 35px; height: 35px; border-radius: 50%; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center;">&times;</button>
-            
             <div id="m-categoria" style="font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px;"></div>
             <h2 id="m-titulo" style="font-size: clamp(22px, 5vw, 36px); font-weight: 850; margin: 0 0 15px 0; line-height: 1.2;"></h2>
             <p id="m-resumo" style="font-size: 16px; line-height: 1.6; opacity: 0.8; margin-bottom: 20px;"></p>
-            
             <div id="m-ficha" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; background: rgba(0,0,0,0.03); padding: 15px; border-radius: 8px; margin-bottom: 20px;"></div>
-            
             <iframe id="m-video" style="width: 100%; aspect-ratio: 16/9; border: none; border-radius: 8px;" allowfullscreen></iframe>
-            
             <div style="margin-top: 25px; text-align: center;">
                 <a id="m-link" href="#" target="_blank" style="display: inline-block; padding: 12px 25px; background: var(--text-main); color: var(--bg); text-decoration: none; font-weight: 700; border-radius: 4px; text-transform: uppercase; font-size: 12px; letter-spacing: 1px;">Ver Artigo Completo</a>
             </div>
