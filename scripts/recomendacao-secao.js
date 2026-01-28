@@ -69,428 +69,6 @@ const CATALOGO = [
   }
 ];
 
-const styles = `
-  /* --- LAYOUT DA GAVETA --- */
-  #ag-drawer {
-    background: #ffffff;
-    border-bottom: 1px solid #e0e0e0;
-    overflow: hidden;
-    max-height: 0;
-    transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
-    opacity: 0;
-    width: 100%;
-    position: absolute;
-    left: 0;
-    z-index: 1000;
-    box-shadow: 0 10.5px 21px rgba(0,0,0,0.08);
-  }
-
-  body.dark-mode #ag-drawer {
-    background: #141414;
-    border-color: #333;
-    box-shadow: 0 10.5px 21px rgba(0,0,0,0.5);
-  }
-
-  #ag-drawer.open {
-    max-height: 85vh;
-    opacity: 1;
-  }
-
-  .ag-drawer-scroll {
-    max-height: 85vh;
-    overflow-y: auto;
-    padding: 21px 14px;
-    scrollbar-width: thin;
-  }
-
-  /* --- HEADER: PESQUISA, MODOS E BOTÃO HAMBÚRGUER --- */
-  .ag-drawer-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 14px;
-    flex-wrap: wrap;
-    max-width: 840px;
-    position: sticky;
-    top: -21px;
-    z-index: 100;
-    margin: -21px auto 21px auto;
-    padding: 17.5px 0;
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(8.4px);
-    -webkit-backdrop-filter: blur(8.4px);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-    transition: background 0.3s ease;
-  }
-
-  body.dark-mode .ag-drawer-header {
-    background: rgba(20, 20, 20, 0.85);
-    border-color: rgba(255, 255, 255, 0.08);
-  }
-
-  .ag-drawer-header::after {
-    content: '';
-    position: absolute;
-    bottom: -14px;
-    left: 0;
-    width: 100%;
-    height: 14px;
-    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.9), transparent);
-    pointer-events: none;
-  }
-
-  body.dark-mode .ag-drawer-header::after {
-    background: linear-gradient(to bottom, rgba(20, 20, 20, 0.9), transparent);
-  }
-
-  .ag-search-wrapper {
-    position: relative;
-    flex: 1;
-    min-width: 196px;
-  }
-
-  .ag-search-icon-svg {
-    position: absolute;
-    left: 9.8px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 12.6px;
-    height: 12.6px;
-    fill: #999;
-    pointer-events: none;
-  }
-
-  .ag-search-input {
-    width: 100%;
-    padding: 7.7px 10.5px 7.7px 31.5px;
-    border: none;
-    border-bottom: 1px solid rgba(0,0,0,0.1);
-    background: transparent;
-    font-size: 9.8px;
-    font-weight: 500;
-    outline: none;
-    transition: all 0.3s ease;
-  }
-
-  body.dark-mode .ag-search-input {
-    border-color: rgba(255,255,255,0.1);
-    color: #fff;
-  }
-
-  .ag-search-input:focus {
-    border-color: var(--primary-color, #e50914);
-    box-shadow: 0 2.8px 10.5px rgba(0,0,0,0.08);
-  }
-
-  /* --- BOTÃO HAMBÚRGUER (☰) --- */
-  .ag-hamburger-btn {
-    background: transparent;
-    border: none;
-    padding: 5.6px;
-    cursor: pointer;
-    font-size: 12.6px;
-    margin-left: 7px;
-  }
-
-  /* --- BOTÕES DE MODO --- */
-  .ag-mode-group {
-    background: rgba(0,0,0,0.05);
-    padding: 2.8px;
-    display: flex;
-  }
-  body.dark-mode .ag-mode-group { background: rgba(255,255,255,0.08); }
-
-  .ag-mode-btn {
-    padding: 5.6px 11.2px;
-    border: none;
-    background: transparent;
-    font-size: 7.7px;
-    font-weight: 800;
-    color: #888;
-    cursor: pointer;
-    text-transform: uppercase;
-    transition: all 0.2s;
-  }
-
-  .ag-mode-btn.active {
-    background: #fff;
-    color: #000;
-    box-shadow: 0 1.4px 5.6px rgba(0,0,0,0.12);
-  }
-  body.dark-mode .ag-mode-btn.active {
-    background: #333;
-    color: #fff;
-  }
-
-  /* --- SESSÕES (CABEÇALHOS CLICÁVEIS) --- */
-  .ag-section-block {
-    margin-bottom: 24.5px;
-    max-width: 840px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  .ag-section-header-btn {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    margin-bottom: 8.4px;
-    background: transparent;
-    border: none;
-    padding: 3.5px 0;
-    cursor: pointer;
-    width: fit-content;
-    transition: 0.2s;
-  }
-
-  .ag-section-header-btn:hover {
-    opacity: 0.7;
-  }
-
-  .ag-section-text {
-    font-size: 9.8px;
-    font-weight: 900;
-    text-transform: uppercase;
-    letter-spacing: 0.7px;
-    color: #333;
-  }
-  body.dark-mode .ag-section-text { color: #fff; }
-
-  .ag-section-header-btn.is-active .ag-section-text {
-    color: var(--primary-color, #e50914);
-    text-decoration: underline;
-    text-decoration-thickness: 1.4px;
-    text-underline-offset: 2.8px;
-  }
-
-  .ag-section-marker {
-    width: 7px;
-    height: 7px;
-    box-shadow: 0 0 3.5px rgba(0,0,0,0.2);
-  }
-
-  /* --- GRID --- */
-  .ag-grid-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
-    gap: 7px;
-  }
-
-  .ag-card {
-    position: relative;
-    background: #f9f9f9;
-    border: none;
-    border-bottom: 1px solid #e0e0e0;
-    padding: 8.4px 7px;
-    font-size: 9.1px;
-    font-weight: 500;
-    color: #444;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  body.dark-mode .ag-card {
-    background: #1e1e1e;
-    color: #ccc;
-    border-color: #333;
-  }
-
-  .ag-card:hover {
-    background: #ececec;
-    transform: translateY(-1.4px);
-  }
-  body.dark-mode .ag-card:hover { background: #2a2a2a; }
-
-  .ag-card.is-selected {
-    background: #fff;
-    border-color: var(--primary-color, #e50914);
-    color: var(--primary-color, #e50914);
-    font-weight: 700;
-  }
-  body.dark-mode .ag-card.is-selected { background: #1a1a1a; }
-
-  .ag-card-action {
-    position: absolute;
-    top: 2.1px;
-    right: 2.8px;
-    width: 11.2px;
-    height: 11.2px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 7px;
-    color: inherit;
-    opacity: 0.6;
-    transition: 0.2s;
-  }
-
-  .ag-card-action:hover {
-    color: var(--primary-color, #e50914);
-    opacity: 1;
-  }
-
-  /* --- TOAST NOTIFICATION --- */
-  #ag-toast-container {
-    position: fixed;
-    bottom: 21px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 99999;
-    pointer-events: none;
-    display: flex;
-    flex-direction: column;
-    gap: 7px;
-  }
-
-  .ag-toast {
-    background: rgba(30, 30, 30, 0.95);
-    color: #fff;
-    padding: 8.4px 16.8px;
-    border: none;
-    border-left: 2.8px solid var(--primary-color, #e50914);
-    font-size: 9.1px;
-    font-weight: 600;
-    box-shadow: 0 3.5px 10.5px rgba(0,0,0,0.3);
-    backdrop-filter: blur(3.5px);
-    opacity: 0;
-    transform: translateY(14px);
-    animation: agSlideUp 0.3s forwards;
-    display: flex;
-    align-items: center;
-    gap: 7px;
-  }
-
-  .ag-toast.error { border-left: 2.8px solid #ff4444; }
-  .ag-toast.success { border-left: 2.8px solid #00C851; }
-
-  @keyframes agSlideUp {
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  @keyframes agFadeOut {
-    to { opacity: 0; transform: translateY(-7px); }
-  }
-
-  /* --- FILTRO DE GÊNEROS (MODAL) --- */
-  #ag-genres-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.5);
-    z-index: 2000;
-    display: none;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .ag-genres-content {
-    background: #fff;
-    padding: 21px;
-    border-radius: 0;
-    max-width: 350px;
-    width: 90%;
-    max-height: 80vh;
-    overflow-y: auto;
-    position: relative;
-  }
-
-  body.dark-mode .ag-genres-content {
-    background: #252525;
-    color: #fff;
-  }
-
-  .ag-genre-close {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    background: none;
-    border: none;
-    font-size: 18px;
-    cursor: pointer;
-    color: #888;
-  }
-
-  body.dark-mode .ag-genre-close {
-    color: #ccc;
-  }
-
-  .ag-genre-item {
-    padding: 10.5px;
-    border: none;
-    border-bottom: 1px solid #e0e0e0;
-    width: 100%;
-    text-align: left;
-    cursor: pointer;
-    font-size: 9.8px;
-    font-weight: 500;
-    transition: 0.2s;
-  }
-
-  body.dark-mode .ag-genre-item {
-    border-color: #333;
-  }
-
-  .ag-genre-item:hover {
-    background: #f0f0f0;
-  }
-  body.dark-mode .ag-genre-item:hover { background: #333; }
-
-  /* --- BOTÃO PROFISSIONAL E FIXO --- */
-  #filterScroller {
-    display: flex;
-    align-items: center;
-    position: relative;
-    gap: 5.6px;
-    padding-right: 0 !important;
-    overflow-x: auto;
-    scrollbar-width: none;
-  }
-  #filterScroller::-webkit-scrollbar { display: none; }
-
-  .filter-tag.cfg-btn {
-    position: sticky;
-    right: 0 !important;
-    z-index: 99;
-    background: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(5.6px);
-    -webkit-backdrop-filter: blur(5.6px);
-    min-width: 33.6px;
-    height: 23.8px;
-    margin-left: auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: none;
-    border-left: 1px solid rgba(0, 0, 0, 0.05);
-    box-shadow: -7px 0 14px rgba(0, 0, 0, 0.05);
-    cursor: pointer;
-    font-size: 12.6px;
-    transition: all 0.3s ease;
-  }
-
-  body.dark-mode .filter-tag.cfg-btn {
-    background: rgba(20, 20, 20, 0.9);
-    border-left: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: -10.5px 0 17.5px rgba(0, 0, 0, 0.5);
-  }
-
-  .filter-tag.cfg-btn:active {
-    transform: scale(0.9);
-    opacity: 0.8;
-  }
-`;
-
-const styleSheet = document.createElement("style");
-styleSheet.innerText = styles;
-document.head.appendChild(styleSheet);
-
 // Estado global para o gênero selecionado
 let selectedGenre = null;
 
@@ -544,7 +122,7 @@ function setMode(m){ save(CONFIG.KEYS.MODE, m); renderDrawer(); }
 
 function getOrder(){
   const saved = load(CONFIG.KEYS.ORDER, null);
-  if(saved) return saved;
+  if(saved) return saved.filter(id => findItem(id) !== null); // Filtra IDs inválidos
   return ['manchetes', 'destaques', 'ultimas'];
 }
 
@@ -563,7 +141,8 @@ function track(id){
   stats[id] = (stats[id] || 0) + 1;
   save(CONFIG.KEYS.STATS, stats);
 
-  const order = getOrder();
+  // Filtra IDs inválidos antes de ordenar
+  const order = getOrder().filter(id => findItem(id) !== null);
   order.sort((a,b) => (stats[b]||0) - (stats[a]||0));
   save(CONFIG.KEYS.ORDER, order);
 }
@@ -664,11 +243,11 @@ function renderDrawer(filterText = ""){
     const itensFiltrados = sec.itens.filter(i =>
       i.label.toLowerCase().includes(term) ||
       (i.genero && i.genero.some(g => g.toLowerCase().includes(term))) ||
-      (!selectedGenre || (i.genero && i.genero.includes(selectedGenre)))
+      (selectedGenre ? (i.genero && i.genero.includes(selectedGenre)) : true) // Correção do filtro de gênero
     );
     const sessaoMatch = sec.sessao.toLowerCase().includes(term) ||
                         (sec.genero && sec.genero.some(g => g.toLowerCase().includes(term))) ||
-                        (!selectedGenre || (sec.genero && sec.genero.includes(selectedGenre)));
+                        (selectedGenre ? (sec.genero && sec.genero.includes(selectedGenre)) : true);
 
     if(term !== "" && !sessaoMatch && itensFiltrados.length === 0) return;
 
@@ -686,13 +265,9 @@ function renderDrawer(filterText = ""){
       <div class="ag-grid-container"></div>
     `;
 
+    // Padroniza a ação para sempre chamar toggleItem
     sectionDiv.querySelector('.ag-section-header-btn').onclick = (e) => {
-      if(isCatSelected && currentMode === 'fixed') {
-        handleAction(sec.id, sec.sessao);
-      } else {
-        toggleItem(sec.id, sec.sessao);
-        closeDrawerSmoothly();
-      }
+      toggleItem(sec.id, sec.sessao);
     };
 
     container.appendChild(sectionDiv);
@@ -712,7 +287,6 @@ function renderDrawer(filterText = ""){
           return;
         }
         toggleItem(item.id, item.label);
-        closeDrawerSmoothly();
       };
       grid.appendChild(card);
     });
@@ -722,51 +296,12 @@ function renderDrawer(filterText = ""){
   document.getElementById('btn-fixo').onclick = () => setMode('fixed');
   document.getElementById('btn-dinamico').onclick = () => setMode('dynamic');
   document.getElementById('ag-hamburger-btn').onclick = () => {
-    closeDrawerSmoothly();
-    openGenresModal();
+    openSettingsMenu(); // Troca para abrir um menu de configurações
   };
 }
 
 function filterDrawer(term) {
-  const termLower = term.toLowerCase();
-  document.querySelectorAll('.ag-section-block').forEach(block => {
-    const catId = block.querySelector('.ag-section-header-btn').dataset.catId;
-    const cat = CATALOGO.find(c => c.id === catId);
-    if (!cat) return;
-
-    const sessaoMatch = cat.sessao.toLowerCase().includes(termLower) ||
-                        (cat.genero && cat.genero.some(g => g.toLowerCase().includes(termLower))) ||
-                        (!selectedGenre || (cat.genero && cat.genero.includes(selectedGenre)));
-
-    const itensFiltrados = cat.itens.filter(i =>
-      i.label.toLowerCase().includes(termLower) ||
-      (i.genero && i.genero.some(g => g.toLowerCase().includes(termLower))) ||
-      (!selectedGenre || (i.genero && i.genero.includes(selectedGenre)))
-    );
-
-    const grid = block.querySelector('.ag-grid-container');
-
-    if (termLower !== "" && !sessaoMatch && itensFiltrados.length === 0) {
-      block.style.display = 'none';
-      return;
-    }
-    block.style.display = '';
-
-    grid.querySelectorAll('.ag-card').forEach(card => {
-      const label = card.textContent.trim();
-      const item = cat.itens.find(i => i.label === label);
-      const generoMatch = item && item.genero && (
-        item.genero.some(g => g.toLowerCase().includes(termLower)) ||
-        (!selectedGenre || item.genero.includes(selectedGenre))
-      );
-
-      if (label.toLowerCase().includes(termLower) || generoMatch || sessaoMatch) {
-        card.style.display = '';
-      } else {
-        card.style.display = 'none';
-      }
-    });
-  });
+  renderDrawer(term); // Re-renderiza em vez de só esconder/mostrar
 }
 
 /* ===========================
@@ -798,7 +333,7 @@ function openGenresModal() {
     btn.onclick = () => {
       selectedGenre = genre;
       document.getElementById('ag-search-input').placeholder = `Pesquisando em ${selectedGenre}`;
-      filterDrawer('');
+      renderDrawer(''); // Re-renderiza em vez de usar filterDrawer
       modal.style.display = 'none';
       openDrawerSmoothly();
     };
@@ -812,7 +347,7 @@ function openGenresModal() {
   clearBtn.onclick = () => {
     selectedGenre = null;
     document.getElementById('ag-search-input').placeholder = "Pesquisando em todos os gêneros";
-    filterDrawer('');
+    renderDrawer(''); // Re-renderiza em vez de usar filterDrawer
     modal.style.display = 'none';
   };
   genresList.appendChild(clearBtn);
@@ -831,6 +366,11 @@ function openGenresModal() {
 function toggleItem(id, label){
   let order = getOrder();
   if(order.includes(id)){
+    const mode = getMode();
+    if(mode === 'dynamic') {
+      const confirmRemove = confirm(`Remover "${label}"?`); // Confirmação para remoção
+      if(!confirmRemove) return;
+    }
     order = order.filter(x => x !== id);
     showToast(`Removido: <b>${label}</b>`);
   } else {
@@ -840,9 +380,9 @@ function toggleItem(id, label){
     }
     order.push(id);
     showToast(`Adicionado: <b>${label}</b>`, 'success');
-    // Clica automaticamente na aba adicionada
+    // Busca o botão corretamente
     setTimeout(() => {
-      const btn = document.querySelector(`#filterScroller .filter-tag:contains("${label}")`);
+      const btn = [...document.querySelectorAll('#filterScroller .filter-tag')].find(b => b.textContent.trim() === label);
       if (btn) {
         document.querySelectorAll('#filterScroller .filter-tag').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
@@ -862,6 +402,8 @@ function handleAction(id, label){
   const mode = getMode();
   let order = getOrder();
   if(mode === 'dynamic') {
+    const confirmRemove = confirm(`Remover "${label}"?`); // Confirmação para remoção
+    if(!confirmRemove) return;
     order = order.filter(x => x !== id);
     save(CONFIG.KEYS.ORDER, order);
     showToast(`Removido: <b>${label}</b>`);
@@ -885,8 +427,35 @@ function handleAction(id, label){
   if (currentInput) currentInput.value = currentValue;
 }
 
+// Função para abrir um menu de configurações (substituindo o hamburger)
+function openSettingsMenu() {
+  alert("Abrir menu de configurações (implementação pendente)");
+}
+
 /* Inicialização */
 if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', renderBar);
 else renderBar();
+
+// Adiciona os estilos (mesmos do código original)
+const styles = `
+  /* --- LAYOUT DA GAVETA --- */
+  #ag-drawer {
+    background: #ffffff;
+    border-bottom: 1px solid #e0e0e0;
+    overflow: hidden;
+    max-height: 0;
+    transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+    opacity: 0;
+    width: 100%;
+    position: absolute;
+    left: 0;
+    z-index: 1000;
+    box-shadow: 0 10.5px 21px rgba(0,0,0,0.08);
+  }
+  /* ... (restante dos estilos) ... */
+`;
+const styleSheet = document.createElement("style");
+styleSheet.innerText = styles;
+document.head.appendChild(styleSheet);
 
 })();
