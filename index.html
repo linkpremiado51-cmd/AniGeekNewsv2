@@ -12,28 +12,25 @@
 
     <script type="text/javascript">
         window.addEventListener('load', function() {
+            // 1. Scripts de Anúncios Flutuantes
             if (typeof aclib !== 'undefined') {
-                // Ativa o Video Slider
                 aclib.runVideoSlider({ zoneId: '10852682' });
-
-                // Ativa o AutoTag
                 aclib.runAutoTag({ zoneId: '9mhglrdbus' });
-                
-                console.log("Adcash: Anúncios flutuantes ativos.");
             }
 
-            // 3. Inicialização do Player de Anúncio In-Stream (VAST)
+            // 2. Player de Anúncio VAST (Sem vídeo de fundo)
             var videoPlayer = fluidPlayer('video-vast-adcash', {
                 layoutControls: {
                     fillToContainer: true,
-                    posterImage: 'https://images.alphacoders.com/133/1338493.png',
-                    autoPlay: false,
-                    mute: true
+                    autoPlay: true, // Tenta disparar o anúncio sozinho
+                    mute: true,     // Navegadores bloqueiam autoplay com som
+                    allowDownload: false,
+                    playButtonShowing: true
                 },
                 vastOptions: {
                     adList: [
                         {
-                            roll: 'preRoll',
+                            roll: 'preRoll', // Dispara assim que carregar
                             vastTag: 'https://youradexchange.com/video/select.php?r=10852746'
                         }
                     ]
@@ -47,7 +44,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;700&family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
     <link rel="stylesheet" href="estilos/geral.css">
     <link rel="stylesheet" href="estilos/cabecalho-rodape.css">
     <link rel="stylesheet" href="estilos/componentes.css">
@@ -68,9 +64,7 @@
                 </ul>
                 <div class="header-actions">
                     <button class="sections-btn" onclick="toggleMobileMenu()">
-                        <span class="bar"></span>
-                        <span class="bar"></span>
-                        <span class="bar"></span>
+                        <span class="bar"></span><span class="bar"></span><span class="bar"></span>
                     </button>
                     <button class="menu-toggle" onclick="toggleMobileMenu()">
                         <i class="fas fa-bars"></i>
@@ -84,15 +78,13 @@
             <div id="banner-topo-geek" style="width: 728px; height: 90px; background: rgba(0,0,0,0.05); position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden;">
                 <span style="position: absolute; top: 0; font-size: 8px; opacity: 0.5;">PUBLICIDADE</span>
                 <script type="text/javascript">
-                    if (typeof aclib !== 'undefined') {
-                        aclib.runBanner({ zoneId: '10852726' });
-                    }
+                    if (typeof aclib !== 'undefined') { aclib.runBanner({ zoneId: '10852726' }); }
                 </script>
             </div>
 
-            <div id="container-player-vast" style="width: 100%; max-width: 728px; aspect-ratio: 16/9; border-radius: 8px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);">
+            <div id="container-player-vast" style="width: 100%; max-width: 728px; aspect-ratio: 16/9; border-radius: 8px; overflow: hidden; background: #000;">
                 <video id="video-vast-adcash">
-                    <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" />
+                    <source src="" type="video/mp4" />
                 </video>
             </div>
 
@@ -105,7 +97,6 @@
             </div>
             <div id="search-results-surface"></div>
         </div>
-
         <div class="filter-scroller" id="filterScroller"></div>
     </div>
 
@@ -182,7 +173,6 @@
             document.body.style.overflow = 'auto';
         };
     </script>
-
     <script type="module" src="scripts/ads-industrial.js"></script>
 </body>
 </html>
