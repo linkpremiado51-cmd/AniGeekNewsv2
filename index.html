@@ -11,45 +11,25 @@
     <script src="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.js"></script>
 
     <style>
-        /* AJUSTE DO BOTÃO DE VISITAR SITE (Click-through) */
-        /* Movemos o botão do centro para o canto superior direito, de forma discreta */
+        /* CSS para discretizar o botão de visita do anúncio */
         .fluid_video_wrapper .vast_video_clickthrough_layer {
             width: auto !important;
             height: auto !important;
-            top: 10px !important;
-            right: 10px !important;
+            top: 20px !important;
+            right: 20px !important;
             left: auto !important;
             bottom: auto !important;
-            background: rgba(0, 0, 0, 0.6) !important;
-            border-radius: 4px !important;
-            padding: 5px 10px !important;
-            font-size: 12px !important;
-            border: 1px solid rgba(255, 255, 255, 0.3) !important;
-            display: block !important; /* Garante que ele apareça */
-        }
-
-        /* Estiliza o texto dentro do botão de visita */
-        .fluid_video_wrapper .fluid_vast_ad_clickthrough {
-            position: relative !important;
-            top: 0 !important;
-            left: 0 !important;
             transform: none !important;
+            background: rgba(0, 0, 0, 0.5) !important;
+            padding: 8px 12px !important;
+            border-radius: 5px !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        }
+        .fluid_video_wrapper .fluid_vast_ad_clickthrough {
+            position: static !important;
+            font-size: 12px !important;
             color: #fff !important;
-            text-decoration: none !important;
-            font-weight: bold !important;
-        }
-
-        /* Estilo do botão de Pular (Skip) para combinar */
-        .fluid_video_wrapper .skip_button {
-            background: rgba(0, 0, 0, 0.7) !important;
-            border: 1px solid #fff !important;
-            border-radius: 4px !important;
-        }
-
-        #container-player-vast {
-            position: relative;
-            background: #000;
-            margin: 0 auto;
+            text-transform: uppercase !important;
         }
     </style>
 
@@ -60,15 +40,13 @@
                 aclib.runAutoTag({ zoneId: '9mhglrdbus' });
             }
 
+            // Inicialização do Player com a tag de anúncio
             var videoPlayer = fluidPlayer('video-vast-adcash', {
                 layoutControls: {
                     fillToContainer: true,
-                    autoPlay: true, 
-                    mute: true,     
-                    playButtonShowing: true,
-                    logo: {
-                        imageUrl: null, // Remove logo do player se houver
-                    }
+                    posterImage: 'https://images.alphacoders.com/133/1338493.png',
+                    autoPlay: true, // Necessário para disparar o VAST
+                    mute: true      // Essencial para o autoplay funcionar em navegadores modernos
                 },
                 vastOptions: {
                     adList: [
@@ -76,10 +54,7 @@
                             roll: 'preRoll',
                             vastTag: 'https://youradexchange.com/video/select.php?r=10852746'
                         }
-                    ],
-                    adText: 'Publicidade',
-                    skipButtonCaption: 'Pular em [seconds]',
-                    skipButtonClickCaption: 'Pular'
+                    ]
                 }
             });
         });
@@ -121,19 +96,18 @@
 
         <div id="publicidade-topo-wrapper" style="width: 100%; display: flex; flex-direction: column; align-items: center; padding: 10px 0; background: var(--bg-body); gap: 15px;">
             
-            <div id="banner-topo-geek" style="width: 728px; height: 90px; background: rgba(0,0,0,0.05); position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+            <div id="banner-topo-geek" style="width: 728px; height: 90px; background: rgba(0,0,0,0.05); position: relative; display: flex; align-items: center; justify-content: center;">
                 <span style="position: absolute; top: 0; font-size: 8px; opacity: 0.5;">PUBLICIDADE</span>
                 <script type="text/javascript">
                     if (typeof aclib !== 'undefined') { aclib.runBanner({ zoneId: '10852726' }); }
                 </script>
             </div>
 
-            <div id="container-player-vast" style="width: 95%; max-width: 728px; aspect-ratio: 16/9; border-radius: 8px; overflow: hidden;">
+            <div id="container-player-vast" style="width: 100%; max-width: 728px; aspect-ratio: 16/9; border-radius: 8px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);">
                 <video id="video-vast-adcash">
-                    <source src="" type="video/mp4" />
+                    <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" />
                 </video>
             </div>
-
         </div>
 
         <div class="search-bar-wrapper">
@@ -161,13 +135,6 @@
         <div class="mobile-menu-item"><a href="#">Animes</a></div>
         <div class="mobile-menu-item"><a href="#">Games</a></div>
         <div class="mobile-menu-item"><a href="#">Mangás</a></div>
-        <div class="theme-toggle-container" style="margin-top: 20px;">
-            <span id="mobileThemeLabel" style="font-weight: bold; font-size: 12px;">TEMA ESCURO</span>
-            <label class="theme-toggle">
-                <input type="checkbox" id="mobileThemeToggle">
-                <span class="slider"></span>
-            </label>
-        </div>
     </div>
 
     <div id="modal-noticia-global" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:99999; overflow-y:auto; backdrop-filter: blur(8px);">
