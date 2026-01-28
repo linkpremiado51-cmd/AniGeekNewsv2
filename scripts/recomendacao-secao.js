@@ -1,74 +1,81 @@
+/* ======================================================
+   AniGeekNews – Enterprise Section System v7
+   • Títulos de Sessão Clicáveis (Categorias Pai)
+   • Notificações Toast Profissionais (Sem Alert)
+   • Controle de Foco (Teclado não abre sozinho)
+   • Design Harmônico
+====================================================== */
+
 (function(){
 
 const CONFIG = {
   MAX_TABS: 12,
   KEYS: {
     ORDER: 'ag_v7_order',
-    MODE:  'ag_v7_mode',
+    MODE:  'ag_v7_mode', // 'dynamic' ou 'fixed'
     STATS: 'ag_v7_stats'
   }
 };
 
+/* ===========================
+   BANCO DE DADOS (COM IDs NAS SESSÕES)
+=========================== */
 const CATALOGO = [
   {
     sessao: "MANCHETES",
-    id: 'manchetes',
+    id: 'manchetes', // ID DA CATEGORIA PAI
     cor: "#FF4500",
-    genero: ["Notícias", "Destaques"],
     itens: [
-      { id: 'destaques', label: 'Destaques do Dia', genero: ["Notícias"] },
-      { id: 'ultimas', label: 'Últimas Notícias', genero: ["Notícias"] },
-      { id: 'trending', label: 'Trending / Em Alta', genero: ["Notícias"] },
-      { id: 'exclusivos', label: 'Exclusivos', genero: ["Notícias"] },
-      { id: 'urgente', label: 'Urgente', genero: ["Notícias"] },
-      { id: 'maislidas', label: 'Mais Lidas', genero: ["Notícias"] },
-      { id: 'editorpick', label: 'Editor’s Pick', genero: ["Notícias"] }
+      { id: 'destaques', label: 'Destaques do Dia' },
+      { id: 'ultimas', label: 'Últimas Notícias' },
+      { id: 'trending', label: 'Trending / Em Alta' },
+      { id: 'exclusivos', label: 'Exclusivos' },
+      { id: 'urgente', label: 'Urgente' },
+      { id: 'maislidas', label: 'Mais Lidas' },
+      { id: 'editorpick', label: 'Editor’s Pick' }
     ]
   },
   {
     sessao: "Saihate no Paladin 1 temporada",
     id: 'saihate_no_paladin',
     cor: "#8A2BE2",
-    genero: ["Fantasia", "Isekai", "Aventura"],
     itens: []
   },
   {
     sessao: "Solo Leveling 1 temporada",
     id: 'solo_leveling',
     cor: "#0f172a",
-    genero: ["Ação", "Fantasia", "Sobrenatural"],
     itens: []
   },
   {
     sessao: "Jujutsu Kaisen 1 temporada",
     id: 'jujutsu_kaisen',
     cor: "#7c0a02",
-    genero: ["Ação", "Sobrenatural", "Shounen"],
     itens: []
   },
   {
     sessao: "Attack on Titan 1 temporada",
     id: 'attack_on_titan',
     cor: "#3b3b3b",
-    genero: ["Ação", "Drama", "Sobrenatural"],
     itens: []
   },
   {
     sessao: "Demon Slayer 1 temporada",
     id: 'demon_slayer',
     cor: "#1f2937",
-    genero: ["Ação", "Sobrenatural", "Shounen"],
     itens: []
   },
   {
     sessao: "Chainsaw Man 1 temporada",
     id: 'chainsaw_man',
     cor: "#991b1b",
-    genero: ["Ação", "Comédia", "Sobrenatural"],
     itens: []
   }
 ];
 
+/* ===========================
+   CSS INJETADO
+=========================== */
 const styles = `
   /* --- LAYOUT DA GAVETA --- */
   #ag-drawer {
@@ -103,7 +110,7 @@ const styles = `
     scrollbar-width: thin;
   }
 
-  /* --- HEADER: PESQUISA, MODOS E BOTÃO HAMBÚRGUER --- */
+  /* --- HEADER: PESQUISA E MODOS (ESTÉTICA HIGH-END) --- */
   .ag-drawer-header {
     display: flex;
     justify-content: space-between;
@@ -111,11 +118,14 @@ const styles = `
     gap: 14px;
     flex-wrap: wrap;
     max-width: 840px;
+
+    /* Fixação no topo com efeito vidro */
     position: sticky;
-    top: -21px;
+    top: -21px; /* Alinhado ao topo do container */
     z-index: 100;
     margin: -21px auto 21px auto;
     padding: 17.5px 0;
+
     background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(8.4px);
     -webkit-backdrop-filter: blur(8.4px);
@@ -128,6 +138,7 @@ const styles = `
     border-color: rgba(255, 255, 255, 0.08);
   }
 
+  /* Efeito de degradê inferior para suavizar a rolagem dos itens */
   .ag-drawer-header::after {
     content: '';
     position: absolute;
@@ -163,9 +174,9 @@ const styles = `
   .ag-search-input {
     width: 100%;
     padding: 7.7px 10.5px 7.7px 31.5px;
-    border: none;
-    border-bottom: 1px solid rgba(0,0,0,0.1);
-    background: transparent;
+    border-radius: 7px;
+    border: 1px solid rgba(0,0,0,0.1);
+    background: rgba(0,0,0,0.04);
     font-size: 9.8px;
     font-weight: 500;
     outline: none;
@@ -173,29 +184,23 @@ const styles = `
   }
 
   body.dark-mode .ag-search-input {
+    background: rgba(255,255,255,0.05);
     border-color: rgba(255,255,255,0.1);
     color: #fff;
   }
 
   .ag-search-input:focus {
+    background: #fff;
     border-color: var(--primary-color, #e50914);
     box-shadow: 0 2.8px 10.5px rgba(0,0,0,0.08);
   }
-
-  /* --- BOTÃO HAMBÚRGUER (☰) --- */
-  .ag-hamburger-btn {
-    background: transparent;
-    border: none;
-    padding: 5.6px;
-    cursor: pointer;
-    font-size: 12.6px;
-    margin-left: 7px;
-  }
+  body.dark-mode .ag-search-input:focus { background: #252525; }
 
   /* --- BOTÕES DE MODO --- */
   .ag-mode-group {
     background: rgba(0,0,0,0.05);
     padding: 2.8px;
+    border-radius: 7px;
     display: flex;
   }
   body.dark-mode .ag-mode-group { background: rgba(255,255,255,0.08); }
@@ -204,6 +209,7 @@ const styles = `
     padding: 5.6px 11.2px;
     border: none;
     background: transparent;
+    border-radius: 4.9px;
     font-size: 7.7px;
     font-weight: 800;
     color: #888;
@@ -230,6 +236,7 @@ const styles = `
     margin-right: auto;
   }
 
+  /* Estilo do título que agora é um botão */
   .ag-section-header-btn {
     display: flex;
     align-items: center;
@@ -256,6 +263,7 @@ const styles = `
   }
   body.dark-mode .ag-section-text { color: #fff; }
 
+  /* Indicador visual de que o título está selecionado */
   .ag-section-header-btn.is-active .ag-section-text {
     color: var(--primary-color, #e50914);
     text-decoration: underline;
@@ -266,6 +274,7 @@ const styles = `
   .ag-section-marker {
     width: 7px;
     height: 7px;
+    border-radius: 2.1px;
     box-shadow: 0 0 3.5px rgba(0,0,0,0.2);
   }
 
@@ -279,8 +288,8 @@ const styles = `
   .ag-card {
     position: relative;
     background: #f9f9f9;
-    border: none;
-    border-bottom: 1px solid #e0e0e0;
+    border: 1px solid transparent;
+    border-radius: 4.2px;
     padding: 8.4px 7px;
     font-size: 9.1px;
     font-weight: 500;
@@ -297,7 +306,6 @@ const styles = `
   body.dark-mode .ag-card {
     background: #1e1e1e;
     color: #ccc;
-    border-color: #333;
   }
 
   .ag-card:hover {
@@ -310,6 +318,7 @@ const styles = `
     background: #fff;
     border-color: var(--primary-color, #e50914);
     color: var(--primary-color, #e50914);
+    box-shadow: inset 0 0 0 0.7px var(--primary-color, #e50914);
     font-weight: 700;
   }
   body.dark-mode .ag-card.is-selected { background: #1a1a1a; }
@@ -324,17 +333,19 @@ const styles = `
     align-items: center;
     justify-content: center;
     font-size: 7px;
+    border-radius: 50%;
     color: inherit;
     opacity: 0.6;
     transition: 0.2s;
   }
 
   .ag-card-action:hover {
-    color: var(--primary-color, #e50914);
+    background: var(--primary-color, #e50914);
+    color: #fff !important;
     opacity: 1;
   }
 
-  /* --- TOAST NOTIFICATION --- */
+  /* --- TOAST NOTIFICATION (Substituto do Alert) --- */
   #ag-toast-container {
     position: fixed;
     bottom: 21px;
@@ -351,8 +362,7 @@ const styles = `
     background: rgba(30, 30, 30, 0.95);
     color: #fff;
     padding: 8.4px 16.8px;
-    border: none;
-    border-left: 2.8px solid var(--primary-color, #e50914);
+    border-radius: 35px;
     font-size: 9.1px;
     font-weight: 600;
     box-shadow: 0 3.5px 10.5px rgba(0,0,0,0.3);
@@ -376,73 +386,7 @@ const styles = `
     to { opacity: 0; transform: translateY(-7px); }
   }
 
-  /* --- FILTRO DE GÊNEROS (MODAL) --- */
-  #ag-genres-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.5);
-    z-index: 2000; /* Aumentado para ficar acima do modal de pesquisa */
-    display: none;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .ag-genres-content {
-    background: #fff;
-    padding: 21px;
-    border-radius: 0;
-    max-width: 350px;
-    width: 90%;
-    max-height: 80vh;
-    overflow-y: auto;
-    position: relative; /* Para posicionar o botão de fechar */
-  }
-
-  body.dark-mode .ag-genres-content {
-    background: #252525;
-    color: #fff;
-  }
-
-  .ag-genre-close {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    background: none;
-    border: none;
-    font-size: 18px;
-    cursor: pointer;
-    color: #888;
-  }
-
-  body.dark-mode .ag-genre-close {
-    color: #ccc;
-  }
-
-  .ag-genre-item {
-    padding: 10.5px;
-    border: none;
-    border-bottom: 1px solid #e0e0e0;
-    width: 100%;
-    text-align: left;
-    cursor: pointer;
-    font-size: 9.8px;
-    font-weight: 500;
-    transition: 0.2s;
-  }
-
-  body.dark-mode .ag-genre-item {
-    border-color: #333;
-  }
-
-  .ag-genre-item:hover {
-    background: #f0f0f0;
-  }
-  body.dark-mode .ag-genre-item:hover { background: #333; }
-
-  /* --- BOTÃO PROFISSIONAL E FIXO --- */
+  /* --- AJUSTE PARA BOTÃO PROFISSIONAL E FIXO --- */
   #filterScroller {
     display: flex;
     align-items: center;
@@ -450,37 +394,61 @@ const styles = `
     gap: 5.6px;
     padding-right: 0 !important;
     overflow-x: auto;
-    scrollbar-width: none;
+    scrollbar-width: none; /* Esconde scroll no Firefox */
   }
-  #filterScroller::-webkit-scrollbar { display: none; }
+  #filterScroller::-webkit-scrollbar { display: none; } /* Esconde scroll no Chrome/Safari */
 
   .filter-tag.cfg-btn {
     position: sticky;
     right: 0 !important;
     z-index: 99;
+
+    /* Estética Profissional: Glassmorphism */
     background: rgba(255, 255, 255, 0.9);
     backdrop-filter: blur(5.6px);
     -webkit-backdrop-filter: blur(5.6px);
+
     min-width: 33.6px;
     height: 23.8px;
     margin-left: auto;
     display: flex;
     align-items: center;
     justify-content: center;
+
+    /* Borda e Sombra refinadas */
     border: none;
     border-left: 1px solid rgba(0, 0, 0, 0.05);
     box-shadow: -7px 0 14px rgba(0, 0, 0, 0.05);
+
     cursor: pointer;
     font-size: 12.6px;
     transition: all 0.3s ease;
   }
 
+  /* Efeito de degradê para as abas sumirem suavemente atrás do botão */
+  .filter-tag.cfg-btn::before {
+    content: '';
+    position: absolute;
+    left: -14px;
+    top: 0;
+    width: 14px;
+    height: 100%;
+    background: linear-gradient(to right, transparent, rgba(255,255,255,0.9));
+    pointer-events: none;
+  }
+
+  /* Ajustes para o Dark Mode */
   body.dark-mode .filter-tag.cfg-btn {
     background: rgba(20, 20, 20, 0.9);
     border-left: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: -10.5px 0 17.5px rgba(0, 0, 0, 0.5);
   }
 
+  body.dark-mode .filter-tag.cfg-btn::before {
+    background: linear-gradient(to right, transparent, rgba(20, 20, 20, 0.9));
+  }
+
+  /* Feedback visual ao tocar/clicar */
   .filter-tag.cfg-btn:active {
     transform: scale(0.9);
     opacity: 0.8;
@@ -491,11 +459,8 @@ const styleSheet = document.createElement("style");
 styleSheet.innerText = styles;
 document.head.appendChild(styleSheet);
 
-// Estado global para o gênero selecionado
-let selectedGenre = null;
-
 /* ===========================
-   SISTEMA DE TOAST (NOTIFICAÇÃÃO)
+   SISTEMA DE TOAST (NOTIFICAÇÃO)
 =========================== */
 function showToast(message, type = 'normal') {
   let container = document.getElementById('ag-toast-container');
@@ -508,8 +473,10 @@ function showToast(message, type = 'normal') {
   const toast = document.createElement('div');
   toast.className = `ag-toast ${type}`;
   toast.innerHTML = message;
+
   container.appendChild(toast);
 
+  // Remove após 3 segundos
   setTimeout(() => {
     toast.style.animation = 'agFadeOut 0.3s forwards';
     setTimeout(() => toast.remove(), 300);
@@ -528,12 +495,16 @@ function setMode(m){ save(CONFIG.KEYS.MODE, m); renderDrawer(); }
 function getOrder(){
   const saved = load(CONFIG.KEYS.ORDER, null);
   if(saved) return saved;
+  // Padrão inicial com alguns IDs
   return ['manchetes', 'destaques', 'ultimas'];
 }
 
+// Encontra ITEM ou CATEGORIA PAI pelo ID
 function findItem(id){
   for(let sec of CATALOGO){
-    if(sec.id === id) return { id: sec.id, label: sec.sessao, genero: sec.genero };
+    // Verifica se é a própria categoria
+    if(sec.id === id) return { id: sec.id, label: sec.sessao };
+    // Verifica itens internos
     const item = sec.itens.find(i => i.id === id);
     if(item) return item;
   }
@@ -595,7 +566,7 @@ function renderBar(){
 }
 
 /* ===========================
-   GAVETA (DRAWER) E FILTRO DE GÊNEROS
+   GAVETA (DRAWER)
 =========================== */
 function toggleDrawer(){
   const drawer = document.getElementById('ag-drawer');
@@ -615,24 +586,23 @@ function renderDrawer(filterText = ""){
   const currentMode = getMode();
 
   const searchIcon = `<svg class="ag-search-icon-svg" viewBox="0 0 24 24"><path d="M21.71 20.29l-5.01-5.01C17.54 13.68 18 11.91 18 10c0-4.41-3.59-8-8-8S2 5.59 2 10s3.59 8 8 8c1.91 0 3.68-.46 5.28-1.3l5.01 5.01c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41z"/></svg>`;
-  const hamburgerIcon = `<button class="ag-hamburger-btn" id="ag-hamburger-btn">☰</button>`;
-
-  let searchPlaceholder = selectedGenre ? `Pesquisando em ${selectedGenre}` : "Pesquisando em todos os gêneros";
 
   let html = `
     <div class="ag-drawer-scroll">
       <div class="ag-drawer-header">
         <div class="ag-search-wrapper">
           ${searchIcon}
-          <input type="text" class="ag-search-input" id="ag-search-input" placeholder="${searchPlaceholder}" value="${filterText}">
+          <input type="text" class="ag-search-input" id="ag-search-input" placeholder="Pesquisar..." value="${filterText}">
         </div>
-        ${hamburgerIcon}
+
         <div class="ag-mode-group">
           <button id="btn-fixo" class="ag-mode-btn ${currentMode==='fixed'?'active':''}">Fixo</button>
           <button id="btn-dinamico" class="ag-mode-btn ${currentMode==='dynamic'?'active':''}">Automático</button>
         </div>
       </div>
+
       <div id="ag-catalog-container"></div>
+
       <div style="text-align:center; padding-top:20px; font-size:12px; color:#888;">
         ${currentOrder.length} de ${CONFIG.MAX_TABS} abas ativas
       </div>
@@ -645,23 +615,24 @@ function renderDrawer(filterText = ""){
   const term = filterText.toLowerCase();
 
   CATALOGO.forEach(sec => {
-    const itensFiltrados = sec.itens.filter(i =>
-      i.label.toLowerCase().includes(term) ||
-      (i.genero && i.genero.some(g => g.toLowerCase().includes(term))) ||
-      (!selectedGenre || (i.genero && i.genero.includes(selectedGenre)))
-    );
-    const sessaoMatch = sec.sessao.toLowerCase().includes(term) ||
-                        (sec.genero && sec.genero.some(g => g.toLowerCase().includes(term))) ||
-                        (!selectedGenre || (sec.genero && sec.genero.includes(selectedGenre)));
+    // Filtragem
+    const itensFiltrados = sec.itens.filter(i => i.label.toLowerCase().includes(term));
+    const sessaoMatch = sec.sessao.toLowerCase().includes(term);
 
     if(term !== "" && !sessaoMatch && itensFiltrados.length === 0) return;
+    const itensParaMostrar = sessaoMatch ? sec.itens : itensFiltrados;
 
     const sectionDiv = document.createElement('div');
     sectionDiv.className = 'ag-section-block';
 
+    // VERIFICA SE A CATEGORIA PAI JÁ ESTÁ SELECIONADA
     const isCatSelected = currentOrder.includes(sec.id);
-    let catIcon = isCatSelected ? (currentMode === 'dynamic' ? ' ✕' : ' •••') : '';
+    let catIcon = '';
+    if(isCatSelected) {
+       catIcon = currentMode === 'dynamic' ? ' <span style="font-size:10px; opacity:0.6; margin-left:5px">✕</span>' : ' <span style="font-size:10px; opacity:0.6; margin-left:5px">•••</span>';
+    }
 
+    // TÍTULO DA SESSÃO AGORA É UM BOTÃO
     sectionDiv.innerHTML = `
       <button class="ag-section-header-btn ${isCatSelected ? 'is-active' : ''}" data-cat-id="${sec.id}">
         <div class="ag-section-marker" style="background:${sec.cor}"></div>
@@ -670,25 +641,36 @@ function renderDrawer(filterText = ""){
       <div class="ag-grid-container"></div>
     `;
 
+    // Evento de clique no título da seção (Pai)
     sectionDiv.querySelector('.ag-section-header-btn').onclick = (e) => {
-      if(isCatSelected && currentMode === 'fixed') {
-        handleAction(sec.id, sec.sessao);
-      } else {
-        toggleItem(sec.id, sec.sessao);
-        drawer.classList.remove('open');
-      }
+        // Se já tem seleção, verifica se é pra mover ou deletar
+        if(isCatSelected && currentMode === 'fixed') {
+             handleAction(sec.id, sec.sessao);
+        } else {
+             toggleItem(sec.id, sec.sessao);
+        }
     };
 
     container.appendChild(sectionDiv);
     const grid = sectionDiv.querySelector('.ag-grid-container');
 
-    (sessaoMatch ? sec.itens : itensFiltrados).forEach(item => {
+    // RENDERIZA OS ITENS FILHOS
+    itensParaMostrar.forEach(item => {
       const isSelected = currentOrder.includes(item.id);
+
       const card = document.createElement('div');
       card.className = `ag-card ${isSelected ? 'is-selected' : ''}`;
-      let actionIcon = isSelected ? (currentMode === 'dynamic' ? '✕' : '•••') : '';
 
-      card.innerHTML = `${item.label}${isSelected ? `<div class="ag-card-action" data-id="${item.id}" data-action="true">${actionIcon}</div>` : ''}`;
+      let actionIcon = '';
+      if(isSelected) {
+        actionIcon = currentMode === 'dynamic' ? '✕' : '•••';
+      }
+
+      card.innerHTML = `
+        ${item.label}
+        ${isSelected ? `<div class="ag-card-action" data-id="${item.id}" data-action="true">${actionIcon}</div>` : ''}
+      `;
+
       card.onclick = (e) => {
         if(e.target.dataset.action || e.target.parentNode.dataset.action) {
           e.stopPropagation();
@@ -696,18 +678,23 @@ function renderDrawer(filterText = ""){
           return;
         }
         toggleItem(item.id, item.label);
-        drawer.classList.remove('open');
       };
+
       grid.appendChild(card);
     });
   });
 
-  document.getElementById('ag-search-input').oninput = (e) => filterDrawer(e.target.value);
+  // Apenas atualiza o evento de input, sem re-renderizar tudo
+  const searchInput = document.getElementById('ag-search-input');
+  searchInput.oninput = (e) => {
+    filterDrawer(e.target.value);
+  };
+
   document.getElementById('btn-fixo').onclick = () => setMode('fixed');
   document.getElementById('btn-dinamico').onclick = () => setMode('dynamic');
-  document.getElementById('ag-hamburger-btn').onclick = openGenresModal;
 }
 
+// Função para filtrar os elementos existentes, sem recriar o drawer
 function filterDrawer(term) {
   const termLower = term.toLowerCase();
   document.querySelectorAll('.ag-section-block').forEach(block => {
@@ -715,17 +702,10 @@ function filterDrawer(term) {
     const cat = CATALOGO.find(c => c.id === catId);
     if (!cat) return;
 
-    const sessaoMatch = cat.sessao.toLowerCase().includes(termLower) ||
-                        (cat.genero && cat.genero.some(g => g.toLowerCase().includes(termLower))) ||
-                        (!selectedGenre || (cat.genero && cat.genero.includes(selectedGenre)));
-
-    const itensFiltrados = cat.itens.filter(i =>
-      i.label.toLowerCase().includes(termLower) ||
-      (i.genero && i.genero.some(g => g.toLowerCase().includes(termLower))) ||
-      (!selectedGenre || (i.genero && i.genero.includes(selectedGenre)))
-    );
-
+    const sessaoMatch = cat.sessao.toLowerCase().includes(termLower);
+    const itensFiltrados = cat.itens.filter(i => i.label.toLowerCase().includes(termLower));
     const grid = block.querySelector('.ag-grid-container');
+    const headerBtn = block.querySelector('.ag-section-header-btn');
 
     if (termLower !== "" && !sessaoMatch && itensFiltrados.length === 0) {
       block.style.display = 'none';
@@ -733,15 +713,10 @@ function filterDrawer(term) {
     }
     block.style.display = '';
 
+    // Filtra os cards
     grid.querySelectorAll('.ag-card').forEach(card => {
       const label = card.textContent.trim();
-      const item = cat.itens.find(i => i.label === label);
-      const generoMatch = item && item.genero && (
-        item.genero.some(g => g.toLowerCase().includes(termLower)) ||
-        (!selectedGenre || item.genero.includes(selectedGenre))
-      );
-
-      if (label.toLowerCase().includes(termLower) || generoMatch || sessaoMatch) {
+      if (label.toLowerCase().includes(termLower) || sessaoMatch) {
         card.style.display = '';
       } else {
         card.style.display = 'none';
@@ -751,71 +726,17 @@ function filterDrawer(term) {
 }
 
 /* ===========================
-   MODAL DE GÊNEROS
-=========================== */
-function openGenresModal() {
-  const modal = document.getElementById('ag-genres-modal');
-  if(!modal) {
-    const m = document.createElement('div');
-    m.id = 'ag-genres-modal';
-    m.innerHTML = `
-      <div class="ag-genres-content">
-        <button class="ag-genre-close" id="ag-genre-close-btn">×</button>
-        <h3 style="margin-top:0;">Filtrar por Gênero</h3>
-        <div id="ag-genres-list"></div>
-      </div>
-    `;
-    document.body.appendChild(m);
-  }
-
-  const genresList = document.getElementById('ag-genres-list');
-  const allGenres = [...new Set(CATALOGO.flatMap(cat => cat.genero || []).concat(CATALOGO.flatMap(cat => cat.itens.flatMap(item => item.genero || []))))];
-
-  genresList.innerHTML = '';
-  allGenres.forEach(genre => {
-    const btn = document.createElement('button');
-    btn.className = 'ag-genre-item';
-    btn.textContent = genre;
-    btn.onclick = () => {
-      selectedGenre = genre;
-      document.getElementById('ag-search-input').placeholder = `Pesquisando em ${selectedGenre}`;
-      filterDrawer('');
-      modal.style.display = 'none';
-    };
-    genresList.appendChild(btn);
-  });
-
-  // Opção para limpar o filtro de gênero
-  const clearBtn = document.createElement('button');
-  clearBtn.className = 'ag-genre-item';
-  clearBtn.textContent = "Limpar filtro de gênero";
-  clearBtn.onclick = () => {
-    selectedGenre = null;
-    document.getElementById('ag-search-input').placeholder = "Pesquisando em todos os gêneros";
-    filterDrawer('');
-    modal.style.display = 'none';
-    renderDrawer();
-  };
-  genresList.appendChild(clearBtn);
-
-  // Botão de fechar
-  document.getElementById('ag-genre-close-btn').onclick = () => {
-    modal.style.display = 'none';
-  };
-
-  modal.style.display = 'flex';
-  modal.onclick = (e) => { if(e.target === modal) modal.style.display = 'none'; };
-}
-
-/* ===========================
    AÇÕES & NOTIFICAÇÕES
 =========================== */
 function toggleItem(id, label){
   let order = getOrder();
+
   if(order.includes(id)){
+    // Remove
     order = order.filter(x => x !== id);
-    showToast(`Removido: <b>${label}</b>`);
+    showToast(`Removido: <b>${label}</b>`, 'normal');
   } else {
+    // Adiciona com verificação de limite
     if(order.length >= CONFIG.MAX_TABS) {
       showToast(`Limite de ${CONFIG.MAX_TABS} abas atingido!`, 'error');
       return;
@@ -823,8 +744,10 @@ function toggleItem(id, label){
     order.push(id);
     showToast(`Adicionado: <b>${label}</b>`, 'success');
   }
+
   save(CONFIG.KEYS.ORDER, order);
   renderBar();
+  // Atualiza apenas visualmente sem perder estado do input
   const currentInput = document.getElementById('ag-search-input');
   const currentValue = currentInput ? currentInput.value : '';
   renderDrawer(currentValue);
@@ -834,28 +757,36 @@ function toggleItem(id, label){
 function handleAction(id, label){
   const mode = getMode();
   let order = getOrder();
+
   if(mode === 'dynamic') {
     order = order.filter(x => x !== id);
     save(CONFIG.KEYS.ORDER, order);
     showToast(`Removido: <b>${label}</b>`);
+    renderBar();
+    const currentInput = document.getElementById('ag-search-input');
+    const currentValue = currentInput ? currentInput.value : '';
+    renderDrawer(currentValue);
+    if (currentInput) currentInput.value = currentValue;
   } else {
+    // Modo Fixo: Prompt simples
     const currentIndex = order.indexOf(id);
     const newPos = prompt(`Mover "${label}" para qual posição? (1-${order.length})`, currentIndex + 1);
+
     if(newPos !== null){
       const targetIndex = parseInt(newPos) - 1;
       if(!isNaN(targetIndex) && targetIndex >= 0 && targetIndex < order.length) {
         order.splice(currentIndex, 1);
         order.splice(targetIndex, 0, id);
         save(CONFIG.KEYS.ORDER, order);
+        renderBar();
+        const currentInput = document.getElementById('ag-search-input');
+        const currentValue = currentInput ? currentInput.value : '';
+        renderDrawer(currentValue);
+        if (currentInput) currentInput.value = currentValue;
         showToast(`<b>${label}</b> movido para posição ${newPos}`);
       }
     }
   }
-  renderBar();
-  const currentInput = document.getElementById('ag-search-input');
-  const currentValue = currentInput ? currentInput.value : '';
-  renderDrawer(currentValue);
-  if (currentInput) currentInput.value = currentValue;
 }
 
 /* Inicialização */
