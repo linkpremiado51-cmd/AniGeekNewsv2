@@ -7,17 +7,38 @@
     
     <script id="aclib" type="text/javascript" src="https://acscdn.com/script/aclib.js"></script>
 
+    <link rel="stylesheet" href="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.css" type="text/css"/>
+    <script src="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.js"></script>
+
     <script type="text/javascript">
         window.addEventListener('load', function() {
             if (typeof aclib !== 'undefined') {
-                // Ativa o Video Slider (O que você queria antes)
+                // Ativa o Video Slider
                 aclib.runVideoSlider({ zoneId: '10852682' });
 
-                // Ativa o AutoTag (O que estava no seu código original)
+                // Ativa o AutoTag
                 aclib.runAutoTag({ zoneId: '9mhglrdbus' });
                 
-                console.log("Adcash: Anúncios flutuantes carregados.");
+                console.log("Adcash: Anúncios flutuantes ativos.");
             }
+
+            // 3. Inicialização do Player de Anúncio In-Stream (VAST)
+            var videoPlayer = fluidPlayer('video-vast-adcash', {
+                layoutControls: {
+                    fillToContainer: true,
+                    posterImage: 'https://images.alphacoders.com/133/1338493.png',
+                    autoPlay: false,
+                    mute: true
+                },
+                vastOptions: {
+                    adList: [
+                        {
+                            roll: 'preRoll',
+                            vastTag: 'https://youradexchange.com/video/select.php?r=10852746'
+                        }
+                    ]
+                }
+            });
         });
     </script>
 
@@ -26,6 +47,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;700&family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
     <link rel="stylesheet" href="estilos/geral.css">
     <link rel="stylesheet" href="estilos/cabecalho-rodape.css">
     <link rel="stylesheet" href="estilos/componentes.css">
@@ -57,16 +79,23 @@
             </div>
         </header>
 
-        <div id="banner-topo-geek" style="width: 100%; display: flex; justify-content: center; padding: 10px 0; background: var(--bg-body); overflow: hidden;">
-            <div style="width: 728px; height: 90px; background: rgba(0,0,0,0.05); position: relative; display: flex; align-items: center; justify-content: center;">
+        <div id="publicidade-topo-wrapper" style="width: 100%; display: flex; flex-direction: column; align-items: center; padding: 10px 0; background: var(--bg-body); gap: 15px;">
+            
+            <div id="banner-topo-geek" style="width: 728px; height: 90px; background: rgba(0,0,0,0.05); position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden;">
                 <span style="position: absolute; top: 0; font-size: 8px; opacity: 0.5;">PUBLICIDADE</span>
                 <script type="text/javascript">
-                    // Banner Zone
                     if (typeof aclib !== 'undefined') {
                         aclib.runBanner({ zoneId: '10852726' });
                     }
                 </script>
             </div>
+
+            <div id="container-player-vast" style="width: 100%; max-width: 728px; aspect-ratio: 16/9; border-radius: 8px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);">
+                <video id="video-vast-adcash">
+                    <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" />
+                </video>
+            </div>
+
         </div>
 
         <div class="search-bar-wrapper">
