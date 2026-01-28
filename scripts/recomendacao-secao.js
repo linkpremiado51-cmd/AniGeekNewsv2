@@ -37,7 +37,7 @@ const CATALOGO = [
   },
   {
     sessao: "Saihate no Paladin",
-    id: 'analises',
+    id: 'saihate_no_paladin',
     cor: "#8A2BE2",
     itens: [
       { id: 'opiniao', label: 'Opinião' },
