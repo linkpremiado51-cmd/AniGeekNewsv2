@@ -1,23 +1,42 @@
 <script id="aclib" type="text/javascript" src="https://acscdn.com/script/aclib.js"></script>
 
 <script type="text/javascript">
-    window.addEventListener('load', function() {
-        // Aguarda 2 segundos para o Firebase renderizar as notícias antes de mostrar o anúncio
-        setTimeout(function() {
-            if (typeof aclib !== 'undefined') {
-                aclib.runVideoSlider({
-                    zoneId: '10852682',
-                });
-                console.log("Adcash: Sistema de anúncios ativado com sucesso.");
-            } else {
-                console.error("Adcash: A biblioteca não carregou. Verifique se há um Adblock ativo.");
-            }
-        }, 2000); 
-    });
+    // Função para rodar os anúncios assim que a biblioteca carregar
+    function iniciarAds() {
+        if (typeof aclib !== 'undefined') {
+            // 1. Inicia o Video Slider (O que desliza na tela)
+            aclib.runVideoSlider({ zoneId: '10852682' });
+            
+            // 2. Inicia o Banner no topo (Zone 10852726)
+            aclib.runBanner({ zoneId: '10852726' });
+            
+            console.log("Adcash: Todos os anúncios foram solicitados.");
+        }
+    }
+
+    // Tenta carregar pelo evento da tag script ou pelo carregamento da página
+    const adScript = document.getElementById('aclib');
+    if (adScript) {
+        adScript.onload = iniciarAds;
+    } else {
+        window.onload = iniciarAds;
+    }
 </script>
+
 <body>
 <div class="destaque-wrapper">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+  <div id="ad-top-banner" style="text-align: center; margin: 10px 0; min-height: 90px; background: rgba(0,0,0,0.05); border-radius: 8px;">
+       <p style="font-size: 10px; color: #666; margin-bottom: 5px;">Publicidade</p>
+       <script type="text/javascript">
+           window.addEventListener('load', function() {
+               if(typeof aclib !== 'undefined') {
+                   aclib.runBanner({ zoneId: '10852726' });
+               }
+           });
+       </script>
+  </div>
 
   <div id="notificacao-novo-artigo">
     <i class="fa-solid fa-satellite-dish"></i>
@@ -42,7 +61,7 @@
       <div style="font-size: 7px; font-weight: 800; opacity: 0.6; text-transform: uppercase;">Deseja assistir?</div>
       <div id="notif-titulo" style="font-size: 9.1px; font-weight: 700;">Título</div>
     </div>
-    <button class="btn-confirmar-video" id="btn-confirmar">Confirmar</button>
+    <button class="btn-confirmar-video" id="btn-confirmar" onclick="window.open('https://youradexchange.com/video/select.php?r=10852722', '_blank')">Confirmar</button>
     <i class="fa-solid fa-xmark" style="cursor:pointer; padding: 3.5px;" onclick="window.fecharNotif()"></i>
   </div>
 
@@ -133,6 +152,8 @@
     const btnConfirmar = document.getElementById('btn-confirmar');
     if(btnConfirmar) {
         btnConfirmar.onclick = () => {
+          // Ação dupla: Abre o anúncio VAST e carrega o vídeo
+          window.open('https://youradexchange.com/video/select.php?r=10852722', '_blank');
           const player = document.getElementById(playerAlvo);
           if (player) player.src = urlAlvo;
           window.fecharNotif();
