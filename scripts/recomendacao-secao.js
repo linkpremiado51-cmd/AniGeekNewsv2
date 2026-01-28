@@ -9,9 +9,6 @@ const CONFIG = {
   }
 };
 
-/* ===========================
-   BANCO DE DADOS (COM GÊNEROS E IDs NAS SESSÕES)
-=========================== */
 const CATALOGO = [
   {
     sessao: "MANCHETES",
@@ -72,9 +69,6 @@ const CATALOGO = [
   }
 ];
 
-/* ===========================
-   CSS INJETADO (ESTILO MODERNO SEM BORDAS ARREDONDADAS)
-=========================== */
 const styles = `
   /* --- LAYOUT DA GAVETA --- */
   #ag-drawer {
@@ -390,7 +384,7 @@ const styles = `
     width: 100%;
     height: 100%;
     background: rgba(0,0,0,0.5);
-    z-index: 1001;
+    z-index: 2000; /* Aumentado para ficar acima do modal de pesquisa */
     display: none;
     align-items: center;
     justify-content: center;
@@ -404,11 +398,27 @@ const styles = `
     width: 90%;
     max-height: 80vh;
     overflow-y: auto;
+    position: relative; /* Para posicionar o botão de fechar */
   }
 
   body.dark-mode .ag-genres-content {
     background: #252525;
     color: #fff;
+  }
+
+  .ag-genre-close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    color: #888;
+  }
+
+  body.dark-mode .ag-genre-close {
+    color: #ccc;
   }
 
   .ag-genre-item {
@@ -481,8 +491,11 @@ const styleSheet = document.createElement("style");
 styleSheet.innerText = styles;
 document.head.appendChild(styleSheet);
 
+// Estado global para o gênero selecionado
+let selectedGenre = null;
+
 /* ===========================
-   SISTEMA DE TOAST (NOTIFICAÇÃO)
+   SISTEMA DE TOAST (NOTIFICAÇÃÃO)
 =========================== */
 function showToast(message, type = 'normal') {
   let container = document.getElementById('ag-toast-container');
@@ -604,12 +617,14 @@ function renderDrawer(filterText = ""){
   const searchIcon = `<svg class="ag-search-icon-svg" viewBox="0 0 24 24"><path d="M21.71 20.29l-5.01-5.01C17.54 13.68 18 11.91 18 10c0-4.41-3.59-8-8-8S2 5.59 2 10s3.59 8 8 8c1.91 0 3.68-.46 5.28-1.3l5.01 5.01c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41z"/></svg>`;
   const hamburgerIcon = `<button class="ag-hamburger-btn" id="ag-hamburger-btn">☰</button>`;
 
+  let searchPlaceholder = selectedGenre ? `Pesquisando em ${selectedGenre}` : "Pesquisando em todos os gêneros";
+
   let html = `
     <div class="ag-drawer-scroll">
       <div class="ag-drawer-header">
         <div class="ag-search-wrapper">
           ${searchIcon}
-          <input type="text" class="ag-search-input" id="ag-search-input" placeholder="Pesquisar..." value="${filterText}">
+          <input type="text" class="ag-search-input" id="ag-search-input" placeholder="${searchPlaceholder}" value="${filterText}">
         </div>
         ${hamburgerIcon}
         <div class="ag-mode-group">
@@ -630,8 +645,15 @@ function renderDrawer(filterText = ""){
   const term = filterText.toLowerCase();
 
   CATALOGO.forEach(sec => {
-    const itensFiltrados = sec.itens.filter(i => i.label.toLowerCase().includes(term) || (i.genero && i.genero.some(g => g.toLowerCase().includes(term))));
-    const sessaoMatch = sec.sessao.toLowerCase().includes(term) || (sec.genero && sec.genero.some(g => g.toLowerCase().includes(term)));
+    const itensFiltrados = sec.itens.filter(i =>
+      i.label.toLowerCase().includes(term) ||
+      (i.genero && i.genero.some(g => g.toLowerCase().includes(term))) ||
+      (!selectedGenre || (i.genero && i.genero.includes(selectedGenre)))
+    );
+    const sessaoMatch = sec.sessao.toLowerCase().includes(term) ||
+                        (sec.genero && sec.genero.some(g => g.toLowerCase().includes(term))) ||
+                        (!selectedGenre || (sec.genero && sec.genero.includes(selectedGenre)));
+
     if(term !== "" && !sessaoMatch && itensFiltrados.length === 0) return;
 
     const sectionDiv = document.createElement('div');
@@ -693,8 +715,16 @@ function filterDrawer(term) {
     const cat = CATALOGO.find(c => c.id === catId);
     if (!cat) return;
 
-    const sessaoMatch = cat.sessao.toLowerCase().includes(termLower) || (cat.genero && cat.genero.some(g => g.toLowerCase().includes(termLower)));
-    const itensFiltrados = cat.itens.filter(i => i.label.toLowerCase().includes(termLower) || (i.genero && i.genero.some(g => g.toLowerCase().includes(termLower))));
+    const sessaoMatch = cat.sessao.toLowerCase().includes(termLower) ||
+                        (cat.genero && cat.genero.some(g => g.toLowerCase().includes(termLower))) ||
+                        (!selectedGenre || (cat.genero && cat.genero.includes(selectedGenre)));
+
+    const itensFiltrados = cat.itens.filter(i =>
+      i.label.toLowerCase().includes(termLower) ||
+      (i.genero && i.genero.some(g => g.toLowerCase().includes(termLower))) ||
+      (!selectedGenre || (i.genero && i.genero.includes(selectedGenre)))
+    );
+
     const grid = block.querySelector('.ag-grid-container');
 
     if (termLower !== "" && !sessaoMatch && itensFiltrados.length === 0) {
@@ -706,7 +736,11 @@ function filterDrawer(term) {
     grid.querySelectorAll('.ag-card').forEach(card => {
       const label = card.textContent.trim();
       const item = cat.itens.find(i => i.label === label);
-      const generoMatch = item && item.genero && item.genero.some(g => g.toLowerCase().includes(termLower));
+      const generoMatch = item && item.genero && (
+        item.genero.some(g => g.toLowerCase().includes(termLower)) ||
+        (!selectedGenre || item.genero.includes(selectedGenre))
+      );
+
       if (label.toLowerCase().includes(termLower) || generoMatch || sessaoMatch) {
         card.style.display = '';
       } else {
@@ -726,6 +760,7 @@ function openGenresModal() {
     m.id = 'ag-genres-modal';
     m.innerHTML = `
       <div class="ag-genres-content">
+        <button class="ag-genre-close" id="ag-genre-close-btn">×</button>
         <h3 style="margin-top:0;">Filtrar por Gênero</h3>
         <div id="ag-genres-list"></div>
       </div>
@@ -742,12 +777,31 @@ function openGenresModal() {
     btn.className = 'ag-genre-item';
     btn.textContent = genre;
     btn.onclick = () => {
-      document.getElementById('ag-search-input').value = genre;
-      filterDrawer(genre);
+      selectedGenre = genre;
+      document.getElementById('ag-search-input').placeholder = `Pesquisando em ${selectedGenre}`;
+      filterDrawer('');
       modal.style.display = 'none';
     };
     genresList.appendChild(btn);
   });
+
+  // Opção para limpar o filtro de gênero
+  const clearBtn = document.createElement('button');
+  clearBtn.className = 'ag-genre-item';
+  clearBtn.textContent = "Limpar filtro de gênero";
+  clearBtn.onclick = () => {
+    selectedGenre = null;
+    document.getElementById('ag-search-input').placeholder = "Pesquisando em todos os gêneros";
+    filterDrawer('');
+    modal.style.display = 'none';
+    renderDrawer();
+  };
+  genresList.appendChild(clearBtn);
+
+  // Botão de fechar
+  document.getElementById('ag-genre-close-btn').onclick = () => {
+    modal.style.display = 'none';
+  };
 
   modal.style.display = 'flex';
   modal.onclick = (e) => { if(e.target === modal) modal.style.display = 'none'; };
