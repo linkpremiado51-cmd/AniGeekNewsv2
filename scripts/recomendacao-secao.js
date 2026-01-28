@@ -2,9 +2,8 @@
    AniGeekNews – Enterprise Section System v7
    • Títulos de Sessão Clicáveis (Categorias Pai)
    • Notificações Toast Profissionais (Sem Alert)
-   • Controle de Foco (Teclado não abre sozinho)
+   • Controle de Foco (Teclado não abre sozinho)j
    • Design Harmônico
-   • CORREÇÃO: Teclado não fecha ao digitar no mobile
 ====================================================== */
 
 (function(){
@@ -33,7 +32,7 @@ const CATALOGO = [
       { id: 'exclusivos', label: 'Exclusivos' },
       { id: 'urgente', label: 'Urgente' },
       { id: 'maislidas', label: 'Mais Lidas' },
-      { id: 'editorpick', label: 'Editor's Pick' }
+      { id: 'editorpick', label: 'Editor’s Pick' }
     ]
   },
   {
@@ -688,29 +687,7 @@ function renderDrawer(filterText = ""){
     });
   });
 
-  // CORREÇÃO DO BUG: Mantém o foco no input após renderização
-  const searchInput = document.getElementById('ag-search-input');
-  searchInput.oninput = (e) => {
-    const currentValue = e.target.value;
-    // Armazena o estado do foco antes da renderização
-    const wasFocused = document.activeElement === searchInput;
-    
-    // Renderiza com o novo valor
-    renderDrawer(currentValue);
-    
-    // Restaura o foco se estava ativo
-    if(wasFocused) {
-      setTimeout(() => {
-        const newInput = document.getElementById('ag-search-input');
-        if(newInput) {
-          newInput.focus();
-          // Restaura a posição do cursor
-          newInput.setSelectionRange(currentValue.length, currentValue.length);
-        }
-      }, 10);
-    }
-  };
-  
+  document.getElementById('ag-search-input').oninput = (e) => renderDrawer(e.target.value);
   document.getElementById('btn-fixo').onclick = () => setMode('fixed');
   document.getElementById('btn-dinamico').onclick = () => setMode('dynamic');
 }
@@ -738,8 +715,7 @@ function toggleItem(id, label){
   save(CONFIG.KEYS.ORDER, order);
   renderBar();
   // Atualiza apenas visualmente sem perder estado do input se possível, ou re-renderiza
-  const currentSearchValue = document.getElementById('ag-search-input')?.value || '';
-  renderDrawer(currentSearchValue);
+  renderDrawer(document.getElementById('ag-search-input').value);
 }
 
 function handleAction(id, label){
@@ -751,8 +727,7 @@ function handleAction(id, label){
     save(CONFIG.KEYS.ORDER, order);
     showToast(`Removido: <b>${label}</b>`);
     renderBar();
-    const currentSearchValue = document.getElementById('ag-search-input')?.value || '';
-    renderDrawer(currentSearchValue);
+    renderDrawer(document.getElementById('ag-search-input').value);
   } else {
     // Modo Fixo: Prompt simples (pode ser melhorado para modal depois, mas cumpre o requisito)
     const currentIndex = order.indexOf(id);
@@ -765,8 +740,7 @@ function handleAction(id, label){
         order.splice(targetIndex, 0, id);
         save(CONFIG.KEYS.ORDER, order);
         renderBar();
-        const currentSearchValue = document.getElementById('ag-search-input')?.value || '';
-        renderDrawer(currentSearchValue);
+        renderDrawer(document.getElementById('ag-search-input').value);
         showToast(`<b>${label}</b> movido para posição ${newPos}`);
       }
     }
