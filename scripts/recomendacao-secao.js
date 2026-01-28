@@ -36,7 +36,7 @@ const CATALOGO = [
     ]
   },
   {
-    sessao: "Saihate no Paladin",
+    sessao: "Saihate no Paladin 1 temporada",
     id: 'saihate_no_paladin',
     cor: "#8A2BE2",
     itens: [
