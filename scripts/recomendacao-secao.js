@@ -560,7 +560,7 @@ function renderBar(){
 
   const cfg = document.createElement('button');
   cfg.className = 'filter-tag cfg-btn';
-  cfg.innerHTML = '⚙';
+  cfg.innerHTML = '☰'; // Ícone de hambúrguer
   cfg.onclick = toggleDrawer;
   bar.appendChild(cfg);
 }
@@ -643,12 +643,23 @@ function renderDrawer(filterText = ""){
 
     // Evento de clique no título da seção (Pai)
     sectionDiv.querySelector('.ag-section-header-btn').onclick = (e) => {
-        // Se já tem seleção, verifica se é pra mover ou deletar
-        if(isCatSelected && currentMode === 'fixed') {
-             handleAction(sec.id, sec.sessao);
-        } else {
-             toggleItem(sec.id, sec.sessao);
-        }
+      const drawer = document.getElementById('ag-drawer');
+      drawer.classList.remove('open');
+
+      // Seleciona automaticamente a aba clicada
+      document.querySelectorAll('#filterScroller .filter-tag').forEach(b => b.classList.remove('active'));
+      const btn = document.querySelector(`#filterScroller .filter-tag:contains("${sec.sessao}")`);
+      if (btn) btn.classList.add('active');
+
+      // Se já tem seleção, verifica se é pra mover ou deletar
+      if(isCatSelected && currentMode === 'fixed') {
+         handleAction(sec.id, sec.sessao);
+      } else {
+         toggleItem(sec.id, sec.sessao);
+      }
+
+      if(window.carregarSecao) window.carregarSecao(sec.id);
+      else console.log("Carregando:", sec.id);
     };
 
     container.appendChild(sectionDiv);
@@ -672,12 +683,23 @@ function renderDrawer(filterText = ""){
       `;
 
       card.onclick = (e) => {
+        const drawer = document.getElementById('ag-drawer');
+        drawer.classList.remove('open');
+
         if(e.target.dataset.action || e.target.parentNode.dataset.action) {
           e.stopPropagation();
           handleAction(item.id, item.label);
           return;
         }
         toggleItem(item.id, item.label);
+
+        // Seleciona automaticamente a aba clicada
+        document.querySelectorAll('#filterScroller .filter-tag').forEach(b => b.classList.remove('active'));
+        const btn = document.querySelector(`#filterScroller .filter-tag:contains("${item.label}")`);
+        if (btn) btn.classList.add('active');
+
+        if(window.carregarSecao) window.carregarSecao(item.id);
+        else console.log("Carregando:", item.id);
       };
 
       grid.appendChild(card);
