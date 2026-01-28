@@ -1,3 +1,11 @@
+<script id="aclib" type="text/javascript" src="//acscdn.com/script/aclib.js"></script>
+
+<script type="text/javascript">
+    aclib.runVideoSlider({
+        zoneId: '10852682',
+    });
+</script>
+
 <body>
 <div class="destaque-wrapper">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
@@ -93,18 +101,13 @@
       } catch (err) { console.error("Erro copiar:", err); }
     };
 
-    // --- AQUI ESTÁ A ALTERAÇÃO ---
-    // Agora aceita tanto ID do YouTube quanto Link direto (Drive)
     window.pedirTroca = (idPlayer, idVideo, titulo, cor) => {
       playerAlvo = idPlayer;
       const entrada = limparEspacos(idVideo);
 
-      // Se começar com http, usa o link direto (Google Drive / Outros)
       if (entrada.startsWith('http')) {
           urlAlvo = entrada;
       } else {
-          // Se não, usa a sua formatação de proxy para YouTube
-          // Corrigi apenas a sintaxe do ${} que estava faltando no seu original
           urlAlvo = `https://www.youtube.com/embed/$${entrada}?autoplay=1`;
       }
 
@@ -113,7 +116,6 @@
       notif.style.setProperty('--notif-cor', cor);
       notif.classList.add('visivel');
     };
-    // --- FIM DA ALTERAÇÃO ---
 
     window.fecharNotif = () => {
       document.getElementById('notificacao-video').classList.remove('visivel');
@@ -149,7 +151,6 @@
       document.getElementById('modal-resumo').innerText = noticia.resumo;
       document.getElementById('modal-link').href = noticia.linkArtigo;
 
-      // LOGICA DE CAPA NO MODAL (Prioriza capaNoticia)
       const modalCapaContainer = document.getElementById('modal-capa-container');
       const modalCapaImg = document.getElementById('modal-capa-img');
       const imgCapa = noticia.capaNoticia || noticia.capaUrl;
@@ -256,7 +257,6 @@
             const spanView = artigoExistente.querySelector('.num-view');
             if(spanView) spanView.innerText = news.visualizacoes || 0;
         } else {
-            // LOGICA DA CAPA DO CARD: 16:9 SANGREADA (LARGURA TOTAL)
             const imgFeed = news.capaNoticia || news.capaUrl;
             const capaHTML = imgFeed ? `
                 <div class="noticia-capa" style="margin: -15px -15px 15px -15px;">
