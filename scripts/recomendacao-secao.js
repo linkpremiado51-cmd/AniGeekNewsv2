@@ -384,7 +384,7 @@ const styles = `
     width: 100%;
     height: 100%;
     background: rgba(0,0,0,0.5);
-    z-index: 2000;
+    z-index: 2000; /* Aumentado para ficar acima do modal de pesquisa */
     display: none;
     align-items: center;
     justify-content: center;
@@ -398,7 +398,7 @@ const styles = `
     width: 90%;
     max-height: 80vh;
     overflow-y: auto;
-    position: relative;
+    position: relative; /* Para posicionar o botão de fechar */
   }
 
   body.dark-mode .ag-genres-content {
@@ -494,25 +494,8 @@ document.head.appendChild(styleSheet);
 // Estado global para o gênero selecionado
 let selectedGenre = null;
 
-// Função para fechar o menu da engrenagem suavemente
-function closeDrawerSmoothly() {
-  const drawer = document.getElementById('ag-drawer');
-  if (drawer && drawer.classList.contains('open')) {
-    drawer.classList.remove('open');
-  }
-}
-
-// Função para abrir o menu da engrenagem suavemente
-function openDrawerSmoothly() {
-  const drawer = document.getElementById('ag-drawer');
-  if (drawer && !drawer.classList.contains('open')) {
-    renderDrawer();
-    drawer.classList.add('open');
-  }
-}
-
 /* ===========================
-   SISTEMA DE TOAST (NOTIFICAÇÃO)
+   SISTEMA DE TOAST (NOTIFICAÇÃÃO)
 =========================== */
 function showToast(message, type = 'normal') {
   let container = document.getElementById('ag-toast-container');
@@ -596,6 +579,7 @@ function renderBar(){
       document.querySelectorAll('#filterScroller .filter-tag').forEach(b=>b.classList.remove('active'));
       btn.classList.add('active');
       track(id);
+      document.getElementById('ag-drawer').classList.remove('open');
 
       if(window.carregarSecao) window.carregarSecao(id);
       else console.log("Carregando:", id);
@@ -691,7 +675,7 @@ function renderDrawer(filterText = ""){
         handleAction(sec.id, sec.sessao);
       } else {
         toggleItem(sec.id, sec.sessao);
-        closeDrawerSmoothly();
+        drawer.classList.remove('open');
       }
     };
 
@@ -712,7 +696,7 @@ function renderDrawer(filterText = ""){
           return;
         }
         toggleItem(item.id, item.label);
-        closeDrawerSmoothly();
+        drawer.classList.remove('open');
       };
       grid.appendChild(card);
     });
@@ -721,10 +705,7 @@ function renderDrawer(filterText = ""){
   document.getElementById('ag-search-input').oninput = (e) => filterDrawer(e.target.value);
   document.getElementById('btn-fixo').onclick = () => setMode('fixed');
   document.getElementById('btn-dinamico').onclick = () => setMode('dynamic');
-  document.getElementById('ag-hamburger-btn').onclick = () => {
-    closeDrawerSmoothly();
-    openGenresModal();
-  };
+  document.getElementById('ag-hamburger-btn').onclick = openGenresModal;
 }
 
 function filterDrawer(term) {
@@ -800,7 +781,6 @@ function openGenresModal() {
       document.getElementById('ag-search-input').placeholder = `Pesquisando em ${selectedGenre}`;
       filterDrawer('');
       modal.style.display = 'none';
-      openDrawerSmoothly();
     };
     genresList.appendChild(btn);
   });
@@ -814,6 +794,7 @@ function openGenresModal() {
     document.getElementById('ag-search-input').placeholder = "Pesquisando em todos os gêneros";
     filterDrawer('');
     modal.style.display = 'none';
+    renderDrawer();
   };
   genresList.appendChild(clearBtn);
 
@@ -823,6 +804,7 @@ function openGenresModal() {
   };
 
   modal.style.display = 'flex';
+  modal.onclick = (e) => { if(e.target === modal) modal.style.display = 'none'; };
 }
 
 /* ===========================
@@ -840,15 +822,6 @@ function toggleItem(id, label){
     }
     order.push(id);
     showToast(`Adicionado: <b>${label}</b>`, 'success');
-    // Clica automaticamente na aba adicionada
-    setTimeout(() => {
-      const btn = document.querySelector(`#filterScroller .filter-tag:contains("${label}")`);
-      if (btn) {
-        document.querySelectorAll('#filterScroller .filter-tag').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        if (window.carregarSecao) window.carregarSecao(id);
-      }
-    }, 100);
   }
   save(CONFIG.KEYS.ORDER, order);
   renderBar();
