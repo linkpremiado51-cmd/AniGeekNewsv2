@@ -36,7 +36,7 @@ const CATALOGO = [
     ]
   },
   {
-    sessao: "ANIGEEKNEWS",
+    sessao: "Saihate no Paladin",
     id: 'analises',
     cor: "#8A2BE2",
     itens: [
