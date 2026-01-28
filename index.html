@@ -10,25 +10,65 @@
     <link rel="stylesheet" href="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.css" type="text/css"/>
     <script src="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.js"></script>
 
+    <style>
+        /* AJUSTE DO BOTÃO DE VISITAR SITE (Click-through) */
+        /* Movemos o botão do centro para o canto superior direito, de forma discreta */
+        .fluid_video_wrapper .vast_video_clickthrough_layer {
+            width: auto !important;
+            height: auto !important;
+            top: 10px !important;
+            right: 10px !important;
+            left: auto !important;
+            bottom: auto !important;
+            background: rgba(0, 0, 0, 0.6) !important;
+            border-radius: 4px !important;
+            padding: 5px 10px !important;
+            font-size: 12px !important;
+            border: 1px solid rgba(255, 255, 255, 0.3) !important;
+            display: block !important; /* Garante que ele apareça */
+        }
+
+        /* Estiliza o texto dentro do botão de visita */
+        .fluid_video_wrapper .fluid_vast_ad_clickthrough {
+            position: relative !important;
+            top: 0 !important;
+            left: 0 !important;
+            transform: none !important;
+            color: #fff !important;
+            text-decoration: none !important;
+            font-weight: bold !important;
+        }
+
+        /* Estilo do botão de Pular (Skip) para combinar */
+        .fluid_video_wrapper .skip_button {
+            background: rgba(0, 0, 0, 0.7) !important;
+            border: 1px solid #fff !important;
+            border-radius: 4px !important;
+        }
+
+        #container-player-vast {
+            position: relative;
+            background: #000;
+            margin: 0 auto;
+        }
+    </style>
+
     <script type="text/javascript">
         window.addEventListener('load', function() {
             if (typeof aclib !== 'undefined') {
-                // Ativa o Video Slider
                 aclib.runVideoSlider({ zoneId: '10852682' });
-
-                // Ativa o AutoTag
                 aclib.runAutoTag({ zoneId: '9mhglrdbus' });
-                
-                console.log("Adcash: Anúncios flutuantes ativos.");
             }
 
-            // 3. Inicialização do Player de Anúncio In-Stream (VAST)
             var videoPlayer = fluidPlayer('video-vast-adcash', {
                 layoutControls: {
                     fillToContainer: true,
-                    posterImage: 'https://images.alphacoders.com/133/1338493.png',
-                    autoPlay: false,
-                    mute: true
+                    autoPlay: true, 
+                    mute: true,     
+                    playButtonShowing: true,
+                    logo: {
+                        imageUrl: null, // Remove logo do player se houver
+                    }
                 },
                 vastOptions: {
                     adList: [
@@ -36,7 +76,10 @@
                             roll: 'preRoll',
                             vastTag: 'https://youradexchange.com/video/select.php?r=10852746'
                         }
-                    ]
+                    ],
+                    adText: 'Publicidade',
+                    skipButtonCaption: 'Pular em [seconds]',
+                    skipButtonClickCaption: 'Pular'
                 }
             });
         });
@@ -47,7 +90,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;700&family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
     <link rel="stylesheet" href="estilos/geral.css">
     <link rel="stylesheet" href="estilos/cabecalho-rodape.css">
     <link rel="stylesheet" href="estilos/componentes.css">
@@ -68,9 +110,7 @@
                 </ul>
                 <div class="header-actions">
                     <button class="sections-btn" onclick="toggleMobileMenu()">
-                        <span class="bar"></span>
-                        <span class="bar"></span>
-                        <span class="bar"></span>
+                        <span class="bar"></span><span class="bar"></span><span class="bar"></span>
                     </button>
                     <button class="menu-toggle" onclick="toggleMobileMenu()">
                         <i class="fas fa-bars"></i>
@@ -84,15 +124,13 @@
             <div id="banner-topo-geek" style="width: 728px; height: 90px; background: rgba(0,0,0,0.05); position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden;">
                 <span style="position: absolute; top: 0; font-size: 8px; opacity: 0.5;">PUBLICIDADE</span>
                 <script type="text/javascript">
-                    if (typeof aclib !== 'undefined') {
-                        aclib.runBanner({ zoneId: '10852726' });
-                    }
+                    if (typeof aclib !== 'undefined') { aclib.runBanner({ zoneId: '10852726' }); }
                 </script>
             </div>
 
-            <div id="container-player-vast" style="width: 100%; max-width: 728px; aspect-ratio: 16/9; border-radius: 8px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);">
+            <div id="container-player-vast" style="width: 95%; max-width: 728px; aspect-ratio: 16/9; border-radius: 8px; overflow: hidden;">
                 <video id="video-vast-adcash">
-                    <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" />
+                    <source src="" type="video/mp4" />
                 </video>
             </div>
 
@@ -105,7 +143,6 @@
             </div>
             <div id="search-results-surface"></div>
         </div>
-
         <div class="filter-scroller" id="filterScroller"></div>
     </div>
 
@@ -182,7 +219,6 @@
             document.body.style.overflow = 'auto';
         };
     </script>
-
     <script type="module" src="scripts/ads-industrial.js"></script>
 </body>
 </html>
