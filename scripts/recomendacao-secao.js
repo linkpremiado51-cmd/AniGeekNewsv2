@@ -2,10 +2,8 @@
    AniGeekNews – Enterprise Section System v7
    • Títulos de Sessão Clicáveis (Categorias Pai)
    • Notificações Toast Profissionais (Sem Alert)
-   • Controle de Foco (Teclado não abre sozinho)
+   • Controle de Foco (Teclado não abre sozinho)j
    • Design Harmônico
-   • Busca por Gênero Aprimorada
-   • Botão Hambúrguer de Filtros
 ====================================================== */
 
 (function(){
@@ -20,7 +18,7 @@ const CONFIG = {
 };
 
 /* ===========================
-   BANCO DE DADOS (COM IDs NAS SESSÕES E GÊNEROS)
+   BANCO DE DADOS (COM IDs NAS SESSÕES)
 =========================== */
 const CATALOGO = [
   {
@@ -34,54 +32,47 @@ const CATALOGO = [
       { id: 'exclusivos', label: 'Exclusivos' },
       { id: 'urgente', label: 'Urgente' },
       { id: 'maislidas', label: 'Mais Lidas' },
-      { id: 'editorpick', label: 'Editor's Pick' }
+      { id: 'editorpick', label: 'Editor’s Pick' }
     ]
   },
   {
     sessao: "Saihate no Paladin 1 temporada",
     id: 'saihate_no_paladin',
     cor: "#8A2BE2",
-    genero: ["Fantasia", "Isekai", "Aventura"],
     itens: []
   },
   {
     sessao: "Solo Leveling 1 temporada",
     id: 'solo_leveling',
     cor: "#0f172a",
-    genero: ["Ação", "Fantasia", "Aventura"],
     itens: []
   },
   {
     sessao: "Jujutsu Kaisen 1 temporada",
     id: 'jujutsu_kaisen',
     cor: "#7c0a02",
-    genero: ["Ação", "Sobrenatural", "Escola"],
     itens: []
   },
   {
     sessao: "Attack on Titan 1 temporada",
     id: 'attack_on_titan',
     cor: "#3b3b3b",
-    genero: ["Ação", "Drama", "Pós-apocalíptico"],
     itens: []
   },
   {
     sessao: "Demon Slayer 1 temporada",
     id: 'demon_slayer',
     cor: "#1f2937",
-    genero: ["Ação", "Histórico", "Sobrenatural"],
     itens: []
   },
   {
     sessao: "Chainsaw Man 1 temporada",
     id: 'chainsaw_man',
     cor: "#991b1b",
-    genero: ["Ação", "Sobrenatural", "Dark"],
     itens: []
   }
 ];
-
-/* ===========================
+                /* ===========================
    CSS INJETADO
 =========================== */
 const styles = `
@@ -118,7 +109,7 @@ const styles = `
     scrollbar-width: thin;
   }
 
-  /* --- HEADER: PESQUISA, HAMBÚRGUER E MODOS --- */
+  /* --- HEADER: PESQUISA E MODOS (ESTÉTICA HIGH-END) --- */
   .ag-drawer-header {
     display: flex;
     justify-content: space-between;
@@ -129,7 +120,7 @@ const styles = `
     
     /* Fixação no topo com efeito vidro */
     position: sticky;
-    top: -21px;
+    top: -21px; /* Alinhado ao topo do container */
     z-index: 100;
     margin: -21px auto 21px auto; 
     padding: 17.5px 0;
@@ -162,50 +153,10 @@ const styles = `
     background: linear-gradient(to bottom, rgba(20, 20, 20, 0.9), transparent);
   }
 
-  /* --- BOTÃO HAMBÚRGUER DE GÊNEROS --- */
-  .ag-genre-btn {
-    width: 28px;
-    height: 28px;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-  }
-
-  .ag-genre-btn:hover {
-    opacity: 0.7;
-  }
-
-  .ag-genre-icon {
-    width: 18px;
-    height: 14px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-
-  .ag-genre-bar {
-    width: 100%;
-    height: 2px;
-    background: #333;
-    border-radius: 1px;
-    transition: all 0.2s;
-  }
-
-  body.dark-mode .ag-genre-bar { background: #fff; }
-
-  /* --- PESQUISA --- */
   .ag-search-wrapper {
     position: relative;
     flex: 1;
     min-width: 196px;
-    display: flex;
-    align-items: center;
-    gap: 7px;
   }
 
   .ag-search-icon-svg {
@@ -276,102 +227,6 @@ const styles = `
     color: #fff;
   }
 
-  /* --- MENU DE GÊNEROS --- */
-  #ag-genre-menu {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.7);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
-
-  #ag-genre-menu.open {
-    display: flex;
-    opacity: 1;
-  }
-
-  .ag-genre-container {
-    background: #fff;
-    border-radius: 14px;
-    max-width: 90%;
-    max-height: 80%;
-    overflow-y: auto;
-    padding: 28px;
-    box-shadow: 0 14px 42px rgba(0,0,0,0.3);
-  }
-
-  body.dark-mode .ag-genre-container {
-    background: #1a1a1a;
-  }
-
-  .ag-genre-title {
-    font-size: 14px;
-    font-weight: 900;
-    margin-bottom: 14px;
-    color: #333;
-    text-align: center;
-  }
-
-  body.dark-mode .ag-genre-title { color: #fff; }
-
-  .ag-genre-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 7px;
-    justify-content: center;
-  }
-
-  .ag-genre-tag {
-    padding: 7px 14px;
-    background: #f0f0f0;
-    border-radius: 21px;
-    font-size: 10.5px;
-    font-weight: 600;
-    color: #333;
-    cursor: pointer;
-    transition: all 0.2s;
-    border: 1px solid transparent;
-  }
-
-  body.dark-mode .ag-genre-tag {
-    background: #2a2a2a;
-    color: #ccc;
-  }
-
-  .ag-genre-tag:hover {
-    background: var(--primary-color, #e50914);
-    color: #fff;
-    transform: scale(1.05);
-  }
-
-  .ag-genre-tag.active {
-    background: var(--primary-color, #e50914);
-    color: #fff;
-    border-color: var(--primary-color, #e50914);
-  }
-
-  .ag-genre-close {
-    position: absolute;
-    top: 14px;
-    right: 14px;
-    background: transparent;
-    border: none;
-    font-size: 21px;
-    color: #fff;
-    cursor: pointer;
-    width: 35px;
-    height: 35px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
 
   /* --- SESSÕES (CABEÇALHOS CLICÁVEIS) --- */
   .ag-section-block {
@@ -530,8 +385,7 @@ const styles = `
   @keyframes agFadeOut {
     to { opacity: 0; transform: translateY(-7px); }
   }
-  
-  /* --- AJUSTE PARA BOTÃO PROFISSIONAL E FIXO --- */
+     /* --- AJUSTE PARA BOTÃO PROFISSIONAL E FIXO --- */
   #filterScroller {
     display: flex;
     align-items: center;
@@ -539,15 +393,16 @@ const styles = `
     gap: 5.6px;
     padding-right: 0 !important;
     overflow-x: auto;
-    scrollbar-width: none;
+    scrollbar-width: none; /* Esconde scroll no Firefox */
   }
-  #filterScroller::-webkit-scrollbar { display: none; }
+  #filterScroller::-webkit-scrollbar { display: none; } /* Esconde scroll no Chrome/Safari */
 
   .filter-tag.cfg-btn {
     position: sticky;
     right: 0 !important;
     z-index: 99;
     
+    /* Estética Profissional: Glassmorphism */
     background: rgba(255, 255, 255, 0.9); 
     backdrop-filter: blur(5.6px);
     -webkit-backdrop-filter: blur(5.6px);
@@ -559,6 +414,7 @@ const styles = `
     align-items: center;
     justify-content: center;
     
+    /* Borda e Sombra refinadas */
     border: none;
     border-left: 1px solid rgba(0, 0, 0, 0.05);
     box-shadow: -7px 0 14px rgba(0, 0, 0, 0.05);
@@ -568,6 +424,7 @@ const styles = `
     transition: all 0.3s ease;
   }
 
+  /* Efeito de degradê para as abas sumirem suavemente atrás do botão */
   .filter-tag.cfg-btn::before {
     content: '';
     position: absolute;
@@ -579,6 +436,7 @@ const styles = `
     pointer-events: none;
   }
 
+  /* Ajustes para o Dark Mode */
   body.dark-mode .filter-tag.cfg-btn {
     background: rgba(20, 20, 20, 0.9);
     border-left: 1px solid rgba(255, 255, 255, 0.1);
@@ -589,10 +447,13 @@ const styles = `
     background: linear-gradient(to right, transparent, rgba(20, 20, 20, 0.9));
   }
 
+  /* Feedback visual ao tocar/clicar */
   .filter-tag.cfg-btn:active {
     transform: scale(0.9);
     opacity: 0.8;
   }
+
+
 
 `;
 
@@ -617,6 +478,7 @@ function showToast(message, type = 'normal') {
   
   container.appendChild(toast);
 
+  // Remove após 3 segundos
   setTimeout(() => {
     toast.style.animation = 'agFadeOut 0.3s forwards';
     setTimeout(() => toast.remove(), 300);
@@ -635,13 +497,16 @@ function setMode(m){ save(CONFIG.KEYS.MODE, m); renderDrawer(); }
 function getOrder(){
   const saved = load(CONFIG.KEYS.ORDER, null);
   if(saved) return saved;
+  // Padrão inicial com alguns IDs
   return ['manchetes', 'destaques', 'ultimas'];
 }
 
 // Encontra ITEM ou CATEGORIA PAI pelo ID
 function findItem(id){
   for(let sec of CATALOGO){
+    // Verifica se é a própria categoria
     if(sec.id === id) return { id: sec.id, label: sec.sessao };
+    // Verifica itens internos
     const item = sec.itens.find(i => i.id === id);
     if(item) return item;
   }
@@ -657,21 +522,6 @@ function track(id){
   const order = getOrder();
   order.sort((a,b) => (stats[b]||0) - (stats[a]||0));
   save(CONFIG.KEYS.ORDER, order);
-}
-
-/* ===========================
-   DEBOUNCE PARA BUSCA
-=========================== */
-function debounce(func, wait) {
-  let timeout;
-  return function executedFunction(...args) {
-    const later = () => {
-      clearTimeout(timeout);
-      func(...args);
-    };
-    clearTimeout(timeout);
-    timeout = setTimeout(later, wait);
-  };
 }
 
 /* ===========================
@@ -718,7 +568,7 @@ function renderBar(){
 }
 
 /* ===========================
-   GAVETA (DRAWER) - CORRIGIDO
+   GAVETA (DRAWER)
 =========================== */
 function toggleDrawer(){
   const drawer = document.getElementById('ag-drawer');
@@ -729,6 +579,7 @@ function toggleDrawer(){
   } else {
     renderDrawer();
     drawer.classList.add('open');
+    // REMOVIDO: setTimeout com focus() para não abrir o teclado
   }
 }
 
@@ -743,13 +594,6 @@ function renderDrawer(filterText = ""){
     <div class="ag-drawer-scroll">
       <div class="ag-drawer-header">
         <div class="ag-search-wrapper">
-          <button class="ag-genre-btn" id="ag-genre-btn">
-            <div class="ag-genre-icon">
-              <div class="ag-genre-bar"></div>
-              <div class="ag-genre-bar"></div>
-              <div class="ag-genre-bar"></div>
-            </div>
-          </button>
           ${searchIcon}
           <input type="text" class="ag-search-input" id="ag-search-input" placeholder="Pesquisar..." value="${filterText}">
         </div>
@@ -770,53 +614,16 @@ function renderDrawer(filterText = ""){
 
   drawer.innerHTML = html;
 
-  // Configurar debounce para busca
-  const input = document.getElementById('ag-search-input');
-  const debouncedSearch = debounce((e) => {
-    renderDrawer(e.target.value);
-  }, 300);
-  
-  input.addEventListener('input', debouncedSearch);
-
-  // Configurar botão de gêneros
-  document.getElementById('ag-genre-btn').onclick = toggleGenreMenu;
-
-  // Configurar botões de modo
-  document.getElementById('btn-fixo').onclick = () => setMode('fixed');
-  document.getElementById('btn-dinamico').onclick = () => setMode('dynamic');
-
-  // Renderizar catálogo
-  renderCatalog(filterText);
-}
-
-function renderCatalog(filterText = ""){
   const container = document.getElementById('ag-catalog-container');
-  if(!container) return;
-
-  const currentOrder = getOrder();
-  const currentMode = getMode();
   const term = filterText.toLowerCase();
 
-  container.innerHTML = '';
-
   CATALOGO.forEach(sec => {
-    // Filtragem por gênero
-    let generoMatch = false;
-    if(sec.genero) {
-      generoMatch = sec.genero.some(g => g.toLowerCase().includes(term));
-    }
-    
-    // Filtragem por nome da sessão
-    const sessaoMatch = sec.sessao.toLowerCase().includes(term);
-    
-    // Filtragem por itens
+    // Filtragem
     const itensFiltrados = sec.itens.filter(i => i.label.toLowerCase().includes(term));
-    
-    // Se não houver correspondência e não estiver filtrando, pular
-    if(term !== "" && !sessaoMatch && !generoMatch && itensFiltrados.length === 0) return;
-    
-    // Determinar quais itens mostrar
-    const itensParaMostrar = sessaoMatch || generoMatch ? sec.itens : itensFiltrados;
+    const sessaoMatch = sec.sessao.toLowerCase().includes(term);
+
+    if(term !== "" && !sessaoMatch && itensFiltrados.length === 0) return;
+    const itensParaMostrar = sessaoMatch ? sec.itens : itensFiltrados;
 
     const sectionDiv = document.createElement('div');
     sectionDiv.className = 'ag-section-block';
@@ -879,73 +686,10 @@ function renderCatalog(filterText = ""){
       grid.appendChild(card);
     });
   });
-}
 
-/* ===========================
-   MENU DE GÊNEROS
-=========================== */
-function toggleGenreMenu(){
-  let menu = document.getElementById('ag-genre-menu');
-  
-  if(!menu) {
-    menu = document.createElement('div');
-    menu.id = 'ag-genre-menu';
-    document.body.appendChild(menu);
-    
-    menu.innerHTML = `
-      <div class="ag-genre-container">
-        <button class="ag-genre-close" id="ag-genre-close">×</button>
-        <h3 class="ag-genre-title">Filtrar por Gênero</h3>
-        <div class="ag-genre-list" id="ag-genre-list"></div>
-      </div>
-    `;
-    
-    document.getElementById('ag-genre-close').onclick = () => {
-      menu.classList.remove('open');
-    };
-  }
-  
-  menu.classList.toggle('open');
-  if(menu.classList.contains('open')) {
-    renderGenreList();
-  }
-}
-
-function renderGenreList(){
-  const list = document.getElementById('ag-genre-list');
-  if(!list) return;
-
-  // Coletar todos os gêneros únicos
-  const generos = new Set();
-  CATALOGO.forEach(sec => {
-    if(sec.genero) {
-      sec.genero.forEach(g => generos.add(g));
-    }
-  });
-
-  list.innerHTML = '';
-
-  generos.forEach(genero => {
-    const tag = document.createElement('div');
-    tag.className = 'ag-genre-tag';
-    tag.textContent = genero;
-    tag.onclick = () => applyGenreFilter(genero);
-    list.appendChild(tag);
-  });
-}
-
-function applyGenreFilter(genero){
-  const menu = document.getElementById('ag-genre-menu');
-  menu.classList.remove('open');
-  
-  const drawer = document.getElementById('ag-drawer');
-  drawer.classList.add('open');
-  
-  const input = document.getElementById('ag-search-input');
-  if(input) {
-    input.value = genero;
-    renderCatalog(genero);
-  }
+  document.getElementById('ag-search-input').oninput = (e) => renderDrawer(e.target.value);
+  document.getElementById('btn-fixo').onclick = () => setMode('fixed');
+  document.getElementById('btn-dinamico').onclick = () => setMode('dynamic');
 }
 
 /* ===========================
@@ -970,7 +714,8 @@ function toggleItem(id, label){
   
   save(CONFIG.KEYS.ORDER, order);
   renderBar();
-  renderCatalog(document.getElementById('ag-search-input').value);
+  // Atualiza apenas visualmente sem perder estado do input se possível, ou re-renderiza
+  renderDrawer(document.getElementById('ag-search-input').value);
 }
 
 function handleAction(id, label){
@@ -982,8 +727,9 @@ function handleAction(id, label){
     save(CONFIG.KEYS.ORDER, order);
     showToast(`Removido: <b>${label}</b>`);
     renderBar();
-    renderCatalog(document.getElementById('ag-search-input').value);
+    renderDrawer(document.getElementById('ag-search-input').value);
   } else {
+    // Modo Fixo: Prompt simples (pode ser melhorado para modal depois, mas cumpre o requisito)
     const currentIndex = order.indexOf(id);
     const newPos = prompt(`Mover "${label}" para qual posição? (1-${order.length})`, currentIndex + 1);
     
@@ -994,7 +740,7 @@ function handleAction(id, label){
         order.splice(targetIndex, 0, id);
         save(CONFIG.KEYS.ORDER, order);
         renderBar();
-        renderCatalog(document.getElementById('ag-search-input').value);
+        renderDrawer(document.getElementById('ag-search-input').value);
         showToast(`<b>${label}</b> movido para posição ${newPos}`);
       }
     }
