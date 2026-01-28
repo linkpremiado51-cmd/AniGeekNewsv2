@@ -5,8 +5,7 @@ const CONFIG = {
   KEYS: {
     ORDER: 'ag_v7_order',
     MODE:  'ag_v7_mode',
-    STATS: 'ag_v7_stats',
-    GENRE: 'ag_v7_genre'
+    STATS: 'ag_v7_stats'
   }
 };
 
@@ -23,7 +22,7 @@ const CATALOGO = [
       { id: 'exclusivos', label: 'Exclusivos', genero: ["Notícias"] },
       { id: 'urgente', label: 'Urgente', genero: ["Notícias"] },
       { id: 'maislidas', label: 'Mais Lidas', genero: ["Notícias"] },
-      { id: 'editorpick', label: 'Editor's Pick', genero: ["Notícias"] }
+      { id: 'editorpick', label: 'Editor’s Pick', genero: ["Notícias"] }
     ]
   },
   {
@@ -183,20 +182,14 @@ const styles = `
     box-shadow: 0 2.8px 10.5px rgba(0,0,0,0.08);
   }
 
-  /* --- BOTÃO DE CONFIGURAÇÕES --- */
-  .ag-settings-btn {
+  /* --- BOTÃO HAMBÚRGUER (☰) --- */
+  .ag-hamburger-btn {
     background: transparent;
     border: none;
     padding: 5.6px;
     cursor: pointer;
     font-size: 12.6px;
     margin-left: 7px;
-    color: #666;
-    transition: color 0.2s;
-  }
-
-  .ag-settings-btn:hover {
-    color: var(--primary-color, #e50914);
   }
 
   /* --- BOTÕES DE MODO --- */
@@ -204,7 +197,6 @@ const styles = `
     background: rgba(0,0,0,0.05);
     padding: 2.8px;
     display: flex;
-    position: relative;
   }
   body.dark-mode .ag-mode-group { background: rgba(255,255,255,0.08); }
 
@@ -218,7 +210,6 @@ const styles = `
     cursor: pointer;
     text-transform: uppercase;
     transition: all 0.2s;
-    position: relative;
   }
 
   .ag-mode-btn.active {
@@ -229,26 +220,6 @@ const styles = `
   body.dark-mode .ag-mode-btn.active {
     background: #333;
     color: #fff;
-  }
-
-  .ag-mode-tooltip {
-    position: absolute;
-    bottom: -40px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(30, 30, 30, 0.95);
-    color: #fff;
-    padding: 5px 10px;
-    border-radius: 4px;
-    font-size: 8px;
-    white-space: nowrap;
-    opacity: 0;
-    transition: opacity 0.2s;
-    pointer-events: none;
-  }
-
-  .ag-mode-btn:hover .ag-mode-tooltip {
-    opacity: 1;
   }
 
   /* --- SESSÕES (CABEÇALHOS CLICÁVEIS) --- */
@@ -270,7 +241,6 @@ const styles = `
     cursor: pointer;
     width: fit-content;
     transition: 0.2s;
-    position: relative;
   }
 
   .ag-section-header-btn:hover {
@@ -348,23 +318,20 @@ const styles = `
     position: absolute;
     top: 2.1px;
     right: 2.8px;
-    width: 21px;
-    height: 21px;
+    width: 11.2px;
+    height: 11.2px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 10px;
+    font-size: 7px;
     color: inherit;
     opacity: 0.6;
     transition: 0.2s;
-    cursor: pointer;
-    border-radius: 50%;
   }
 
   .ag-card-action:hover {
     color: var(--primary-color, #e50914);
     opacity: 1;
-    background: rgba(229, 9, 20, 0.1);
   }
 
   /* --- TOAST NOTIFICATION --- */
@@ -400,7 +367,6 @@ const styles = `
 
   .ag-toast.error { border-left: 2.8px solid #ff4444; }
   .ag-toast.success { border-left: 2.8px solid #00C851; }
-  .ag-toast.info { border-left: 2.8px solid #1E88E5; }
 
   @keyframes agSlideUp {
     to { opacity: 1; transform: translateY(0); }
@@ -476,12 +442,6 @@ const styles = `
   }
   body.dark-mode .ag-genre-item:hover { background: #333; }
 
-  .ag-genre-item.active {
-    background: var(--primary-color, #e50914);
-    color: #fff;
-    font-weight: 700;
-  }
-
   /* --- BOTÃO PROFISSIONAL E FIXO --- */
   #filterScroller {
     display: flex;
@@ -525,261 +485,72 @@ const styles = `
     transform: scale(0.9);
     opacity: 0.8;
   }
-
-  /* --- BADGE DE GÊNERO SELECIONADO --- */
-  .ag-genre-badge {
-    display: inline-block;
-    background: rgba(229, 9, 20, 0.1);
-    color: var(--primary-color, #e50914);
-    padding: 2px 8px;
-    border-radius: 10px;
-    font-size: 8px;
-    margin-left: 5px;
-    font-weight: 600;
-  }
-
-  /* --- DIALOG DE MOVIMENTAÇÃO --- */
-  .ag-move-dialog {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-    z-index: 3000;
-    max-width: 400px;
-    width: 90%;
-  }
-
-  body.dark-mode .ag-move-dialog {
-    background: #252525;
-    color: #fff;
-  }
-
-  .ag-move-dialog-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #e0e0e0;
-  }
-
-  body.dark-mode .ag-move-dialog-header {
-    border-color: #333;
-  }
-
-  .ag-move-dialog-title {
-    font-size: 14px;
-    font-weight: 700;
-    color: #333;
-  }
-
-  body.dark-mode .ag-move-dialog-title {
-    color: #fff;
-  }
-
-  .ag-move-dialog-close {
-    background: none;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-    color: #888;
-  }
-
-  .ag-move-dialog-body {
-    margin-bottom: 15px;
-  }
-
-  .ag-move-position-input {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 12px;
-    margin-bottom: 10px;
-  }
-
-  .ag-move-position-label {
-    display: block;
-    margin-bottom: 5px;
-    font-size: 11px;
-    color: #666;
-  }
-
-  .ag-move-buttons {
-    display: flex;
-    gap: 10px;
-  }
-
-  .ag-move-btn {
-    flex: 1;
-    padding: 8px;
-    border: none;
-    border-radius: 4px;
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-
-  .ag-move-btn.cancel {
-    background: #f0f0f0;
-    color: #333;
-  }
-
-  .ag-move-btn.confirm {
-    background: var(--primary-color, #e50914);
-    color: #fff;
-  }
-
-  .ag-move-btn:hover {
-    opacity: 0.9;
-  }
-
-  /* --- TUTORIAL TOOLTIP --- */
-  .ag-tutorial-tooltip {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgba(30, 30, 30, 0.95);
-    color: #fff;
-    padding: 15px;
-    border-radius: 8px;
-    max-width: 400px;
-    z-index: 4000;
-    text-align: center;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-    animation: agTooltipFadeIn 0.3s;
-  }
-
-  @keyframes agTooltipFadeIn {
-    from { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
-    to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-  }
-
-  .ag-tutorial-close {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: none;
-    border: none;
-    color: #fff;
-    font-size: 16px;
-    cursor: pointer;
-  }
-
-  .ag-tutorial-title {
-    font-size: 14px;
-    font-weight: 700;
-    margin-bottom: 10px;
-  }
-
-  .ag-tutorial-text {
-    font-size: 11px;
-    line-height: 1.5;
-    margin-bottom: 15px;
-  }
-
-  .ag-tutorial-btn {
-    background: var(--primary-color, #e50914);
-    color: #fff;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    font-size: 11px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-
-  .ag-tutorial-btn:hover {
-    opacity: 0.9;
-  }
-
-  /* --- INDICADOR DE MODO --- */
-  .ag-mode-indicator {
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(0, 0, 0, 0.7);
-    color: #fff;
-    padding: 4px 12px;
-    border-radius: 4px;
-    font-size: 9px;
-    white-space: nowrap;
-    opacity: 0;
-    transition: opacity 0.3s;
-    pointer-events: none;
-  }
-
-  .ag-mode-group:hover .ag-mode-indicator {
-    opacity: 1;
-  }
-
-  /* --- CONTADOR DE ITENS --- */
-  .ag-item-counter {
-    text-align: center;
-    padding: 15px 0;
-    font-size: 11px;
-    color: #666;
-  }
-
-  body.dark-mode .ag-item-counter {
-    color: #999;
-  }
-
-  .ag-item-counter strong {
-    color: var(--primary-color, #e50914);
-    font-weight: 700;
-  }
 `;
 
 const styleSheet = document.createElement("style");
 styleSheet.innerText = styles;
 document.head.appendChild(styleSheet);
 
-// Estado global
-let selectedGenre = load(CONFIG.KEYS.GENRE, null);
-let tutorialShown = load('ag_tutorial_shown', false);
+// Estado global para o gênero selecionado
+let selectedGenre = null;
 
-// Funções de armazenamento
+// Função para fechar o menu da engrenagem suavemente
+function closeDrawerSmoothly() {
+  const drawer = document.getElementById('ag-drawer');
+  if (drawer && drawer.classList.contains('open')) {
+    drawer.classList.remove('open');
+  }
+}
+
+// Função para abrir o menu da engrenagem suavemente
+function openDrawerSmoothly() {
+  const drawer = document.getElementById('ag-drawer');
+  if (drawer && !drawer.classList.contains('open')) {
+    renderDrawer();
+    drawer.classList.add('open');
+  }
+}
+
+/* ===========================
+   SISTEMA DE TOAST (NOTIFICAÇÃO)
+=========================== */
+function showToast(message, type = 'normal') {
+  let container = document.getElementById('ag-toast-container');
+  if(!container) {
+    container = document.createElement('div');
+    container.id = 'ag-toast-container';
+    document.body.appendChild(container);
+  }
+
+  const toast = document.createElement('div');
+  toast.className = `ag-toast ${type}`;
+  toast.innerHTML = message;
+  container.appendChild(toast);
+
+  setTimeout(() => {
+    toast.style.animation = 'agFadeOut 0.3s forwards';
+    setTimeout(() => toast.remove(), 300);
+  }, 3000);
+}
+
+/* ===========================
+   LÓGICA CORE
+=========================== */
 function load(k,d){ try{ return JSON.parse(localStorage.getItem(k)) ?? d }catch(e){ return d } }
 function save(k,v){ localStorage.setItem(k,JSON.stringify(v)); }
 
-// Funções de modo
 function getMode(){ return load(CONFIG.KEYS.MODE, 'dynamic'); }
-function setMode(m){ 
-  save(CONFIG.KEYS.MODE, m); 
-  showModeIndicator(m);
-  renderDrawer(); 
-}
+function setMode(m){ save(CONFIG.KEYS.MODE, m); renderDrawer(); }
 
-function showModeIndicator(mode) {
-  const indicator = document.querySelector('.ag-mode-indicator');
-  if (!indicator) return;
-  
-  const text = mode === 'dynamic' 
-    ? 'Ordem automática baseada no uso' 
-    : 'Ordem fixa definida por você';
-  
-  indicator.textContent = text;
-}
-
-// Funções de ordem
 function getOrder(){
   const saved = load(CONFIG.KEYS.ORDER, null);
-  if(saved) return saved.filter(id => findItem(id) !== null);
+  if(saved) return saved;
   return ['manchetes', 'destaques', 'ultimas'];
 }
 
 function findItem(id){
   for(let sec of CATALOGO){
-    if(sec.id === id) return { id: sec.id, label: sec.sessao, genero: sec.genero, isSection: true };
+    if(sec.id === id) return { id: sec.id, label: sec.sessao, genero: sec.genero };
     const item = sec.itens.find(i => i.id === id);
     if(item) return item;
   }
@@ -792,12 +563,14 @@ function track(id){
   stats[id] = (stats[id] || 0) + 1;
   save(CONFIG.KEYS.STATS, stats);
 
-  const order = getOrder().filter(id => findItem(id) !== null);
+  const order = getOrder();
   order.sort((a,b) => (stats[b]||0) - (stats[a]||0));
   save(CONFIG.KEYS.ORDER, order);
 }
 
-// Renderização da barra
+/* ===========================
+   RENDERIZAÇÃO BARRA HORIZONTAL
+=========================== */
 function renderBar(){
   const bar = document.getElementById('filterScroller');
   if(!bar) return;
@@ -834,11 +607,12 @@ function renderBar(){
   cfg.className = 'filter-tag cfg-btn';
   cfg.innerHTML = '⚙';
   cfg.onclick = toggleDrawer;
-  cfg.title = 'Configurações';
   bar.appendChild(cfg);
 }
 
-// Drawer
+/* ===========================
+   GAVETA (DRAWER) E FILTRO DE GÊNEROS
+=========================== */
 function toggleDrawer(){
   const drawer = document.getElementById('ag-drawer');
   if(!drawer) return;
@@ -848,10 +622,6 @@ function toggleDrawer(){
   } else {
     renderDrawer();
     drawer.classList.add('open');
-    if (!tutorialShown) {
-      showTutorial();
-      save('ag_tutorial_shown', true);
-    }
   }
 }
 
@@ -861,9 +631,9 @@ function renderDrawer(filterText = ""){
   const currentMode = getMode();
 
   const searchIcon = `<svg class="ag-search-icon-svg" viewBox="0 0 24 24"><path d="M21.71 20.29l-5.01-5.01C17.54 13.68 18 11.91 18 10c0-4.41-3.59-8-8-8S2 5.59 2 10s3.59 8 8 8c1.91 0 3.68-.46 5.28-1.3l5.01 5.01c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41z"/></svg>`;
-  const settingsIcon = `<button class="ag-settings-btn" id="ag-settings-btn" title="Configurações">⚙</button>`;
+  const hamburgerIcon = `<button class="ag-hamburger-btn" id="ag-hamburger-btn">☰</button>`;
 
-  let searchPlaceholder = selectedGenre ? `Filtrando por: ${selectedGenre}` : "Buscar por título ou gênero...";
+  let searchPlaceholder = selectedGenre ? `Pesquisando em ${selectedGenre}` : "Pesquisando em todos os gêneros";
 
   let html = `
     <div class="ag-drawer-scroll">
@@ -872,23 +642,15 @@ function renderDrawer(filterText = ""){
           ${searchIcon}
           <input type="text" class="ag-search-input" id="ag-search-input" placeholder="${searchPlaceholder}" value="${filterText}">
         </div>
-        ${settingsIcon}
+        ${hamburgerIcon}
         <div class="ag-mode-group">
-          <button id="btn-fixo" class="ag-mode-btn ${currentMode==='fixed'?'active':''}" title="Ordem Fixa">
-            Fixo
-            <span class="ag-mode-tooltip">Ordem manual - você controla a posição</span>
-          </button>
-          <button id="btn-dinamico" class="ag-mode-btn ${currentMode==='dynamic'?'active':''}" title="Ordem Automática">
-            Automático
-            <span class="ag-mode-tooltip">Ordem automática - baseada no uso</span>
-          </button>
-          <div class="ag-mode-indicator"></div>
+          <button id="btn-fixo" class="ag-mode-btn ${currentMode==='fixed'?'active':''}">Fixo</button>
+          <button id="btn-dinamico" class="ag-mode-btn ${currentMode==='dynamic'?'active':''}">Automático</button>
         </div>
       </div>
       <div id="ag-catalog-container"></div>
-      <div class="ag-item-counter">
-        <strong>${currentOrder.length}</strong> de <strong>${CONFIG.MAX_TABS}</strong> itens selecionados
-        ${selectedGenre ? `<span class="ag-genre-badge">${selectedGenre}</span>` : ''}
+      <div style="text-align:center; padding-top:20px; font-size:12px; color:#888;">
+        ${currentOrder.length} de ${CONFIG.MAX_TABS} abas ativas
       </div>
     </div>
   `;
@@ -902,11 +664,11 @@ function renderDrawer(filterText = ""){
     const itensFiltrados = sec.itens.filter(i =>
       i.label.toLowerCase().includes(term) ||
       (i.genero && i.genero.some(g => g.toLowerCase().includes(term))) ||
-      (selectedGenre ? (i.genero && i.genero.includes(selectedGenre)) : true)
+      (!selectedGenre || (i.genero && i.genero.includes(selectedGenre)))
     );
     const sessaoMatch = sec.sessao.toLowerCase().includes(term) ||
                         (sec.genero && sec.genero.some(g => g.toLowerCase().includes(term))) ||
-                        (selectedGenre ? (sec.genero && sec.genero.includes(selectedGenre)) : true);
+                        (!selectedGenre || (sec.genero && sec.genero.includes(selectedGenre)));
 
     if(term !== "" && !sessaoMatch && itensFiltrados.length === 0) return;
 
@@ -914,20 +676,23 @@ function renderDrawer(filterText = ""){
     sectionDiv.className = 'ag-section-block';
 
     const isCatSelected = currentOrder.includes(sec.id);
-    let catIcon = isCatSelected ? (currentMode === 'dynamic' ? '✕' : '⋮') : '';
+    let catIcon = isCatSelected ? (currentMode === 'dynamic' ? ' ✕' : ' •••') : '';
 
     sectionDiv.innerHTML = `
       <button class="ag-section-header-btn ${isCatSelected ? 'is-active' : ''}" data-cat-id="${sec.id}">
         <div class="ag-section-marker" style="background:${sec.cor}"></div>
-        <span class="ag-section-text">${sec.sessao}</span>
-        ${isCatSelected ? `<span class="ag-card-action" data-id="${sec.id}" data-action="true" title="${currentMode === 'dynamic' ? 'Remover' : 'Mover'}">${catIcon}</span>` : ''}
+        <span class="ag-section-text">${sec.sessao}${catIcon}</span>
       </button>
       <div class="ag-grid-container"></div>
     `;
 
     sectionDiv.querySelector('.ag-section-header-btn').onclick = (e) => {
-      if(e.target.closest('.ag-card-action')) return;
-      toggleItem(sec.id, sec.sessao);
+      if(isCatSelected && currentMode === 'fixed') {
+        handleAction(sec.id, sec.sessao);
+      } else {
+        toggleItem(sec.id, sec.sessao);
+        closeDrawerSmoothly();
+      }
     };
 
     container.appendChild(sectionDiv);
@@ -937,32 +702,76 @@ function renderDrawer(filterText = ""){
       const isSelected = currentOrder.includes(item.id);
       const card = document.createElement('div');
       card.className = `ag-card ${isSelected ? 'is-selected' : ''}`;
-      
-      let actionIcon = isSelected ? (currentMode === 'dynamic' ? '✕' : '⋮') : '';
-      let actionTitle = isSelected ? (currentMode === 'dynamic' ? 'Remover' : 'Mover') : '';
+      let actionIcon = isSelected ? (currentMode === 'dynamic' ? '✕' : '•••') : '';
 
-      card.innerHTML = `${item.label}${isSelected ? `<span class="ag-card-action" data-id="${item.id}" data-action="true" title="${actionTitle}">${actionIcon}</span>` : ''}`;
-      
+      card.innerHTML = `${item.label}${isSelected ? `<div class="ag-card-action" data-id="${item.id}" data-action="true">${actionIcon}</div>` : ''}`;
       card.onclick = (e) => {
-        if(e.target.closest('.ag-card-action')) {
+        if(e.target.dataset.action || e.target.parentNode.dataset.action) {
           e.stopPropagation();
           handleAction(item.id, item.label);
           return;
         }
         toggleItem(item.id, item.label);
+        closeDrawerSmoothly();
       };
-      
       grid.appendChild(card);
     });
   });
 
-  document.getElementById('ag-search-input').oninput = (e) => renderDrawer(e.target.value);
+  document.getElementById('ag-search-input').oninput = (e) => filterDrawer(e.target.value);
   document.getElementById('btn-fixo').onclick = () => setMode('fixed');
   document.getElementById('btn-dinamico').onclick = () => setMode('dynamic');
-  document.getElementById('ag-settings-btn').onclick = () => openSettingsMenu();
+  document.getElementById('ag-hamburger-btn').onclick = () => {
+    closeDrawerSmoothly();
+    openGenresModal();
+  };
 }
 
-// Modal de gêneros
+function filterDrawer(term) {
+  const termLower = term.toLowerCase();
+  document.querySelectorAll('.ag-section-block').forEach(block => {
+    const catId = block.querySelector('.ag-section-header-btn').dataset.catId;
+    const cat = CATALOGO.find(c => c.id === catId);
+    if (!cat) return;
+
+    const sessaoMatch = cat.sessao.toLowerCase().includes(termLower) ||
+                        (cat.genero && cat.genero.some(g => g.toLowerCase().includes(termLower))) ||
+                        (!selectedGenre || (cat.genero && cat.genero.includes(selectedGenre)));
+
+    const itensFiltrados = cat.itens.filter(i =>
+      i.label.toLowerCase().includes(termLower) ||
+      (i.genero && i.genero.some(g => g.toLowerCase().includes(termLower))) ||
+      (!selectedGenre || (i.genero && i.genero.includes(selectedGenre)))
+    );
+
+    const grid = block.querySelector('.ag-grid-container');
+
+    if (termLower !== "" && !sessaoMatch && itensFiltrados.length === 0) {
+      block.style.display = 'none';
+      return;
+    }
+    block.style.display = '';
+
+    grid.querySelectorAll('.ag-card').forEach(card => {
+      const label = card.textContent.trim();
+      const item = cat.itens.find(i => i.label === label);
+      const generoMatch = item && item.genero && (
+        item.genero.some(g => g.toLowerCase().includes(termLower)) ||
+        (!selectedGenre || item.genero.includes(selectedGenre))
+      );
+
+      if (label.toLowerCase().includes(termLower) || generoMatch || sessaoMatch) {
+        card.style.display = '';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  });
+}
+
+/* ===========================
+   MODAL DE GÊNEROS
+=========================== */
 function openGenresModal() {
   const modal = document.getElementById('ag-genres-modal');
   if(!modal) {
@@ -984,18 +793,31 @@ function openGenresModal() {
   genresList.innerHTML = '';
   allGenres.forEach(genre => {
     const btn = document.createElement('button');
-    btn.className = `ag-genre-item ${selectedGenre === genre ? 'active' : ''}`;
+    btn.className = 'ag-genre-item';
     btn.textContent = genre;
     btn.onclick = () => {
-      selectedGenre = genre === selectedGenre ? null : genre;
-      save(CONFIG.KEYS.GENRE, selectedGenre);
-      document.getElementById('ag-search-input').placeholder = selectedGenre ? `Filtrando por: ${selectedGenre}` : "Buscar por título ou gênero...";
-      renderDrawer('');
+      selectedGenre = genre;
+      document.getElementById('ag-search-input').placeholder = `Pesquisando em ${selectedGenre}`;
+      filterDrawer('');
       modal.style.display = 'none';
+      openDrawerSmoothly();
     };
     genresList.appendChild(btn);
   });
 
+  // Opção para limpar o filtro de gênero
+  const clearBtn = document.createElement('button');
+  clearBtn.className = 'ag-genre-item';
+  clearBtn.textContent = "Limpar filtro de gênero";
+  clearBtn.onclick = () => {
+    selectedGenre = null;
+    document.getElementById('ag-search-input').placeholder = "Pesquisando em todos os gêneros";
+    filterDrawer('');
+    modal.style.display = 'none';
+  };
+  genresList.appendChild(clearBtn);
+
+  // Botão de fechar
   document.getElementById('ag-genre-close-btn').onclick = () => {
     modal.style.display = 'none';
   };
@@ -1003,29 +825,24 @@ function openGenresModal() {
   modal.style.display = 'flex';
 }
 
-// Ações
+/* ===========================
+   AÇÕES & NOTIFICAÇÕES
+=========================== */
 function toggleItem(id, label){
   let order = getOrder();
   if(order.includes(id)){
-    const mode = getMode();
-    if(mode === 'dynamic') {
-      const confirmRemove = confirm(`Remover "${label}" dos itens selecionados?`);
-      if(!confirmRemove) {
-        showToast('Operação cancelada', 'info');
-        return;
-      }
-    }
     order = order.filter(x => x !== id);
     showToast(`Removido: <b>${label}</b>`);
   } else {
     if(order.length >= CONFIG.MAX_TABS) {
-      showToast(`Limite de ${CONFIG.MAX_TABS} itens atingido!`, 'error');
+      showToast(`Limite de ${CONFIG.MAX_TABS} abas atingido!`, 'error');
       return;
     }
     order.push(id);
     showToast(`Adicionado: <b>${label}</b>`, 'success');
+    // Clica automaticamente na aba adicionada
     setTimeout(() => {
-      const btn = [...document.querySelectorAll('#filterScroller .filter-tag')].find(b => b.textContent.trim() === label);
+      const btn = document.querySelector(`#filterScroller .filter-tag:contains("${label}")`);
       if (btn) {
         document.querySelectorAll('#filterScroller .filter-tag').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
@@ -1044,20 +861,23 @@ function toggleItem(id, label){
 function handleAction(id, label){
   const mode = getMode();
   let order = getOrder();
-  
   if(mode === 'dynamic') {
-    const confirmRemove = confirm(`Remover "${label}" dos itens selecionados?`);
-    if(!confirmRemove) {
-      showToast('Operação cancelada', 'info');
-      return;
-    }
     order = order.filter(x => x !== id);
     save(CONFIG.KEYS.ORDER, order);
     showToast(`Removido: <b>${label}</b>`);
   } else {
-    openMoveDialog(id, label, order);
+    const currentIndex = order.indexOf(id);
+    const newPos = prompt(`Mover "${label}" para qual posição? (1-${order.length})`, currentIndex + 1);
+    if(newPos !== null){
+      const targetIndex = parseInt(newPos) - 1;
+      if(!isNaN(targetIndex) && targetIndex >= 0 && targetIndex < order.length) {
+        order.splice(currentIndex, 1);
+        order.splice(targetIndex, 0, id);
+        save(CONFIG.KEYS.ORDER, order);
+        showToast(`<b>${label}</b> movido para posição ${newPos}`);
+      }
+    }
   }
-  
   renderBar();
   const currentInput = document.getElementById('ag-search-input');
   const currentValue = currentInput ? currentInput.value : '';
@@ -1065,134 +885,8 @@ function handleAction(id, label){
   if (currentInput) currentInput.value = currentValue;
 }
 
-function openMoveDialog(id, label, order) {
-  const dialog = document.createElement('div');
-  dialog.className = 'ag-move-dialog';
-  dialog.innerHTML = `
-    <div class="ag-move-dialog-header">
-      <span class="ag-move-dialog-title">Mover "${label}"</span>
-      <button class="ag-move-dialog-close" id="ag-move-close">×</button>
-    </div>
-    <div class="ag-move-dialog-body">
-      <label class="ag-move-position-label">Posição atual: ${order.indexOf(id) + 1} de ${order.length}</label>
-      <input type="number" class="ag-move-position-input" id="ag-move-position" min="1" max="${order.length}" value="${order.indexOf(id) + 1}">
-      <p style="font-size: 10px; color: #666; margin-top: 5px;">Digite a nova posição (1-${order.length})</p>
-    </div>
-    <div class="ag-move-buttons">
-      <button class="ag-move-btn cancel" id="ag-move-cancel">Cancelar</button>
-      <button class="ag-move-btn confirm" id="ag-move-confirm">Mover</button>
-    </div>
-  `;
-  
-  document.body.appendChild(dialog);
-  
-  document.getElementById('ag-move-close').onclick = () => dialog.remove();
-  document.getElementById('ag-move-cancel').onclick = () => dialog.remove();
-  document.getElementById('ag-move-confirm').onclick = () => {
-    const newPos = parseInt(document.getElementById('ag-move-position').value) - 1;
-    const currentIndex = order.indexOf(id);
-    
-    if(!isNaN(newPos) && newPos >= 0 && newPos < order.length && newPos !== currentIndex) {
-      order.splice(currentIndex, 1);
-      order.splice(newPos, 0, id);
-      save(CONFIG.KEYS.ORDER, order);
-      showToast(`<b>${label}</b> movido para posição ${newPos + 1}`, 'success');
-      dialog.remove();
-      renderBar();
-      renderDrawer(document.getElementById('ag-search-input').value);
-    } else {
-      showToast('Posição inválida ou sem alteração', 'error');
-    }
-  };
-}
-
-// Menu de configurações
-function openSettingsMenu() {
-  const modal = document.createElement('div');
-  modal.id = 'ag-settings-modal';
-  modal.style.cssText = `
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.5);
-    z-index: 2000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  `;
-  
-  modal.innerHTML = `
-    <div class="ag-genres-content">
-      <button class="ag-genre-close" id="ag-settings-close">×</button>
-      <h3 style="margin-top:0;">Configurações</h3>
-      <div style="display: flex; flex-direction: column; gap: 15px;">
-        <button class="ag-genre-item" id="ag-genre-filter-btn">
-          ${selectedGenre ? `Filtrando por: ${selectedGenre} ✅` : 'Filtrar por Gênero'}
-        </button>
-        <button class="ag-genre-item" onclick="location.reload()">
-          Recarregar Página
-        </button>
-        <button class="ag-genre-item" onclick="localStorage.clear(); location.reload()">
-          Limpar Todos os Dados
-        </button>
-      </div>
-    </div>
-  `;
-  
-  document.body.appendChild(modal);
-  
-  document.getElementById('ag-settings-close').onclick = () => modal.remove();
-  document.getElementById('ag-genre-filter-btn').onclick = () => {
-    modal.remove();
-    openGenresModal();
-  };
-}
-
-// Toast
-function showToast(message, type = 'normal') {
-  let container = document.getElementById('ag-toast-container');
-  if(!container) {
-    container = document.createElement('div');
-    container.id = 'ag-toast-container';
-    document.body.appendChild(container);
-  }
-
-  const toast = document.createElement('div');
-  toast.className = `ag-toast ${type}`;
-  toast.innerHTML = message;
-  container.appendChild(toast);
-
-  setTimeout(() => {
-    toast.style.animation = 'agFadeOut 0.3s forwards';
-    setTimeout(() => toast.remove(), 300);
-  }, 3000);
-}
-
-// Tutorial
-function showTutorial() {
-  const tutorial = document.createElement('div');
-  tutorial.className = 'ag-tutorial-tooltip';
-  tutorial.innerHTML = `
-    <button class="ag-tutorial-close" id="ag-tutorial-close">×</button>
-    <div class="ag-tutorial-title">Bem-vindo ao Sistema de Abas!</div>
-    <div class="ag-tutorial-text">
-      <p><strong>Modo Fixo:</strong> Você controla manualmente a ordem dos itens.</p>
-      <p><strong>Modo Automático:</strong> A ordem é ajustada automaticamente com base no seu uso.</p>
-      <p>Clique nos itens para adicioná-los ou removê-los da barra superior.</p>
-      <p>Use o botão ⚙ para acessar configurações e filtros.</p>
-    </div>
-    <button class="ag-tutorial-btn" id="ag-tutorial-ok">Entendi!</button>
-  `;
-  
-  document.body.appendChild(tutorial);
-  
-  document.getElementById('ag-tutorial-close').onclick = () => tutorial.remove();
-  document.getElementById('ag-tutorial-ok').onclick = () => tutorial.remove();
-}
-
-// Inicialização
+/* Inicialização */
 if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', renderBar);
 else renderBar();
+
 })();
