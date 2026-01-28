@@ -10,43 +10,25 @@
     <link rel="stylesheet" href="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.css" type="text/css"/>
     <script src="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.js"></script>
 
-    <style>
-        /* CSS para discretizar o botão de visita do anúncio */
-        .fluid_video_wrapper .vast_video_clickthrough_layer {
-            width: auto !important;
-            height: auto !important;
-            top: 20px !important;
-            right: 20px !important;
-            left: auto !important;
-            bottom: auto !important;
-            transform: none !important;
-            background: rgba(0, 0, 0, 0.5) !important;
-            padding: 8px 12px !important;
-            border-radius: 5px !important;
-            border: 1px solid rgba(255, 255, 255, 0.2) !important;
-        }
-        .fluid_video_wrapper .fluid_vast_ad_clickthrough {
-            position: static !important;
-            font-size: 12px !important;
-            color: #fff !important;
-            text-transform: uppercase !important;
-        }
-    </style>
-
     <script type="text/javascript">
         window.addEventListener('load', function() {
             if (typeof aclib !== 'undefined') {
+                // Ativa o Video Slider
                 aclib.runVideoSlider({ zoneId: '10852682' });
+
+                // Ativa o AutoTag
                 aclib.runAutoTag({ zoneId: '9mhglrdbus' });
+                
+                console.log("Adcash: Anúncios flutuantes ativos.");
             }
 
-            // Inicialização do Player com a tag de anúncio
+            // 3. Inicialização do Player de Anúncio In-Stream (VAST)
             var videoPlayer = fluidPlayer('video-vast-adcash', {
                 layoutControls: {
                     fillToContainer: true,
                     posterImage: 'https://images.alphacoders.com/133/1338493.png',
-                    autoPlay: true, // Necessário para disparar o VAST
-                    mute: true      // Essencial para o autoplay funcionar em navegadores modernos
+                    autoPlay: false,
+                    mute: true
                 },
                 vastOptions: {
                     adList: [
@@ -65,6 +47,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;700&family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
     <link rel="stylesheet" href="estilos/geral.css">
     <link rel="stylesheet" href="estilos/cabecalho-rodape.css">
     <link rel="stylesheet" href="estilos/componentes.css">
@@ -85,7 +68,9 @@
                 </ul>
                 <div class="header-actions">
                     <button class="sections-btn" onclick="toggleMobileMenu()">
-                        <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
                     </button>
                     <button class="menu-toggle" onclick="toggleMobileMenu()">
                         <i class="fas fa-bars"></i>
@@ -96,10 +81,12 @@
 
         <div id="publicidade-topo-wrapper" style="width: 100%; display: flex; flex-direction: column; align-items: center; padding: 10px 0; background: var(--bg-body); gap: 15px;">
             
-            <div id="banner-topo-geek" style="width: 728px; height: 90px; background: rgba(0,0,0,0.05); position: relative; display: flex; align-items: center; justify-content: center;">
+            <div id="banner-topo-geek" style="width: 728px; height: 90px; background: rgba(0,0,0,0.05); position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden;">
                 <span style="position: absolute; top: 0; font-size: 8px; opacity: 0.5;">PUBLICIDADE</span>
                 <script type="text/javascript">
-                    if (typeof aclib !== 'undefined') { aclib.runBanner({ zoneId: '10852726' }); }
+                    if (typeof aclib !== 'undefined') {
+                        aclib.runBanner({ zoneId: '10852726' });
+                    }
                 </script>
             </div>
 
@@ -108,6 +95,7 @@
                     <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" />
                 </video>
             </div>
+
         </div>
 
         <div class="search-bar-wrapper">
@@ -117,6 +105,7 @@
             </div>
             <div id="search-results-surface"></div>
         </div>
+
         <div class="filter-scroller" id="filterScroller"></div>
     </div>
 
@@ -135,6 +124,13 @@
         <div class="mobile-menu-item"><a href="#">Animes</a></div>
         <div class="mobile-menu-item"><a href="#">Games</a></div>
         <div class="mobile-menu-item"><a href="#">Mangás</a></div>
+        <div class="theme-toggle-container" style="margin-top: 20px;">
+            <span id="mobileThemeLabel" style="font-weight: bold; font-size: 12px;">TEMA ESCURO</span>
+            <label class="theme-toggle">
+                <input type="checkbox" id="mobileThemeToggle">
+                <span class="slider"></span>
+            </label>
+        </div>
     </div>
 
     <div id="modal-noticia-global" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:99999; overflow-y:auto; backdrop-filter: blur(8px);">
@@ -186,6 +182,7 @@
             document.body.style.overflow = 'auto';
         };
     </script>
+
     <script type="module" src="scripts/ads-industrial.js"></script>
 </body>
 </html>
