@@ -661,19 +661,14 @@ function renderDrawer(filterText = ""){
   const term = filterText.toLowerCase();
 
   CATALOGO.forEach(sec => {
-    // Verifica se a sessão possui o gênero selecionado
-    const sessaoHasGenre = !selectedGenre || (sec.genero && sec.genero.includes(selectedGenre));
-
-    // Verifica se algum item da sessão possui o gênero selecionado
     const itensFiltrados = sec.itens.filter(i =>
       i.label.toLowerCase().includes(term) ||
       (i.genero && i.genero.some(g => g.toLowerCase().includes(term))) ||
       (!selectedGenre || (i.genero && i.genero.includes(selectedGenre)))
     );
-
     const sessaoMatch = sec.sessao.toLowerCase().includes(term) ||
                         (sec.genero && sec.genero.some(g => g.toLowerCase().includes(term))) ||
-                        sessaoHasGenre;
+                        (!selectedGenre || (sec.genero && sec.genero.includes(selectedGenre)));
 
     if(term !== "" && !sessaoMatch && itensFiltrados.length === 0) return;
 
@@ -703,11 +698,7 @@ function renderDrawer(filterText = ""){
     container.appendChild(sectionDiv);
     const grid = sectionDiv.querySelector('.ag-grid-container');
 
-    // Mostra apenas itens que possuem o gênero selecionado
     (sessaoMatch ? sec.itens : itensFiltrados).forEach(item => {
-      const itemHasGenre = !selectedGenre || (item.genero && item.genero.includes(selectedGenre));
-      if (!itemHasGenre) return;
-
       const isSelected = currentOrder.includes(item.id);
       const card = document.createElement('div');
       card.className = `ag-card ${isSelected ? 'is-selected' : ''}`;
@@ -743,11 +734,9 @@ function filterDrawer(term) {
     const cat = CATALOGO.find(c => c.id === catId);
     if (!cat) return;
 
-    const sessaoHasGenre = !selectedGenre || (cat.genero && cat.genero.includes(selectedGenre));
-
     const sessaoMatch = cat.sessao.toLowerCase().includes(termLower) ||
                         (cat.genero && cat.genero.some(g => g.toLowerCase().includes(termLower))) ||
-                        sessaoHasGenre;
+                        (!selectedGenre || (cat.genero && cat.genero.includes(selectedGenre)));
 
     const itensFiltrados = cat.itens.filter(i =>
       i.label.toLowerCase().includes(termLower) ||
@@ -766,9 +755,12 @@ function filterDrawer(term) {
     grid.querySelectorAll('.ag-card').forEach(card => {
       const label = card.textContent.trim();
       const item = cat.itens.find(i => i.label === label);
-      const itemHasGenre = !selectedGenre || (item.genero && item.genero.includes(selectedGenre));
+      const generoMatch = item && item.genero && (
+        item.genero.some(g => g.toLowerCase().includes(termLower)) ||
+        (!selectedGenre || item.genero.includes(selectedGenre))
+      );
 
-      if (label.toLowerCase().includes(termLower) || itemHasGenre || sessaoMatch) {
+      if (label.toLowerCase().includes(termLower) || generoMatch || sessaoMatch) {
         card.style.display = '';
       } else {
         card.style.display = 'none';
