@@ -39,7 +39,37 @@ const CATALOGO = [
     sessao: "Saihate no Paladin 1 temporada",
     id: 'saihate_no_paladin',
     cor: "#8A2BE2",
-    itens: [] // ← itens removidos corretamente
+    itens: []
+  },
+  {
+    sessao: "Solo Leveling 1 temporada",
+    id: 'solo_leveling',
+    cor: "#0f172a",
+    itens: []
+  },
+  {
+    sessao: "Jujutsu Kaisen 1 temporada",
+    id: 'jujutsu_kaisen',
+    cor: "#7c0a02",
+    itens: []
+  },
+  {
+    sessao: "Attack on Titan 1 temporada",
+    id: 'attack_on_titan',
+    cor: "#3b3b3b",
+    itens: []
+  },
+  {
+    sessao: "Demon Slayer 1 temporada",
+    id: 'demon_slayer',
+    cor: "#1f2937",
+    itens: []
+  },
+  {
+    sessao: "Chainsaw Man 1 temporada",
+    id: 'chainsaw_man',
+    cor: "#991b1b",
+    itens: []
   }
 ];
                 /* ===========================
