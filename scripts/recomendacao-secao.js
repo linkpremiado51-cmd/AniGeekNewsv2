@@ -39,18 +39,9 @@ const CATALOGO = [
     sessao: "Saihate no Paladin 1 temporada",
     id: 'saihate_no_paladin',
     cor: "#8A2BE2",
-    itens: [
-      { id: 'opiniao', label: 'Opinião' },
-      { id: 'critica', label: 'Crítica Técnica' },
-      { id: 'analisemercado', label: 'Análise de Mercado' },
-      { id: 'comparativos', label: 'Comparativos' },
-      { id: 'teorias', label: 'Teorias' },
-      { id: 'explicacoes', label: 'Explicações' },
-      { id: 'impacto', label: 'Impacto na Indústria' }
-    ]
+    itens: [] // ← itens removidos corretamente
   }
 ];
-
                 /* ===========================
    CSS INJETADO
 =========================== */
