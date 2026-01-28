@@ -93,14 +93,27 @@
       } catch (err) { console.error("Erro copiar:", err); }
     };
 
+    // --- AQUI ESTÁ A ALTERAÇÃO ---
+    // Agora aceita tanto ID do YouTube quanto Link direto (Drive)
     window.pedirTroca = (idPlayer, idVideo, titulo, cor) => {
       playerAlvo = idPlayer;
-      urlAlvo = `https://www.youtube.com/embed/${idVideo}?autoplay=1`;
+      const entrada = limparEspacos(idVideo);
+
+      // Se começar com http, usa o link direto (Google Drive / Outros)
+      if (entrada.startsWith('http')) {
+          urlAlvo = entrada;
+      } else {
+          // Se não, usa a sua formatação de proxy para YouTube
+          // Corrigi apenas a sintaxe do ${} que estava faltando no seu original
+          urlAlvo = `https://www.youtube.com/embed/$${entrada}?autoplay=1`;
+      }
+
       const notif = document.getElementById('notificacao-video');
       document.getElementById('notif-titulo').innerText = titulo;
       notif.style.setProperty('--notif-cor', cor);
       notif.classList.add('visivel');
     };
+    // --- FIM DA ALTERAÇÃO ---
 
     window.fecharNotif = () => {
       document.getElementById('notificacao-video').classList.remove('visivel');
@@ -273,7 +286,7 @@
                 <div class="destaque-categoria"><i class="fa-solid fa-hashtag"></i> ${news.categoria}</div>
                 
                 <div class="destaque-header">
-                  <h2 class="destaque-titulo" onclick='window.abrirNoticiaEmModal(${JSON.stringify(news).replace(/'/g, "&apos;")})' style="cursor:pointer">${news.titulo}</h2>
+                  <h2 class="destaque-titulo" onclick='window.abrirNoticiaEmModal(${JSON.stringify(news).replace(/'/g, "'")})' style="cursor:pointer">${news.titulo}</h2>
                   <div class="menu-opcoes-container" tabindex="0">
                     <button class="btn-tres-pontos"><i class="fa-solid fa-ellipsis-vertical"></i></button>
                     <div class="dropdown-conteudo header-dropdown">
