@@ -81,7 +81,7 @@
         if (entrada.startsWith('http')) {
             urlAlvo = entrada;
         } else {
-            urlAlvo = `https://www.youtube.com/embed/$${entrada}?autoplay=1`;
+            urlAlvo = `https://www.youtube.com/embed/${entrada}?autoplay=1`;
         }
 
         const notif = document.getElementById('notificacao-video');
@@ -136,6 +136,11 @@
 
           artigo.classList.add('destacado');
           setTimeout(() => artigo.classList.remove('destacado'), 3000);
+
+          // Limpa o ?id= da URL após o scroll
+          const url = new URL(window.location);
+          url.searchParams.delete('id');
+          window.history.replaceState({}, '', url);
         }
       }
 
@@ -298,7 +303,10 @@
           todasAsNoticias.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
           if(todasAsNoticias.length > 0) { document.getElementById('novo-artigo-titulo').innerText = todasAsNoticias[0].titulo; }
           renderizarNoticias();
-          verificarNoticiaNaUrl();
+
+          setTimeout(() => {
+            verificarNoticiaNaUrl();
+          }, 100);
         });
       }
 
