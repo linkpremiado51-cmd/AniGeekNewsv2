@@ -1,82 +1,123 @@
 (function() {
-    // === 1. CONFIGURAÇÃO E ESTADO ===
     let isTabActive = true;
     document.addEventListener("visibilitychange", () => isTabActive = !document.hidden);
 
-    // Função para garantir que o container exista
     const initAds = () => {
-        if (document.getElementById('premium-ads-system')) return;
+        // Busca o container ou cria se não existir
+        let adsRoot = document.getElementById('premium-ads-system');
+        if (!adsRoot) {
+            adsRoot = document.createElement('div');
+            adsRoot.id = 'premium-ads-system';
+            document.body.appendChild(adsRoot);
+        }
 
-        const adsRoot = document.createElement('div');
-        adsRoot.id = 'premium-ads-system';
-        document.body.appendChild(adsRoot);
-
-        // === 2. ESTILIZAÇÃO ===
+        // === ESTILIZAÇÃO DAS GAVETAS E OVERLAY ===
         const style = document.createElement('style');
         style.textContent = `
-            #premium-ads-system { font-family: sans-serif; }
             .premium-banner { 
-                position: fixed; left: 0; width: 100%; z-index: 999999; 
-                background: #ffffff; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); 
-                transition: all 0.5s ease; border-top: 1px solid #ddd;
+                position: fixed; left: 0; width: 100%; z-index: 2147483646; 
+                background: #ffffff; box-shadow: 0 0 15px rgba(0,0,0,0.2); 
+                transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
             }
-            .premium-bottom { bottom: -120px; height: 100px; }
-            .premium-top { top: -120px; height: 90px; border-top: none; border-bottom: 1px solid #ddd; }
-            .premium-container { max-width: 1100px; margin: 0 auto; padding: 10px; position: relative; }
-            .ad-label { font-size: 9px; color: #888; text-transform: uppercase; display: block; margin-bottom: 5px; }
-            .ad-close-x { position: absolute; right: 10px; top: 5px; background: #eee; border: none; border-radius: 50%; width: 20px; height: 20px; cursor: pointer; }
-            .ad-slot-placeholder { background: #f9f9f9; border: 1px dashed #ccc; display: flex; align-items: center; justify-content: center; color: #999; font-size: 12px; margin: 0 auto; }
-            .slot-300x250 { width: 300px; height: 80px; }
-            .slot-leaderboard { width: 100%; height: 60px; }
+            .premium-bottom { bottom: -150px; border-top: 2px solid #333; }
+            .premium-top { top: -150px; border-bottom: 2px solid #333; }
             
-            /* Interstitial */
-            .premium-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1000000; display: none; align-items: center; justify-content: center; }
-            .premium-modal { background: #fff; width: 90%; max-width: 500px; padding: 20px; border-radius: 8px; text-align: center; }
-            .premium-prog-bg { width: 100%; height: 5px; background: #eee; margin: 15px 0; }
-            .premium-prog-fill { width: 0%; height: 100%; background: #333; }
-            .btn-premium-skip { padding: 10px 20px; cursor: not-allowed; background: #ccc; border: none; }
-            .btn-premium-skip.ready { background: #000; color: #fff; cursor: pointer; }
+            .premium-container { max-width: 100%; margin: 0 auto; padding: 15px; position: relative; display: flex; flex-direction: column; align-items: center; }
+            .ad-label { font-size: 10px; color: #666; font-weight: bold; text-transform: uppercase; margin-bottom: 8px; }
+            .ad-close-x { position: absolute; right: 10px; top: 10px; background: #333; color: #fff; border: none; border-radius: 50%; width: 25px; height: 25px; cursor: pointer; z-index: 10; }
+            
+            .ad-slot-placeholder { background: #f0f0f0; border: 1px dashed #999; width: 320px; height: 50px; display: flex; align-items: center; justify-content: center; color: #666; font-weight: bold; }
+
+            /* Interstitial (Cobre a tela toda) */
+            .premium-overlay { 
+                position: fixed; inset: 0; background: rgba(0,0,0,0.9); 
+                z-index: 2147483647; display: none; align-items: center; justify-content: center; 
+                opacity: 0; transition: opacity 0.5s ease;
+            }
+            .premium-modal { 
+                background: #fff; width: 90%; max-width: 400px; padding: 30px; 
+                border-radius: 12px; text-align: center; position: relative;
+            }
+            .premium-prog-bg { width: 100%; height: 8px; background: #eee; margin: 20px 0; border-radius: 4px; overflow: hidden; }
+            .premium-prog-fill { width: 0%; height: 100%; background: #e74c3c; transition: width 0.1s linear; }
+            .btn-premium-skip { 
+                width: 100%; padding: 15px; border: none; border-radius: 5px; 
+                background: #ccc; color: #fff; font-weight: bold; cursor: not-allowed; 
+            }
+            .btn-premium-skip.ready { background: #2ecc71; cursor: pointer; }
         `;
         document.head.appendChild(style);
 
-        // === 3. ESTRUTURA HTML ===
+        // === INSERINDO O HTML ===
         adsRoot.innerHTML = `
-            <div id="p-block-1" class="premium-banner premium-bottom">
+            <div id="p-block-top" class="premium-banner premium-top">
                 <div class="premium-container">
-                    <span class="ad-label">Patrocinado</span>
-                    <button id="p-close-1" class="ad-close-x">×</button>
-                    <div id="p-slot-1" class="ad-slot-placeholder slot-leaderboard">ANÚNCIO DISPONÍVEL</div>
+                    <button class="ad-close-x" onclick="document.getElementById('p-block-top').style.top='-150px'">×</button>
+                    <span class="ad-label">Publicidade Superior</span>
+                    <div class="ad-slot-placeholder">ANÚNCIO TOPO 728x90</div>
                 </div>
             </div>
 
-            <div id="p-block-2-overlay" class="premium-overlay">
+            <div id="p-block-bottom" class="premium-banner premium-bottom">
+                <div class="premium-container">
+                    <button class="ad-close-x" onclick="document.getElementById('p-block-bottom').style.bottom='-150px'">×</button>
+                    <span class="ad-label">Publicidade Inferior</span>
+                    <div class="ad-slot-placeholder">ANÚNCIO RODAPÉ 320x50</div>
+                </div>
+            </div>
+
+            <div id="p-overlay" class="premium-overlay">
                 <div class="premium-modal">
-                    <h2 style="margin:0">Publicidade</h2>
-                    <div class="ad-slot-placeholder" style="height:250px; margin: 20px 0;">ESPAÇO PUBLICITÁRIO</div>
-                    <div class="premium-prog-bg"><div id="p-prog-2" class="premium-prog-fill"></div></div>
-                    <button id="p-close-2" class="btn-premium-skip" disabled>Aguarde...</button>
-                </div>
-            </div>
-
-            <div id="p-block-3" class="premium-banner premium-top">
-                <div class="premium-container">
-                    <span class="ad-label">Destaque</span>
-                    <button id="p-close-3" class="ad-close-x">×</button>
-                    <div class="ad-slot-placeholder slot-leaderboard">TOP BANNER ADS</div>
+                    <h3>Aguarde o Carregamento</h3>
+                    <div class="ad-slot-placeholder" style="height: 200px; width: 100%;">ANÚNCIO INTERSTITIAL</div>
+                    <div class="premium-prog-bg"><div id="p-prog-fill" class="premium-prog-fill"></div></div>
+                    <button id="p-btn-skip" class="btn-premium-skip" disabled>AGUARDE...</button>
                 </div>
             </div>
         `;
 
-        // Lógica de abertura imediata para teste
-        setTimeout(() => { document.getElementById('p-block-3').style.top = '0px'; }, 2000); // 2 segundos
-        setTimeout(() => { document.getElementById('p-block-1').style.bottom = '0px'; }, 4000); // 4 segundos
+        // === LÓGICA DE APARIÇÃO ===
 
-        // Fechamento
-        document.getElementById('p-close-1').onclick = () => document.getElementById('p-block-1').style.bottom = '-120px';
-        document.getElementById('p-close-3').onclick = () => document.getElementById('p-block-3').style.top = '-120px';
+        // 1. Gaveta Superior (2 segundos)
+        setTimeout(() => {
+            document.getElementById('p-block-top').style.top = '0px';
+        }, 2000);
+
+        // 2. Gaveta Inferior (4 segundos)
+        setTimeout(() => {
+            document.getElementById('p-block-bottom').style.bottom = '0px';
+        }, 4000);
+
+        // 3. Interstitial (10 segundos para teste)
+        setTimeout(() => {
+            const overlay = document.getElementById('p-overlay');
+            const fill = document.getElementById('p-prog-fill');
+            const btn = document.getElementById('p-btn-skip');
+            
+            overlay.style.display = 'flex';
+            setTimeout(() => overlay.style.opacity = '1', 50);
+
+            let progress = 0;
+            const interval = setInterval(() => {
+                if (isTabActive) {
+                    progress += 2;
+                    fill.style.width = progress + '%';
+                    if (progress >= 100) {
+                        clearInterval(interval);
+                        btn.innerText = "PULAR ANÚNCIO";
+                        btn.disabled = false;
+                        btn.classList.add('ready');
+                    }
+                }
+            }, 100);
+
+            btn.onclick = () => {
+                overlay.style.opacity = '0';
+                setTimeout(() => overlay.style.display = 'none', 500);
+            };
+        }, 10000);
     };
 
-    // Executa quando o DOM estiver pronto
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', initAds);
     } else {
