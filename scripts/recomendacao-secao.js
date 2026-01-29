@@ -1,10 +1,11 @@
 /* ======================================================
-   AniGeekNews – Enterprise Section System v7
+   AniGeekNews – Enterprise Section System v7.1 (Full)
    • Títulos de Sessão Clicáveis (Categorias Pai)
    • Notificações Toast Profissionais (Sem Alert)
    • Controle de Foco (Teclado não abre sozinho)
    • Design Harmônico
    • URLs Compartilháveis por Aba
+   • Deep Linking: Abre aba correta ao receber ID de notícia
 ====================================================== */
 
 (function(){
@@ -203,8 +204,7 @@ const styles = `
     border: none;
     background: transparent;
     border-radius: 4.9px;
-    font-size: 7.7px;
-    font-weight: 800;
+    font-size: 7.7px; font-weight: 800;
     color: #888;
     cursor: pointer;
     text-transform: uppercase;
@@ -799,33 +799,63 @@ function ensureTabExists(id){
 }
 
 /* ===========================
-   CARREGAMENTO DE SEÇÃO POR URL
+   CARREGAMENTO DE SEÇÃO POR URL (Deep Linking & Params)
 =========================== */
 window.addEventListener('DOMContentLoaded', () => {
-  const params = new URLSearchParams(window.location.search);
-  const secao = params.get('secao');
-
-  if (!secao) return;
-
-  const ok = ensureTabExists(secao);
-  if (!ok) return;
-
   renderBar();
 
-  setTimeout(() => {
-    const btn = document.querySelector(`#filterScroller .filter-tag[data-id="${secao}"]`);
-    if (btn) {
-      document.querySelectorAll('#filterScroller .filter-tag').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      btn.click();
-    } else if (window.carregarSecao) {
-      window.carregarSecao(secao);
+  // Nova Lógica de Detecção de URL
+  const params = new URLSearchParams(window.location.search);
+  const newsId = params.get('id');
+  const secaoForcada = params.get('secao');
+  
+  // 1. Prioridade: ID da Notícia (Link Compartilhado)
+  if (newsId) {
+    // IMPORTANTE: Aqui definimos a coleção onde estão as notícias.
+    // Como no seu arquivo HTML você usou 'saihate_no_paladin' como coleção principal,
+    // forçamos a abertura dessa aba.
+    const abaAlvo = 'saihate_no_paladin';
+    
+    // Garante que a aba esteja na lista de abas ativas e renderiza
+    if(ensureTabExists(abaAlvo)) {
+        renderBar(); 
+        // Pequeno delay para garantir que o DOM renderizou o botão antes de clicar
+        setTimeout(() => {
+            const btn = document.querySelector(`#filterScroller .filter-tag[data-id="${abaAlvo}"]`);
+            if(btn) {
+                // Remove seleção visual das outras e ativa esta
+                document.querySelectorAll('#filterScroller .filter-tag').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                // Se o script de notícias expõe a função global, chama direto
+                if (window.carregarSecao) {
+                    window.carregarSecao(abaAlvo);
+                } else {
+                    // Fallback: Clica fisicamente no botão
+                    btn.click();
+                }
+            }
+        }, 200);
     }
-  }, 150);
-});
+    return; // Encerra aqui para não conflitar com a lógica de seção normal
+  }
 
-/* Inicialização */
-if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', renderBar);
-else renderBar();
+  // 2. Prioridade: Seção Específica (Parâmetro antigo ?secao=)
+  if (secaoForcada) {
+    if(ensureTabExists(secaoForcada)) {
+        renderBar();
+        setTimeout(() => {
+            const btn = document.querySelector(`#filterScroller .filter-tag[data-id="${secaoForcada}"]`);
+            if (btn) {
+                document.querySelectorAll('#filterScroller .filter-tag').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                btn.click();
+            } else if (window.carregarSecao) {
+                window.carregarSecao(secaoForcada);
+            }
+        }, 150);
+    }
+  }
+});
 
 })();
