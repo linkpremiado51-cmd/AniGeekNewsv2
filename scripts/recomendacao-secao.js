@@ -23,18 +23,10 @@ const CONFIG = {
 =========================== */
 const CATALOGO = [
   {
-    sessao: "MANCHETES",
+    sessao: "PAGINA INICIAL",
     id: 'manchetes',
     cor: "#FF4500",
-    itens: [
-      { id: 'destaques', label: 'Destaques do Dia' },
-      { id: 'ultimas', label: 'Últimas Notícias' },
-      { id: 'trending', label: 'Trending / Em Alta' },
-      { id: 'exclusivos', label: 'Exclusivos' },
-      { id: 'urgente', label: 'Urgente' },
-      { id: 'maislidas', label: 'Mais Lidas' },
-      { id: 'editorpick', label: 'Editor’s Pick' }
-    ]
+    itens: []
   },
   {
     sessao: "Saihate no Paladin 1 temporada",
