@@ -3,97 +3,56 @@
 const displayPrincipal = document.getElementById('conteudo_de_destaque');
 
 /**
- * Ajuste Pro: Garante que o módulo de comentários seja reiniciado
+ * Garante que o módulo de comentários seja reiniciado
  * sempre que um novo conteúdo HTML é injetado.
  */
 function reiniciarModuloComentarios() {
-    // Se a função existir globalmente (vinda do comentarios.js), nós a chamamos
     if (typeof window.inicializarComentarios === 'function') {
         window.inicializarComentarios();
     }
 }
 
-async function abrirNoticiaUnica(item) {
-    if (!displayPrincipal) return;
+/**
+ * Scroll inteligente até a notícia baseada no data-id
+ */
+function rolarParaNoticiaPorId(id) {
+    const tentativasMax = 25;
+    let tentativas = 0;
 
-    try {
-        gerenciarCSSDaSecao(item.origem || 'manchetes');
+    const tentar = () => {
+        const el = document.querySelector(`[data-id="${id}"]`);
+        if (el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            el.classList.add('highlight-noticia');
+            setTimeout(() => el.classList.remove('highlight-noticia'), 2500);
+        } else if (tentativas < tentativasMax) {
+            tentativas++;
+            setTimeout(tentar, 150);
+        }
+    };
 
-        displayPrincipal.innerHTML = `
-            <div class="foco-noticia-wrapper" style="animation: fadeIn 0.4s ease; max-width: var(--container-w); margin: 0 auto; padding: 20px;">
-                <div class="barra-ferramentas-foco" style="display: flex; justify-content: flex-start; padding-bottom: 20px; border-bottom: 1px dashed var(--border); margin-bottom: 30px;">
-                    <button onclick="window.voltarParaLista()" class="btn-voltar-estilizado" style="background: none; border: 1px solid var(--text-main); color: var(--text-main); padding: 8px 18px; font-size: 10px; font-weight: 800; letter-spacing: 1px; cursor: pointer; display: flex; align-items: center; gap: 12px; transition: 0.3s; text-transform: uppercase;">
-                        <i class="fa-solid fa-chevron-left" style="font-size: 14px;"></i> 
-                        <span>Voltar para ${item.origem ? item.origem.toUpperCase() : 'Início'}</span>
-                    </button>
-                </div>
-                <div id="container-principal">
-                    <p style="text-align:center; padding:50px; color:var(--text-muted);">Carregando conteúdo...</p>
-                </div>
-            </div>
-        `;
-
-        const response = await fetch(`./secoes/${item.origem || 'manchetes'}.html`);
-        if (!response.ok) throw new Error("Falha ao carregar motor de renderização.");
-        const htmlBase = await response.text();
-
-        const parser = new DOMParser();
-        const docSeçao = parser.parseFromString(htmlBase, 'text/html');
-        const scripts = docSeçao.querySelectorAll("script");
-
-        scripts.forEach(oldScript => {
-            const newScript = document.createElement("script");
-            if (oldScript.type === 'module' || !oldScript.type) {
-                let conteudo = oldScript.textContent;
-                if (conteudo.includes('function renderizarNoticias')) {
-                    conteudo += `\n window.renderizarNoticias = renderizarNoticias;`;
-                }
-                newScript.type = 'module';
-                newScript.textContent = conteudo;
-            } else {
-                if (oldScript.src) newScript.src = oldScript.src;
-                newScript.textContent = oldScript.textContent;
-            }
-            document.head.appendChild(newScript);
-        });
-
-        let tentativas = 0;
-        const tentarRenderizar = () => {
-            if (typeof window.renderizarNoticias === 'function') {
-                const container = document.getElementById('container-principal');
-                if (container) container.innerHTML = "";
-                window.renderizarNoticias([item]);
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-                
-                // IMPORTANTE: Chama os comentários após renderizar a notícia única
-                setTimeout(reiniciarModuloComentarios, 500); 
-            } else if (tentativas < 20) {
-                tentativas++;
-                setTimeout(tentarRenderizar, 150);
-            }
-        };
-        tentarRenderizar();
-
-    } catch (err) {
-        console.error("Erro na ponte de navegação:", err);
-        displayPrincipal.innerHTML = `<div style="padding:100px; text-align:center;">Erro ao carregar conteúdo.</div>`;
-    }
+    tentar();
 }
 
+/**
+ * Carrega uma seção normalmente (lista de notícias)
+ */
 async function carregarSecao(nome) {
     if (!displayPrincipal) return;
 
-    displayPrincipal.innerHTML = '<div style="text-align: center; padding: 120px; color: var(--text-muted); opacity: 0.5;">SINCRONIZANDO...</div>';
-    
+    displayPrincipal.innerHTML =
+        '<div style="text-align:center;padding:120px;color:var(--text-muted);opacity:.5">SINCRONIZANDO...</div>';
+
     try {
         gerenciarCSSDaSecao(nome);
 
         const response = await fetch(`./secoes/${nome}.html`);
         if (!response.ok) throw new Error("Arquivo não encontrado.");
-        
+
         const html = await response.text();
         displayPrincipal.innerHTML = html;
 
+        // Reexecuta scripts da seção
         const scripts = displayPrincipal.querySelectorAll("script");
         scripts.forEach(oldScript => {
             const newScript = document.createElement("script");
@@ -104,59 +63,83 @@ async function carregarSecao(nome) {
         });
 
         window.scrollTo({ top: 0, behavior: 'smooth' });
-
-        /**
-         * AJUSTE PARA COMENTÁRIOS:
-         * Aguarda um pouco a renderização do Firebase para reativar o módulo
-         */
         setTimeout(reiniciarModuloComentarios, 800);
 
     } catch (err) {
-        displayPrincipal.innerHTML = `<div style="text-align:center; padding:100px;">Erro: ${nome} não carregado.</div>`;
+        console.error(err);
+        displayPrincipal.innerHTML =
+            `<div style="text-align:center;padding:100px">Erro: ${nome} não carregado.</div>`;
     }
 }
 
-// Eventos de clique nas categorias
-document.querySelectorAll('.filter-tag').forEach(tag => {
-tag.addEventListener('click', () => {
-document.querySelectorAll('.filter-tag').forEach(t => t.classList.remove('active'));
-tag.classList.add('active');
+/**
+ * Resolve links do tipo:
+ * index.html?id=saihate-no-paladin
+ */
+function verificarLinkCompartilhado() {
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('id');
+    if (!id) return;
 
-// Ajusta a coleção do container de comentários
-const container = document.querySelector('.container-comentarios-dinamico');
-if (container) {
-container.setAttribute('data-colecao', tag.dataset.section);
+    // ⚠️ precisa existir globalmente
+    const item = window.noticias?.find(n => n.id === id);
+
+    const secao = item?.origem || 'manchetes';
+
+    carregarSecao(secao);
+
+    // Aguarda renderização e rola até a notícia
+    setTimeout(() => {
+        rolarParaNoticiaPorId(id);
+    }, 700);
 }
 
-carregarSecao(tag.dataset.section);
-
-// Reinicia os comentários para a aba correta
-setTimeout(reiniciarModuloComentarios, 500);
-});
-});
 /**
- * Inicialização com Simulação de Clique
+ * Eventos de clique nas categorias
+ */
+document.querySelectorAll('.filter-tag').forEach(tag => {
+    tag.addEventListener('click', () => {
+        document.querySelectorAll('.filter-tag')
+            .forEach(t => t.classList.remove('active'));
+
+        tag.classList.add('active');
+
+        const container = document.querySelector('.container-comentarios-dinamico');
+        if (container) {
+            container.setAttribute('data-colecao', tag.dataset.section);
+        }
+
+        const url = new URL(window.location);
+        url.searchParams.delete('id');
+        window.history.pushState({}, '', url);
+
+        carregarSecao(tag.dataset.section);
+        setTimeout(reiniciarModuloComentarios, 500);
+    });
+});
+
+/**
+ * Inicialização principal
  */
 window.addEventListener('DOMContentLoaded', () => {
     const params = new URLSearchParams(window.location.search);
+
     if (params.has('id')) {
         verificarLinkCompartilhado();
     } else {
-        // AJUSTE: Procura a primeira aba e simula o clique real
         const primeiraAba = document.querySelector('.filter-tag');
-        if (primeiraAba) {
-            primeiraAba.click();
-        } else {
-            // Fallback caso não ache a tag
-            carregarSecao('manchetes');
-        }
+        if (primeiraAba) primeiraAba.click();
+        else carregarSecao('manchetes');
     }
 });
 
-// Funções de apoio mantidas
+/**
+ * CSS dinâmico por seção
+ */
 function gerenciarCSSDaSecao(nome) {
     const linkAntigo = document.getElementById('css-secao-dinamica');
     if (linkAntigo) linkAntigo.remove();
+
     const novoLink = document.createElement('link');
     novoLink.id = 'css-secao-dinamica';
     novoLink.rel = 'stylesheet';
@@ -164,14 +147,5 @@ function gerenciarCSSDaSecao(nome) {
     document.head.appendChild(novoLink);
 }
 
-window.voltarParaLista = function() {
-    const url = new URL(window.location);
-    url.searchParams.delete('id');
-    window.history.pushState({}, '', url);
-    const tagAtiva = document.querySelector('.filter-tag.active');
-    const secaoDestino = tagAtiva ? tagAtiva.dataset.section : 'manchetes';
-    carregarSecao(secaoDestino);
-};
-
+// Exposição global mínima
 window.carregarSecao = carregarSecao;
-window.abrirNoticiaUnica = abrirNoticiaUnica;
