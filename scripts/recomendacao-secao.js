@@ -546,6 +546,7 @@ function renderBar(){
     const btn = document.createElement('button');
     btn.className = 'filter-tag';
     btn.textContent = item.label;
+    btn.dataset.id = id; // Adiciona o atributo data-id para identificação
     btn.onclick = () => {
       document.querySelectorAll('#filterScroller .filter-tag').forEach(b=>b.classList.remove('active'));
       btn.classList.add('active');
@@ -743,6 +744,14 @@ function toggleItem(id, label){
     }
     order.push(id);
     showToast(`Adicionado: <b>${label}</b>`, 'success');
+
+    // Simula um clique real na aba adicionada
+    setTimeout(() => {
+      const button = document.querySelector(`#filterScroller .filter-tag[data-id="${id}"]`);
+      if (button) {
+        button.click();
+      }
+    }, 100);
   }
 
   save(CONFIG.KEYS.ORDER, order);
