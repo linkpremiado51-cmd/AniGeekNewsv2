@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AniGeekNews | Jornalismo Geek</title>
     <meta name="description" content="Jornalismo independente sobre cultura pop, animes, games e cinema.">
@@ -18,11 +19,18 @@
         html {
             scroll-behavior: smooth;
         }
+        /* Garantir que o container de anúncios não quebre o layout */
+        #premium-ads-system {
+            position: relative;
+            z-index: 9999;
+        }
     </style>
 </head>
 
 <body>
 <div id="progress-bar"></div>
+
+<div id="premium-ads-system"></div>
 
 <div class="sticky-header-group">
     <header>
@@ -64,38 +72,25 @@
     <div class="mobile-menu-item"><a href="#">Mangás</a></div>
 </div>
 
-<!-- SCRIPTS -->
 <script type="module" src="scripts/config-firebase.js"></script>
 <script type="module" src="scripts/tema.js"></script>
 <script type="module" src="scripts/navegacao.js"></script>
 <script src="scripts/recomendacao-secao.js"></script>
 
-<!-- NOVA FUNÇÃO GLOBAL (SEM MODAL) -->
+<script src="scripts/ads-industrial.js"></script>
+
 <script>
 window.abrirModalNoticia = (noticia) => {
     if (!noticia || !noticia.id) return;
-
     const alvo = document.getElementById(noticia.id);
-    if (!alvo) {
-        console.warn('Notícia não encontrada:', noticia.id);
-        return;
-    }
-
-    // Atualiza URL com âncora
+    if (!alvo) return;
     history.pushState(null, '', `#${noticia.id}`);
-
-    // Scroll suave até a notícia
-    alvo.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-    });
+    alvo.scrollIntoView({ behavior: 'smooth', block: 'start' });
 };
 
-// Caso o usuário entre direto com #id na URL
 window.addEventListener('load', () => {
     const hash = window.location.hash.replace('#', '');
     if (!hash) return;
-
     const alvo = document.getElementById(hash);
     if (alvo) {
         setTimeout(() => {
@@ -105,10 +100,14 @@ window.addEventListener('load', () => {
 });
 </script>
 
-<script type="module" src="scripts/ads-industrial.js"></script>
 <script type="text/javascript">
-aclib.runAutoTag({
-    zoneId: '9mhglrdbus',
+// Garante que o script rode apenas após o carregamento completo
+window.addEventListener('load', function() {
+    if (typeof aclib !== 'undefined') {
+        aclib.runAutoTag({
+            zoneId: '9mhglrdbus',
+        });
+    }
 });
 </script>
 
