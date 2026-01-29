@@ -129,15 +129,9 @@
 
         const artigo = document.getElementById(`artigo-${id}`);
         if (artigo) {
-          artigo.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start'
-          });
-
+          artigo.scrollIntoView({ behavior: 'smooth', block: 'start' });
           artigo.classList.add('destacado');
           setTimeout(() => artigo.classList.remove('destacado'), 3000);
-
-          // Limpa o ?id= da URL após o scroll
           const url = new URL(window.location);
           url.searchParams.delete('id');
           window.history.replaceState({}, '', url);
@@ -300,8 +294,24 @@
       function carregarTudoRealTime() {
         onSnapshot(collection(db, "saihate_no_paladin"), (snapshot) => {
           todasAsNoticias = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-          todasAsNoticias.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-          if(todasAsNoticias.length > 0) { document.getElementById('novo-artigo-titulo').innerText = todasAsNoticias[0].titulo; }
+
+          // NOVA LÓGICA DE ORDENAÇÃO NUMÉRICA:
+          // Organiza pelo campo 'ordem' (1, 2, 3...). 
+          // Se não houver o campo 'ordem', usa o timestamp como backup.
+          todasAsNoticias.sort((a, b) => {
+            const ordemA = a.ordem !== undefined ? parseInt(a.ordem) : 999;
+            const ordemB = b.ordem !== undefined ? parseInt(b.ordem) : 999;
+            
+            if (ordemA !== ordemB) {
+              return ordemA - ordemB; // Ordem crescente (1 primeiro)
+            }
+            return (b.timestamp || 0) - (a.timestamp || 0); // Empate usa o mais recente
+          });
+
+          if(todasAsNoticias.length > 0) { 
+            document.getElementById('novo-artigo-titulo').innerText = todasAsNoticias[0].titulo; 
+          }
+          
           renderizarNoticias();
 
           setTimeout(() => {
