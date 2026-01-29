@@ -29,7 +29,7 @@
       <i class="fa-solid fa-xmark" style="cursor:pointer; padding: 3.5px;" onclick="window.fecharNotif()"></i>
     </div>
 
-    <div id="toast-copiado">Link copiado!</div>
+    <div id="toast-copiado">Link copiado para o AniGeek!</div>
 
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -57,9 +57,14 @@
         return url ? url.trim() : url;
       }
 
+      // Melhora na função de compartilhamento para suportar metadados do LinkPreview
       window.shareNews = (titulo, url) => {
         if (navigator.share) {
-          navigator.share({ title: titulo, url }).catch(console.error);
+          navigator.share({ 
+            title: 'AniGeek: ' + titulo, 
+            text: 'Confira essa análise no AniGeek Suite:',
+            url: url 
+          }).catch(console.error);
         } else {
           window.copiarLink(url);
         }
@@ -85,7 +90,8 @@
         }
 
         const notif = document.getElementById('notificacao-video');
-        document.getElementById('notif-titulo').innerText = titulo;
+        const notifTitulo = document.getElementById('notif-titulo');
+        if(notifTitulo) notifTitulo.innerText = titulo;
         notif.style.setProperty('--notif-cor', cor);
         notif.classList.add('visivel');
       };
@@ -98,7 +104,12 @@
       if(btnConfirmar) {
           btnConfirmar.onclick = () => {
             const player = document.getElementById(playerAlvo);
-            if (player) player.src = urlAlvo;
+            if (player) {
+                player.src = urlAlvo;
+                // Incrementa view ao confirmar player
+                const newsId = playerAlvo.split('-')[1];
+                incrementarVisualizacao(newsId);
+            }
             window.fecharNotif();
           };
       }
@@ -132,6 +143,10 @@
           artigo.scrollIntoView({ behavior: 'smooth', block: 'start' });
           artigo.classList.add('destacado');
           setTimeout(() => artigo.classList.remove('destacado'), 3000);
+          
+          // Incrementa visualização ao entrar direto pelo link
+          incrementarVisualizacao(id);
+          
           const url = new URL(window.location);
           url.searchParams.delete('id');
           window.history.replaceState({}, '', url);
@@ -142,7 +157,11 @@
         const containers = document.querySelectorAll('.container-comentarios-dinamico');
         if (containers.length === 0) return;
         try {
-          await import('./comentarios/comentarios.js');
+          // Garante que o script de comentários seja carregado apenas uma vez
+          if (!window.comentariosCarregados) {
+              await import('./comentarios/comentarios.js');
+              window.comentariosCarregados = true;
+          }
         } catch (err) { console.error("Erro scripts comentarios", err); }
       }
 
@@ -152,7 +171,7 @@
           if (primeiraNoticia.capaUrl) {
               heroArea.innerHTML = `
                   <div class="hero-topo-container">
-                      <img src="${limparEspacos(primeiraNoticia.capaUrl)}" class="hero-topo-img" alt="Capa">
+                      <img src="${limparEspacos(primeiraNoticia.capaUrl)}" class="hero-topo-img" alt="Capa Principal">
                       ${primeiraNoticia.capaDesc ? `<div class="hero-topo-desc">${primeiraNoticia.capaDesc}</div>` : ''}
                   </div>
               `;
@@ -185,21 +204,21 @@
               const imgFeed = news.capaNoticia || news.capaUrl;
               const capaHTML = imgFeed ? `
                   <div class="noticia-capa" style="margin: -15px -15px 15px -15px;">
-                      <img src="${limparEspacos(imgFeed)}" style="width: 100%; aspect-ratio: 16 / 9; border-radius: 12px 12px 0 0; object-fit: cover; display: block;">
+                      <img src="${limparEspacos(imgFeed)}" style="width: 100%; aspect-ratio: 16 / 9; border-radius: 12px 12px 0 0; object-fit: cover; display: block;" alt="Capa do artigo">
                   </div>` : '';
 
               let fichaCategoriaHtml = '';
               if (news.fichaCategoria) {
                   fichaCategoriaHtml = `
                   <div class="ficha-categoria" style="border-left: 4px solid ${news.fichaCategoria.cor};">
-                      <img src="${limparEspacos(news.fichaCategoria.perfilImg)}" alt="Imagem do editor">
+                      <img src="${limparEspacos(news.fichaCategoria.perfilImg)}" alt="Editor">
                       <div class="ficha-info">
-                          ${news.fichaCategoria.info.map(item => `
+                          ${news.fichaCategoria.info ? news.fichaCategoria.info.map(item => `
                               <div class="info-item">
                                   <span class="info-label">${item.label}:</span>
                                   <span class="info-valor">${item.valor}</span>
                               </div>
-                          `).join('')}
+                          `).join('') : ''}
                       </div>
                   </div>`;
               }
@@ -213,9 +232,14 @@
                   <div class="destaque-header">
                     <h2 class="destaque-titulo">${news.titulo}</h2>
                     <div class="menu-opcoes-container" tabindex="0">
-                      <button class="btn-tres-pontos"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                      <button class="btn-tres-pontos" aria-label="Opções"><i class="fa-solid fa-ellipsis-vertical"></i></button>
                       <div class="dropdown-conteudo header-dropdown">
-                        <a href="#" onclick="event.preventDefault(); window.copiarLink('${shareUrl}');"><i class="fa-regular fa-copy"></i> Copiar Link</a>
+                        <a href="#" onclick="event.preventDefault(); window.copiarLink('${shareUrl}');">
+                            <i class="fa-regular fa-copy"></i> Copiar Link (LinkPreview)
+                        </a>
+                        <a href="#" onclick="event.preventDefault(); window.shareNews('${news.titulo.replace(/'/g, "\\'")}', '${shareUrl}');">
+                            <i class="fa-solid fa-share-nodes"></i> Compartilhar Agora
+                        </a>
                       </div>
                     </div>
                   </div>
@@ -231,7 +255,7 @@
                 </div>
 
                 <div class="destaque-media">
-                  <iframe id="player-${news.id}" src="${limparEspacos(news.videoPrincipal)}" allowfullscreen style="width: 100%; aspect-ratio: 16 / 9; border: none;"></iframe>
+                  <iframe id="player-${news.id}" src="${limparEspacos(news.videoPrincipal)}" allowfullscreen style="width: 100%; aspect-ratio: 16 / 9; border: none;" loading="lazy"></iframe>
                 </div>
 
                 <div class="premium-actions-bar">
@@ -252,7 +276,7 @@
                   <div class="temas-scroll-wrapper"><div class="temas-container">
                       ${news.relacionados ? news.relacionados.map(rel => `
                         <div class="tema-card" onclick="window.pedirTroca('player-${news.id}', '${rel.idVid}', '${rel.titulo.replace(/'/g, "\\'")}', '${news.cor}')">
-                          <img src="${limparEspacos(rel.thumb)}" class="tema-thumb">
+                          <img src="${limparEspacos(rel.thumb)}" class="tema-thumb" loading="lazy">
                           <div class="tema-titulo">${rel.titulo}</div>
                         </div>`).join('') : ''}
                   </div></div>
@@ -264,7 +288,7 @@
                       ${news.produtos ? news.produtos.map(prod => `
                         <a href="${limparEspacos(prod.link)}" target="_blank" class="banner-produto-item">
                           <div class="banner-img-box">
-                            <img src="${limparEspacos(prod.img)}" class="banner-thumb">
+                            <img src="${limparEspacos(prod.img)}" class="banner-thumb" loading="lazy">
                           </div>
                           <div class="banner-info">
                             <div class="banner-titulo">${prod.nome}</div>
@@ -295,17 +319,14 @@
         onSnapshot(collection(db, "saihate_no_paladin"), (snapshot) => {
           todasAsNoticias = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
-          // NOVA LÓGICA DE ORDENAÇÃO NUMÉRICA:
-          // Organiza pelo campo 'ordem' (1, 2, 3...). 
-          // Se não houver o campo 'ordem', usa o timestamp como backup.
           todasAsNoticias.sort((a, b) => {
             const ordemA = a.ordem !== undefined ? parseInt(a.ordem) : 999;
             const ordemB = b.ordem !== undefined ? parseInt(b.ordem) : 999;
             
             if (ordemA !== ordemB) {
-              return ordemA - ordemB; // Ordem crescente (1 primeiro)
+              return ordemA - ordemB; 
             }
-            return (b.timestamp || 0) - (a.timestamp || 0); // Empate usa o mais recente
+            return (b.timestamp || 0) - (a.timestamp || 0); 
           });
 
           if(todasAsNoticias.length > 0) { 
@@ -316,7 +337,7 @@
 
           setTimeout(() => {
             verificarNoticiaNaUrl();
-          }, 100);
+          }, 150);
         });
       }
 
