@@ -547,17 +547,17 @@ function renderBar(){
     const btn = document.createElement('button');
     btn.className = 'filter-tag';
     btn.textContent = item.label || item.sessao;
-    btn.dataset.id = id; // Adiciona o atributo data-id para identificação
+    btn.dataset.id = id;
     btn.onclick = () => {
       document.querySelectorAll('#filterScroller .filter-tag').forEach(b=>b.classList.remove('active'));
       btn.classList.add('active');
       track(id);
       document.getElementById('ag-drawer').classList.remove('open');
 
-      // 🔗 Atualiza URL sem recarregar
+      // 🔗 Atualiza URL sem recarregar (usando replaceState para navegação interna)
       const url = new URL(window.location);
       url.searchParams.set('secao', id);
-      window.history.pushState({}, '', url);
+      window.history.replaceState({}, '', url);
 
       if(window.carregarSecao) window.carregarSecao(id);
       else console.log("Carregando:", id);
@@ -622,7 +622,6 @@ function renderDrawer(filterText = ""){
   const term = filterText.toLowerCase();
 
   CATALOGO.forEach(sec => {
-    // Filtragem
     const itensFiltrados = sec.itens.filter(i => i.label.toLowerCase().includes(term));
     const sessaoMatch = sec.sessao.toLowerCase().includes(term);
 
@@ -632,14 +631,12 @@ function renderDrawer(filterText = ""){
     const sectionDiv = document.createElement('div');
     sectionDiv.className = 'ag-section-block';
 
-    // VERIFICA SE A CATEGORIA PAI JÁ ESTÁ SELECIONADA
     const isCatSelected = currentOrder.includes(sec.id);
     let catIcon = '';
     if(isCatSelected) {
        catIcon = currentMode === 'dynamic' ? ' <span style="font-size:10px; opacity:0.6; margin-left:5px">✕</span>' : ' <span style="font-size:10px; opacity:0.6; margin-left:5px">•••</span>';
     }
 
-    // TÍTULO DA SESSÃO AGORA É UM BOTÃO
     sectionDiv.innerHTML = `
       <button class="ag-section-header-btn ${isCatSelected ? 'is-active' : ''}" data-cat-id="${sec.id}">
         <div class="ag-section-marker" style="background:${sec.cor}"></div>
@@ -648,9 +645,7 @@ function renderDrawer(filterText = ""){
       <div class="ag-grid-container"></div>
     `;
 
-    // Evento de clique no título da seção (Pai)
     sectionDiv.querySelector('.ag-section-header-btn').onclick = (e) => {
-        // Se já tem seleção, verifica se é pra mover ou deletar
         if(isCatSelected && currentMode === 'fixed') {
              handleAction(sec.id, sec.sessao);
         } else {
@@ -661,7 +656,6 @@ function renderDrawer(filterText = ""){
     container.appendChild(sectionDiv);
     const grid = sectionDiv.querySelector('.ag-grid-container');
 
-    // RENDERIZA OS ITENS FILHOS
     itensParaMostrar.forEach(item => {
       const isSelected = currentOrder.includes(item.id);
 
@@ -691,7 +685,6 @@ function renderDrawer(filterText = ""){
     });
   });
 
-  // Apenas atualiza o evento de input, sem re-renderizar tudo
   const searchInput = document.getElementById('ag-search-input');
   searchInput.oninput = (e) => {
     filterDrawer(e.target.value);
@@ -720,7 +713,6 @@ function filterDrawer(term) {
     }
     block.style.display = '';
 
-    // Filtra os cards
     grid.querySelectorAll('.ag-card').forEach(card => {
       const label = card.textContent.trim();
       if (label.toLowerCase().includes(termLower) || sessaoMatch) {
@@ -739,34 +731,27 @@ function toggleItem(id, label){
   let order = getOrder();
 
   if(order.includes(id)){
-    // Remove
     order = order.filter(x => x !== id);
     showToast(`Removido: <b>${label}</b>`, 'normal');
   } else {
-    // Adiciona com verificação de limite
     if(order.length >= CONFIG.MAX_TABS) {
       showToast(`Limite de ${CONFIG.MAX_TABS} abas atingido!`, 'error');
       return;
     }
     order.push(id);
     showToast(`Adicionado: <b>${label}</b>`, 'success');
-
-    // Simula um clique real na aba adicionada
-    setTimeout(() => {
-      const button = document.querySelector(`#filterScroller .filter-tag[data-id="${id}"]`);
-      if (button) {
-        button.click();
-      }
-    }, 100);
   }
 
   save(CONFIG.KEYS.ORDER, order);
   renderBar();
-  // Atualiza apenas visualmente sem perder estado do input
-  const currentInput = document.getElementById('ag-search-input');
-  const currentValue = currentInput ? currentInput.value : '';
-  renderDrawer(currentValue);
-  if (currentInput) currentInput.value = currentValue;
+
+  // Renderiza primeiro, interage depois
+  setTimeout(() => {
+    const button = document.querySelector(`#filterScroller .filter-tag[data-id="${id}"]`);
+    if (button) {
+      button.click();
+    }
+  }, 100);
 }
 
 function handleAction(id, label){
@@ -783,7 +768,6 @@ function handleAction(id, label){
     renderDrawer(currentValue);
     if (currentInput) currentInput.value = currentValue;
   } else {
-    // Modo Fixo: Prompt simples
     const currentIndex = order.indexOf(id);
     const newPos = prompt(`Mover "${label}" para qual posição? (1-${order.length})`, currentIndex + 1);
 
@@ -814,9 +798,9 @@ function ensureTabExists(id){
   let order = getOrder();
   if (!order.includes(id)) {
     if (order.length >= CONFIG.MAX_TABS) {
-      order.pop(); // remove a última (regra simples e previsível)
+      order.pop();
     }
-    order.unshift(id); // URL tem prioridade máxima
+    order.unshift(id);
     save(CONFIG.KEYS.ORDER, order);
   }
   return true;
@@ -834,13 +818,13 @@ window.addEventListener('DOMContentLoaded', () => {
   const ok = ensureTabExists(secao);
   if (!ok) return;
 
-  // Re-renderiza a barra com a aba garantida
   renderBar();
 
-  // Aguarda DOM pintar e força o clique
   setTimeout(() => {
     const btn = document.querySelector(`#filterScroller .filter-tag[data-id="${secao}"]`);
     if (btn) {
+      document.querySelectorAll('#filterScroller .filter-tag').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
       btn.click();
     } else if (window.carregarSecao) {
       window.carregarSecao(secao);
