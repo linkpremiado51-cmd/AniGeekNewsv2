@@ -2,7 +2,7 @@
    AniGeekNews – Enterprise Section System v7
    • Títulos de Sessão Clicáveis (Categorias Pai)
    • Notificações Toast Profissionais (Sem Alert)
-   • Controle de Foco (Teclado não abre sozinho)j
+   • Controle de Foco (Teclado não abre sozinho)
    • Design Harmônico
 ====================================================== */
 
@@ -24,7 +24,7 @@ const CATALOGO = [
   {
     sessao: "MANCHETES",
     id: 'manchetes', // ID DA CATEGORIA PAI
-    cor: "#FF4500", 
+    cor: "#FF4500",
     itens: [
       { id: 'destaques', label: 'Destaques do Dia' },
       { id: 'ultimas', label: 'Últimas Notícias' },
@@ -72,7 +72,8 @@ const CATALOGO = [
     itens: []
   }
 ];
-                /* ===========================
+
+/* ===========================
    CSS INJETADO
 =========================== */
 const styles = `
@@ -90,7 +91,7 @@ const styles = `
     z-index: 1000;
     box-shadow: 0 10.5px 21px rgba(0,0,0,0.08);
   }
-  
+
   body.dark-mode #ag-drawer {
     background: #141414;
     border-color: #333;
@@ -117,14 +118,14 @@ const styles = `
     gap: 14px;
     flex-wrap: wrap;
     max-width: 840px;
-    
+
     /* Fixação no topo com efeito vidro */
     position: sticky;
     top: -21px; /* Alinhado ao topo do container */
     z-index: 100;
-    margin: -21px auto 21px auto; 
+    margin: -21px auto 21px auto;
     padding: 17.5px 0;
-    
+
     background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(8.4px);
     -webkit-backdrop-filter: blur(8.4px);
@@ -148,7 +149,7 @@ const styles = `
     background: linear-gradient(to bottom, rgba(255, 255, 255, 0.9), transparent);
     pointer-events: none;
   }
-  
+
   body.dark-mode .ag-drawer-header::after {
     background: linear-gradient(to bottom, rgba(20, 20, 20, 0.9), transparent);
   }
@@ -187,7 +188,7 @@ const styles = `
     border-color: rgba(255,255,255,0.1);
     color: #fff;
   }
-  
+
   .ag-search-input:focus {
     background: #fff;
     border-color: var(--primary-color, #e50914);
@@ -226,7 +227,6 @@ const styles = `
     background: #333;
     color: #fff;
   }
-
 
   /* --- SESSÕES (CABEÇALHOS CLICÁVEIS) --- */
   .ag-section-block {
@@ -281,7 +281,7 @@ const styles = `
   /* --- GRID --- */
   .ag-grid-container {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(105px, 1fr)); 
+    grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
     gap: 7px;
   }
 
@@ -297,7 +297,7 @@ const styles = `
     text-align: center;
     cursor: pointer;
     transition: all 0.2s ease;
-    height: 100%; 
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -338,7 +338,7 @@ const styles = `
     opacity: 0.6;
     transition: 0.2s;
   }
-  
+
   .ag-card-action:hover {
     background: var(--primary-color, #e50914);
     color: #fff !important;
@@ -374,18 +374,19 @@ const styles = `
     align-items: center;
     gap: 7px;
   }
-  
+
   .ag-toast.error { border-left: 2.8px solid #ff4444; }
   .ag-toast.success { border-left: 2.8px solid #00C851; }
 
   @keyframes agSlideUp {
     to { opacity: 1; transform: translateY(0); }
   }
-  
+
   @keyframes agFadeOut {
     to { opacity: 0; transform: translateY(-7px); }
   }
-     /* --- AJUSTE PARA BOTÃO PROFISSIONAL E FIXO --- */
+
+  /* --- AJUSTE PARA BOTÃO PROFISSIONAL E FIXO --- */
   #filterScroller {
     display: flex;
     align-items: center;
@@ -401,24 +402,24 @@ const styles = `
     position: sticky;
     right: 0 !important;
     z-index: 99;
-    
+
     /* Estética Profissional: Glassmorphism */
-    background: rgba(255, 255, 255, 0.9); 
+    background: rgba(255, 255, 255, 0.9);
     backdrop-filter: blur(5.6px);
     -webkit-backdrop-filter: blur(5.6px);
-    
+
     min-width: 33.6px;
     height: 23.8px;
     margin-left: auto;
     display: flex;
     align-items: center;
     justify-content: center;
-    
+
     /* Borda e Sombra refinadas */
     border: none;
     border-left: 1px solid rgba(0, 0, 0, 0.05);
     box-shadow: -7px 0 14px rgba(0, 0, 0, 0.05);
-    
+
     cursor: pointer;
     font-size: 12.6px;
     transition: all 0.3s ease;
@@ -452,9 +453,6 @@ const styles = `
     transform: scale(0.9);
     opacity: 0.8;
   }
-
-
-
 `;
 
 const styleSheet = document.createElement("style");
@@ -475,7 +473,7 @@ function showToast(message, type = 'normal') {
   const toast = document.createElement('div');
   toast.className = `ag-toast ${type}`;
   toast.innerHTML = message;
-  
+
   container.appendChild(toast);
 
   // Remove após 3 segundos
@@ -518,7 +516,7 @@ function track(id){
   const stats = load(CONFIG.KEYS.STATS, {});
   stats[id] = (stats[id] || 0) + 1;
   save(CONFIG.KEYS.STATS, stats);
-  
+
   const order = getOrder();
   order.sort((a,b) => (stats[b]||0) - (stats[a]||0));
   save(CONFIG.KEYS.ORDER, order);
@@ -553,7 +551,7 @@ function renderBar(){
       btn.classList.add('active');
       track(id);
       document.getElementById('ag-drawer').classList.remove('open');
-      
+
       if(window.carregarSecao) window.carregarSecao(id);
       else console.log("Carregando:", id);
     };
@@ -562,7 +560,7 @@ function renderBar(){
 
   const cfg = document.createElement('button');
   cfg.className = 'filter-tag cfg-btn';
-  cfg.innerHTML = '⚙'; 
+  cfg.innerHTML = '⚙';
   cfg.onclick = toggleDrawer;
   bar.appendChild(cfg);
 }
@@ -573,13 +571,12 @@ function renderBar(){
 function toggleDrawer(){
   const drawer = document.getElementById('ag-drawer');
   if(!drawer) return;
-  
+
   if(drawer.classList.contains('open')){
     drawer.classList.remove('open');
   } else {
     renderDrawer();
     drawer.classList.add('open');
-    // REMOVIDO: setTimeout com focus() para não abrir o teclado
   }
 }
 
@@ -597,7 +594,7 @@ function renderDrawer(filterText = ""){
           ${searchIcon}
           <input type="text" class="ag-search-input" id="ag-search-input" placeholder="Pesquisar..." value="${filterText}">
         </div>
-        
+
         <div class="ag-mode-group">
           <button id="btn-fixo" class="ag-mode-btn ${currentMode==='fixed'?'active':''}">Fixo</button>
           <button id="btn-dinamico" class="ag-mode-btn ${currentMode==='dynamic'?'active':''}">Automático</button>
@@ -605,7 +602,7 @@ function renderDrawer(filterText = ""){
       </div>
 
       <div id="ag-catalog-container"></div>
-      
+
       <div style="text-align:center; padding-top:20px; font-size:12px; color:#888;">
         ${currentOrder.length} de ${CONFIG.MAX_TABS} abas ativas
       </div>
@@ -643,7 +640,7 @@ function renderDrawer(filterText = ""){
       </button>
       <div class="ag-grid-container"></div>
     `;
-    
+
     // Evento de clique no título da seção (Pai)
     sectionDiv.querySelector('.ag-section-header-btn').onclick = (e) => {
         // Se já tem seleção, verifica se é pra mover ou deletar
@@ -660,10 +657,10 @@ function renderDrawer(filterText = ""){
     // RENDERIZA OS ITENS FILHOS
     itensParaMostrar.forEach(item => {
       const isSelected = currentOrder.includes(item.id);
-      
+
       const card = document.createElement('div');
       card.className = `ag-card ${isSelected ? 'is-selected' : ''}`;
-      
+
       let actionIcon = '';
       if(isSelected) {
         actionIcon = currentMode === 'dynamic' ? '✕' : '•••';
@@ -687,9 +684,45 @@ function renderDrawer(filterText = ""){
     });
   });
 
-  document.getElementById('ag-search-input').oninput = (e) => renderDrawer(e.target.value);
+  // Apenas atualiza o evento de input, sem re-renderizar tudo
+  const searchInput = document.getElementById('ag-search-input');
+  searchInput.oninput = (e) => {
+    filterDrawer(e.target.value);
+  };
+
   document.getElementById('btn-fixo').onclick = () => setMode('fixed');
   document.getElementById('btn-dinamico').onclick = () => setMode('dynamic');
+}
+
+// Função para filtrar os elementos existentes, sem recriar o drawer
+function filterDrawer(term) {
+  const termLower = term.toLowerCase();
+  document.querySelectorAll('.ag-section-block').forEach(block => {
+    const catId = block.querySelector('.ag-section-header-btn').dataset.catId;
+    const cat = CATALOGO.find(c => c.id === catId);
+    if (!cat) return;
+
+    const sessaoMatch = cat.sessao.toLowerCase().includes(termLower);
+    const itensFiltrados = cat.itens.filter(i => i.label.toLowerCase().includes(termLower));
+    const grid = block.querySelector('.ag-grid-container');
+    const headerBtn = block.querySelector('.ag-section-header-btn');
+
+    if (termLower !== "" && !sessaoMatch && itensFiltrados.length === 0) {
+      block.style.display = 'none';
+      return;
+    }
+    block.style.display = '';
+
+    // Filtra os cards
+    grid.querySelectorAll('.ag-card').forEach(card => {
+      const label = card.textContent.trim();
+      if (label.toLowerCase().includes(termLower) || sessaoMatch) {
+        card.style.display = '';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  });
 }
 
 /* ===========================
@@ -697,7 +730,7 @@ function renderDrawer(filterText = ""){
 =========================== */
 function toggleItem(id, label){
   let order = getOrder();
-  
+
   if(order.includes(id)){
     // Remove
     order = order.filter(x => x !== id);
@@ -711,11 +744,14 @@ function toggleItem(id, label){
     order.push(id);
     showToast(`Adicionado: <b>${label}</b>`, 'success');
   }
-  
+
   save(CONFIG.KEYS.ORDER, order);
   renderBar();
-  // Atualiza apenas visualmente sem perder estado do input se possível, ou re-renderiza
-  renderDrawer(document.getElementById('ag-search-input').value);
+  // Atualiza apenas visualmente sem perder estado do input
+  const currentInput = document.getElementById('ag-search-input');
+  const currentValue = currentInput ? currentInput.value : '';
+  renderDrawer(currentValue);
+  if (currentInput) currentInput.value = currentValue;
 }
 
 function handleAction(id, label){
@@ -727,12 +763,15 @@ function handleAction(id, label){
     save(CONFIG.KEYS.ORDER, order);
     showToast(`Removido: <b>${label}</b>`);
     renderBar();
-    renderDrawer(document.getElementById('ag-search-input').value);
+    const currentInput = document.getElementById('ag-search-input');
+    const currentValue = currentInput ? currentInput.value : '';
+    renderDrawer(currentValue);
+    if (currentInput) currentInput.value = currentValue;
   } else {
-    // Modo Fixo: Prompt simples (pode ser melhorado para modal depois, mas cumpre o requisito)
+    // Modo Fixo: Prompt simples
     const currentIndex = order.indexOf(id);
     const newPos = prompt(`Mover "${label}" para qual posição? (1-${order.length})`, currentIndex + 1);
-    
+
     if(newPos !== null){
       const targetIndex = parseInt(newPos) - 1;
       if(!isNaN(targetIndex) && targetIndex >= 0 && targetIndex < order.length) {
@@ -740,7 +779,10 @@ function handleAction(id, label){
         order.splice(targetIndex, 0, id);
         save(CONFIG.KEYS.ORDER, order);
         renderBar();
-        renderDrawer(document.getElementById('ag-search-input').value);
+        const currentInput = document.getElementById('ag-search-input');
+        const currentValue = currentInput ? currentInput.value : '';
+        renderDrawer(currentValue);
+        if (currentInput) currentInput.value = currentValue;
         showToast(`<b>${label}</b> movido para posição ${newPos}`);
       }
     }
