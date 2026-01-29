@@ -4,6 +4,7 @@
    • Notificações Toast Profissionais (Sem Alert)
    • Controle de Foco (Teclado não abre sozinho)
    • Design Harmônico
+   • URLs Compartilháveis por Aba
 ====================================================== */
 
 (function(){
@@ -23,7 +24,7 @@ const CONFIG = {
 const CATALOGO = [
   {
     sessao: "MANCHETES",
-    id: 'manchetes', // ID DA CATEGORIA PAI
+    id: 'manchetes',
     cor: "#FF4500",
     itens: [
       { id: 'destaques', label: 'Destaques do Dia' },
@@ -553,6 +554,11 @@ function renderBar(){
       track(id);
       document.getElementById('ag-drawer').classList.remove('open');
 
+      // 🔗 Atualiza URL sem recarregar
+      const url = new URL(window.location);
+      url.searchParams.set('secao', id);
+      window.history.pushState({}, '', url);
+
       if(window.carregarSecao) window.carregarSecao(id);
       else console.log("Carregando:", id);
     };
@@ -797,6 +803,27 @@ function handleAction(id, label){
     }
   }
 }
+
+/* ===========================
+   CARREGAMENTO DE SEÇÃO POR URL
+=========================== */
+window.addEventListener('DOMContentLoaded', () => {
+  const params = new URLSearchParams(window.location.search);
+  const secao = params.get('secao');
+
+  if (!secao) return;
+
+  // Espera a barra renderizar
+  setTimeout(() => {
+    const btn = document.querySelector(`#filterScroller .filter-tag[data-id="${secao}"]`);
+    if (btn) {
+      btn.click();
+    } else if (window.carregarSecao) {
+      // fallback direto
+      window.carregarSecao(secao);
+    }
+  }, 100);
+});
 
 /* Inicialização */
 if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', renderBar);
