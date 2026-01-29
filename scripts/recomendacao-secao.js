@@ -504,7 +504,7 @@ function getOrder(){
 function findItem(id){
   for(let sec of CATALOGO){
     // Verifica se é a própria categoria
-    if(sec.id === id) return { id: sec.id, label: sec.sessao };
+    if(sec.id === id) return sec;
     // Verifica itens internos
     const item = sec.itens.find(i => i.id === id);
     if(item) return item;
@@ -546,7 +546,7 @@ function renderBar(){
 
     const btn = document.createElement('button');
     btn.className = 'filter-tag';
-    btn.textContent = item.label;
+    btn.textContent = item.label || item.sessao;
     btn.dataset.id = id; // Adiciona o atributo data-id para identificação
     btn.onclick = () => {
       document.querySelectorAll('#filterScroller .filter-tag').forEach(b=>b.classList.remove('active'));
@@ -805,6 +805,24 @@ function handleAction(id, label){
 }
 
 /* ===========================
+   FUNÇÃO: Garante que a aba exista no order
+=========================== */
+function ensureTabExists(id){
+  const exists = CATALOGO.some(sec => sec.id === id || sec.itens.some(i => i.id === id));
+  if (!exists) return false;
+
+  let order = getOrder();
+  if (!order.includes(id)) {
+    if (order.length >= CONFIG.MAX_TABS) {
+      order.pop(); // remove a última (regra simples e previsível)
+    }
+    order.unshift(id); // URL tem prioridade máxima
+    save(CONFIG.KEYS.ORDER, order);
+  }
+  return true;
+}
+
+/* ===========================
    CARREGAMENTO DE SEÇÃO POR URL
 =========================== */
 window.addEventListener('DOMContentLoaded', () => {
@@ -813,16 +831,21 @@ window.addEventListener('DOMContentLoaded', () => {
 
   if (!secao) return;
 
-  // Espera a barra renderizar
+  const ok = ensureTabExists(secao);
+  if (!ok) return;
+
+  // Re-renderiza a barra com a aba garantida
+  renderBar();
+
+  // Aguarda DOM pintar e força o clique
   setTimeout(() => {
     const btn = document.querySelector(`#filterScroller .filter-tag[data-id="${secao}"]`);
     if (btn) {
       btn.click();
     } else if (window.carregarSecao) {
-      // fallback direto
       window.carregarSecao(secao);
     }
-  }, 100);
+  }, 150);
 });
 
 /* Inicialização */
