@@ -13,6 +13,12 @@
     <link rel="stylesheet" href="estilos/geral.css">
     <link rel="stylesheet" href="estilos/cabecalho-rodape.css">
     <link rel="stylesheet" href="estilos/componentes.css">
+
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
 </head>
 
 <body>
@@ -21,7 +27,7 @@
 <div class="sticky-header-group">
     <header>
         <div class="nav-container">
-            <a href="./index.html" class="logo">AniGeeknewsv3.com<span></span></a>
+            <a href="./index.html" class="logo">AniGeeknewsv3.com</a>
             <ul class="nav-menu">
                 <li class="nav-item"><a href="#">Animes</a></li>
                 <li class="nav-item"><a href="#">Games</a></li>
@@ -29,11 +35,6 @@
                 <li class="nav-item" id="area-usuario"><span>Aguardando...</span></li>
             </ul>
             <div class="header-actions">
-                <button class="sections-btn" onclick="toggleMobileMenu()">
-                    <span class="bar"></span>
-                    <span class="bar"></span>
-                    <span class="bar"></span>
-                </button>
                 <button class="menu-toggle" onclick="toggleMobileMenu()">
                     <i class="fas fa-bars"></i>
                 </button>
@@ -41,16 +42,13 @@
         </div>
     </header>
 
-    <!-- Filtros serão gerados dinamicamente pelo recomendacao-secao.js -->
-    <div class="filter-scroller" id="filterScroller">
-        <!-- As abas aparecerão aqui automaticamente -->
-    </div>
+    <div class="filter-scroller" id="filterScroller"></div>
 </div>
 
 <main id="dynamic-content">
     <section class="hero">
         <div id="conteudo_de_destaque">
-            <p style="text-align: center; padding-top: 100px; color: var(--text-muted);">
+            <p style="text-align:center;padding-top:100px;color:var(--text-muted)">
                 Iniciando portal...
             </p>
         </div>
@@ -64,90 +62,49 @@
     <div class="mobile-menu-item"><a href="#">Animes</a></div>
     <div class="mobile-menu-item"><a href="#">Games</a></div>
     <div class="mobile-menu-item"><a href="#">Mangás</a></div>
-    <div class="theme-toggle-container" style="margin-top: 20px;">
-        <span id="mobileThemeLabel" style="font-weight: bold; font-size: 12px;">TEMA ESCURO</span>
-        <label class="theme-toggle">
-            <input type="checkbox" id="mobileThemeToggle">
-            <span class="slider"></span>
-        </label>
-    </div>
 </div>
 
-<!-- Modal Global de Notícia (mantido intacto) -->
-<div id="modal-noticia-global" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:99999; overflow-y:auto; backdrop-filter: blur(8px);">
-    <div id="modal-conteudo-interno" style="background: var(--bg, #fff); color: var(--text-main, #121212); max-width: 900px; margin: 20px auto; padding: 25px; border-radius: 12px; position: relative; box-shadow: 0 10px 40px rgba(0,0,0,0.5);">
-        <button onclick="window.fecharModalGlobal()" style="position: absolute; top: 15px; right: 15px; border: none; background: rgba(0,0,0,0.05); width: 35px; height: 35px; border-radius: 50%; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center;">&times;</button>
-
-        <div id="m-categoria" style="font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px;"></div>
-        <h2 id="m-titulo" style="font-size: clamp(22px, 5vw, 36px); font-weight: 850; margin: 0 0 15px 0; line-height: 1.2;"></h2>
-        <p id="m-resumo" style="font-size: 16px; line-height: 1.6; opacity: 0.8; margin-bottom: 20px;"></p>
-
-        <div id="m-ficha" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; background: rgba(0,0,0,0.03); padding: 15px; border-radius: 8px; margin-bottom: 20px;"></div>
-
-        <iframe id="m-video" style="width: 100%; aspect-ratio: 16/9; border: none; border-radius: 8px;" allowfullscreen></iframe>
-
-        <div style="margin-top: 25px; text-align: center;">
-            <a id="m-link" href="#" target="_blank" style="display: inline-block; padding: 12px 25px; background: var(--text-main); color: var(--bg); text-decoration: none; font-weight: 700; border-radius: 4px; text-transform: uppercase; font-size: 12px; letter-spacing: 1px;">Ver Artigo Completo</a>
-        </div>
-    </div>
-</div>
-
-<!-- Scripts principais -->
+<!-- SCRIPTS -->
 <script type="module" src="scripts/config-firebase.js"></script>
 <script type="module" src="scripts/tema.js"></script>
 <script type="module" src="scripts/navegacao.js"></script>
-
-<!-- Script de recomendação e gestão de seções -->
 <script src="scripts/recomendacao-secao.js"></script>
 
-<!-- Função global exigida pelo sistema -->
+<!-- NOVA FUNÇÃO GLOBAL (SEM MODAL) -->
 <script>
 window.abrirModalNoticia = (noticia) => {
-    const modal = document.getElementById('modal-noticia-global');
-    if (!modal) return;
+    if (!noticia || !noticia.id) return;
 
-    document.getElementById('m-categoria').innerText = noticia.categoria || "Geek";
-    document.getElementById('m-categoria').style.color = noticia.cor || "var(--primary)";
-    document.getElementById('m-titulo').innerText = noticia.titulo;
-    document.getElementById('m-resumo').innerText = noticia.resumo || "";
-    document.getElementById('m-video').src = noticia.videoPrincipal || "";
-    document.getElementById('m-link').href = noticia.linkArtigo || "#";
-
-    const fichaContainer = document.getElementById('m-ficha');
-    if (noticia.ficha && noticia.ficha.length > 0) {
-        fichaContainer.style.display = 'grid';
-        fichaContainer.innerHTML = noticia.ficha.map(item => `
-            <div style="border-left: 3px solid ${noticia.cor || '#eee'}; padding-left: 10px;">
-                <div style="font-size: 9px; text-transform: uppercase; font-weight: 800; opacity: 0.5;">${item.label}</div>
-                <div style="font-size: 13px; font-weight: 700;">${item.valor}</div>
-            </div>
-        `).join('');
-    } else {
-        fichaContainer.style.display = 'none';
+    const alvo = document.getElementById(noticia.id);
+    if (!alvo) {
+        console.warn('Notícia não encontrada:', noticia.id);
+        return;
     }
 
-    modal.style.display = 'block';
-    document.body.style.overflow = 'hidden';
+    // Atualiza URL com âncora
+    history.pushState(null, '', `#${noticia.id}`);
+
+    // Scroll suave até a notícia
+    alvo.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+    });
 };
 
-window.fecharModalGlobal = () => {
-    const modal = document.getElementById('modal-noticia-global');
-    modal.style.display = 'none';
-    document.getElementById('m-video').src = "";
-    document.body.style.overflow = 'auto';
+// Caso o usuário entre direto com #id na URL
+window.addEventListener('load', () => {
+    const hash = window.location.hash.replace('#', '');
+    if (!hash) return;
 
-    const url = new URL(window.location);
-    url.searchParams.delete('id');
-    window.history.pushState({}, '', url);
-};
-
-window.onclick = function(event) {
-    const modal = document.getElementById('modal-noticia-global');
-    if (event.target == modal) window.fecharModalGlobal();
-};
+    const alvo = document.getElementById(hash);
+    if (alvo) {
+        setTimeout(() => {
+            alvo.scrollIntoView({ behavior: 'smooth' });
+        }, 300);
+    }
+});
 </script>
 
-<!-- Script externo (não alterado) -->
 <script type="module" src="scripts/ads-industrial.js"></script>
 <script type="text/javascript">
 aclib.runAutoTag({
