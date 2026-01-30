@@ -42,8 +42,8 @@ const CATALOGO = [
     itens: []
   },
   {
-    sessao: "Jujutsu Kaisen 1 temporada",
-    id: 'jujutsu_kaisen',
+    sessao: "Jujutsu Kaisen: Shimetsu Kaiyu",
+    id: 'Jujutsu_kaisen_shimetsu_kaiyu',
     cor: "#7c0a02",
     itens: []
   },
