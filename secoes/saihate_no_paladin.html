@@ -11,11 +11,8 @@
     </div>
 
     <div id="ad-slot-top" class="ad-container-anigeek"></div>
-
     <div id="hero-area"></div>
-
     <div id="container-principal"></div>
-
     <div id="ad-slot-bottom" class="ad-container-anigeek"></div>
 
     <div id="pagination-control" style="text-align: center; padding: 21px; display: none;">
@@ -65,8 +62,13 @@
       const db = getFirestore(app);
 
       let todasAsNoticias = [];
-      // INTEGRAÇÃO: Respeita o estado salvo no index.html
+      
+      /**
+       * SINCRONIZAÇÃO: Pega o valor definido no index.html.
+       * Se for uma sessão nova, o padrão é 5.
+       */
       let noticiasExibidas = window.noticiasExibidas || 5; 
+      
       let playerAlvo = '';
       let urlAlvo = '';
       let linkPropaganda = "https://www.effectivegatecpm.com/u1isyicizb?key=66934bf68fc6093a89704779bb57cce3";
@@ -105,12 +107,13 @@
 
       function limparEspacos(url) { return url ? url.trim() : url; }
 
-      // --- HANDLERS DE UI ---
+      // --- HANDLERS DE UI E PERSISTÊNCIA ---
       window.handlePlayerAd = (playerId, linkArtigo) => {
           if (!playersAdList.has(playerId)) {
               playersAdList.add(playerId); 
               const idLimpo = playerId.replace('player-', '');
               
+              // SALVA O ID DO ARTIGO: Para o index.html saber onde voltar o scroll
               window.lastArticleId = idLimpo;
               if (window.saveStateGlobal) window.saveStateGlobal();
 
@@ -307,7 +310,7 @@
         injetarComentariosDinamicos();
         btnPaginacao.style.display = noticiasExibidas < todasAsNoticias.length ? 'block' : 'none';
         
-        // Sincroniza variável global
+        // SINCRONIZAÇÃO GLOBAL: Avisa o index.html quantas notícias o usuário tem abertas
         window.noticiasExibidas = noticiasExibidas;
         if (window.saveStateGlobal) window.saveStateGlobal();
       }
@@ -334,6 +337,8 @@
           todasAsNoticias.sort((a, b) => (a.ordem || 999) - (b.ordem || 999));
           if(todasAsNoticias.length > 0) document.getElementById('novo-artigo-titulo').innerText = todasAsNoticias[0].titulo;
           renderizarNoticias();
+          
+          // Verifica se há um ID na URL para scroll automático
           setTimeout(verificarNoticiaNaUrl, 150);
         });
       }
