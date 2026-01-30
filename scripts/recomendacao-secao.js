@@ -20,7 +20,7 @@ const CONFIG = {
 };
 
 /* ===========================
-   BANCO DE DADOS (COM IDs NAS SESSÕES)
+   BANCO DE DADOS (COM IDs NAS SEsSÕES)
 =========================== */
 const CATALOGO = [
   {
