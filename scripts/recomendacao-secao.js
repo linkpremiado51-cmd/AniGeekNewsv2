@@ -1,9 +1,10 @@
 /* ======================================================
-   AniGeekNews – Enterprise Section System v8.0 (Visual Upgrade)
+   AniGeekNews – Enterprise Section System v8.0 (Refined)
+   • Barra de Pesquisa e Botões acima das Abas (Fixo)
    • Capa Personalizada no Menu
-   • Imagem do Personagem Totalmente Estática (Fade Only)
-   • Correção de Estabilidade na Pesquisa (Anti-Jumping)
-   • Design High-End
+   • Efeitos Visuais Aprimorados (Fade Only)
+   • Correção de Layout na Pesquisa
+   • Sem Auto-Focus ou Auto-Click
 ====================================================== */
 
 (function(){
@@ -18,7 +19,7 @@ const CONFIG = {
 };
 
 /* ===========================
-   BANCO DE DADOS (COM IDs NAS SESSÕES)
+   BANCO DE DADOS
 =========================== */
 const CATALOGO = [
   {
@@ -69,19 +70,89 @@ const CATALOGO = [
    CSS INJETADO
 =========================== */
 const styles = `
-  /* --- LAYOUT DA GAVETA --- */
+  /* --- LAYOUT GLOBAL --- */
+  #ag-main-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    margin-bottom: 10px;
+    position: relative;
+  }
+
+  /* --- CABEÇALHO ESTÁTICO (Barra e Botões acima das abas) --- */
+  #ag-static-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 14px;
+    padding: 10px 0;
+    cursor: pointer; /* Indica que é clicável para abrir o menu */
+  }
+
+  .ag-fake-search {
+    flex: 1;
+    background: rgba(0,0,0,0.04);
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 7px;
+    padding: 8px 12px;
+    font-size: 10px;
+    color: #666;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    pointer-events: none; /* O clique passa para o container pai */
+  }
+
+  body.dark-mode .ag-fake-search {
+    background: rgba(255,255,255,0.05);
+    border-color: rgba(255,255,255,0.1);
+    color: #aaa;
+  }
+
+  .ag-fake-buttons {
+    display: flex;
+    gap: 4px;
+    background: rgba(0,0,0,0.05);
+    padding: 3px;
+    border-radius: 7px;
+    pointer-events: none;
+  }
+  
+  body.dark-mode .ag-fake-buttons { background: rgba(255,255,255,0.08); }
+
+  .ag-fake-btn {
+    padding: 5px 10px;
+    font-size: 8px;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: #888;
+    border-radius: 5px;
+  }
+  
+  .ag-fake-btn.active {
+    background: #fff;
+    color: #000;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  }
+  body.dark-mode .ag-fake-btn.active { background: #333; color: #fff; }
+
+  /* --- GAVETA (DRAWER) --- */
   #ag-drawer {
     background: #ffffff;
     border-bottom: 1px solid #e0e0e0;
-    overflow: hidden; /* Mantém o conteúdo dentro */
+    overflow: hidden;
     max-height: 0;
     transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
     opacity: 0;
     width: 100%;
     position: absolute;
+    top: 50px; /* Ajuste para aparecer logo abaixo do header estático */
     left: 0;
     z-index: 1000;
     box-shadow: 0 10.5px 21px rgba(0,0,0,0.08);
+    display: flex;
+    flex-direction: column;
   }
 
   body.dark-mode #ag-drawer {
@@ -91,172 +162,157 @@ const styles = `
   }
 
   #ag-drawer.open {
-    max-height: 90vh;
+    max-height: 85vh;
     opacity: 1;
   }
 
-   /* IMAGEM DO PERSONAGEM - TOTALMENTE IMÓVEL (FIXED) */
+   /* IMAGEM DO PERSONAGEM (IMOVEL, APENAS FADE) */
   .ag-char-fixed {
-    position: fixed; /* Fixa em relação à janela, não ao menu */
+    position: absolute;
     bottom: 0;
     right: 0;
-    height: 85vh; /* Altura ajustada */
+    height: 90%;
     width: auto;
-    max-width: 50vw;
+    max-width: 45vw;
     object-fit: contain;
     object-position: bottom right;
     pointer-events: none;
-    z-index: 1002; /* Acima do drawer */
-    
-    /* Apenas Fade In/Out - Sem deslizamento */
+    z-index: 0; /* Atrás do conteúdo */
     opacity: 0;
-    transition: opacity 0.4s ease-in-out; 
-    transform: none !important; /* Garante que não haja movimento */
+    transition: opacity 0.5s ease-in-out; /* Apenas opacidade, sem movimento */
   }
 
-  /* Quando o drawer tem a classe open, a imagem aparece */
-  #ag-drawer.open ~ .ag-char-fixed,
-  .ag-char-wrapper.visible .ag-char-fixed { 
+  #ag-drawer.open .ag-char-fixed {
     opacity: 1;
+  }
+
+  /* CAPA DO MENU DA ENGRENAGEM */
+  .ag-drawer-cover {
+    width: 100%;
+    height: 120px; /* Altura da capa */
+    background-image: url('https://i.postimg.cc/HWM72wfT/the-pensive-journey-by-chcofficial-dhme17e-pre.jpg');
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    margin-bottom: 20px;
+    border-radius: 0 0 10px 10px;
+    flex-shrink: 0;
+  }
+  
+  /* Gradiente para a capa não cortar seco */
+  .ag-drawer-cover::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 40px;
+    background: linear-gradient(to bottom, transparent, #ffffff);
+  }
+  body.dark-mode .ag-drawer-cover::after {
+    background: linear-gradient(to bottom, transparent, #141414);
+  }
+
+  /* HEADER DENTRO DA GAVETA (Funcional) */
+  .ag-drawer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 14px;
+    padding: 0 14px 14px 14px;
+    position: relative;
+    z-index: 10;
+    /* Movemos para cima da capa visualmente se desejar, mas aqui vamos deixar abaixo da capa conforme "onde estavam antes" */
+    margin-top: -30px; /* Sobe um pouco para sobrepor o final da capa */
   }
 
   .ag-drawer-scroll {
     position: relative;
     z-index: 5;
-    max-height: 90vh;
     overflow-y: auto;
-    padding: 0; /* Padding removido aqui para a capa encostar nas bordas */
+    padding: 0 14px 21px 14px;
     scrollbar-width: thin;
-  }
-
-
-  /* --- HEADER COM CAPA --- */
-  .ag-drawer-header {
-    display: flex;
-    justify-content: center; /* Centraliza conteúdo */
-    align-items: flex-end; /* Conteúdo na parte de baixo da capa */
-    gap: 14px;
-    flex-wrap: wrap;
-    width: 100%;
-    min-height: 180px; /* Altura da capa */
-    
-    /* CAPA DE FUNDO */
-    background-image: url('https://i.postimg.cc/HWM72wfT/the-pensive-journey-by-chcofficial-dhme17e-pre.jpg');
-    background-size: cover;
-    background-position: center;
-    position: relative;
-    
-    z-index: 100;
-    margin-bottom: 35px; /* Espaço para não encostar nas categorias */
-    padding: 20px;
-    
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-  }
-
-  /* Overlay escuro para melhorar leitura dos botões sobre a imagem */
-  .ag-drawer-header::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0.2));
-    z-index: 1;
-  }
-
-  .ag-header-content-wrapper {
-    position: relative;
-    z-index: 2;
-    width: 100%;
-    max-width: 840px;
-    display: flex;
-    gap: 14px;
-    align-items: center;
+    /* IMPORTANTE: Altura mínima para evitar que o container suba com poucos resultados */
+    min-height: 50vh; 
   }
 
   .ag-search-wrapper {
     position: relative;
     flex: 1;
     min-width: 196px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1); /* Destaque sobre a capa */
+    border-radius: 7px;
   }
 
   .ag-search-icon-svg {
     position: absolute;
-    left: 12px;
+    left: 9.8px;
     top: 50%;
     transform: translateY(-50%);
-    width: 14px;
-    height: 14px;
-    fill: #fff; /* Ícone branco na capa */
+    width: 12.6px;
+    height: 12.6px;
+    fill: #999;
     pointer-events: none;
   }
 
   .ag-search-input {
     width: 100%;
-    padding: 10px 12px 10px 36px;
-    border-radius: 8px;
-    border: 1px solid rgba(255,255,255,0.3);
-    background: rgba(0,0,0,0.4); /* Fundo escuro translúcido */
-    backdrop-filter: blur(5px);
-    font-size: 11px;
+    padding: 7.7px 10.5px 7.7px 31.5px;
+    border-radius: 7px;
+    border: 1px solid rgba(0,0,0,0.1);
+    background: #fff; /* Fundo sólido para não misturar com a capa */
+    font-size: 9.8px;
     font-weight: 500;
     outline: none;
-    color: #fff;
     transition: all 0.3s ease;
   }
 
-  .ag-search-input::placeholder {
-    color: rgba(255,255,255,0.7);
+  body.dark-mode .ag-search-input {
+    background: #252525;
+    border-color: rgba(255,255,255,0.1);
+    color: #fff;
   }
 
   .ag-search-input:focus {
-    background: rgba(0,0,0,0.7);
-    border-color: #fff;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    border-color: var(--primary-color, #e50914);
   }
 
-  /* --- BOTÕES DE MODO --- */
+  /* BOTÕES DE MODO DENTRO DO DRAWER */
   .ag-mode-group {
-    background: rgba(0,0,0,0.5);
-    backdrop-filter: blur(5px);
-    padding: 4px;
-    border-radius: 8px;
+    background: #fff;
+    padding: 2.8px;
+    border-radius: 7px;
     display: flex;
-    border: 1px solid rgba(255,255,255,0.2);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
   }
+  body.dark-mode .ag-mode-group { background: #252525; }
 
   .ag-mode-btn {
-    padding: 7px 14px;
+    padding: 5.6px 11.2px;
     border: none;
     background: transparent;
-    border-radius: 6px;
-    font-size: 9px; font-weight: 800;
-    color: rgba(255,255,255,0.6);
+    border-radius: 4.9px;
+    font-size: 7.7px; font-weight: 800;
+    color: #888;
     cursor: pointer;
     text-transform: uppercase;
     transition: all 0.2s;
   }
 
   .ag-mode-btn.active {
-    background: #fff;
+    background: #eee;
     color: #000;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+  body.dark-mode .ag-mode-btn.active {
+    background: #444;
+    color: #fff;
   }
 
-  /* --- CORREÇÃO DO PULO (JUMPING FIX) --- */
-  #ag-catalog-container {
-    min-height: 60vh; /* Garante altura mínima para não pular na pesquisa */
-    padding: 0 20px 40px 20px;
-    max-width: 900px;
-    margin: 0 auto;
-    position: relative;
-    z-index: 2;
-  }
-
-  /* --- SESSÕES (CABEÇALHOS CLICÁVEIS) --- */
+  /* --- SESSÕES E CARDS --- */
   .ag-section-block {
     margin-bottom: 24.5px;
-    max-width: 840px;
-    margin-left: auto;
-    margin-right: auto;
+    position: relative;
+    z-index: 2; /* Acima da imagem do personagem */
   }
 
   .ag-section-header-btn {
@@ -275,7 +331,7 @@ const styles = `
   .ag-section-header-btn:hover { opacity: 0.7; }
 
   .ag-section-text {
-    font-size: 10px;
+    font-size: 9.8px;
     font-weight: 900;
     text-transform: uppercase;
     letter-spacing: 0.7px;
@@ -291,12 +347,12 @@ const styles = `
   }
 
   .ag-section-marker {
-    width: 7px; height: 7px;
+    width: 7px;
+    height: 7px;
     border-radius: 2.1px;
     box-shadow: 0 0 3.5px rgba(0,0,0,0.2);
   }
 
-  /* --- GRID --- */
   .ag-grid-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
@@ -343,11 +399,17 @@ const styles = `
 
   .ag-card-action {
     position: absolute;
-    top: 2.1px; right: 2.8px;
-    width: 11.2px; height: 11.2px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 7px; border-radius: 50%;
-    color: inherit; opacity: 0.6;
+    top: 2.1px;
+    right: 2.8px;
+    width: 11.2px;
+    height: 11.2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 7px;
+    border-radius: 50%;
+    color: inherit;
+    opacity: 0.6;
     transition: 0.2s;
   }
 
@@ -357,67 +419,68 @@ const styles = `
     opacity: 1;
   }
 
-  /* --- TOAST NOTIFICATION --- */
+  /* --- TOAST --- */
   #ag-toast-container {
-    position: fixed; bottom: 21px; left: 50%;
+    position: fixed;
+    bottom: 21px;
+    left: 50%;
     transform: translateX(-50%);
-    z-index: 99999; pointer-events: none;
-    display: flex; flex-direction: column; gap: 7px;
+    z-index: 99999;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
   }
 
   .ag-toast {
     background: rgba(30, 30, 30, 0.95);
-    color: #fff; padding: 8.4px 16.8px;
+    color: #fff;
+    padding: 8.4px 16.8px;
     border-radius: 35px;
-    font-size: 9.1px; font-weight: 600;
+    font-size: 9.1px;
+    font-weight: 600;
     box-shadow: 0 3.5px 10.5px rgba(0,0,0,0.3);
     backdrop-filter: blur(3.5px);
-    opacity: 0; transform: translateY(14px);
+    opacity: 0;
+    transform: translateY(14px);
     animation: agSlideUp 0.3s forwards;
-    display: flex; align-items: center; gap: 7px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
   }
 
   .ag-toast.error { border-left: 2.8px solid #ff4444; }
   .ag-toast.success { border-left: 2.8px solid #00C851; }
 
-  @keyframes agSlideUp { to { opacity: 1; transform: translateY(0); } }
-  @keyframes agFadeOut { to { opacity: 0; transform: translateY(-7px); } }
+  @keyframes agSlideUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
 
-  /* --- BARRA HORIZONTAL E BOTÃO ENGRENAGEM --- */
+  @keyframes agFadeOut {
+    to { opacity: 0; transform: translateY(-7px); }
+  }
+
+  /* --- ABAS (FILTERS) --- */
   #filterScroller {
-    display: flex; align-items: center; position: relative;
-    gap: 5.6px; padding-right: 0 !important;
-    overflow-x: auto; scrollbar-width: none;
+    display: flex;
+    align-items: center;
+    position: relative;
+    gap: 5.6px;
+    padding-right: 0 !important;
+    overflow-x: auto;
+    scrollbar-width: none;
   }
   #filterScroller::-webkit-scrollbar { display: none; }
 
+  .filter-tag {
+    white-space: nowrap;
+    /* Estilos base das abas (presumindo que o site já tenha, se não, adicione aqui) */
+  }
+
   .filter-tag.cfg-btn {
-    position: sticky; right: 0 !important; z-index: 99;
-    background: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(5.6px); -webkit-backdrop-filter: blur(5.6px);
-    min-width: 33.6px; height: 23.8px; margin-left: auto;
-    display: flex; align-items: center; justify-content: center;
-    border: none; border-left: 1px solid rgba(0, 0, 0, 0.05);
-    box-shadow: -7px 0 14px rgba(0, 0, 0, 0.05);
-    cursor: pointer; font-size: 12.6px; transition: all 0.3s ease;
+    /* Escondido pois agora temos o header estático, mas mantido no DOM se necessário lógica */
+    display: none !important; 
   }
-
-  .filter-tag.cfg-btn::before {
-    content: ''; position: absolute; left: -14px; top: 0;
-    width: 14px; height: 100%;
-    background: linear-gradient(to right, transparent, rgba(255,255,255,0.9));
-    pointer-events: none;
-  }
-
-  body.dark-mode .filter-tag.cfg-btn {
-    background: rgba(20, 20, 20, 0.9);
-    border-left: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: -10.5px 0 17.5px rgba(0, 0, 0, 0.5);
-  }
-  body.dark-mode .filter-tag.cfg-btn::before {
-    background: linear-gradient(to right, transparent, rgba(20, 20, 20, 0.9));
-  }
-  .filter-tag.cfg-btn:active { transform: scale(0.9); opacity: 0.8; }
 `;
 
 const styleSheet = document.createElement("style");
@@ -440,6 +503,7 @@ function showToast(message, type = 'normal') {
   toast.innerHTML = message;
 
   container.appendChild(toast);
+
   setTimeout(() => {
     toast.style.animation = 'agFadeOut 0.3s forwards';
     setTimeout(() => toast.remove(), 300);
@@ -453,7 +517,7 @@ function load(k,d){ try{ return JSON.parse(localStorage.getItem(k)) ?? d }catch(
 function save(k,v){ localStorage.setItem(k,JSON.stringify(v)); }
 
 function getMode(){ return load(CONFIG.KEYS.MODE, 'dynamic'); }
-function setMode(m){ save(CONFIG.KEYS.MODE, m); renderDrawer(document.getElementById('ag-search-input')?.value || ""); }
+function setMode(m){ save(CONFIG.KEYS.MODE, m); renderDrawer(); renderStaticHeader(); }
 
 function getOrder(){
   const saved = load(CONFIG.KEYS.ORDER, null);
@@ -482,27 +546,42 @@ function track(id){
 }
 
 /* ===========================
-   RENDERIZAÇÃO
+   RENDERIZAÇÃO DA INTERFACE
 =========================== */
+
 function renderBar(){
   const bar = document.getElementById('filterScroller');
   if(!bar) return;
 
-  // Garante que o wrapper da imagem fixa existe
-  let charWrapper = document.getElementById('ag-char-wrapper');
-  if(!charWrapper) {
-      charWrapper = document.createElement('div');
-      charWrapper.id = 'ag-char-wrapper';
-      charWrapper.className = 'ag-char-wrapper'; // Classe para controle de estado
-      charWrapper.innerHTML = `<img src="https://i.postimg.cc/W49RX3dK/anime-boy-render-04-by-luxio56lavi-d5xed2a.png" class="ag-char-fixed" alt="Anime Character">`;
-      document.body.appendChild(charWrapper);
+  // Criar Wrapper Principal se não existir para organizar StaticHeader acima das abas
+  let mainWrapper = document.getElementById('ag-main-wrapper');
+  if(!mainWrapper) {
+    mainWrapper = document.createElement('div');
+    mainWrapper.id = 'ag-main-wrapper';
+    bar.parentNode.insertBefore(mainWrapper, bar);
+    mainWrapper.appendChild(bar); // Move as abas para dentro
   }
 
+  // Criar Header Estático (Barra e Botões acima das abas)
+  let staticHeader = document.getElementById('ag-static-header');
+  if(!staticHeader) {
+    staticHeader = document.createElement('div');
+    staticHeader.id = 'ag-static-header';
+    mainWrapper.insertBefore(staticHeader, bar); // Insere antes das abas
+    
+    // Clique no header estático abre o menu
+    staticHeader.onclick = toggleDrawer;
+  }
+
+  renderStaticHeader();
+
+  // Criar Drawer (Menu Oculto)
   let drawer = document.getElementById('ag-drawer');
   if(!drawer) {
     drawer = document.createElement('div');
     drawer.id = 'ag-drawer';
-    bar.parentNode.insertBefore(drawer, bar.nextSibling);
+    // O drawer fica dentro do wrapper, logo após o scroller
+    mainWrapper.appendChild(drawer);
   }
 
   const order = getOrder();
@@ -520,38 +599,49 @@ function renderBar(){
       document.querySelectorAll('#filterScroller .filter-tag').forEach(b=>b.classList.remove('active'));
       btn.classList.add('active');
       track(id);
-      
       document.getElementById('ag-drawer').classList.remove('open');
-      document.getElementById('ag-char-wrapper').classList.remove('visible'); // Esconde imagem
 
       const url = new URL(window.location);
       url.searchParams.set('secao', id);
       window.history.replaceState({}, '', url);
 
       if(window.carregarSecao) window.carregarSecao(id);
+      else console.log("Carregando:", id);
     };
     bar.appendChild(btn);
   });
-
-  const cfg = document.createElement('button');
-  cfg.className = 'filter-tag cfg-btn';
-  cfg.innerHTML = '⚙';
-  cfg.onclick = toggleDrawer;
-  bar.appendChild(cfg);
 }
 
+function renderStaticHeader() {
+    const staticHeader = document.getElementById('ag-static-header');
+    const currentMode = getMode();
+    const searchIcon = `<svg style="width:10px;height:10px;fill:#888" viewBox="0 0 24 24"><path d="M21.71 20.29l-5.01-5.01C17.54 13.68 18 11.91 18 10c0-4.41-3.59-8-8-8S2 5.59 2 10s3.59 8 8 8c1.91 0 3.68-.46 5.28-1.3l5.01 5.01c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41z"/></svg>`;
+
+    staticHeader.innerHTML = `
+        <div class="ag-fake-search">
+            ${searchIcon}
+            <span>Pesquisar categorias...</span>
+        </div>
+        <div class="ag-fake-buttons">
+            <div class="ag-fake-btn ${currentMode==='fixed'?'active':''}">Fixo</div>
+            <div class="ag-fake-btn ${currentMode==='dynamic'?'active':''}">Auto</div>
+        </div>
+    `;
+}
+
+/* ===========================
+   GAVETA (DRAWER)
+=========================== */
 function toggleDrawer(){
   const drawer = document.getElementById('ag-drawer');
-  const charWrapper = document.getElementById('ag-char-wrapper');
   if(!drawer) return;
 
   if(drawer.classList.contains('open')){
     drawer.classList.remove('open');
-    if(charWrapper) charWrapper.classList.remove('visible');
   } else {
+    // Renderiza sem focar no input (previne teclado)
     renderDrawer();
     drawer.classList.add('open');
-    if(charWrapper) charWrapper.classList.add('visible');
   }
 }
 
@@ -559,27 +649,30 @@ function renderDrawer(filterText = ""){
   const drawer = document.getElementById('ag-drawer');
   const currentOrder = getOrder();
   const currentMode = getMode();
-
+  
+  // Imagem do personagem (Imóvel, fade apenas)
+  const charImg = `<img src="https://i.postimg.cc/W49RX3dK/anime-boy-render-04-by-luxio56lavi-d5xed2a.png" class="ag-char-fixed" alt="Anime Character">`;
+  
   const searchIcon = `<svg class="ag-search-icon-svg" viewBox="0 0 24 24"><path d="M21.71 20.29l-5.01-5.01C17.54 13.68 18 11.91 18 10c0-4.41-3.59-8-8-8S2 5.59 2 10s3.59 8 8 8c1.91 0 3.68-.46 5.28-1.3l5.01 5.01c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41z"/></svg>`;
 
   let html = `
-    <div class="ag-drawer-scroll">
-      <div class="ag-drawer-header">
-        <div class="ag-header-content-wrapper">
-            <div class="ag-search-wrapper">
-              ${searchIcon}
-              <input type="text" class="ag-search-input" id="ag-search-input" placeholder="Pesquisar..." value="${filterText}">
-            </div>
-
-            <div class="ag-mode-group">
-              <button id="btn-fixo" class="ag-mode-btn ${currentMode==='fixed'?'active':''}">Fixo</button>
-              <button id="btn-dinamico" class="ag-mode-btn ${currentMode==='dynamic'?'active':''}">Auto</button>
-            </div>
-        </div>
+    ${charImg}
+    <div class="ag-drawer-cover"></div>
+    <div class="ag-drawer-header">
+      <div class="ag-search-wrapper">
+        ${searchIcon}
+        <input type="text" class="ag-search-input" id="ag-search-input" placeholder="Pesquisar..." value="${filterText}" autocomplete="off">
       </div>
 
-      <div id="ag-catalog-container"></div>
+      <div class="ag-mode-group">
+        <button id="btn-fixo" class="ag-mode-btn ${currentMode==='fixed'?'active':''}">Fixo</button>
+        <button id="btn-dinamico" class="ag-mode-btn ${currentMode==='dynamic'?'active':''}">Auto</button>
+      </div>
+    </div>
 
+    <div class="ag-drawer-scroll">
+      <div id="ag-catalog-container"></div>
+      
       <div style="text-align:center; padding-top:20px; font-size:12px; color:#888;">
         ${currentOrder.length} de ${CONFIG.MAX_TABS} abas ativas
       </div>
@@ -602,15 +695,12 @@ function renderDrawer(filterText = ""){
     sectionDiv.className = 'ag-section-block';
 
     const isCatSelected = currentOrder.includes(sec.id);
-    let catIcon = '';
-    if(isCatSelected) {
-       catIcon = currentMode === 'dynamic' ? ' <span style="font-size:10px; opacity:0.6; margin-left:5px">✕</span>' : ' <span style="font-size:10px; opacity:0.6; margin-left:5px">•••</span>';
-    }
-
+    // Removemos a imagem do lado da categoria (X ou ...) conforme pedido
+    
     sectionDiv.innerHTML = `
       <button class="ag-section-header-btn ${isCatSelected ? 'is-active' : ''}" data-cat-id="${sec.id}">
         <div class="ag-section-marker" style="background:${sec.cor}"></div>
-        <span class="ag-section-text">${sec.sessao}${catIcon}</span>
+        <span class="ag-section-text">${sec.sessao}</span>
       </button>
       <div class="ag-grid-container"></div>
     `;
@@ -628,12 +718,19 @@ function renderDrawer(filterText = ""){
 
     itensParaMostrar.forEach(item => {
       const isSelected = currentOrder.includes(item.id);
+
       const card = document.createElement('div');
       card.className = `ag-card ${isSelected ? 'is-selected' : ''}`;
-      
-      let actionIcon = isSelected ? (currentMode === 'dynamic' ? '✕' : '•••') : '';
-      
-      card.innerHTML = `${item.label} ${isSelected ? `<div class="ag-card-action" data-id="${item.id}" data-action="true">${actionIcon}</div>` : ''}`;
+
+      let actionIcon = '';
+      if(isSelected) {
+        actionIcon = currentMode === 'dynamic' ? '✕' : '•••';
+      }
+
+      card.innerHTML = `
+        ${item.label}
+        ${isSelected ? `<div class="ag-card-action" data-id="${item.id}" data-action="true">${actionIcon}</div>` : ''}
+      `;
 
       card.onclick = (e) => {
         if(e.target.dataset.action || e.target.parentNode.dataset.action) {
@@ -643,13 +740,15 @@ function renderDrawer(filterText = ""){
         }
         toggleItem(item.id, item.label);
       };
+
       grid.appendChild(card);
     });
   });
 
   const searchInput = document.getElementById('ag-search-input');
-  searchInput.focus(); // Foco automático para UX
-  searchInput.setSelectionRange(searchInput.value.length, searchInput.value.length);
+  
+  // Garantia: NÃO foca automaticamente para o teclado não abrir
+  // searchInput.focus(); REMOVIDO
   
   searchInput.oninput = (e) => {
     filterDrawer(e.target.value);
@@ -668,14 +767,14 @@ function filterDrawer(term) {
 
     const sessaoMatch = cat.sessao.toLowerCase().includes(termLower);
     const itensFiltrados = cat.itens.filter(i => i.label.toLowerCase().includes(termLower));
-    
+    const grid = block.querySelector('.ag-grid-container');
+
     if (termLower !== "" && !sessaoMatch && itensFiltrados.length === 0) {
       block.style.display = 'none';
       return;
     }
     block.style.display = '';
 
-    const grid = block.querySelector('.ag-grid-container');
     grid.querySelectorAll('.ag-card').forEach(card => {
       const label = card.textContent.trim();
       if (label.toLowerCase().includes(termLower) || sessaoMatch) {
@@ -687,8 +786,12 @@ function filterDrawer(term) {
   });
 }
 
+/* ===========================
+   AÇÕES & NOTIFICAÇÕES
+=========================== */
 function toggleItem(id, label){
   let order = getOrder();
+
   if(order.includes(id)){
     order = order.filter(x => x !== id);
     showToast(`Removido: <b>${label}</b>`, 'normal');
@@ -700,12 +803,17 @@ function toggleItem(id, label){
     order.push(id);
     showToast(`Adicionado: <b>${label}</b>`, 'success');
   }
+
   save(CONFIG.KEYS.ORDER, order);
   renderBar();
-  setTimeout(() => {
-     const input = document.getElementById('ag-search-input');
-     renderDrawer(input ? input.value : "");
-  }, 50);
+  
+  // Atualiza o Drawer visualmente para mostrar a seleção
+  const currentInput = document.getElementById('ag-search-input');
+  const term = currentInput ? currentInput.value : '';
+  renderDrawer(term); 
+  
+  // REMOVIDO: Clique automático no botão real
+  // O usuário pediu "Retirada da funcionalidade em que o usuário adicina a categoria e ela já é clicada"
 }
 
 function handleAction(id, label){
@@ -717,7 +825,8 @@ function handleAction(id, label){
     save(CONFIG.KEYS.ORDER, order);
     showToast(`Removido: <b>${label}</b>`);
     renderBar();
-    renderDrawer(document.getElementById('ag-search-input')?.value || "");
+    const currentInput = document.getElementById('ag-search-input');
+    renderDrawer(currentInput ? currentInput.value : '');
   } else {
     const currentIndex = order.indexOf(id);
     const newPos = prompt(`Mover "${label}" para qual posição? (1-${order.length})`, currentIndex + 1);
@@ -729,7 +838,8 @@ function handleAction(id, label){
         order.splice(targetIndex, 0, id);
         save(CONFIG.KEYS.ORDER, order);
         renderBar();
-        renderDrawer(document.getElementById('ag-search-input')?.value || "");
+        const currentInput = document.getElementById('ag-search-input');
+        renderDrawer(currentInput ? currentInput.value : '');
         showToast(`<b>${label}</b> movido para posição ${newPos}`);
       }
     }
@@ -739,9 +849,12 @@ function handleAction(id, label){
 function ensureTabExists(id){
   const exists = CATALOGO.some(sec => sec.id === id || sec.itens.some(i => i.id === id));
   if (!exists) return false;
+
   let order = getOrder();
   if (!order.includes(id)) {
-    if (order.length >= CONFIG.MAX_TABS) order.pop();
+    if (order.length >= CONFIG.MAX_TABS) {
+      order.pop();
+    }
     order.unshift(id);
     save(CONFIG.KEYS.ORDER, order);
   }
@@ -750,6 +863,7 @@ function ensureTabExists(id){
 
 window.addEventListener('DOMContentLoaded', () => {
   renderBar();
+
   const params = new URLSearchParams(window.location.search);
   const newsId = params.get('id');
   const secaoForcada = params.get('secao');
