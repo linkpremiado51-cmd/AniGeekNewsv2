@@ -44,8 +44,6 @@
       }
       .destaque-media { position: relative; }
       #container-principal { min-height: 200px; }
-      
-      /* Estilo para suavizar a entrada das notícias restauradas */
       .destaque-secao { transition: opacity 0.3s ease; }
     </style>
 
@@ -67,14 +65,14 @@
       const db = getFirestore(app);
 
       let todasAsNoticias = [];
-      let noticiasExibidas = 5;
+      // INTEGRAÇÃO: Respeita o estado salvo no index.html
+      let noticiasExibidas = window.noticiasExibidas || 5; 
       let playerAlvo = '';
       let urlAlvo = '';
-      
       let linkPropaganda = "https://www.effectivegatecpm.com/u1isyicizb?key=66934bf68fc6093a89704779bb57cce3";
       let playersAdList = new Set(); 
 
-      // --- SISTEMA DE IDENTIFICAÇÃO E TRACKING ---
+      // --- SISTEMA DE TRACKING ---
       function getVisitorId() {
           let vid = localStorage.getItem('anigeek_vid');
           if (!vid) {
@@ -90,14 +88,9 @@
               const ref = doc(db, "saihate_no_paladin", docId, "visitantes", vid);
               await setDoc(ref, {
                   lastActive: serverTimestamp(),
-                  actions: arrayUnion({
-                      type: tipoAcao,
-                      ts: Date.now()
-                  })
+                  actions: arrayUnion({ type: tipoAcao, ts: Date.now() })
               }, { merge: true });
-          } catch (e) {
-              console.error("Tracking silencioso falhou:", e);
-          }
+          } catch (e) { console.error("Tracking falhou:", e); }
       };
 
       function injectAdSafe(containerId, content) {
@@ -110,25 +103,20 @@
           container.appendChild(fragment);
       }
 
-      function limparEspacos(url) {
-        return url ? url.trim() : url;
-      }
+      function limparEspacos(url) { return url ? url.trim() : url; }
 
-      // MODIFICADO: Agora salva o estado antes de abrir propaganda
+      // --- HANDLERS DE UI ---
       window.handlePlayerAd = (playerId, linkArtigo) => {
           if (!playersAdList.has(playerId)) {
               playersAdList.add(playerId); 
-              
               const idLimpo = playerId.replace('player-', '');
               
-              // SALVA POSIÇÃO ANTES DO REDIRECIONAMENTO/POPUP
+              window.lastArticleId = idLimpo;
               if (window.saveStateGlobal) window.saveStateGlobal();
 
               window.registrarInteracao(idLimpo, 'player_click');
-
               const linkFinal = (linkArtigo && linkArtigo.trim() !== "") ? linkArtigo : linkPropaganda;
               window.open(linkFinal, '_blank'); 
-              
               const overlay = document.querySelector(`.overlay-player-${idLimpo}`);
               if (overlay) overlay.remove();
           }
@@ -136,14 +124,8 @@
 
       window.shareNews = (titulo, url) => {
         if (navigator.share) {
-          navigator.share({ 
-            title: 'AniGeek: ' + titulo, 
-            text: 'Confira essa análise no AniGeek Suite:',
-            url: url 
-          }).catch(console.error);
-        } else {
-          window.copiarLink(url);
-        }
+          navigator.share({ title: 'AniGeek: ' + titulo, text: 'Confira no AniGeek:', url: url }).catch(console.error);
+        } else { window.copiarLink(url); }
       };
 
       window.copiarLink = async (url) => {
@@ -159,7 +141,6 @@
         playerAlvo = idPlayer;
         const entrada = limparEspacos(idVideo);
         urlAlvo = entrada.startsWith('http') ? entrada : `https://www.youtube.com/embed/${entrada}?autoplay=1`;
-        
         const notif = document.getElementById('notificacao-video');
         const notifTitulo = document.getElementById('notif-titulo');
         if(notifTitulo) notifTitulo.innerText = titulo;
@@ -167,9 +148,7 @@
         notif.classList.add('visivel');
       };
 
-      window.fecharNotif = () => {
-        document.getElementById('notificacao-video').classList.remove('visivel');
-      };
+      window.fecharNotif = () => { document.getElementById('notificacao-video').classList.remove('visivel'); };
 
       const btnConfirmar = document.getElementById('btn-confirmar');
       if(btnConfirmar) {
@@ -188,14 +167,14 @@
         try {
           const noticiaRef = doc(db, "saihate_no_paladin", idNoticia);
           await updateDoc(noticiaRef, { visualizacoes: increment(1) });
-        } catch(err) { console.error("Erro visualização:", err); }
+        } catch(err) {}
       }
 
       window.curtirNoticia = async (idNoticia) => {
         try {
           const noticiaRef = doc(db, "saihate_no_paladin", idNoticia);
           await updateDoc(noticiaRef, { curtidas: increment(1) });
-        } catch(err) { console.error("Erro curtir:", err); }
+        } catch(err) {}
       };
 
       function verificarNoticiaNaUrl() {
@@ -226,74 +205,59 @@
 
       function renderizarHero(primeiraNoticia) {
           const heroArea = document.getElementById('hero-area');
-          if (!heroArea) return;
-          if (primeiraNoticia && primeiraNoticia.capaUrl) {
-              heroArea.innerHTML = `
-                  <div class="hero-topo-container">
-                      <img src="${limparEspacos(primeiraNoticia.capaUrl)}" class="hero-topo-img" alt="Capa Principal">
-                      ${primeiraNoticia.capaDesc ? `<div class="hero-topo-desc">${primeiraNoticia.capaDesc}</div>` : ''}
-                  </div>`;
-              heroArea.style.display = 'block';
-          } else {
-              heroArea.style.display = 'none';
-          }
+          if (!heroArea || !primeiraNoticia || !primeiraNoticia.capaUrl) return;
+          heroArea.innerHTML = `
+              <div class="hero-topo-container">
+                  <img src="${limparEspacos(primeiraNoticia.capaUrl)}" class="hero-topo-img" alt="Capa Principal">
+                  ${primeiraNoticia.capaDesc ? `<div class="hero-topo-desc">${primeiraNoticia.capaDesc}</div>` : ''}
+              </div>`;
       }
 
+      // --- CORE DE RENDERIZAÇÃO ---
       function renderizarNoticias() {
         const container = document.getElementById('container-principal');
         const btnPaginacao = document.getElementById('pagination-control');
         if (!container) return;
 
         container.innerHTML = ''; 
-
         const baseUrl = window.location.origin + window.location.pathname;
-        if (todasAsNoticias.length > 0) { renderizarHero(todasAsNoticias[0]); }
+        if (todasAsNoticias.length > 0) renderizarHero(todasAsNoticias[0]);
 
         const listaParaExibir = todasAsNoticias.slice(0, noticiasExibidas);
 
         listaParaExibir.forEach(news => {
           const shareUrl = `${baseUrl}?id=${encodeURIComponent(news.id)}`;
           const imgFeed = news.capaNoticia || news.capaUrl;
-          const capaHTML = imgFeed ? `
-              <div class="noticia-capa" style="margin: -15px -15px 15px -15px;">
-                  <img src="${limparEspacos(imgFeed)}" style="width: 100%; aspect-ratio: 16 / 9; border-radius: 12px 12px 0 0; object-fit: cover; display: block;" alt="Capa do artigo">
-              </div>` : '';
-
-          let fichaCategoriaHtml = '';
-          if (news.fichaCategoria) {
-              fichaCategoriaHtml = `
-              <div class="ficha-categoria" style="border-left: 4px solid ${news.fichaCategoria.cor};">
-                  <img src="${limparEspacos(news.fichaCategoria.perfilImg)}" alt="Editor">
-                  <div class="ficha-info">
-                      ${news.fichaCategoria.info ? news.fichaCategoria.info.map(item => `
-                          <div class="info-item">
-                              <span class="info-label">${item.label}:</span>
-                              <span class="info-valor">${item.valor}</span>
-                          </div>`).join('') : ''}
-                  </div>
-              </div>`;
-          }
-
           const overlayEstilo = playersAdList.has(`player-${news.id}`) ? 'display:none;' : '';
 
           const html = `
-          <article class="destaque-secao" id="artigo-${news.id}" style="--tema-cor: ${news.cor}">
+          <article class="destaque-secao" id="artigo-${news.id}" style="--tema-cor: ${news.cor}" onclick="window.lastArticleId='${news.id}'">
             <div class="destaque-padding">
-              ${capaHTML}
+              ${imgFeed ? `<div class="noticia-capa" style="margin: -15px -15px 15px -15px;"><img src="${limparEspacos(imgFeed)}" style="width: 100%; aspect-ratio: 16 / 9; border-radius: 12px 12px 0 0; object-fit: cover; display: block;"></div>` : ''}
               <div class="destaque-categoria"><i class="fa-solid fa-hashtag"></i> ${news.categoria}</div>
               <div class="destaque-header">
                 <h2 class="destaque-titulo">${news.titulo}</h2>
                 <div class="menu-opcoes-container" tabindex="0">
-                  <button class="btn-tres-pontos" aria-label="Opções"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                  <button class="btn-tres-pontos"><i class="fa-solid fa-ellipsis-vertical"></i></button>
                   <div class="dropdown-conteudo header-dropdown">
-                    <a href="#" onclick="event.preventDefault(); window.copiarLink('${shareUrl}');"><i class="fa-regular fa-copy"></i> Copiar Link</a>
-                    <a href="#" onclick="event.preventDefault(); window.shareNews('${news.titulo.replace(/'/g, "\\'")}', '${shareUrl}');"><i class="fa-solid fa-share-nodes"></i> Compartilhar</a>
+                    <a href="#" onclick="event.preventDefault(); window.copiarLink('${shareUrl}');">Copiar Link</a>
+                    <a href="#" onclick="event.preventDefault(); window.shareNews('${news.titulo}', '${shareUrl}');">Compartilhar</a>
                   </div>
                 </div>
               </div>
-              ${fichaCategoriaHtml}
+
+              ${news.fichaCategoria ? `
+              <div class="ficha-categoria" style="border-left: 4px solid ${news.fichaCategoria.cor};">
+                  <img src="${limparEspacos(news.fichaCategoria.perfilImg)}">
+                  <div class="ficha-info">
+                      ${news.fichaCategoria.info ? news.fichaCategoria.info.map(item => `
+                          <div class="info-item"><span class="info-label">${item.label}:</span> <span class="info-valor">${item.valor}</span></div>`).join('') : ''}
+                  </div>
+              </div>` : ''}
+
               <p class="destaque-resumo">${news.resumo}</p>
               <a href="${news.linkArtigo}" class="btn-ver-artigo" target="_blank"><i class="fa-solid fa-book-open"></i> Ver artigo completo</a>
+              
               <div class="destaque-info-grid">
                 ${news.ficha ? news.ficha.map(item => `<div class="info-item"><span class="info-label">${item.label}</span><span class="info-valor">${item.valor}</span></div>`).join('') : ''}
               </div>
@@ -305,16 +269,16 @@
             </div>
 
             <div class="premium-actions-bar">
-                <button class="btn-premium-icon" onclick="curtirNoticia('${news.id}')"><i class="fa-regular fa-thumbs-up"></i> Útil (<span class="num-like">${news.curtidas || 0}</span>)</button>
-                <button class="btn-premium-icon" onclick="window.shareNews('${news.titulo.replace(/'/g, "\\'")}', '${shareUrl}')"><i class="fa-solid fa-share-nodes"></i> Compartilhar</button>
-                <button class="btn-premium-icon btn-stats"><i class="fa-solid fa-chart-column"></i> <span class="stats-num num-view">${news.visualizacoes || 0}</span></button>
+                <button class="btn-premium-icon" onclick="curtirNoticia('${news.id}')"><i class="fa-regular fa-thumbs-up"></i> Útil (${news.curtidas || 0})</button>
+                <button class="btn-premium-icon" onclick="window.shareNews('${news.titulo}', '${shareUrl}')"><i class="fa-solid fa-share-nodes"></i></button>
+                <button class="btn-premium-icon"><i class="fa-solid fa-chart-column"></i> ${news.visualizacoes || 0}</button>
             </div>
 
             <div class="carrossel-temas">
               <div class="carrossel-header"><span class="temas-label">Vídeos Relacionados</span></div>
               <div class="temas-scroll-wrapper"><div class="temas-container">
                   ${news.relacionados ? news.relacionados.map(rel => `
-                    <div class="tema-card" onclick="window.pedirTroca('player-${news.id}', '${rel.idVid}', '${rel.titulo.replace(/'/g, "\\'")}', '${news.cor}')">
+                    <div class="tema-card" onclick="window.pedirTroca('player-${news.id}', '${rel.idVid}', '${rel.titulo}', '${news.cor}')">
                       <img src="${limparEspacos(rel.thumb)}" class="tema-thumb" loading="lazy">
                       <div class="tema-titulo">${rel.titulo}</div>
                     </div>`).join('') : ''}
@@ -322,16 +286,12 @@
             </div>
 
             <div class="secao-produtos-banner">
-              <div class="banner-header"><i class="fa-solid fa-cart-shopping"></i> Produtos Recomendados</div>
+              <div class="banner-header"><i class="fa-solid fa-cart-shopping"></i> Recomendados</div>
               <div class="banner-lista">
                   ${news.produtos ? news.produtos.map(prod => `
                     <a href="${limparEspacos(prod.link)}" target="_blank" class="banner-produto-item" onclick="window.registrarInteracao('${news.id}', 'ad_click')">
-                      <div class="banner-img-box"><img src="${limparEspacos(prod.img)}" class="banner-thumb" loading="lazy"></div>
-                      <div class="banner-info">
-                        <div class="banner-titulo">${prod.nome}</div>
-                        <div class="banner-desc">${prod.desc || 'Item selecionado pela nossa equipe Geek.'}</div>
-                        <div class="banner-link-fake">Ver na loja <i class="fa-solid fa-chevron-right"></i></div>
-                      </div>
+                      <div class="banner-img-box"><img src="${limparEspacos(prod.img)}" class="banner-thumb"></div>
+                      <div class="banner-info"><div class="banner-titulo">${prod.nome}</div><div class="banner-link-fake">Ver na loja</div></div>
                     </a>`).join('') : ''}
               </div>
             </div>
@@ -347,7 +307,8 @@
         injetarComentariosDinamicos();
         btnPaginacao.style.display = noticiasExibidas < todasAsNoticias.length ? 'block' : 'none';
         
-        // Dispara um salvamento após renderizar para garantir que a memória saiba o que foi carregado
+        // Sincroniza variável global
+        window.noticiasExibidas = noticiasExibidas;
         if (window.saveStateGlobal) window.saveStateGlobal();
       }
 
@@ -370,15 +331,8 @@
       function carregarTudoRealTime() {
         onSnapshot(collection(db, "saihate_no_paladin"), (snapshot) => {
           todasAsNoticias = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-          todasAsNoticias.sort((a, b) => {
-            const ordemA = a.ordem !== undefined ? parseInt(a.ordem) : 999;
-            const ordemB = b.ordem !== undefined ? parseInt(b.ordem) : 999;
-            return ordemA !== ordemB ? ordemA - ordemB : (b.timestamp || 0) - (a.timestamp || 0);
-          });
-
-          if(todasAsNoticias.length > 0) { 
-            document.getElementById('novo-artigo-titulo').innerText = todasAsNoticias[0].titulo; 
-          }
+          todasAsNoticias.sort((a, b) => (a.ordem || 999) - (b.ordem || 999));
+          if(todasAsNoticias.length > 0) document.getElementById('novo-artigo-titulo').innerText = todasAsNoticias[0].titulo;
           renderizarNoticias();
           setTimeout(verificarNoticiaNaUrl, 150);
         });
