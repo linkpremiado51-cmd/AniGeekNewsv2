@@ -1,5 +1,5 @@
 <script data-cfasync='false' src='//wwr.giriudog.com/?tag=6afb306c'></script>
-
+<meta name="referrer" content="no-referrer-when-downgrade" />
 (function() {
     // === 1. SCRIPT GLOBAL (fearfullack) ===
     (function(bekw){
