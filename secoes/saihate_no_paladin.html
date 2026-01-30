@@ -1,4 +1,3 @@
-
 <body>
   <div class="destaque-wrapper">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
@@ -45,11 +44,13 @@
       }
       .destaque-media { position: relative; }
       #container-principal { min-height: 200px; }
+      
+      /* Estilo para suavizar a entrada das notícias restauradas */
+      .destaque-secao { transition: opacity 0.3s ease; }
     </style>
 
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-      // Adicionado setDoc, arrayUnion, serverTimestamp para o tracking
       import { getFirestore, collection, onSnapshot, doc, updateDoc, increment, getDoc, setDoc, arrayUnion, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
       const firebaseConfig = {
@@ -73,40 +74,31 @@
       let linkPropaganda = "https://www.effectivegatecpm.com/u1isyicizb?key=66934bf68fc6093a89704779bb57cce3";
       let playersAdList = new Set(); 
 
-      // --- SISTEMA DE IDENTIFICAÇÃO E TRACKING (NOVO) ---
-      
-      // Gera ou recupera um ID único para o visitante (guardado no navegador)
+      // --- SISTEMA DE IDENTIFICAÇÃO E TRACKING ---
       function getVisitorId() {
           let vid = localStorage.getItem('anigeek_vid');
           if (!vid) {
-              // Gera um UUID simples ou aleatório
-              vid = crypto.randomUUID ? crypto.randomUUID() : 'visitor-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
+              vid = crypto.randomUUID ? crypto.randomUUID() : 'visitor-' + Date.now() + '-' + Math.floor(Math.random() * 10000);
               localStorage.setItem('anigeek_vid', vid);
           }
           return vid;
       }
 
-      // Registra a interação na sub-coleção 'visitantes'
       window.registrarInteracao = async (docId, tipoAcao) => {
           try {
               const vid = getVisitorId();
               const ref = doc(db, "saihate_no_paladin", docId, "visitantes", vid);
-              
-              // Salva/Atualiza o documento do visitante com a nova ação
               await setDoc(ref, {
                   lastActive: serverTimestamp(),
                   actions: arrayUnion({
-                      type: tipoAcao, // 'player_click' ou 'ad_click'
+                      type: tipoAcao,
                       ts: Date.now()
                   })
               }, { merge: true });
-              
-              console.log("Interação registrada:", tipoAcao);
           } catch (e) {
-              console.error("Tracking silencioso falhou (o usuário não percebe):", e);
+              console.error("Tracking silencioso falhou:", e);
           }
       };
-      // --------------------------------------------------
 
       function injectAdSafe(containerId, content) {
           const container = document.getElementById(containerId);
@@ -122,14 +114,16 @@
         return url ? url.trim() : url;
       }
 
+      // MODIFICADO: Agora salva o estado antes de abrir propaganda
       window.handlePlayerAd = (playerId, linkArtigo) => {
           if (!playersAdList.has(playerId)) {
               playersAdList.add(playerId); 
               
-              // Identifica o ID do documento baseado no ID do player (player-XYZ)
               const idLimpo = playerId.replace('player-', '');
               
-              // REGISTRA A AÇÃO NO ANALYTICS
+              // SALVA POSIÇÃO ANTES DO REDIRECIONAMENTO/POPUP
+              if (window.saveStateGlobal) window.saveStateGlobal();
+
               window.registrarInteracao(idLimpo, 'player_click');
 
               const linkFinal = (linkArtigo && linkArtigo.trim() !== "") ? linkArtigo : linkPropaganda;
@@ -283,7 +277,6 @@
           const overlayEstilo = playersAdList.has(`player-${news.id}`) ? 'display:none;' : '';
 
           const html = `
-          
           <article class="destaque-secao" id="artigo-${news.id}" style="--tema-cor: ${news.cor}">
             <div class="destaque-padding">
               ${capaHTML}
@@ -353,6 +346,9 @@
 
         injetarComentariosDinamicos();
         btnPaginacao.style.display = noticiasExibidas < todasAsNoticias.length ? 'block' : 'none';
+        
+        // Dispara um salvamento após renderizar para garantir que a memória saiba o que foi carregado
+        if (window.saveStateGlobal) window.saveStateGlobal();
       }
 
       document.getElementById('btn-carregar-mais').onclick = () => {
