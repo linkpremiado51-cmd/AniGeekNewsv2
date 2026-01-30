@@ -1,3 +1,4 @@
+
 <body>
   <div class="destaque-wrapper">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
@@ -44,27 +45,6 @@
       }
       .destaque-media { position: relative; }
       #container-principal { min-height: 200px; }
-      
-      /* Estilo para toast de cópia */
-      #toast-copiado {
-        position: fixed;
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: rgba(0, 0, 0, 0.85);
-        color: #fff;
-        padding: 10px 20px;
-        border-radius: 25px;
-        font-size: 12px;
-        font-weight: 600;
-        opacity: 0;
-        transition: opacity 0.3s;
-        z-index: 9999;
-      }
-      
-      #toast-copiado.mostrar {
-        opacity: 1;
-      }
     </style>
 
     <script type="module">
@@ -92,124 +72,6 @@
       
       let linkPropaganda = "https://www.effectivegatecpm.com/u1isyicizb?key=66934bf68fc6093a89704779bb57cce3";
       let playersAdList = new Set(); 
-
-      // --- SISTEMA DE PERSISTÊNCIA DE ESTADO ---
-      
-      const STATE_KEYS = {
-        SCROLL_POSITION: 'anigeek_scroll_pos',
-        ACTIVE_TAB: 'anigeek_active_tab',
-        DRAWER_OPEN: 'anigeek_drawer_open',
-        NEWS_LOADED: 'anigeek_news_loaded',
-        LAST_ARTICLE_ID: 'anigeek_last_article_id',
-        SESSION_TIMESTAMP: 'anigeek_session_ts'
-      };
-
-      // Salvar estado atual
-      function saveState() {
-        try {
-          const currentState = {
-            scrollPosition: window.scrollY,
-            activeTab: document.querySelector('#filterScroller .filter-tag.active')?.dataset?.id || null,
-            drawerOpen: document.getElementById('ag-drawer')?.classList.contains('open') || false,
-            newsLoaded: noticiasExibidas,
-            lastArticleId: window.lastArticleId || null,
-            timestamp: Date.now()
-          };
-          
-          localStorage.setItem(STATE_KEYS.SCROLL_POSITION, JSON.stringify(currentState));
-          localStorage.setItem(STATE_KEYS.SESSION_TIMESTAMP, Date.now().toString());
-        } catch (e) {
-          console.warn("Erro ao salvar estado:", e);
-        }
-      }
-
-      // Carregar estado salvo
-      function loadState() {
-        try {
-          const savedStateStr = localStorage.getItem(STATE_KEYS.SCROLL_POSITION);
-          if (!savedStateStr) return null;
-          
-          const savedState = JSON.parse(savedStateStr);
-          const sessionTs = parseInt(localStorage.getItem(STATE_KEYS.SESSION_TIMESTAMP) || '0');
-          const now = Date.now();
-          
-          // Só restaura se foi nos últimos 30 minutos
-          if (now - sessionTs > 30 * 60 * 1000) {
-            localStorage.removeItem(STATE_KEYS.SCROLL_POSITION);
-            return null;
-          }
-          
-          return savedState;
-        } catch (e) {
-          console.warn("Erro ao carregar estado:", e);
-          return null;
-        }
-      }
-
-      // Restaurar estado ao carregar a página
-      function restoreState() {
-        const state = loadState();
-        if (!state) return;
-
-        // Restaurar número de notícias carregadas
-        if (state.newsLoaded) {
-          noticiasExibidas = state.newsLoaded;
-        }
-
-        // Restaurar última aba ativa (se existir)
-        if (state.activeTab) {
-          setTimeout(() => {
-            const tabBtn = document.querySelector(`#filterScroller .filter-tag[data-id="${state.activeTab}"]`);
-            if (tabBtn) {
-              document.querySelectorAll('#filterScroller .filter-tag').forEach(b => b.classList.remove('active'));
-              tabBtn.classList.add('active');
-            }
-          }, 300);
-        }
-
-        // Restaurar estado do drawer
-        if (state.drawerOpen) {
-          setTimeout(() => {
-            const drawer = document.getElementById('ag-drawer');
-            if (drawer) {
-              drawer.classList.add('open');
-            }
-          }, 400);
-        }
-
-        // Restaurar scroll position após conteúdo carregar
-        setTimeout(() => {
-          if (state.scrollPosition > 0) {
-            window.scrollTo(0, state.scrollPosition);
-          }
-          
-          // Destacar último artigo visualizado
-          if (state.lastArticleId) {
-            const artigo = document.getElementById(`artigo-${state.lastArticleId}`);
-            if (artigo) {
-              artigo.classList.add('destacado');
-              setTimeout(() => artigo.classList.remove('destacado'), 3000);
-            }
-          }
-        }, 500);
-      }
-
-      // Salvar estado periodicamente e antes de sair
-      window.addEventListener('beforeunload', saveState);
-      window.addEventListener('scroll', () => {
-        if (!window.scrollTimeout) {
-          window.scrollTimeout = setTimeout(saveState, 300);
-        }
-      });
-      
-      window.addEventListener('click', (e) => {
-        // Salvar quando clicar em links internos ou botões importantes
-        if (e.target.closest('.filter-tag') || 
-            e.target.closest('.btn-paginacao-geek') ||
-            e.target.closest('.destaque-secao')) {
-          saveState();
-        }
-      });
 
       // --- SISTEMA DE IDENTIFICAÇÃO E TRACKING (NOVO) ---
       
@@ -346,11 +208,6 @@
         const urlParams = new URLSearchParams(window.location.search);
         const id = urlParams.get('id');
         if (!id) return;
-        
-        // Salvar ID para destacar depois
-        window.lastArticleId = id;
-        saveState();
-        
         const artigo = document.getElementById(`artigo-${id}`);
         if (artigo) {
           artigo.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -427,7 +284,7 @@
 
           const html = `
           
-          <article class="destaque-secao" id="artigo-${news.id}" style="--tema-cor: ${news.cor}" onclick="window.lastArticleId='${news.id}'; saveState();">
+          <article class="destaque-secao" id="artigo-${news.id}" style="--tema-cor: ${news.cor}">
             <div class="destaque-padding">
               ${capaHTML}
               <div class="destaque-categoria"><i class="fa-solid fa-hashtag"></i> ${news.categoria}</div>
@@ -496,15 +353,11 @@
 
         injetarComentariosDinamicos();
         btnPaginacao.style.display = noticiasExibidas < todasAsNoticias.length ? 'block' : 'none';
-        
-        // Salvar estado após renderizar
-        saveState();
       }
 
       document.getElementById('btn-carregar-mais').onclick = () => {
           noticiasExibidas += 5;
           renderizarNoticias();
-          saveState();
       };
 
       async function carregarConfiguracoesAds() {
@@ -531,18 +384,10 @@
             document.getElementById('novo-artigo-titulo').innerText = todasAsNoticias[0].titulo; 
           }
           renderizarNoticias();
-          
-          // Restaurar estado após carregar notícias
-          setTimeout(() => {
-            restoreState();
-            setTimeout(verificarNoticiaNaUrl, 150);
-          }, 200);
+          setTimeout(verificarNoticiaNaUrl, 150);
         });
       }
 
-      // Iniciar sistema de persistência
-      console.log("Sistema de persistência AniGeek iniciado");
-      
       carregarConfiguracoesAds();
       carregarTudoRealTime();
     </script>
