@@ -67,11 +67,9 @@
       let playerAlvo = '';
       let urlAlvo = '';
       
-      // CONFIGURAÇÕES DE ANÚNCIO (Sincronizadas com o Firebase)
       let linkPropaganda = "https://www.effectivegatecpm.com/u1isyicizb?key=66934bf68fc6093a89704779bb57cce3";
-      let playersAdList = new Set(); // Controla quem já clicou nesta sessão
+      let playersAdList = new Set(); 
 
-      // Função para injetar scripts de anúncio de forma segura e funcional
       function injectAdSafe(containerId, content) {
           const container = document.getElementById(containerId);
           if (!container || !content) return;
@@ -86,14 +84,17 @@
         return url ? url.trim() : url;
       }
 
-      // Função para lidar com o redirecionamento único
-      window.handlePlayerAd = (playerId) => {
+      // FUNÇÃO ATUALIZADA: Agora aceita o link específico como parâmetro
+      window.handlePlayerAd = (playerId, linkArtigo) => {
           if (!playersAdList.has(playerId)) {
-              playersAdList.add(playerId); // Marca como clicado
-              window.open(linkPropaganda, '_blank'); // Abre propaganda
+              playersAdList.add(playerId); 
               
-              // Remove o overlay para que o segundo clique vá direto no iframe
-              const overlay = document.querySelector(`.overlay-${playerId}`);
+              // Se o artigo tiver um link próprio, usa ele. Se não, usa o global.
+              const linkFinal = (linkArtigo && linkArtigo.trim() !== "") ? linkArtigo : linkPropaganda;
+              
+              window.open(linkFinal, '_blank'); 
+              
+              const overlay = document.querySelector(`.overlay-player-${playerId.split('-')[1]}`);
               if (overlay) overlay.remove();
           }
       };
@@ -258,7 +259,7 @@
                   </div>`;
               }
 
-              // Lógica de Player com Overlay de Propaganda
+              // RENDERIZAÇÃO ATUALIZADA: Passa o link exclusivo para a função handlePlayerAd
               const html = `
               <article class="destaque-secao" id="artigo-${news.id}" style="--tema-cor: ${news.cor}">
                 <div class="destaque-padding">
@@ -287,7 +288,7 @@
                 </div>
 
                 <div class="destaque-media">
-                  <div class="player-overlay-ad overlay-player-${news.id}" onclick="handlePlayerAd('player-${news.id}')"></div>
+                  <div class="player-overlay-ad overlay-player-${news.id}" onclick="handlePlayerAd('player-${news.id}', '${news.linkPropagandaArtigo || ''}')"></div>
                   <iframe id="player-${news.id}" src="${limparEspacos(news.videoPrincipal)}" allowfullscreen style="width: 100%; aspect-ratio: 16 / 9; border: none;" loading="lazy"></iframe>
                 </div>
 
@@ -339,7 +340,6 @@
               `;
               container.insertAdjacentHTML('beforeend', html);
 
-              // Injeta o conteúdo do banner (Script ou Imagem) no artigo específico
               if(news.bannerAd) {
                   injectAdSafe(`ad-artigo-${news.id}`, news.bannerAd);
               }
@@ -356,7 +356,6 @@
       };
 
       async function carregarConfiguracoesAds() {
-          // Busca configurações globais (Link de propaganda e Banners Topo/Fundo)
           try {
               const snap = await getDoc(doc(db, "configuracoes", "ads"));
               if(snap.exists()) {
