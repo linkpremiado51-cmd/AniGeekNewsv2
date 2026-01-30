@@ -1,11 +1,10 @@
 /* ======================================================
-   AniGeekNews – Enterprise Section System v9.0 (FINAL)
-   • Auto-Clique Real Restaurado
-   • Barra de Pesquisa Externa (Topo)
-   • Capa Personalizada no Menu
+   AniGeekNews – Enterprise Section System v10.0 (FINAL PERFECTED)
+   • Menu abre ABAIXO das categorias (Barra de pesquisa sempre livre)
+   • Capa ocupa 100% da largura horizontal
+   • Auto-Clique Real mantido
    • Personagem Estático (Fade Only)
-   • Correção de Pulo de Layout
-   • Código Completo (Sem cortes)
+   • Zero cortes de código
 ====================================================== */
 
 (function(){
@@ -13,9 +12,9 @@
 const CONFIG = {
   MAX_TABS: 12,
   KEYS: {
-    ORDER: 'ag_v9_order',
-    MODE:  'ag_v9_mode', // 'dynamic' ou 'fixed'
-    STATS: 'ag_v9_stats'
+    ORDER: 'ag_v10_order',
+    MODE:  'ag_v10_mode', // 'dynamic' ou 'fixed'
+    STATS: 'ag_v10_stats'
   }
 };
 
@@ -76,8 +75,9 @@ const styles = `
     display: flex;
     flex-direction: column;
     width: 100%;
-    position: relative;
+    position: relative; /* Importante para o drawer se posicionar em relação a isso */
     margin-bottom: 15px;
+    z-index: 50;
   }
 
   /* --- HEADER EXTERNO (PESQUISA E BOTÕES ACIMA DAS ABAS) --- */
@@ -88,7 +88,8 @@ const styles = `
     gap: 12px;
     padding: 10px 5px;
     width: 100%;
-    z-index: 102; /* Acima de tudo */
+    position: relative;
+    z-index: 1100; /* SUPERIOR AO DRAWER PARA FICAR CLICÁVEL */
     background: transparent;
   }
 
@@ -167,20 +168,51 @@ const styles = `
     color: #fff;
   }
 
+  /* --- BARRA DE ABAS (ORIGINAL) --- */
+  #filterScroller {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding-bottom: 5px;
+    position: relative;
+    z-index: 1050; /* Também acima do drawer */
+  }
+  #filterScroller::-webkit-scrollbar { display: none; }
+
+  .filter-tag.cfg-btn {
+    position: sticky;
+    right: 0;
+    z-index: 99;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(5px);
+    border-left: 1px solid rgba(0,0,0,0.05);
+    box-shadow: -10px 0 20px rgba(0,0,0,0.05);
+    min-width: 40px;
+    justify-content: center;
+  }
+  body.dark-mode .filter-tag.cfg-btn {
+    background: rgba(30, 30, 30, 0.9);
+    border-color: rgba(255,255,255,0.1);
+  }
+
   /* --- GAVETA (DRAWER) --- */
   #ag-drawer {
     background: #ffffff;
     border-bottom: 1px solid #e0e0e0;
     overflow: hidden;
     max-height: 0;
-    /* Apenas max-height e opacity animam, sem transform */
     transition: max-height 0.5s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease;
     opacity: 0;
     width: 100%;
-    position: absolute; /* Sobrepõe o conteúdo abaixo */
-    top: 100%; /* Logo abaixo do header/abas */
+    
+    /* POSICIONAMENTO CRÍTICO: ABAIXO DE TUDO */
+    position: absolute; 
+    top: 100%; /* Começa exatamente onde o wrapper termina (abaixo das abas) */
     left: 0;
-    z-index: 1000;
+    z-index: 1000; /* Menor que o header */
+    
     box-shadow: 0 15px 40px rgba(0,0,0,0.15);
     border-radius: 0 0 12px 12px;
   }
@@ -205,29 +237,31 @@ const styles = `
     scrollbar-width: thin;
   }
 
-  /* Container interno com altura mínima para evitar PULO (Jitter) */
+  /* Container interno */
   .ag-drawer-content {
-    padding: 20px 15px;
-    min-height: 450px; /* Garante tamanho fixo mesmo com poucos resultados */
+    padding: 0; /* REMOVIDO PADDING GERAL PARA A CAPA TOCAR AS BORDAS */
+    min-height: 450px;
     display: flex;
     flex-direction: column;
   }
 
-  /* --- IMAGEM DE CAPA NO MENU --- */
+  /* --- IMAGEM DE CAPA NO MENU (FULL WIDTH) --- */
   .ag-drawer-cover {
     width: 100%;
-    height: 120px;
+    height: 130px;
     object-fit: cover;
-    border-radius: 8px;
-    margin-bottom: 25px; /* Não encostar nas categorias */
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     display: block;
-    flex-shrink: 0;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+  }
+
+  /* Padding apenas para o conteúdo de texto/cards */
+  .ag-catalog-padder {
+    padding: 20px 15px;
   }
 
   /* --- IMAGEM DE PERSONAGEM (FIXA/SEM DESLIZE) --- */
   .ag-char-fixed {
-    position: absolute; /* Absoluto em relação ao drawer, mas fixo visualmente */
+    position: absolute;
     bottom: 0;
     right: 0;
     height: 90%;
@@ -236,9 +270,7 @@ const styles = `
     object-fit: contain;
     object-position: bottom right;
     pointer-events: none;
-    z-index: 1; /* Atrás do conteúdo */
-    
-    /* Efeito APENAS Opacidade (Fade In/Out) - NADA de Transform/Slide */
+    z-index: 1;
     opacity: 0;
     transition: opacity 0.5s ease;
   }
@@ -251,7 +283,7 @@ const styles = `
   .ag-section-block {
     margin-bottom: 25px;
     position: relative;
-    z-index: 10; /* Acima do personagem */
+    z-index: 10; 
   }
 
   .ag-section-header-btn {
@@ -376,35 +408,6 @@ const styles = `
 
   @keyframes agSlideUp { to { opacity: 1; transform: translateY(0); } }
   @keyframes agFadeOut { to { opacity: 0; transform: translateY(-10px); } }
-
-  /* --- BARRA DE ABAS (ORIGINAL) --- */
-  #filterScroller {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    overflow-x: auto;
-    scrollbar-width: none;
-    padding-bottom: 5px;
-    position: relative;
-    z-index: 10;
-  }
-  #filterScroller::-webkit-scrollbar { display: none; }
-
-  .filter-tag.cfg-btn {
-    position: sticky;
-    right: 0;
-    z-index: 99;
-    background: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(5px);
-    border-left: 1px solid rgba(0,0,0,0.05);
-    box-shadow: -10px 0 20px rgba(0,0,0,0.05);
-    min-width: 40px;
-    justify-content: center;
-  }
-  body.dark-mode .filter-tag.cfg-btn {
-    background: rgba(30, 30, 30, 0.9);
-    border-color: rgba(255,255,255,0.1);
-  }
 `;
 
 const styleSheet = document.createElement("style");
@@ -429,7 +432,6 @@ function getMode(){ return load(CONFIG.KEYS.MODE, 'dynamic'); }
 function setMode(m){ 
     save(CONFIG.KEYS.MODE, m); 
     updateModeButtons(); 
-    // Atualiza a visualização sem perder o filtro atual
     const currentSearch = document.querySelector('.ag-search-input') ? document.querySelector('.ag-search-input').value : "";
     renderDrawer(currentSearch); 
 }
@@ -492,7 +494,7 @@ function initInterface() {
              }
         });
 
-        // Digitação: Abre e Filtra
+        // Digitação: Abre e Filtra (sem mover o layout)
         searchInput.addEventListener('input', (e) => {
             const drawer = document.getElementById('ag-drawer');
             if(!drawer.classList.contains('open')) drawer.classList.add('open');
@@ -544,25 +546,19 @@ function renderBar(){
     btn.dataset.id = id;
     
     btn.onclick = () => {
-      // Remove classe ativa de todos
       document.querySelectorAll('#filterScroller .filter-tag').forEach(b=>b.classList.remove('active'));
       btn.classList.add('active');
-      
-      // Fecha a gaveta
       document.getElementById('ag-drawer').classList.remove('open');
       
-      // Lógica de URL
       const url = new URL(window.location);
       url.searchParams.set('secao', id);
       window.history.replaceState({}, '', url);
 
-      // Carrega conteúdo
       if(window.carregarSecao) window.carregarSecao(id);
     };
     bar.appendChild(btn);
   });
 
-  // Botão Engrenagem
   const cfg = document.createElement('button');
   cfg.className = 'filter-tag cfg-btn';
   cfg.innerHTML = '⚙';
@@ -578,7 +574,7 @@ function toggleDrawer(){
   if(drawer.classList.contains('open')){
     drawer.classList.remove('open');
   } else {
-    // Ao abrir pela engrenagem, apenas renderiza, não foca no teclado
+    // Renderiza mas NÃO foca no input para evitar abrir teclado
     const currentSearch = document.querySelector('.ag-search-input') ? document.querySelector('.ag-search-input').value : "";
     renderDrawer(currentSearch);
     drawer.classList.add('open');
@@ -590,9 +586,7 @@ function renderDrawer(filterText = ""){
   const currentOrder = getOrder();
   const currentMode = getMode();
 
-  // URL da Imagem da Capa (Solicitada)
   const coverUrl = "https://i.postimg.cc/HWM72wfT/the-pensive-journey-by-chcofficial-dhme17e-pre.jpg";
-  // URL da Imagem do Personagem
   const charUrl = "https://i.postimg.cc/W49RX3dK/anime-boy-render-04-by-luxio56lavi-d5xed2a.png";
 
   drawer.innerHTML = `
@@ -602,10 +596,12 @@ function renderDrawer(filterText = ""){
       <div class="ag-drawer-content">
         <img src="${coverUrl}" class="ag-drawer-cover" alt="Cover">
 
-        <div id="ag-catalog-container"></div>
-        
-        <div style="text-align:center; padding-top:20px; font-size:10px; color:#999; position:relative; z-index:10;">
-             ${currentOrder.length} de ${CONFIG.MAX_TABS} abas
+        <div class="ag-catalog-padder">
+            <div id="ag-catalog-container"></div>
+            
+            <div style="text-align:center; padding-top:20px; font-size:10px; color:#999; position:relative; z-index:10;">
+                 ${currentOrder.length} de ${CONFIG.MAX_TABS} abas
+            </div>
         </div>
       </div>
     </div>
@@ -615,7 +611,6 @@ function renderDrawer(filterText = ""){
   const term = filterText.toLowerCase();
 
   CATALOGO.forEach(sec => {
-    // Filtro
     const itensFiltrados = sec.itens.filter(i => i.label.toLowerCase().includes(term));
     const sessaoMatch = sec.sessao.toLowerCase().includes(term);
 
@@ -626,7 +621,6 @@ function renderDrawer(filterText = ""){
     sectionDiv.className = 'ag-section-block';
 
     const isCatSelected = currentOrder.includes(sec.id);
-    // Ícone condicional
     let catIcon = isCatSelected ? (currentMode === 'dynamic' ? ' ✕' : ' •••') : '';
 
     sectionDiv.innerHTML = `
@@ -637,7 +631,6 @@ function renderDrawer(filterText = ""){
       <div class="ag-grid-container"></div>
     `;
 
-    // Evento da Categoria Pai
     sectionDiv.querySelector('.ag-section-header-btn').onclick = () => {
         if(isCatSelected && currentMode === 'fixed') handleAction(sec.id, sec.sessao);
         else toggleItem(sec.id, sec.sessao);
@@ -671,11 +664,10 @@ function renderDrawer(filterText = ""){
   });
 }
 
-// Filtro Otimizado (Sem recriar DOM para evitar fechar teclado se estiver aberto)
+// Filtro que não recria DOM (evita fechar teclado ou perder foco)
 function filterDrawer(term) {
   const termLower = term.toLowerCase();
   
-  // Atualiza blocos
   document.querySelectorAll('.ag-section-block').forEach(block => {
     const catId = block.querySelector('.ag-section-header-btn').dataset.catId;
     const cat = CATALOGO.find(c => c.id === catId);
@@ -710,7 +702,6 @@ function toggleItem(id, label){
     showToast(`Removido: <b>${label}</b>`);
     save(CONFIG.KEYS.ORDER, order);
     renderBar();
-    // Atualiza drawer sem fechar
     const currentSearch = document.querySelector('.ag-search-input') ? document.querySelector('.ag-search-input').value : "";
     renderDrawer(currentSearch);
   } else {
@@ -722,24 +713,21 @@ function toggleItem(id, label){
     order.push(id);
     save(CONFIG.KEYS.ORDER, order);
     
-    // 1. Renderiza a barra para o botão aparecer
     renderBar();
-    // 2. Atualiza drawer visualmente
     const currentSearch = document.querySelector('.ag-search-input') ? document.querySelector('.ag-search-input').value : "";
     renderDrawer(currentSearch);
     showToast(`Adicionado: <b>${label}</b>`, 'success');
 
     // ==========================================================
-    // INSTRUÇÃO CRÍTICA: AUTO-CLIQUE REAL APÓS ADICIONAR
+    // AUTO-CLIQUE REAL APÓS ADICIONAR
     // ==========================================================
     setTimeout(() => {
-        // Busca o botão recém criado na barra
         const btn = document.querySelector(`#filterScroller .filter-tag[data-id="${id}"]`);
         if(btn) {
-            console.log("Auto-clicando na nova aba:", id);
-            btn.click(); // Simula o clique físico
+            console.log("Simulando clique na nova aba:", id);
+            btn.click(); 
         }
-    }, 150); // Delay curto para garantir que o DOM atualizou
+    }, 150);
   }
 }
 
@@ -748,10 +736,8 @@ function handleAction(id, label){
   let order = getOrder();
 
   if(mode === 'dynamic') {
-    // Modo dinâmico: clique no ícone remove
     toggleItem(id, label);
   } else {
-    // Modo fixo: reordenar
     const currentIdx = order.indexOf(id);
     const newPos = prompt(`Mover "${label}" para qual posição? (1-${order.length})`, currentIdx + 1);
     if(newPos && !isNaN(newPos)) {
@@ -775,23 +761,18 @@ window.addEventListener('DOMContentLoaded', () => {
   initInterface();
   renderBar();
 
-  // Verifica URL para abrir aba específica
   const params = new URLSearchParams(window.location.search);
-  const idNews = params.get('id'); // Notícia
-  const idSec = params.get('secao'); // Seção direta
+  const idNews = params.get('id');
+  const idSec = params.get('secao');
   
   let targetId = null;
-
-  // Lógica: Se tem ID de noticia, forçamos 'saihate_no_paladin' (conforme seu exemplo anterior)
   if(idNews) targetId = 'saihate_no_paladin';
   else if(idSec) targetId = idSec;
 
   if (targetId) {
-     // Verifica se ID é válido no catálogo
      const item = findItem(targetId);
      if(item) {
          let order = getOrder();
-         // Se não estiver nas abas, adiciona
          if (!order.includes(targetId)) {
              if(order.length >= CONFIG.MAX_TABS) order.pop();
              order.push(targetId);
@@ -799,7 +780,6 @@ window.addEventListener('DOMContentLoaded', () => {
              renderBar();
          }
          
-         // Clica na aba
          setTimeout(() => {
              const btn = document.querySelector(`.filter-tag[data-id="${targetId}"]`);
              if(btn) btn.click();
