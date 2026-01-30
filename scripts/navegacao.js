@@ -62,7 +62,12 @@ async function carregarSecao(nome) {
             document.body.appendChild(newScript);
         });
 
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        // MODIFICAÇÃO: Só faz scroll para o topo se NÃO houver um estado salvo recente
+        const hasSavedScroll = localStorage.getItem('anigeek_persistence_v2');
+        if (!hasSavedScroll) {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
         setTimeout(reiniciarModuloComentarios, 800);
 
     } catch (err) {
@@ -83,7 +88,6 @@ function verificarLinkCompartilhado() {
 
     // ⚠️ precisa existir globalmente
     const item = window.noticias?.find(n => n.id === id);
-
     const secao = item?.origem || 'manchetes';
 
     carregarSecao(secao);
@@ -99,6 +103,9 @@ function verificarLinkCompartilhado() {
  */
 document.querySelectorAll('.filter-tag').forEach(tag => {
     tag.addEventListener('click', () => {
+        // Se for um clique manual, limpamos a persistência de scroll para permitir ir ao topo
+        localStorage.removeItem('anigeek_persistence_v2');
+        
         document.querySelectorAll('.filter-tag')
             .forEach(t => t.classList.remove('active'));
 
@@ -127,9 +134,30 @@ window.addEventListener('DOMContentLoaded', () => {
     if (params.has('id')) {
         verificarLinkCompartilhado();
     } else {
-        const primeiraAba = document.querySelector('.filter-tag');
-        if (primeiraAba) primeiraAba.click();
-        else carregarSecao('manchetes');
+        // MODIFICAÇÃO: Verifica se há uma aba salva antes de clicar na primeira por padrão
+        const savedStateStr = localStorage.getItem('anigeek_persistence_v2');
+        let secaoParaCarregar = 'manchetes';
+
+        if (savedStateStr) {
+            const state = JSON.parse(savedStateStr);
+            secaoParaCarregar = state.activeTabId || 'manchetes';
+            
+            // Ativa visualmente a tag correta
+            document.querySelectorAll('.filter-tag').forEach(t => {
+                if(t.dataset.section === secaoParaCarregar) t.classList.add('active');
+                else t.classList.remove('active');
+            });
+        }
+
+        const abaAlvo = document.querySelector(`.filter-tag[data-section="${secaoParaCarregar}"]`);
+        if (abaAlvo) {
+            // Se já está salva, carregamos direto sem forçar o click (que resetaria o scroll)
+            carregarSecao(secaoParaCarregar);
+        } else {
+            const primeiraAba = document.querySelector('.filter-tag');
+            if (primeiraAba) primeiraAba.click();
+            else carregarSecao('manchetes');
+        }
     }
 });
 
