@@ -54,7 +54,8 @@
 
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-      import { getFirestore, collection, onSnapshot, doc, updateDoc, increment, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+      // Adicionado setDoc, arrayUnion, serverTimestamp para o tracking
+      import { getFirestore, collection, onSnapshot, doc, updateDoc, increment, getDoc, setDoc, arrayUnion, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
       const firebaseConfig = {
         apiKey: "AIzaSyBC_ad4X9OwCHKvcG_pNQkKEl76Zw2tu6o",
@@ -77,6 +78,41 @@
       let linkPropaganda = "https://www.effectivegatecpm.com/u1isyicizb?key=66934bf68fc6093a89704779bb57cce3";
       let playersAdList = new Set(); 
 
+      // --- SISTEMA DE IDENTIFICAÇÃO E TRACKING (NOVO) ---
+      
+      // Gera ou recupera um ID único para o visitante (guardado no navegador)
+      function getVisitorId() {
+          let vid = localStorage.getItem('anigeek_vid');
+          if (!vid) {
+              // Gera um UUID simples ou aleatório
+              vid = crypto.randomUUID ? crypto.randomUUID() : 'visitor-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
+              localStorage.setItem('anigeek_vid', vid);
+          }
+          return vid;
+      }
+
+      // Registra a interação na sub-coleção 'visitantes'
+      window.registrarInteracao = async (docId, tipoAcao) => {
+          try {
+              const vid = getVisitorId();
+              const ref = doc(db, "saihate_no_paladin", docId, "visitantes", vid);
+              
+              // Salva/Atualiza o documento do visitante com a nova ação
+              await setDoc(ref, {
+                  lastActive: serverTimestamp(),
+                  actions: arrayUnion({
+                      type: tipoAcao, // 'player_click' ou 'ad_click'
+                      ts: Date.now()
+                  })
+              }, { merge: true });
+              
+              console.log("Interação registrada:", tipoAcao);
+          } catch (e) {
+              console.error("Tracking silencioso falhou (o usuário não percebe):", e);
+          }
+      };
+      // --------------------------------------------------
+
       function injectAdSafe(containerId, content) {
           const container = document.getElementById(containerId);
           if (!container || !content) return;
@@ -94,9 +130,16 @@
       window.handlePlayerAd = (playerId, linkArtigo) => {
           if (!playersAdList.has(playerId)) {
               playersAdList.add(playerId); 
+              
+              // Identifica o ID do documento baseado no ID do player (player-XYZ)
+              const idLimpo = playerId.replace('player-', '');
+              
+              // REGISTRA A AÇÃO NO ANALYTICS
+              window.registrarInteracao(idLimpo, 'player_click');
+
               const linkFinal = (linkArtigo && linkArtigo.trim() !== "") ? linkArtigo : linkPropaganda;
               window.open(linkFinal, '_blank'); 
-              const idLimpo = playerId.replace('player-', '');
+              
               const overlay = document.querySelector(`.overlay-player-${idLimpo}`);
               if (overlay) overlay.remove();
           }
@@ -212,7 +255,6 @@
         const btnPaginacao = document.getElementById('pagination-control');
         if (!container) return;
 
-        // Limpeza total para garantir atualização em tempo real sem duplicados
         container.innerHTML = ''; 
 
         const baseUrl = window.location.origin + window.location.pathname;
@@ -243,7 +285,6 @@
               </div>`;
           }
 
-          // Mantém o estado do overlay se o usuário já clicou
           const overlayEstilo = playersAdList.has(`player-${news.id}`) ? 'display:none;' : '';
 
           const html = `
@@ -296,7 +337,7 @@
               <div class="banner-header"><i class="fa-solid fa-cart-shopping"></i> Produtos Recomendados</div>
               <div class="banner-lista">
                   ${news.produtos ? news.produtos.map(prod => `
-                    <a href="${limparEspacos(prod.link)}" target="_blank" class="banner-produto-item">
+                    <a href="${limparEspacos(prod.link)}" target="_blank" class="banner-produto-item" onclick="window.registrarInteracao('${news.id}', 'ad_click')">
                       <div class="banner-img-box"><img src="${limparEspacos(prod.img)}" class="banner-thumb" loading="lazy"></div>
                       <div class="banner-info">
                         <div class="banner-titulo">${prod.nome}</div>
@@ -325,7 +366,6 @@
       };
 
       async function carregarConfiguracoesAds() {
-        // Escuta as configurações globais em tempo real
         onSnapshot(doc(db, "configuracoes", "ads"), (snap) => {
           if(snap.exists()) {
               const d = snap.data();
