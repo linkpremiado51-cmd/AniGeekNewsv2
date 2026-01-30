@@ -87,7 +87,7 @@
       window.registrarInteracao = async (docId, tipoAcao) => {
           try {
               const vid = getVisitorId();
-              const ref = doc(db, "jujutsu_kaisen", docId, "visitantes", vid);
+              const ref = doc(db, "Jujutsu_kaisen_shimetsu_kaiyu", docId, "visitantes", vid);
               await setDoc(ref, {
                   lastActive: serverTimestamp(),
                   actions: arrayUnion({ type: tipoAcao, ts: Date.now() })
@@ -168,14 +168,14 @@
 
       async function incrementarVisualizacao(idNoticia) {
         try {
-          const noticiaRef = doc(db, "jujutsu_kaisen", idNoticia);
+          const noticiaRef = doc(db, "Jujutsu_kaisen_shimetsu_kaiyu", idNoticia);
           await updateDoc(noticiaRef, { visualizacoes: increment(1) });
         } catch(err) {}
       }
 
       window.curtirNoticia = async (idNoticia) => {
         try {
-          const noticiaRef = doc(db, "Jujutsu_kaisen", idNoticia);
+          const noticiaRef = doc(db, "Jujutsu_kaisen_shimetsu_kaiyu", idNoticia);
           await updateDoc(noticiaRef, { curtidas: increment(1) });
         } catch(err) {}
       };
@@ -332,7 +332,7 @@
       }
 
       function carregarTudoRealTime() {
-        onSnapshot(collection(db, "jujutsu_kaisen"), (snapshot) => {
+        onSnapshot(collection(db, "Jujutsu_kaisen_shimetsu_kaiyu"), (snapshot) => {
           todasAsNoticias = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
           todasAsNoticias.sort((a, b) => (a.ordem || 999) - (b.ordem || 999));
           if(todasAsNoticias.length > 0) document.getElementById('novo-artigo-titulo').innerText = todasAsNoticias[0].titulo;
