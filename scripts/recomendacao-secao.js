@@ -97,7 +97,24 @@ const styles = `
     opacity: 1;
   }
 
+  /* IMAGEM DO PERSONAGEM FIXA NO CANTO */
+  .ag-char-fixed {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    height: 95%; /* Ajusta altura relativa ao drawer */
+    width: auto;
+    max-width: 50vw; /* Limite para não cobrir tudo em telas pequenas */
+    object-fit: contain;
+    object-position: bottom right;
+    pointer-events: none; /* Permite clicar através da imagem */
+    z-index: 1; /* Fica atrás do conteúdo de rolagem se necessário, mas visível */
+    opacity: 1;
+  }
+
   .ag-drawer-scroll {
+    position: relative; /* Para ficar acima da imagem se sobrepor */
+    z-index: 5;
     max-height: 85vh;
     overflow-y: auto;
     padding: 21px 14px;
@@ -587,6 +604,7 @@ function renderDrawer(filterText = ""){
   const searchIcon = `<svg class="ag-search-icon-svg" viewBox="0 0 24 24"><path d="M21.71 20.29l-5.01-5.01C17.54 13.68 18 11.91 18 10c0-4.41-3.59-8-8-8S2 5.59 2 10s3.59 8 8 8c1.91 0 3.68-.46 5.28-1.3l5.01 5.01c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41z"/></svg>`;
 
   let html = `
+    <img src="https://i.postimg.cc/W49RX3dK/anime-boy-render-04-by-luxio56lavi-d5xed2a.png" class="ag-char-fixed" alt="Anime Character">
     <div class="ag-drawer-scroll">
       <div class="ag-drawer-header">
         <div class="ag-search-wrapper">
