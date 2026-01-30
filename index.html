@@ -1,9 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <!-- ===== VERIFICAÇÕES ===== -->
-   <!-- <meta name="monetag" content="e06df971ba6dd42eb5581027c13cb0a7"> -->
-    <meta name="ppck-ver" content="68939c8da52b56e7fdbd2814436b04db" />
+  <meta name="ppck-ver" content="68939c8da52b56e7fdbd2814436b04db" />
     <meta name="6a97888e-site-verification" content="ccb57535b53ed6b31254339d34d7ea73">
 
     <meta charset="UTF-8">
@@ -23,48 +21,21 @@
     <link rel="stylesheet" href="estilos/geral.css">
     <link rel="stylesheet" href="estilos/cabecalho-rodape.css">
     <link rel="stylesheet" href="estilos/componentes.css">
-    <!-- 
-<script src="https://quge5.com/88/tag.min.js" data-zone="207000" async data-cfasync="false"></script>
--->
-<style>
-        html {
-            scroll-behavior: smooth;
-        }
-
+    
+    <style>
+        html { scroll-behavior: smooth; }
         #progress-bar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 3px;
+            position: fixed; top: 0; left: 0; height: 3px;
             background: var(--primary-color, #e50914);
-            width: 0%;
-            z-index: 9999;
-            transition: width 0.3s ease;
+            width: 0%; z-index: 9999; transition: width 0.3s ease;
         }
-
-        #premium-ads-system {
-            position: relative;
-            z-index: 9999;
-        }
-
-        /* BANNER SUPERIOR */
         .top-banner-ad {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: var(--bg-body);
-            padding: 8px 0;
-            border-bottom: 1px solid var(--border-ui);
-            z-index: 9998;
+            width: 100%; display: flex; justify-content: center; align-items: center;
+            background: var(--bg-body); padding: 8px 0; border-bottom: 1px solid var(--border-ui); z-index: 9998;
         }
-
-        /* Destaque suave para artigos */
         .destaque-secao.destacado {
-            animation: destacarArtigo 1.5s ease-in-out;
-            position: relative;
+            animation: destacarArtigo 1.5s ease-in-out; position: relative;
         }
-
         @keyframes destacarArtigo {
             0% { box-shadow: 0 0 0 0 rgba(229, 9, 20, 0); }
             25% { box-shadow: 0 0 0 8px rgba(229, 9, 20, 0.15); }
@@ -76,15 +47,14 @@
 <body>
 
 <script>
-    // BLOCO DE RECUPERAÇÃO IMEDIATA (Anti-salto de página por propaganda)
+    // RECUPERAÇÃO DE SCROLL IMEDIATA
     (function() {
         try {
-            const savedStateStr = localStorage.getItem('anigeek_persistence_v2');
-            if (savedStateStr) {
-                const state = JSON.parse(savedStateStr);
-                if (state.scrollY > 0) {
-                    window.scrollTo(0, state.scrollY);
-                }
+            const saved = localStorage.getItem('anigeek_persistence_v2');
+            if (saved) {
+                const state = JSON.parse(saved);
+                if (state.newsLoaded) window.noticiasExibidas = state.newsLoaded;
+                if (state.scrollY > 0) window.scrollTo(0, state.scrollY);
             }
         } catch (e) {}
     })();
@@ -92,8 +62,7 @@
 
 <div id="progress-bar"></div>
 
-<div class="top-banner-ad">
-    </div>
+<div class="top-banner-ad"></div>
 
 <div class="sticky-header-group">
     <header>
@@ -112,16 +81,13 @@
             </div>
         </div>
     </header>
-
     <div class="filter-scroller" id="filterScroller"></div>
 </div>
 
 <main id="dynamic-content">
     <section class="hero">
         <div id="conteudo_de_destaque">
-            <p style="text-align:center;padding-top:100px;color:var(--text-muted)">
-                Iniciando portal...
-            </p>
+            <p style="text-align:center;padding-top:100px;color:var(--text-muted)">Iniciando portal...</p>
         </div>
     </section>
 </main>
@@ -141,160 +107,95 @@
 <script src="scripts/recomendacao-secao.js"></script>
 
 <script>
-// ============================================================
-// SISTEMA DE PERSISTÊNCIA DE ESTADO - ANIGEEK NEWS v2.0
-// Mantém o contexto do usuário mesmo após atualização da página
-// ============================================================
 (function() {
     const PERSISTENCE_KEYS = {
         STATE: 'anigeek_persistence_v2',
-        SESSION_TS: 'anigeek_session_ts_v2',
-        VISITOR_ID: 'anigeek_vid_v2'
+        SESSION_TS: 'anigeek_session_ts_v2'
     };
     
-    const STATE_DEFAULTS = {
-        scrollY: 0,
-        activeTabId: 'manchetes', 
-        drawerOpen: false,
-        newsLoaded: 5,
-        lastArticleId: null,
-        timestamp: Date.now()
-    };
-
-    function getVisitorId() {
-        let vid = localStorage.getItem(PERSISTENCE_KEYS.VISITOR_ID);
-        if (!vid) {
-            vid = crypto.randomUUID ? crypto.randomUUID() : 'visitor-' + Date.now() + '-' + Math.floor(Math.random() * 10000);
-            localStorage.setItem(PERSISTENCE_KEYS.VISITOR_ID, vid);
-        }
-        return vid;
-    }
-
     function saveState() {
         try {
             const state = {
                 scrollY: window.scrollY,
-                activeTabId: document.querySelector('#filterScroller .filter-tag.active')?.dataset?.id || STATE_DEFAULTS.activeTabId,
-                drawerOpen: document.getElementById('ag-drawer')?.classList.contains('open') || false,
-                newsLoaded: window.noticiasExibidas || STATE_DEFAULTS.newsLoaded,
+                activeTabId: document.querySelector('#filterScroller .filter-tag.active')?.dataset?.section || 'manchetes',
+                newsLoaded: window.noticiasExibidas || 5,
                 lastArticleId: window.lastArticleId || null,
                 timestamp: Date.now()
             };
-            
             localStorage.setItem(PERSISTENCE_KEYS.STATE, JSON.stringify(state));
             localStorage.setItem(PERSISTENCE_KEYS.SESSION_TS, Date.now().toString());
-        } catch (e) {
-            console.warn('Erro ao salvar estado:', e);
-        }
+        } catch (e) {}
     }
 
     function loadState() {
         try {
-            const savedStateStr = localStorage.getItem(PERSISTENCE_KEYS.STATE);
-            if (!savedStateStr) return null;
-            
-            const savedState = JSON.parse(savedStateStr);
-            const sessionTs = parseInt(localStorage.getItem(PERSISTENCE_KEYS.SESSION_TS) || '0');
-            const now = Date.now();
-            
-            if (now - sessionTs > 45 * 60 * 1000) {
-                localStorage.removeItem(PERSISTENCE_KEYS.STATE);
-                localStorage.removeItem(PERSISTENCE_KEYS.SESSION_TS);
-                return null;
-            }
-            
-            return {...STATE_DEFAULTS, ...savedState};
-        } catch (e) {
-            return null;
-        }
+            const saved = localStorage.getItem(PERSISTENCE_KEYS.STATE);
+            if (!saved) return null;
+            const state = JSON.parse(saved);
+            const ts = parseInt(localStorage.getItem(PERSISTENCE_KEYS.SESSION_TS) || '0');
+            if (Date.now() - ts > 45 * 60 * 1000) return null;
+            return state;
+        } catch (e) { return null; }
     }
 
     function restoreState() {
         const state = loadState();
         if (!state) return;
-        
-        if (state.scrollY > 0) {
-            window.scrollTo(0, state.scrollY);
-            let attempts = 0;
-            const scrollInterval = setInterval(() => {
-                window.scrollTo(0, state.scrollY);
-                if (++attempts > 8) clearInterval(scrollInterval);
-            }, 500);
-        }
-        
+
+        // 1. Garante que a quantidade de notícias seja aplicada globalmente
+        if (state.newsLoaded) window.noticiasExibidas = state.newsLoaded;
+
+        // 2. Restaura Aba
         if (state.activeTabId) {
-            const restoreTab = (attempts = 0) => {
-                const tabBtn = document.querySelector(`#filterScroller .filter-tag[data-id="${state.activeTabId}"]`);
-                if (tabBtn && !tabBtn.classList.contains('active')) {
-                    document.querySelectorAll('#filterScroller .filter-tag').forEach(b => b.classList.remove('active'));
-                    tabBtn.classList.add('active');
-                    tabBtn.click();
-                } else if (attempts < 15) {
-                    setTimeout(() => restoreTab(attempts + 1), 100);
+            const checkTab = setInterval(() => {
+                const tab = document.querySelector(`.filter-tag[data-section="${state.activeTabId}"]`);
+                if (tab) {
+                    clearInterval(checkTab);
+                    if (!tab.classList.contains('active')) tab.click();
                 }
-            };
-            setTimeout(restoreTab, 300);
+            }, 100);
+            setTimeout(() => clearInterval(checkTab), 3000);
         }
+
+        // 3. Scroll e Busca por Paginação
+        const perseguirArtigo = (attempts = 0) => {
+            const article = state.lastArticleId ? document.getElementById(`artigo-${state.lastArticleId}`) : null;
+            const btnMais = document.getElementById('btn-carregar-mais');
+
+            if (article) {
+                article.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                article.classList.add('destacado');
+            } else if (btnMais && btnMais.offsetParent !== null && attempts < 10) {
+                btnMais.click();
+                setTimeout(() => perseguirArtigo(attempts + 1), 600);
+            } else if (state.scrollY > 0) {
+                window.scrollTo({ top: state.scrollY, behavior: 'smooth' });
+            }
+        };
+
+        setTimeout(perseguirArtigo, 1200);
     }
 
-    function initPersistence() {
-        getVisitorId();
-        document.addEventListener('DOMContentLoaded', () => {
-            restoreState();
-            setInterval(saveState, 8000);
-            window.addEventListener('beforeunload', saveState);
-            
-            let scrollTimeout;
-            window.addEventListener('scroll', () => {
-                clearTimeout(scrollTimeout);
-                scrollTimeout = setTimeout(saveState, 400);
-            });
-            
-            document.addEventListener('click', (e) => {
-                const t = e.target;
-                if (t.closest('.filter-tag, .cfg-btn, .btn-paginacao-geek, .destaque-secao')) {
-                    setTimeout(saveState, 150);
-                }
-            });
+    document.addEventListener('DOMContentLoaded', () => {
+        restoreState();
+        setInterval(saveState, 5000);
+        window.addEventListener('scroll', () => {
+            clearTimeout(window.scTimer);
+            window.scTimer = setTimeout(saveState, 500);
         });
-    }
+    });
 
-    initPersistence();
     window.saveStateGlobal = saveState;
 })();
 </script>
 
 <script>
-window.abrirModalNoticia = (noticia) => {
-    if (!noticia || !noticia.id) return;
-    const alvo = document.getElementById(noticia.id);
-    if (!alvo) return;
-    history.pushState(null, '', `#${noticia.id}`);
-    alvo.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    
-    window.lastArticleId = noticia.id;
-    if (typeof window.saveStateGlobal === 'function') window.saveStateGlobal();
-};
-
 window.addEventListener('load', () => {
-    const hash = window.location.hash.replace('#', '');
-    if (hash) {
-        const alvo = document.getElementById(hash);
-        if (alvo) {
-            setTimeout(() => {
-                alvo.scrollIntoView({ behavior: 'smooth' });
-                alvo.classList.add('destacado');
-                setTimeout(() => alvo.classList.remove('destacado'), 2500);
-            }, 300);
-        }
-    }
-    
     let lastScroll = 0;
     window.addEventListener('scroll', () => {
         const scrollTop = window.scrollY;
         const docHeight = document.documentElement.scrollHeight - window.innerHeight;
         const scrollPercent = (scrollTop / docHeight) * 100;
-        
         if (Math.abs(scrollTop - lastScroll) > 5) {
             document.getElementById('progress-bar').style.width = `${scrollPercent}%`;
             lastScroll = scrollTop;
@@ -302,6 +203,5 @@ window.addEventListener('load', () => {
     });
 });
 </script>
-
 </body>
 </html>
