@@ -6,7 +6,6 @@
    • Design Harmônico
    • URLs Compartilháveis por Aba
    • Deep Linking: Abre aba correta ao receber ID de notícia
-   • Minha Lista de Animes (Favoritos Fixos)
 ====================================================== */
 
 (function(){
@@ -115,95 +114,6 @@ const styles = `
 
   body.dark-mode .ag-drawer-cover {
     box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-  }
-
-  /* --- SEÇÃO DE FAVORITOS (MINHA LISTA DE ANIMES) --- */
-  .ag-favorites-section {
-    background: linear-gradient(135deg, #ff4444 0%, #cc0000 100%);
-    border-radius: 8px;
-    padding: 14px;
-    margin-bottom: 21px;
-    box-shadow: 0 4px 12px rgba(204, 0, 0, 0.3);
-  }
-
-  .ag-favorites-title {
-    color: #fff;
-    font-size: 12px;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 10.5px;
-    display: flex;
-    align-items: center;
-    gap: 7px;
-  }
-
-  .ag-favorites-title::before {
-    content: '★';
-    font-size: 14px;
-  }
-
-  .ag-favorites-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
-    gap: 7px;
-  }
-
-  .ag-favorite-card {
-    background: rgba(255, 255, 255, 0.15);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 4.2px;
-    padding: 8.4px 7px;
-    font-size: 9.1px;
-    font-weight: 600;
-    color: #fff;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .ag-favorite-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 100%);
-    pointer-events: none;
-  }
-
-  .ag-favorite-card:hover {
-    background: rgba(255, 255, 255, 0.25);
-    transform: translateY(-1.4px);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-  }
-
-  .ag-favorite-remove {
-    position: absolute;
-    top: 2.1px;
-    right: 2.8px;
-    width: 11.2px;
-    height: 11.2px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 7px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.3);
-    color: #fff;
-    cursor: pointer;
-    opacity: 0.8;
-    transition: all 0.2s;
-  }
-
-  .ag-favorite-remove:hover {
-    background: #fff;
-    color: #cc0000;
-    opacity: 1;
-    transform: scale(1.1);
   }
 
   /* IMAGEM DO PERSONAGEM FIXA NO CANTO */
@@ -677,44 +587,6 @@ const styles = `
     color: #fff;
     box-shadow: 0 4px 12px rgba(229, 9, 20, 0.3);
   }
-
-  /* --- RESULTADOS DA PESQUISA --- */
-  .ag-search-results {
-    background: rgba(255, 255, 255, 0.95);
-    border-radius: 8px;
-    padding: 14px;
-    margin-bottom: 14px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    display: none;
-  }
-
-  body.dark-mode .ag-search-results {
-    background: rgba(30, 30, 30, 0.95);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-  }
-
-  .ag-search-results.active {
-    display: block;
-  }
-
-  .ag-search-results-title {
-    font-size: 10px;
-    font-weight: 700;
-    color: #666;
-    margin-bottom: 7px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-
-  body.dark-mode .ag-search-results-title {
-    color: #aaa;
-  }
-
-  .ag-search-results-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
-    gap: 7px;
-  }
 `;
 
 const styleSheet = document.createElement("style");
@@ -871,18 +743,6 @@ function renderDrawer(filterText = ""){
         </div>
       </div>
 
-      <!-- SEÇÃO DE FAVORITOS (MINHA LISTA DE ANIMES) -->
-      <div class="ag-favorites-section">
-        <div class="ag-favorites-title">Minha Lista de Animes</div>
-        <div class="ag-favorites-grid" id="ag-favorites-grid"></div>
-      </div>
-
-      <!-- RESULTADOS DA PESQUISA -->
-      <div class="ag-search-results" id="ag-search-results">
-        <div class="ag-search-results-title">Resultados da Pesquisa</div>
-        <div class="ag-search-results-grid" id="ag-search-results-grid"></div>
-      </div>
-
       <div id="ag-catalog-container"></div>
 
       <div style="text-align:center; padding-top:20px; font-size:12px; color:#888;">
@@ -892,9 +752,6 @@ function renderDrawer(filterText = ""){
   `;
 
   drawer.innerHTML = html;
-
-  // Renderizar Favoritos
-  renderFavorites();
 
   const container = document.getElementById('ag-catalog-container');
   const term = filterText.toLowerCase();
@@ -972,100 +829,34 @@ function renderDrawer(filterText = ""){
   document.getElementById('btn-dinamico').onclick = () => setMode('dynamic');
 }
 
-// Renderizar Favoritos
-function renderFavorites(){
-  const favoritesGrid = document.getElementById('ag-favorites-grid');
-  if(!favoritesGrid) return;
-
-  favoritesGrid.innerHTML = '';
-
-  const currentOrder = getOrder();
-  
-  if(currentOrder.length === 0) {
-    favoritesGrid.innerHTML = '<div style="grid-column: span all; text-align: center; color: rgba(255,255,255,0.6); font-size: 9px; padding: 14px;">Nenhum anime adicionado ainda</div>';
-    return;
-  }
-
-  currentOrder.forEach(id => {
-    const item = findItem(id);
-    if(!item) return;
-
-    const favoriteCard = document.createElement('div');
-    favoriteCard.className = 'ag-favorite-card';
-    favoriteCard.innerHTML = `
-      ${item.label || item.sessao}
-      <div class="ag-favorite-remove" data-id="${id}">×</div>
-    `;
-    
-    favoriteCard.onclick = (e) => {
-      if(e.target.classList.contains('ag-favorite-remove') || e.target.parentNode.classList.contains('ag-favorite-card')) {
-        e.stopPropagation();
-        toggleItem(id, item.label || item.sessao);
-      }
-    };
-
-    favoritesGrid.appendChild(favoriteCard);
-  });
-}
-
 // Função para filtrar os elementos existentes, sem recriar o drawer
 function filterDrawer(term) {
   const termLower = term.toLowerCase();
-  const searchResults = document.getElementById('ag-search-results');
-  const searchResultsGrid = document.getElementById('ag-search-results-grid');
-  
-  if(!searchResults || !searchResultsGrid) return;
-
-  // Limpar resultados anteriores
-  searchResultsGrid.innerHTML = '';
-
-  if(termLower === "") {
-    searchResults.classList.remove('active');
-    // Mostrar todas as seções
-    document.querySelectorAll('.ag-section-block').forEach(block => {
-      block.style.display = '';
-    });
-    return;
-  }
-
-  // Mostrar resultados da pesquisa
-  searchResults.classList.add('active');
-  
-  let hasResults = false;
-
-  CATALOGO.forEach(sec => {
-    const sessaoMatch = sec.sessao.toLowerCase().includes(termLower);
-    const itensFiltrados = sec.itens.filter(i => i.label.toLowerCase().includes(termLower));
-
-    // Adicionar categoria pai se corresponder
-    if(sessaoMatch) {
-      hasResults = true;
-      const resultCard = document.createElement('div');
-      resultCard.className = 'ag-card';
-      resultCard.innerHTML = `<strong>${sec.sessao}</strong>`;
-      resultCard.onclick = () => toggleItem(sec.id, sec.sessao);
-      searchResultsGrid.appendChild(resultCard);
-    }
-
-    // Adicionar itens que correspondem
-    itensFiltrados.forEach(item => {
-      hasResults = true;
-      const resultCard = document.createElement('div');
-      resultCard.className = 'ag-card';
-      resultCard.innerHTML = item.label;
-      resultCard.onclick = () => toggleItem(item.id, item.label);
-      searchResultsGrid.appendChild(resultCard);
-    });
-  });
-
-  // Esconder seções quando há pesquisa ativa
   document.querySelectorAll('.ag-section-block').forEach(block => {
-    block.style.display = 'none';
-  });
+    const catId = block.querySelector('.ag-section-header-btn').dataset.catId;
+    const cat = CATALOGO.find(c => c.id === catId);
+    if (!cat) return;
 
-  if(!hasResults) {
-    searchResultsGrid.innerHTML = '<div style="grid-column: span all; text-align: center; color: #999; font-size: 10px; padding: 14px;">Nenhum resultado encontrado</div>';
-  }
+    const sessaoMatch = cat.sessao.toLowerCase().includes(termLower);
+    const itensFiltrados = cat.itens.filter(i => i.label.toLowerCase().includes(termLower));
+    const grid = block.querySelector('.ag-grid-container');
+    const headerBtn = block.querySelector('.ag-section-header-btn');
+
+    if (termLower !== "" && !sessaoMatch && itensFiltrados.length === 0) {
+      block.style.display = 'none';
+      return;
+    }
+    block.style.display = '';
+
+    grid.querySelectorAll('.ag-card').forEach(card => {
+      const label = card.textContent.trim();
+      if (label.toLowerCase().includes(termLower) || sessaoMatch) {
+        card.style.display = '';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  });
 }
 
 /* ===========================
@@ -1082,14 +873,12 @@ function toggleItem(id, label){
       showToast(`Limite de ${CONFIG.MAX_TABS} abas atingido!`, 'error');
       return;
     }
-    // Adicionar no INÍCIO do array (primeira posição)
-    order.unshift(id);
+    order.push(id);
     showToast(`Adicionado: <b>${label}</b>`, 'success');
   }
 
   save(CONFIG.KEYS.ORDER, order);
   renderBar();
-  renderFavorites();
 
   // AUTO-CLIQUE MANTIDO - Clica automaticamente na categoria adicionada
   setTimeout(() => {
@@ -1109,7 +898,6 @@ function handleAction(id, label){
     save(CONFIG.KEYS.ORDER, order);
     showToast(`Removido: <b>${label}</b>`);
     renderBar();
-    renderFavorites();
     const currentInput = document.getElementById('ag-search-input');
     const currentValue = currentInput ? currentInput.value : '';
     renderDrawer(currentValue);
@@ -1125,7 +913,6 @@ function handleAction(id, label){
         order.splice(targetIndex, 0, id);
         save(CONFIG.KEYS.ORDER, order);
         renderBar();
-        renderFavorites();
         const currentInput = document.getElementById('ag-search-input');
         const currentValue = currentInput ? currentInput.value : '';
         renderDrawer(currentValue);
@@ -1148,7 +935,6 @@ function ensureTabExists(id){
     if (order.length >= CONFIG.MAX_TABS) {
       order.pop();
     }
-    // Garantir que vá para o início
     order.unshift(id);
     save(CONFIG.KEYS.ORDER, order);
   }
@@ -1176,7 +962,6 @@ window.addEventListener('DOMContentLoaded', () => {
     // Garante que a aba esteja na lista de abas ativas e renderiza
     if(ensureTabExists(abaAlvo)) {
         renderBar(); 
-        renderFavorites();
         // Pequeno delay para garantir que o DOM renderizou o botão antes de clicar
         setTimeout(() => {
             const btn = document.querySelector(`#filterScroller .filter-tag[data-id="${abaAlvo}"]`);
@@ -1202,7 +987,6 @@ window.addEventListener('DOMContentLoaded', () => {
   if (secaoForcada) {
     if(ensureTabExists(secaoForcada)) {
         renderBar();
-        renderFavorites();
         setTimeout(() => {
             const btn = document.querySelector(`#filterScroller .filter-tag[data-id="${secaoForcada}"]`);
             if (btn) {
