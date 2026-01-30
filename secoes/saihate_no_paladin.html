@@ -84,18 +84,21 @@
         return url ? url.trim() : url;
       }
 
-      // FUNÇÃO ATUALIZADA: Agora aceita o link específico como parâmetro
+      // FUNÇÃO CORRIGIDA: Agora remove o overlay usando o seletor exato da classe
       window.handlePlayerAd = (playerId, linkArtigo) => {
           if (!playersAdList.has(playerId)) {
               playersAdList.add(playerId); 
               
-              // Se o artigo tiver um link próprio, usa ele. Se não, usa o global.
               const linkFinal = (linkArtigo && linkArtigo.trim() !== "") ? linkArtigo : linkPropaganda;
-              
               window.open(linkFinal, '_blank'); 
               
-              const overlay = document.querySelector(`.overlay-player-${playerId.split('-')[1]}`);
-              if (overlay) overlay.remove();
+              // O ID do player é 'player-ID'. O overlay tem a classe 'overlay-player-ID'
+              const idLimpo = playerId.replace('player-', '');
+              const overlay = document.querySelector(`.overlay-player-${idLimpo}`);
+              
+              if (overlay) {
+                  overlay.remove(); // Remove o bloqueio para o player ficar clicável
+              }
           }
       };
 
@@ -259,7 +262,6 @@
                   </div>`;
               }
 
-              // RENDERIZAÇÃO ATUALIZADA: Passa o link exclusivo para a função handlePlayerAd
               const html = `
               <article class="destaque-secao" id="artigo-${news.id}" style="--tema-cor: ${news.cor}">
                 <div class="destaque-padding">
