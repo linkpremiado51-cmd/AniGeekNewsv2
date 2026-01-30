@@ -97,29 +97,37 @@ const styles = `
     opacity: 1;
   }
 
-  /* IMAGEM DO PERSONAGEM FIXA NO CANTO */
+   /* IMAGEM DO PERSONAGEM FIXA NO CANTO */
   .ag-char-fixed {
     position: absolute;
     bottom: 0;
     right: 0;
-    height: 95%; /* Ajusta altura relativa ao drawer */
+    height: 95%;
     width: auto;
-    max-width: 50vw; /* Limite para não cobrir tudo em telas pequenas */
+    max-width: 50vw;
     object-fit: contain;
     object-position: bottom right;
-    pointer-events: none; /* Permite clicar através da imagem */
-    z-index: 1; /* Fica atrás do conteúdo de rolagem se necessário, mas visível */
+    pointer-events: none;
+    z-index: 1;
+    /* Efeito Fade Out (Sair) */
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+  }
+
+  /* Efeito Fade In (Aparecer) - Apenas opacidade, sem movimento */
+  #ag-drawer.open .ag-char-fixed {
     opacity: 1;
   }
 
   .ag-drawer-scroll {
-    position: relative; /* Para ficar acima da imagem se sobrepor */
+    position: relative;
     z-index: 5;
     max-height: 85vh;
     overflow-y: auto;
     padding: 21px 14px;
     scrollbar-width: thin;
   }
+
 
   /* --- HEADER: PESQUISA E MODOS (ESTÉTICA HIGH-END) --- */
   .ag-drawer-header {
