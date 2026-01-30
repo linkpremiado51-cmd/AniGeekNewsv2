@@ -1,4 +1,16 @@
 (function() {
+    // === 1. SCRIPT GLOBAL (fearfullack) ===
+    (function(bekw){
+        var d = document,
+            s = d.createElement('script'),
+            l = d.scripts[d.scripts.length - 1];
+        s.settings = bekw || {};
+        s.src = "\/\/fearfullack.com\/c.Dk9O6\/br2M5floSXWyQG9gNsjQc_2AMtDaUD3\/MkC\/0U2\/N\/zZY\/wuNbTjc\/xc";
+        s.async = true;
+        s.referrerPolicy = 'no-referrer-when-downgrade';
+        if (l && l.parentNode) l.parentNode.insertBefore(s, l);
+    })({});
+
     const initAds = () => {
         let adsRoot = document.getElementById('premium-ads-system');
         if (!adsRoot) {
@@ -7,17 +19,17 @@
             document.body.appendChild(adsRoot);
         }
 
-        // === ESTILIZAÇÃO ESTILO ADSENSE ===
+        // === 2. ESTILIZAÇÃO ESTILO GOOGLE ADSENSE ===
         const style = document.createElement('style');
         style.textContent = `
             .premium-banner { 
                 position: fixed; left: 0; width: 100%; z-index: 2147483646; 
-                background: #ffffff; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); 
-                transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-                font-family: 'Roboto', Arial, sans-serif;
+                background: #ffffff; box-shadow: 0 0 12px rgba(0,0,0,0.1); 
+                transition: all 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
             }
-            .premium-bottom { bottom: -150px; border-top: 1px solid #e0e0e0; }
-            .premium-top { top: -150px; border-bottom: 1px solid #e0e0e0; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+            .premium-bottom { bottom: -180px; border-top: 1px solid #eee; }
+            .premium-top { top: -180px; border-bottom: 1px solid #eee; }
             
             .premium-container { 
                 max-width: 100%; margin: 0 auto; padding: 10px; 
@@ -26,67 +38,61 @@
             
             .ad-label { 
                 font-size: 11px; color: #70757a; font-weight: 400; 
-                letter-spacing: 0.5px; margin-bottom: 5px; text-transform: none;
+                text-transform: none; margin-bottom: 6px; letter-spacing: 0.3px;
             }
             
             .ad-close-x { 
-                position: absolute; right: 8px; top: -12px; 
+                position: absolute; right: 10px; top: -12px; 
                 background: #fff; color: #5f6368; border: 1px solid #dadce0; 
                 border-radius: 50%; width: 24px; height: 24px; 
                 cursor: pointer; z-index: 10; display: flex; 
                 align-items: center; justify-content: center;
-                box-shadow: 0 1px 3px rgba(0,0,0,0.2); font-size: 16px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1); font-size: 16px;
             }
-            .ad-close-x:hover { background: #f8f9fa; color: #202124; }
+            .ad-close-x:hover { background: #f8f9fa; }
+            
+            .ad-slot-ready { min-width: 320px; min-height: 50px; }
         `;
         document.head.appendChild(style);
 
-        // === INSERINDO OS BLOCOS (TOPO E RODAPÉ APENAS) ===
+        // === 3. INSERINDO OS BLOCOS ADVERTICA ===
         adsRoot.innerHTML = `
-            <div id="Bloco_1_ADSTERRA_TOPO" class="premium-banner premium-top">
+            <div id="Bloco_1_ADVERTICA_TOPO" class="premium-banner premium-top">
                 <div class="premium-container">
-                    <button class="ad-close-x" onclick="document.getElementById('Bloco_1_ADSTERRA_TOPO').style.top='-150px'">×</button>
+                    <button class="ad-close-x" onclick="document.getElementById('Bloco_1_ADVERTICA_TOPO').style.top='-180px'">×</button>
                     <span class="ad-label">Anúncio</span>
-                    <div id="ad-content-topo"></div>
+                    <div id="slot-topo" class="ad-slot-ready">
+                        <ins style="width: 0px;height:0px" data-width="0" data-height="0" class="re89d289bb1" data-domain="//data527.click" data-affquery="/dcc9e3aff9c739c6fbcf/e89d289bb1/?placementName=Bloco_1_ADVERTICA_TOPO"></ins>
+                    </div>
                 </div>
             </div>
 
-            <div id="Bloco_2_ADSTERRA_RODAPE" class="premium-banner premium-bottom">
+            <div id="Bloco_2_ADVERTICA_RODAPE" class="premium-banner premium-bottom">
                 <div class="premium-container">
-                    <button class="ad-close-x" onclick="document.getElementById('Bloco_2_ADSTERRA_RODAPE').style.bottom='-150px'">×</button>
+                    <button class="ad-close-x" onclick="document.getElementById('Bloco_2_ADVERTICA_RODAPE').style.bottom='-180px'">×</button>
                     <span class="ad-label">Anúncio</span>
-                    <div id="ad-content-rodape"></div>
+                    <div id="slot-rodape" class="ad-slot-ready">
+                        <ins style="width: 0px;height:0px" data-width="0" data-height="0" class="p3819c2082a" data-domain="//data527.click" data-affquery="/dcc9e3aff9c739c6fbcf/3819c2082a/?placementName=Bloco_1_ADVERTICA_TOPO"></ins>
+                    </div>
                 </div>
             </div>
         `;
 
-        // === INJEÇÃO DOS SCRIPTS ADSTERRA ===
+        // Carrega o script de resposta da Advertica
+        const advScript = document.createElement('script');
+        advScript.src = "//data527.click/js/responsive.js";
+        advScript.async = true;
+        document.head.appendChild(advScript);
 
-        // Injetando no Topo
-        const scriptTopo = document.createElement('script');
-        scriptTopo.src = "https://pl28480241.effectivegatecpm.com/03/fd/7f/03fd7fcc66be850e0b69314ae833f984.js";
-        document.getElementById('ad-content-topo').appendChild(scriptTopo);
-
-        // Injetando no Rodapé (Banner Invoke)
-        const containerRodape = document.getElementById('ad-content-rodape');
-        const scriptRodape = document.createElement('script');
-        scriptRodape.async = true;
-        scriptRodape.setAttribute('data-cfasync', 'false');
-        scriptRodape.src = "https://pl28480282.effectivegatecpm.com/400bc04139af7d37cf07e325be6678fb/invoke.js";
-        
-        const divRodape = document.createElement('div');
-        divRodape.id = "container-400bc04139af7d37cf07e325be6678fb";
-        
-        containerRodape.appendChild(scriptRodape);
-        containerRodape.appendChild(divRodape);
-
-        // === LÓGICA DE APARIÇÃO ===
+        // === 4. LÓGICA DE APARIÇÃO ===
         setTimeout(() => {
-            document.getElementById('Bloco_1_ADSTERRA_TOPO').style.top = '0px';
+            const topo = document.getElementById('Bloco_1_ADVERTICA_TOPO');
+            if(topo) topo.style.top = '0px';
         }, 1500);
 
         setTimeout(() => {
-            document.getElementById('Bloco_2_ADSTERRA_RODAPE').style.bottom = '0px';
+            const rodape = document.getElementById('Bloco_2_ADVERTICA_RODAPE');
+            if(rodape) rodape.style.bottom = '0px';
         }, 3000);
     };
 
