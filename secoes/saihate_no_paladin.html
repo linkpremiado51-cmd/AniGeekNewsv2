@@ -1,4 +1,6 @@
 <body>
+  <script async src="https://js.wpadmngr.com/static/adManager.js" data-admpid="420517"></script>
+
   <div class="destaque-wrapper">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
@@ -67,11 +69,10 @@
       let playerAlvo = '';
       let urlAlvo = '';
       
-      // CONFIGURAÇÕES DE ANÚNCIO (Sincronizadas com o Firebase)
       let linkPropaganda = "https://www.effectivegatecpm.com/u1isyicizb?key=66934bf68fc6093a89704779bb57cce3";
-      let playersAdList = new Set(); // Controla quem já clicou nesta sessão
+      let playersAdList = new Set(); 
 
-      // Função para injetar scripts de anúncio de forma segura e funcional
+      // Função melhorada para injetar o código HTML (DIVs de banner) e forçar a execução se necessário
       function injectAdSafe(containerId, content) {
           const container = document.getElementById(containerId);
           if (!container || !content) return;
@@ -86,13 +87,10 @@
         return url ? url.trim() : url;
       }
 
-      // Função para lidar com o redirecionamento único
       window.handlePlayerAd = (playerId) => {
           if (!playersAdList.has(playerId)) {
-              playersAdList.add(playerId); // Marca como clicado
-              window.open(linkPropaganda, '_blank'); // Abre propaganda
-              
-              // Remove o overlay para que o segundo clique vá direto no iframe
+              playersAdList.add(playerId);
+              window.open(linkPropaganda, '_blank');
               const overlay = document.querySelector(`.overlay-${playerId}`);
               if (overlay) overlay.remove();
           }
@@ -100,11 +98,7 @@
 
       window.shareNews = (titulo, url) => {
         if (navigator.share) {
-          navigator.share({ 
-            title: 'AniGeek: ' + titulo, 
-            text: 'Confira essa análise no AniGeek Suite:',
-            url: url 
-          }).catch(console.error);
+          navigator.share({ title: 'AniGeek: ' + titulo, text: 'Confira no AniGeek:', url: url }).catch(console.error);
         } else {
           window.copiarLink(url);
         }
@@ -122,13 +116,7 @@
       window.pedirTroca = (idPlayer, idVideo, titulo, cor) => {
         playerAlvo = idPlayer;
         const entrada = limparEspacos(idVideo);
-
-        if (entrada.startsWith('http')) {
-            urlAlvo = entrada;
-        } else {
-            urlAlvo = `https://www.youtube.com/embed/${entrada}?autoplay=1`;
-        }
-
+        urlAlvo = entrada.startsWith('http') ? entrada : `https://www.youtube.com/embed/${entrada}?autoplay=1`;
         const notif = document.getElementById('notificacao-video');
         const notifTitulo = document.getElementById('notif-titulo');
         if(notifTitulo) notifTitulo.innerText = titulo;
@@ -136,9 +124,7 @@
         notif.classList.add('visivel');
       };
 
-      window.fecharNotif = () => {
-        document.getElementById('notificacao-video').classList.remove('visivel');
-      };
+      window.fecharNotif = () => document.getElementById('notificacao-video').classList.remove('visivel');
 
       const btnConfirmar = document.getElementById('btn-confirmar');
       if(btnConfirmar) {
@@ -146,8 +132,7 @@
             const player = document.getElementById(playerAlvo);
             if (player) {
                 player.src = urlAlvo;
-                const newsId = playerAlvo.split('-')[1];
-                incrementarVisualizacao(newsId);
+                incrementarVisualizacao(playerAlvo.split('-')[1]);
             }
             window.fecharNotif();
           };
@@ -155,33 +140,26 @@
 
       async function incrementarVisualizacao(idNoticia) {
         try {
-          const noticiaRef = doc(db, "saihate_no_paladin", idNoticia);
-          await updateDoc(noticiaRef, { visualizacoes: increment(1) });
-        } catch(err) { console.error("Erro visualização:", err); }
+          await updateDoc(doc(db, "saihate_no_paladin", idNoticia), { visualizacoes: increment(1) });
+        } catch(err) {}
       }
 
       window.curtirNoticia = async (idNoticia) => {
         try {
           const spanCurtidas = document.querySelector(`#artigo-${idNoticia} .num-like`);
-          if(spanCurtidas) {
-             let atual = parseInt(spanCurtidas.innerText) || 0;
-             spanCurtidas.innerText = atual + 1;
-          }
-          const noticiaRef = doc(db, "saihate_no_paladin", idNoticia);
-          await updateDoc(noticiaRef, { curtidas: increment(1) });
-        } catch(err) { console.error("Erro curtir:", err); }
+          if(spanCurtidas) spanCurtidas.innerText = (parseInt(spanCurtidas.innerText) || 0) + 1;
+          await updateDoc(doc(db, "saihate_no_paladin", idNoticia), { curtidas: increment(1) });
+        } catch(err) {}
       };
 
       function verificarNoticiaNaUrl() {
         const urlParams = new URLSearchParams(window.location.search);
         const id = urlParams.get('id');
         if (!id) return;
-
         const artigo = document.getElementById(`artigo-${id}`);
         if (artigo) {
           artigo.scrollIntoView({ behavior: 'smooth', block: 'start' });
           artigo.classList.add('destacado');
-          setTimeout(() => artigo.classList.remove('destacado'), 3000);
           incrementarVisualizacao(id);
           const url = new URL(window.location);
           url.searchParams.delete('id');
@@ -192,28 +170,19 @@
       async function injetarComentariosDinamicos() {
         const containers = document.querySelectorAll('.container-comentarios-dinamico');
         if (containers.length === 0) return;
-        try {
-          if (!window.comentariosCarregados) {
-              await import('./comentarios/comentarios.js');
-              window.comentariosCarregados = true;
-          }
-        } catch (err) { console.error("Erro scripts comentarios", err); }
+        if (!window.comentariosCarregados) {
+            await import('./comentarios/comentarios.js');
+            window.comentariosCarregados = true;
+        }
       }
 
       function renderizarHero(primeiraNoticia) {
           const heroArea = document.getElementById('hero-area');
           if (!heroArea || !primeiraNoticia) return;
           if (primeiraNoticia.capaUrl) {
-              heroArea.innerHTML = `
-                  <div class="hero-topo-container">
-                      <img src="${limparEspacos(primeiraNoticia.capaUrl)}" class="hero-topo-img" alt="Capa Principal">
-                      ${primeiraNoticia.capaDesc ? `<div class="hero-topo-desc">${primeiraNoticia.capaDesc}</div>` : ''}
-                  </div>
-              `;
+              heroArea.innerHTML = `<div class="hero-topo-container"><img src="${limparEspacos(primeiraNoticia.capaUrl)}" class="hero-topo-img">${primeiraNoticia.capaDesc ? `<div class="hero-topo-desc">${primeiraNoticia.capaDesc}</div>` : ''}</div>`;
               heroArea.style.display = 'block';
-          } else {
-              heroArea.style.display = 'none';
-          }
+          } else { heroArea.style.display = 'none'; }
       }
 
       function renderizarNoticias() {
@@ -222,7 +191,7 @@
         if (!container) return;
 
         const baseUrl = window.location.origin + window.location.pathname;
-        if (todasAsNoticias.length > 0) { renderizarHero(todasAsNoticias[0]); }
+        if (todasAsNoticias.length > 0) renderizarHero(todasAsNoticias[0]);
 
         const listaParaExibir = todasAsNoticias.slice(0, noticiasExibidas);
 
@@ -237,28 +206,10 @@
               if(spanView) spanView.innerText = news.visualizacoes || 0;
           } else {
               const imgFeed = news.capaNoticia || news.capaUrl;
-              const capaHTML = imgFeed ? `
-                  <div class="noticia-capa" style="margin: -15px -15px 15px -15px;">
-                      <img src="${limparEspacos(imgFeed)}" style="width: 100%; aspect-ratio: 16 / 9; border-radius: 12px 12px 0 0; object-fit: cover; display: block;" alt="Capa do artigo">
-                  </div>` : '';
+              const capaHTML = imgFeed ? `<div class="noticia-capa" style="margin: -15px -15px 15px -15px;"><img src="${limparEspacos(imgFeed)}" style="width: 100%; aspect-ratio: 16 / 9; border-radius: 12px 12px 0 0; object-fit: cover; display: block;"></div>` : '';
 
-              let fichaCategoriaHtml = '';
-              if (news.fichaCategoria) {
-                  fichaCategoriaHtml = `
-                  <div class="ficha-categoria" style="border-left: 4px solid ${news.fichaCategoria.cor};">
-                      <img src="${limparEspacos(news.fichaCategoria.perfilImg)}" alt="Editor">
-                      <div class="ficha-info">
-                          ${news.fichaCategoria.info ? news.fichaCategoria.info.map(item => `
-                              <div class="info-item">
-                                  <span class="info-label">${item.label}:</span>
-                                  <span class="info-valor">${item.valor}</span>
-                              </div>
-                          `).join('') : ''}
-                      </div>
-                  </div>`;
-              }
+              let fichaCategoriaHtml = news.fichaCategoria ? `<div class="ficha-categoria" style="border-left: 4px solid ${news.fichaCategoria.cor};"><img src="${limparEspacos(news.fichaCategoria.perfilImg)}"><div class="ficha-info">${news.fichaCategoria.info ? news.fichaCategoria.info.map(item => `<div class="info-item"><span class="info-label">${item.label}:</span><span class="info-valor">${item.valor}</span></div>`).join('') : ''}</div></div>` : '';
 
-              // Lógica de Player com Overlay de Propaganda
               const html = `
               <article class="destaque-secao" id="artigo-${news.id}" style="--tema-cor: ${news.cor}">
                 <div class="destaque-padding">
@@ -267,23 +218,17 @@
                   <div class="destaque-header">
                     <h2 class="destaque-titulo">${news.titulo}</h2>
                     <div class="menu-opcoes-container" tabindex="0">
-                      <button class="btn-tres-pontos" aria-label="Opções"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                      <button class="btn-tres-pontos"><i class="fa-solid fa-ellipsis-vertical"></i></button>
                       <div class="dropdown-conteudo header-dropdown">
-                        <a href="#" onclick="event.preventDefault(); window.copiarLink('${shareUrl}');">
-                            <i class="fa-regular fa-copy"></i> Copiar Link
-                        </a>
-                        <a href="#" onclick="event.preventDefault(); window.shareNews('${news.titulo.replace(/'/g, "\\'")}', '${shareUrl}');">
-                            <i class="fa-solid fa-share-nodes"></i> Compartilhar Agora
-                        </a>
+                        <a href="#" onclick="event.preventDefault(); window.copiarLink('${shareUrl}');">Copiar Link</a>
+                        <a href="#" onclick="event.preventDefault(); window.shareNews('${news.titulo.replace(/'/g, "\\'")}', '${shareUrl}');">Compartilhar</a>
                       </div>
                     </div>
                   </div>
                   ${fichaCategoriaHtml}
                   <p class="destaque-resumo">${news.resumo}</p>
                   <a href="${news.linkArtigo}" class="btn-ver-artigo" target="_blank"><i class="fa-solid fa-book-open"></i> Ver artigo completo</a>
-                  <div class="destaque-info-grid">
-                    ${news.ficha ? news.ficha.map(item => `<div class="info-item"><span class="info-label">${item.label}</span><span class="info-valor">${item.valor}</span></div>`).join('') : ''}
-                  </div>
+                  <div class="destaque-info-grid">${news.ficha ? news.ficha.map(item => `<div class="info-item"><span class="info-label">${item.label}</span><span class="info-valor">${item.valor}</span></div>`).join('') : ''}</div>
                 </div>
 
                 <div class="destaque-media">
@@ -292,43 +237,22 @@
                 </div>
 
                 <div class="premium-actions-bar">
-                    <button class="btn-premium-icon" onclick="curtirNoticia('${news.id}')">
-                      <i class="fa-regular fa-thumbs-up"></i> Útil (<span class="num-like">${news.curtidas || 0}</span>)
-                    </button>
-                    <button class="btn-premium-icon" onclick="window.shareNews('${news.titulo.replace(/'/g, "\\'")}', '${shareUrl}')">
-                      <i class="fa-solid fa-share-nodes"></i> Compartilhar
-                    </button>
-                    <button class="btn-premium-icon btn-stats">
-                      <i class="fa-solid fa-chart-column"></i>
-                      <span class="stats-num num-view">${news.visualizacoes || 0}</span>
-                    </button>
+                    <button class="btn-premium-icon" onclick="curtirNoticia('${news.id}')"><i class="fa-regular fa-thumbs-up"></i> Útil (<span class="num-like">${news.curtidas || 0}</span>)</button>
+                    <button class="btn-premium-icon" onclick="window.shareNews('${news.titulo.replace(/'/g, "\\'")}', '${shareUrl}')"><i class="fa-solid fa-share-nodes"></i></button>
+                    <button class="btn-premium-icon btn-stats"><i class="fa-solid fa-chart-column"></i> <span class="stats-num num-view">${news.visualizacoes || 0}</span></button>
                 </div>
 
                 <div class="carrossel-temas">
                   <div class="carrossel-header"><span class="temas-label">Vídeos Relacionados</span></div>
                   <div class="temas-scroll-wrapper"><div class="temas-container">
-                      ${news.relacionados ? news.relacionados.map(rel => `
-                        <div class="tema-card" onclick="window.pedirTroca('player-${news.id}', '${rel.idVid}', '${rel.titulo.replace(/'/g, "\\'")}', '${news.cor}')">
-                          <img src="${limparEspacos(rel.thumb)}" class="tema-thumb" loading="lazy">
-                          <div class="tema-titulo">${rel.titulo}</div>
-                        </div>`).join('') : ''}
+                      ${news.relacionados ? news.relacionados.map(rel => `<div class="tema-card" onclick="window.pedirTroca('player-${news.id}', '${rel.idVid}', '${rel.titulo.replace(/'/g, "\\'")}', '${news.cor}')"><img src="${limparEspacos(rel.thumb)}" class="tema-thumb"><div class="tema-titulo">${rel.titulo}</div></div>`).join('') : ''}
                   </div></div>
                 </div>
 
                 <div class="secao-produtos-banner">
                   <div class="banner-header"><i class="fa-solid fa-cart-shopping"></i> Produtos Recomendados</div>
                   <div class="banner-lista">
-                      ${news.produtos ? news.produtos.map(prod => `
-                        <a href="${limparEspacos(prod.link)}" target="_blank" class="banner-produto-item">
-                          <div class="banner-img-box">
-                            <img src="${limparEspacos(prod.img)}" class="banner-thumb" loading="lazy">
-                          </div>
-                          <div class="banner-info">
-                            <div class="banner-titulo">${prod.nome}</div>
-                            <div class="banner-desc">${prod.desc || 'Item selecionado pela nossa equipe Geek.'}</div>
-                            <div class="banner-link-fake">Ver na loja <i class="fa-solid fa-chevron-right"></i></div>
-                          </div>
-                        </a>`).join('') : ''}
+                      ${news.produtos ? news.produtos.map(prod => `<a href="${limparEspacos(prod.link)}" target="_blank" class="banner-produto-item"><div class="banner-img-box"><img src="${limparEspacos(prod.img)}" class="banner-thumb"></div><div class="banner-info"><div class="banner-titulo">${prod.nome}</div><div class="banner-desc">${prod.desc || 'Geek Choice.'}</div><div class="banner-link-fake">Ver na loja <i class="fa-solid fa-chevron-right"></i></div></div></a>`).join('') : ''}
                   </div>
                 </div>
 
@@ -339,10 +263,8 @@
               `;
               container.insertAdjacentHTML('beforeend', html);
 
-              // Injeta o conteúdo do banner (Script ou Imagem) no artigo específico
-              if(news.bannerAd) {
-                  injectAdSafe(`ad-artigo-${news.id}`, news.bannerAd);
-              }
+              // INJEÇÃO DO BANNER DO PASSO 2 NO ARTIGO
+              if(news.bannerAd) injectAdSafe(`ad-artigo-${news.id}`, news.bannerAd);
           }
         });
 
@@ -356,12 +278,12 @@
       };
 
       async function carregarConfiguracoesAds() {
-          // Busca configurações globais (Link de propaganda e Banners Topo/Fundo)
           try {
               const snap = await getDoc(doc(db, "configuracoes", "ads"));
               if(snap.exists()) {
                   const d = snap.data();
                   if(d.linkPropaganda) linkPropaganda = d.linkPropaganda;
+                  // INJEÇÃO DOS BANNERS GLOBAIS (TOPO E FUNDO)
                   if(d.bannerTopo) injectAdSafe('ad-slot-top', d.bannerTopo);
                   if(d.bannerFundo) injectAdSafe('ad-slot-bottom', d.bannerFundo);
               }
@@ -371,15 +293,8 @@
       function carregarTudoRealTime() {
         onSnapshot(collection(db, "saihate_no_paladin"), (snapshot) => {
           todasAsNoticias = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-          todasAsNoticias.sort((a, b) => {
-            const ordemA = a.ordem !== undefined ? parseInt(a.ordem) : 999;
-            const ordemB = b.ordem !== undefined ? parseInt(b.ordem) : 999;
-            return ordemA !== ordemB ? ordemA - ordemB : (b.timestamp || 0) - (a.timestamp || 0);
-          });
-
-          if(todasAsNoticias.length > 0) { 
-            document.getElementById('novo-artigo-titulo').innerText = todasAsNoticias[0].titulo; 
-          }
+          todasAsNoticias.sort((a, b) => (a.ordem || 999) - (b.ordem || 999) || (b.timestamp || 0) - (a.timestamp || 0));
+          if(todasAsNoticias.length > 0) document.getElementById('novo-artigo-titulo').innerText = todasAsNoticias[0].titulo;
           renderizarNoticias();
           setTimeout(verificarNoticiaNaUrl, 150);
         });
