@@ -16,18 +16,23 @@ function reiniciarModuloComentarios() {
  * Scroll inteligente até a notícia baseada no data-id
  */
 function rolarParaNoticiaPorId(id) {
-    const tentativasMax = 25;
+    const tentativasMax = 30;
     let tentativas = 0;
 
     const tentar = () => {
-        const el = document.querySelector(`[data-id="${id}"]`);
+        const el = document.getElementById(`artigo-${id}`) || document.querySelector(`[data-id="${id}"]`);
         if (el) {
-            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            el.classList.add('highlight-noticia');
-            setTimeout(() => el.classList.remove('highlight-noticia'), 2500);
+            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            el.classList.add('destacado');
+            setTimeout(() => el.classList.remove('destacado'), 2500);
         } else if (tentativas < tentativasMax) {
             tentativas++;
-            setTimeout(tentar, 150);
+            // Se não achou, tenta "clicar" no botão de carregar mais se ele existir
+            const btnMais = document.getElementById('btn-carregar-mais');
+            if (btnMais && btnMais.offsetParent !== null) {
+                btnMais.click();
+            }
+            setTimeout(tentar, 200);
         }
     };
 
@@ -52,7 +57,7 @@ async function carregarSecao(nome) {
         const html = await response.text();
         displayPrincipal.innerHTML = html;
 
-        // Reexecuta scripts da seção
+        // Reexecuta scripts da seção (importante para o Firebase iniciar)
         const scripts = displayPrincipal.querySelectorAll("script");
         scripts.forEach(oldScript => {
             const newScript = document.createElement("script");
@@ -62,9 +67,20 @@ async function carregarSecao(nome) {
             document.body.appendChild(newScript);
         });
 
-        // MODIFICAÇÃO: Só faz scroll para o topo se NÃO houver um estado salvo recente
-        const hasSavedScroll = localStorage.getItem('anigeek_persistence_v2');
-        if (!hasSavedScroll) {
+        // LÓGICA DE PERSISTÊNCIA: 
+        // Só rola para o topo se não houver um estado salvo de scroll no localStorage
+        const savedState = localStorage.getItem('anigeek_persistence_v2');
+        let shouldScrollTop = true;
+
+        if (savedState) {
+            const state = JSON.parse(savedState);
+            // Se o scroll salvo for significativo, não forçamos o topo agora
+            if (state.scrollY > 150) {
+                shouldScrollTop = false;
+            }
+        }
+
+        if (shouldScrollTop) {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
         
@@ -78,55 +94,59 @@ async function carregarSecao(nome) {
 }
 
 /**
- * Resolve links do tipo:
- * index.html?id=saihate-no-paladin
+ * Resolve links compartilhados via query param
  */
 function verificarLinkCompartilhado() {
     const params = new URLSearchParams(window.location.search);
     const id = params.get('id');
     if (!id) return;
 
-    // ⚠️ precisa existir globalmente
+    // Tenta encontrar a origem se o array global de notícias existir
     const item = window.noticias?.find(n => n.id === id);
     const secao = item?.origem || 'manchetes';
 
     carregarSecao(secao);
 
-    // Aguarda renderização e rola até a notícia
+    // Aguarda renderização e persegue o ID
     setTimeout(() => {
         rolarParaNoticiaPorId(id);
-    }, 700);
+    }, 1000);
 }
 
 /**
- * Eventos de clique nas categorias
+ * Eventos de clique nas categorias (Abas)
  */
 document.querySelectorAll('.filter-tag').forEach(tag => {
-    tag.addEventListener('click', () => {
-        // Se for um clique manual, limpamos a persistência de scroll para permitir ir ao topo
-        localStorage.removeItem('anigeek_persistence_v2');
-        
-        document.querySelectorAll('.filter-tag')
-            .forEach(t => t.classList.remove('active'));
-
-        tag.classList.add('active');
-
-        const container = document.querySelector('.container-comentarios-dinamico');
-        if (container) {
-            container.setAttribute('data-colecao', tag.dataset.section);
+    tag.addEventListener('click', function() {
+        // Se o usuário clicou manualmente, ele quer ver o topo daquela seção
+        // Então limpamos a memória de scroll antiga
+        const saved = localStorage.getItem('anigeek_persistence_v2');
+        if (saved) {
+            const state = JSON.parse(saved);
+            state.scrollY = 0; 
+            localStorage.setItem('anigeek_persistence_v2', JSON.stringify(state));
         }
 
+        document.querySelectorAll('.filter-tag').forEach(t => t.classList.remove('active'));
+        this.classList.add('active');
+
+        // Atualiza o container de comentários se necessário
+        const container = document.querySelector('.container-comentarios-dinamico');
+        if (container) {
+            container.setAttribute('data-colecao', this.dataset.section);
+        }
+
+        // Limpa ID da URL para não confundir o sistema
         const url = new URL(window.location);
         url.searchParams.delete('id');
         window.history.pushState({}, '', url);
 
-        carregarSecao(tag.dataset.section);
-        setTimeout(reiniciarModuloComentarios, 500);
+        carregarSecao(this.dataset.section);
     });
 });
 
 /**
- * Inicialização principal
+ * Inicialização principal ao carregar o DOM
  */
 window.addEventListener('DOMContentLoaded', () => {
     const params = new URLSearchParams(window.location.search);
@@ -134,7 +154,6 @@ window.addEventListener('DOMContentLoaded', () => {
     if (params.has('id')) {
         verificarLinkCompartilhado();
     } else {
-        // MODIFICAÇÃO: Verifica se há uma aba salva antes de clicar na primeira por padrão
         const savedStateStr = localStorage.getItem('anigeek_persistence_v2');
         let secaoParaCarregar = 'manchetes';
 
@@ -142,27 +161,20 @@ window.addEventListener('DOMContentLoaded', () => {
             const state = JSON.parse(savedStateStr);
             secaoParaCarregar = state.activeTabId || 'manchetes';
             
-            // Ativa visualmente a tag correta
+            // Ativa visualmente a aba salva
             document.querySelectorAll('.filter-tag').forEach(t => {
                 if(t.dataset.section === secaoParaCarregar) t.classList.add('active');
                 else t.classList.remove('active');
             });
         }
 
-        const abaAlvo = document.querySelector(`.filter-tag[data-section="${secaoParaCarregar}"]`);
-        if (abaAlvo) {
-            // Se já está salva, carregamos direto sem forçar o click (que resetaria o scroll)
-            carregarSecao(secaoParaCarregar);
-        } else {
-            const primeiraAba = document.querySelector('.filter-tag');
-            if (primeiraAba) primeiraAba.click();
-            else carregarSecao('manchetes');
-        }
+        // Carrega a seção sem disparar o evento de .click() manual para não resetar o scroll
+        carregarSecao(secaoParaCarregar);
     }
 });
 
 /**
- * CSS dinâmico por seção
+ * Gerencia a troca de CSS por seção
  */
 function gerenciarCSSDaSecao(nome) {
     const linkAntigo = document.getElementById('css-secao-dinamica');
@@ -175,5 +187,5 @@ function gerenciarCSSDaSecao(nome) {
     document.head.appendChild(novoLink);
 }
 
-// Exposição global mínima
+// Exposição global para ser chamado de outros scripts
 window.carregarSecao = carregarSecao;
