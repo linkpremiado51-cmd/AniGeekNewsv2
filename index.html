@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <!-- ===== VERIFICAÇÕES ===== -->
-   <meta name="monetag" content="e06df971ba6dd42eb5581027c13cb0a7"
-  <meta name="ppck-ver" content="68939c8da52b56e7fdbd2814436b04db" />
+    <meta name="monetag" content="e06df971ba6dd42eb5581027c13cb0a7">
+    <meta name="ppck-ver" content="68939c8da52b56e7fdbd2814436b04db" />
     <meta name="6a97888e-site-verification" content="ccb57535b53ed6b31254339d34d7ea73">
 
     <meta charset="UTF-8">
@@ -24,7 +23,7 @@
     <link rel="stylesheet" href="estilos/cabecalho-rodape.css">
     <link rel="stylesheet" href="estilos/componentes.css">
         
-<script src="https://quge5.com/88/tag.min.js" data-zone="207000" async data-cfasync="false"></script>
+    <script src="https://quge5.com/88/tag.min.js" data-zone="207000" async data-cfasync="false"></script>
 
     <style>
         html { scroll-behavior: smooth; }
@@ -37,6 +36,14 @@
             width: 100%; display: flex; justify-content: center; align-items: center;
             background: var(--bg-body); padding: 8px 0; border-bottom: 1px solid var(--border-ui); z-index: 9998;
         }
+        
+        /* ESTABILIDADE DE LAYOUT: Evita o pulo de página enquanto o Firebase carrega */
+        #conteudo_de_destaque {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
         .destaque-secao.destacado {
             animation: destacarArtigo 1.5s ease-in-out; position: relative;
         }
@@ -51,14 +58,22 @@
 <body>
 
 <script>
-    // RECUPERAÇÃO DE SCROLL IMEDIATA
+    /**
+     * BLOCO DE RECUPERAÇÃO IMEDIATA (Anti-Flicker)
+     * Executa antes do carregamento do body para preparar variáveis e altura.
+     */
     (function() {
         try {
             const saved = localStorage.getItem('anigeek_persistence_v2');
             if (saved) {
                 const state = JSON.parse(saved);
+                // Define globalmente para as seções lerem
                 if (state.newsLoaded) window.noticiasExibidas = state.newsLoaded;
-                if (state.scrollY > 0) window.scrollTo(0, state.scrollY);
+                
+                // Pré-ajuste de scroll para evitar que a página comece no topo e pule
+                if (state.scrollY > 0) {
+                    window.scrollTo(0, state.scrollY);
+                }
             }
         } catch (e) {}
     })();
@@ -91,7 +106,7 @@
 <main id="dynamic-content">
     <section class="hero">
         <div id="conteudo_de_destaque">
-            <p style="text-align:center;padding-top:100px;color:var(--text-muted)">Iniciando portal...</p>
+            <p style="text-align:center;padding-top:100px;color:var(--text-muted)">Sincronizando portal...</p>
         </div>
     </section>
 </main>
@@ -111,6 +126,9 @@
 <script src="scripts/recomendacao-secao.js"></script>
 
 <script>
+/**
+ * SISTEMA DE PERSISTÊNCIA DE SESSÃO V2
+ */
 (function() {
     const PERSISTENCE_KEYS = {
         STATE: 'anigeek_persistence_v2',
@@ -119,9 +137,10 @@
     
     function saveState() {
         try {
+            const activeTab = document.querySelector('#filterScroller .filter-tag.active');
             const state = {
                 scrollY: window.scrollY,
-                activeTabId: document.querySelector('#filterScroller .filter-tag.active')?.dataset?.section || 'manchetes',
+                activeTabId: activeTab ? activeTab.dataset.section : 'manchetes',
                 newsLoaded: window.noticiasExibidas || 5,
                 lastArticleId: window.lastArticleId || null,
                 timestamp: Date.now()
@@ -137,6 +156,7 @@
             if (!saved) return null;
             const state = JSON.parse(saved);
             const ts = parseInt(localStorage.getItem(PERSISTENCE_KEYS.SESSION_TS) || '0');
+            // Expira após 45 minutos de inatividade
             if (Date.now() - ts > 45 * 60 * 1000) return null;
             return state;
         } catch (e) { return null; }
@@ -146,10 +166,10 @@
         const state = loadState();
         if (!state) return;
 
-        // 1. Garante que a quantidade de notícias seja aplicada globalmente
+        // 1. Aplica a quantidade de notícias global
         if (state.newsLoaded) window.noticiasExibidas = state.newsLoaded;
 
-        // 2. Restaura Aba
+        // 2. Restaura Aba Ativa
         if (state.activeTabId) {
             const checkTab = setInterval(() => {
                 const tab = document.querySelector(`.filter-tag[data-section="${state.activeTabId}"]`);
@@ -161,27 +181,31 @@
             setTimeout(() => clearInterval(checkTab), 3000);
         }
 
-        // 3. Scroll e Busca por Paginação
+        // 3. Restaura Posição de Leitura e Artigo Específico
         const perseguirArtigo = (attempts = 0) => {
             const article = state.lastArticleId ? document.getElementById(`artigo-${state.lastArticleId}`) : null;
             const btnMais = document.getElementById('btn-carregar-mais');
 
             if (article) {
-                article.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                article.scrollIntoView({ behavior: 'instant', block: 'center' });
                 article.classList.add('destacado');
             } else if (btnMais && btnMais.offsetParent !== null && attempts < 10) {
+                // Se o artigo não está aqui mas o botão sim, o usuário carregou mais notícias antes
                 btnMais.click();
                 setTimeout(() => perseguirArtigo(attempts + 1), 600);
             } else if (state.scrollY > 0) {
-                window.scrollTo({ top: state.scrollY, behavior: 'smooth' });
+                // Se não há artigo específico, apenas restaura os pixels do scroll
+                window.scrollTo({ top: state.scrollY, behavior: 'instant' });
             }
         };
 
-        setTimeout(perseguirArtigo, 1200);
+        // Delay para garantir que o Firebase injetou o primeiro lote
+        setTimeout(perseguirArtigo, 1500);
     }
 
     document.addEventListener('DOMContentLoaded', () => {
         restoreState();
+        // Autosave a cada 5 segundos ou no scroll
         setInterval(saveState, 5000);
         window.addEventListener('scroll', () => {
             clearTimeout(window.scTimer);
@@ -194,6 +218,7 @@
 </script>
 
 <script>
+// Barra de Progresso de Leitura
 window.addEventListener('load', () => {
     let lastScroll = 0;
     window.addEventListener('scroll', () => {
