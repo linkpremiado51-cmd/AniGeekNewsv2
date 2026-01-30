@@ -1,10 +1,11 @@
 /* ======================================================
-   AniGeekNews – Enterprise Section System v8.0 (Final Corrected)
-   • Barra de Pesquisa Externa (Acima das Abas)
-   • Auto-Clique Real ao Adicionar
+   AniGeekNews – Enterprise Section System v9.0 (FINAL)
+   • Auto-Clique Real Restaurado
+   • Barra de Pesquisa Externa (Topo)
    • Capa Personalizada no Menu
-   • Personagem com Fade In/Out (Sem deslize)
-   • Correção de Altura (Sem Pulos na Pesquisa)
+   • Personagem Estático (Fade Only)
+   • Correção de Pulo de Layout
+   • Código Completo (Sem cortes)
 ====================================================== */
 
 (function(){
@@ -12,9 +13,9 @@
 const CONFIG = {
   MAX_TABS: 12,
   KEYS: {
-    ORDER: 'ag_v8_order',
-    MODE:  'ag_v8_mode', // 'dynamic' ou 'fixed'
-    STATS: 'ag_v8_stats'
+    ORDER: 'ag_v9_order',
+    MODE:  'ag_v9_mode', // 'dynamic' ou 'fixed'
+    STATS: 'ag_v9_stats'
   }
 };
 
@@ -67,28 +68,28 @@ const CATALOGO = [
 ];
 
 /* ===========================
-   CSS INJETADO
+   CSS INJETADO (COMPLETO)
 =========================== */
 const styles = `
-  /* --- LAYOUT GLOBAL --- */
-  .ag-interface-container {
+  /* --- CONTAINER GLOBAL --- */
+  .ag-interface-wrapper {
     display: flex;
     flex-direction: column;
     width: 100%;
-    margin-bottom: 10px;
+    position: relative;
+    margin-bottom: 15px;
   }
 
-  /* --- BARRA DE PESQUISA E BOTÕES (EXTERNO/TOPO) --- */
+  /* --- HEADER EXTERNO (PESQUISA E BOTÕES ACIMA DAS ABAS) --- */
   .ag-external-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 10px;
-    padding: 10px 0;
+    gap: 12px;
+    padding: 10px 5px;
     width: 100%;
-    max-width: 100%;
+    z-index: 102; /* Acima de tudo */
     background: transparent;
-    z-index: 101;
   }
 
   .ag-search-wrapper {
@@ -109,44 +110,46 @@ const styles = `
 
   .ag-search-input {
     width: 100%;
-    padding: 8px 10px 8px 32px;
-    border-radius: 6px;
+    padding: 9px 12px 9px 34px;
+    border-radius: 8px;
     border: 1px solid rgba(0,0,0,0.1);
-    background: rgba(255,255,255,0.9);
+    background: rgba(255,255,255,0.95);
     font-size: 11px;
     font-weight: 500;
     outline: none;
     transition: all 0.3s ease;
-    cursor: pointer; /* Indica que é clicável para abrir o menu */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.03);
   }
 
   body.dark-mode .ag-search-input {
-    background: rgba(40,40,40,0.9);
+    background: rgba(40,40,40,0.95);
     border-color: rgba(255,255,255,0.1);
     color: #fff;
   }
 
   .ag-search-input:focus {
     border-color: var(--primary-color, #e50914);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    background: #fff;
   }
+  body.dark-mode .ag-search-input:focus { background: #222; }
 
-  /* --- BOTÕES DE MODO --- */
+  /* --- BOTÕES DE MODO (FIXO/AUTO) --- */
   .ag-mode-group {
-    background: rgba(0,0,0,0.05);
+    background: rgba(0,0,0,0.06);
     padding: 3px;
-    border-radius: 6px;
+    border-radius: 8px;
     display: flex;
     flex-shrink: 0;
   }
   body.dark-mode .ag-mode-group { background: rgba(255,255,255,0.1); }
 
   .ag-mode-btn {
-    padding: 6px 12px;
+    padding: 7px 14px;
     border: none;
     background: transparent;
-    border-radius: 4px;
-    font-size: 9px; 
+    border-radius: 6px;
+    font-size: 9px;
     font-weight: 800;
     color: #888;
     cursor: pointer;
@@ -157,32 +160,35 @@ const styles = `
   .ag-mode-btn.active {
     background: #fff;
     color: #000;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
   }
   body.dark-mode .ag-mode-btn.active {
     background: #444;
     color: #fff;
   }
 
-  /* --- GAVETA (MENU DA ENGRENAGEM) --- */
+  /* --- GAVETA (DRAWER) --- */
   #ag-drawer {
     background: #ffffff;
     border-bottom: 1px solid #e0e0e0;
     overflow: hidden;
     max-height: 0;
-    transition: max-height 0.5s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s ease;
+    /* Apenas max-height e opacity animam, sem transform */
+    transition: max-height 0.5s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease;
     opacity: 0;
     width: 100%;
-    position: absolute;
+    position: absolute; /* Sobrepõe o conteúdo abaixo */
+    top: 100%; /* Logo abaixo do header/abas */
     left: 0;
     z-index: 1000;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+    border-radius: 0 0 12px 12px;
   }
 
   body.dark-mode #ag-drawer {
     background: #141414;
     border-color: #333;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.7);
   }
 
   #ag-drawer.open {
@@ -190,146 +196,159 @@ const styles = `
     opacity: 1;
   }
 
-  /* Conteúdo da gaveta com scroll */
+  /* Scroll interno */
   .ag-drawer-scroll {
     position: relative;
     z-index: 5;
     max-height: 85vh;
     overflow-y: auto;
-    padding: 0; /* Padding removido para capa encostar nas bordas se quiser, mas ajustado abaixo */
     scrollbar-width: thin;
   }
-  
-  /* Container interno para dar espaçamento nas laterais */
-  .ag-drawer-inner {
+
+  /* Container interno com altura mínima para evitar PULO (Jitter) */
+  .ag-drawer-content {
     padding: 20px 15px;
-    /* Altura mínima para evitar que o layout pule (Jitter) na pesquisa */
-    min-height: 400px; 
+    min-height: 450px; /* Garante tamanho fixo mesmo com poucos resultados */
+    display: flex;
+    flex-direction: column;
   }
 
-   /* IMAGEM DO PERSONAGEM FIXA */
+  /* --- IMAGEM DE CAPA NO MENU --- */
+  .ag-drawer-cover {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 25px; /* Não encostar nas categorias */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    display: block;
+    flex-shrink: 0;
+  }
+
+  /* --- IMAGEM DE PERSONAGEM (FIXA/SEM DESLIZE) --- */
   .ag-char-fixed {
-    position: fixed; /* Imóvel em relação à tela ou container pai transformado */
+    position: absolute; /* Absoluto em relação ao drawer, mas fixo visualmente */
     bottom: 0;
     right: 0;
-    height: 85vh; /* Ajuste conforme necessário */
+    height: 90%;
     width: auto;
-    max-width: 45vw;
+    max-width: 50vw;
     object-fit: contain;
     object-position: bottom right;
     pointer-events: none;
-    z-index: 2; /* Acima do conteúdo, abaixo do toast */
+    z-index: 1; /* Atrás do conteúdo */
     
-    /* Efeito APENAS Fade In/Out */
+    /* Efeito APENAS Opacidade (Fade In/Out) - NADA de Transform/Slide */
     opacity: 0;
-    transition: opacity 0.4s ease-in-out;
-    transform: none !important; /* Garante que não desliza */
+    transition: opacity 0.5s ease;
   }
 
   #ag-drawer.open .ag-char-fixed {
     opacity: 1;
   }
 
-  /* CAPA NO TOPO DO MENU */
-  .ag-drawer-cover {
-    width: 100%;
-    height: 140px;
-    object-fit: cover;
-    border-radius: 8px;
-    margin-bottom: 25px; /* Não encostar nas categorias */
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    display: block;
-  }
-
   /* --- SESSÕES E GRID --- */
   .ag-section-block {
     margin-bottom: 25px;
     position: relative;
-    z-index: 3; /* Acima da imagem do personagem */
+    z-index: 10; /* Acima do personagem */
   }
 
   .ag-section-header-btn {
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
     background: transparent;
     border: none;
-    padding: 4px 0;
+    padding: 0;
     cursor: pointer;
-    width: fit-content;
+    transition: opacity 0.2s;
   }
+  .ag-section-header-btn:hover { opacity: 0.8; }
 
   .ag-section-text {
     font-size: 10px;
     font-weight: 900;
     text-transform: uppercase;
-    letter-spacing: 0.8px;
-    color: #333;
+    letter-spacing: 1px;
+    color: #444;
   }
-  body.dark-mode .ag-section-text { color: #fff; }
+  body.dark-mode .ag-section-text { color: #eee; }
 
   .ag-section-header-btn.is-active .ag-section-text {
     color: var(--primary-color, #e50914);
     text-decoration: underline;
+    text-decoration-thickness: 2px;
   }
 
   .ag-section-marker {
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 14px;
     border-radius: 2px;
   }
 
   .ag-grid-container {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(115px, 1fr));
     gap: 8px;
   }
 
   .ag-card {
     position: relative;
-    background: #f4f4f4;
+    background: #f7f7f7;
     border: 1px solid transparent;
-    border-radius: 5px;
-    padding: 10px 8px;
+    border-radius: 6px;
+    padding: 12px 8px;
     font-size: 9.5px;
     font-weight: 600;
-    color: #444;
+    color: #555;
     text-align: center;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.2s;
     display: flex;
     align-items: center;
     justify-content: center;
+    min-height: 40px;
   }
-
   body.dark-mode .ag-card {
-    background: #222;
+    background: #252525;
     color: #ccc;
   }
 
-  .ag-card:hover { transform: translateY(-2px); }
+  .ag-card:hover { 
+    transform: translateY(-2px); 
+    background: #eee;
+  }
+  body.dark-mode .ag-card:hover { background: #333; }
 
   .ag-card.is-selected {
     background: #fff;
     border-color: var(--primary-color, #e50914);
     color: var(--primary-color, #e50914);
     font-weight: 800;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
   }
-  body.dark-mode .ag-card.is-selected { background: #333; }
+  body.dark-mode .ag-card.is-selected { background: #1a1a1a; }
 
   .ag-card-action {
     position: absolute;
-    top: 3px;
-    right: 4px;
+    top: 4px;
+    right: 5px;
     font-size: 8px;
-    opacity: 0.7;
+    width: 12px;
+    height: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.6;
   }
+  .ag-card-action:hover { opacity: 1; color: red; }
 
   /* --- TOAST --- */
   #ag-toast-container {
     position: fixed;
-    bottom: 20px;
+    bottom: 25px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 99999;
@@ -342,20 +361,23 @@ const styles = `
   .ag-toast {
     background: rgba(20, 20, 20, 0.95);
     color: #fff;
-    padding: 10px 20px;
-    border-radius: 50px;
+    padding: 10px 24px;
+    border-radius: 30px;
     font-size: 10px;
     font-weight: 600;
-    backdrop-filter: blur(4px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    backdrop-filter: blur(5px);
+    opacity: 0;
+    transform: translateY(20px);
     animation: agSlideUp 0.3s forwards;
   }
   .ag-toast.success { border-left: 3px solid #00C851; }
   .ag-toast.error { border-left: 3px solid #ff4444; }
 
-  @keyframes agSlideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes agSlideUp { to { opacity: 1; transform: translateY(0); } }
   @keyframes agFadeOut { to { opacity: 0; transform: translateY(-10px); } }
 
-  /* --- BARRA DE ABAS (FILTERS) --- */
+  /* --- BARRA DE ABAS (ORIGINAL) --- */
   #filterScroller {
     display: flex;
     align-items: center;
@@ -363,6 +385,8 @@ const styles = `
     overflow-x: auto;
     scrollbar-width: none;
     padding-bottom: 5px;
+    position: relative;
+    z-index: 10;
   }
   #filterScroller::-webkit-scrollbar { display: none; }
 
@@ -372,8 +396,10 @@ const styles = `
     z-index: 99;
     background: rgba(255, 255, 255, 0.9);
     backdrop-filter: blur(5px);
-    border-left: 1px solid rgba(0,0,0,0.1);
-    box-shadow: -5px 0 10px rgba(0,0,0,0.05);
+    border-left: 1px solid rgba(0,0,0,0.05);
+    box-shadow: -10px 0 20px rgba(0,0,0,0.05);
+    min-width: 40px;
+    justify-content: center;
   }
   body.dark-mode .filter-tag.cfg-btn {
     background: rgba(30, 30, 30, 0.9);
@@ -390,6 +416,7 @@ document.head.appendChild(styleSheet);
 =========================== */
 function load(k,d){ try{ return JSON.parse(localStorage.getItem(k)) ?? d }catch(e){ return d } }
 function save(k,v){ localStorage.setItem(k,JSON.stringify(v)); }
+
 function showToast(msg, type='normal'){
   let c = document.getElementById('ag-toast-container');
   if(!c){ c = document.createElement('div'); c.id='ag-toast-container'; document.body.appendChild(c); }
@@ -399,8 +426,14 @@ function showToast(msg, type='normal'){
 }
 
 function getMode(){ return load(CONFIG.KEYS.MODE, 'dynamic'); }
-function setMode(m){ save(CONFIG.KEYS.MODE, m); updateModeButtons(); renderDrawer(document.querySelector('.ag-search-input').value); }
-function getOrder(){ return load(CONFIG.KEYS.ORDER, ['manchetes', 'destaques']); }
+function setMode(m){ 
+    save(CONFIG.KEYS.MODE, m); 
+    updateModeButtons(); 
+    // Atualiza a visualização sem perder o filtro atual
+    const currentSearch = document.querySelector('.ag-search-input') ? document.querySelector('.ag-search-input').value : "";
+    renderDrawer(currentSearch); 
+}
+function getOrder(){ return load(CONFIG.KEYS.ORDER, ['manchetes', 'destaques', 'ultimas']); }
 
 function findItem(id){
   for(let sec of CATALOGO){
@@ -412,24 +445,22 @@ function findItem(id){
 }
 
 /* ===========================
-   RENDERIZAÇÃO DA INTERFACE
+   CONSTRUÇÃO DA INTERFACE
 =========================== */
-// Inicializa a estrutura DOM
-function initStructure() {
+function initInterface() {
     const scrollContainer = document.getElementById('filterScroller');
     if (!scrollContainer) return;
 
-    // Criar container pai se não existir
-    if (!document.querySelector('.ag-interface-container')) {
-        const wrapper = document.createElement('div');
-        wrapper.className = 'ag-interface-container';
+    // 1. Cria Wrapper Global se não existir
+    let wrapper = document.querySelector('.ag-interface-wrapper');
+    if (!wrapper) {
+        wrapper = document.createElement('div');
+        wrapper.className = 'ag-interface-wrapper';
         scrollContainer.parentNode.insertBefore(wrapper, scrollContainer);
         wrapper.appendChild(scrollContainer);
     }
 
-    const wrapper = document.querySelector('.ag-interface-container');
-
-    // 1. Criar Header Externo (Barra e Botões ACIMA das abas)
+    // 2. Injeta Header Externo (Barra + Botões) ACIMA do scroller
     if (!document.querySelector('.ag-external-header')) {
         const header = document.createElement('div');
         header.className = 'ag-external-header';
@@ -439,32 +470,44 @@ function initStructure() {
         header.innerHTML = `
             <div class="ag-search-wrapper">
                 ${searchIcon}
-                <input type="text" class="ag-search-input" placeholder="Pesquisar categoria...">
+                <input type="text" class="ag-search-input" placeholder="Pesquisar...">
             </div>
             <div class="ag-mode-group">
                 <button id="btn-fixo" class="ag-mode-btn">Fixo</button>
-                <button id="btn-dinamico" class="ag-mode-btn">Automático</button>
+                <button id="btn-dinamico" class="ag-mode-btn">Auto</button>
             </div>
         `;
 
         wrapper.insertBefore(header, scrollContainer);
 
-        // Event Listeners do Header
-        header.querySelector('.ag-search-input').addEventListener('click', () => openDrawer());
-        header.querySelector('.ag-search-input').addEventListener('input', (e) => {
-            if(!document.getElementById('ag-drawer').classList.contains('open')) openDrawer();
+        // Eventos do Header
+        const searchInput = header.querySelector('.ag-search-input');
+        
+        // Clique: Abre o Drawer
+        searchInput.addEventListener('click', () => {
+             const drawer = document.getElementById('ag-drawer');
+             if(!drawer.classList.contains('open')) {
+                 renderDrawer(searchInput.value);
+                 drawer.classList.add('open');
+             }
+        });
+
+        // Digitação: Abre e Filtra
+        searchInput.addEventListener('input', (e) => {
+            const drawer = document.getElementById('ag-drawer');
+            if(!drawer.classList.contains('open')) drawer.classList.add('open');
             filterDrawer(e.target.value);
         });
-        
+
+        // Botões de Modo
         document.getElementById('btn-fixo').onclick = () => setMode('fixed');
         document.getElementById('btn-dinamico').onclick = () => setMode('dynamic');
     }
 
-    // 2. Criar a Gaveta (Drawer) DEPOIS do scroller
+    // 3. Cria o Drawer (Gaveta) DEPOIS do scroller
     if (!document.getElementById('ag-drawer')) {
         const drawer = document.createElement('div');
         drawer.id = 'ag-drawer';
-        // A capa e o personagem são inseridos no renderDrawer
         wrapper.appendChild(drawer);
     }
 
@@ -473,42 +516,53 @@ function initStructure() {
 
 function updateModeButtons() {
     const mode = getMode();
-    document.getElementById('btn-fixo').className = `ag-mode-btn ${mode==='fixed'?'active':''}`;
-    document.getElementById('btn-dinamico').className = `ag-mode-btn ${mode==='dynamic'?'active':''}`;
+    const btnFixo = document.getElementById('btn-fixo');
+    const btnAuto = document.getElementById('btn-dinamico');
+    if(btnFixo && btnAuto) {
+        btnFixo.className = `ag-mode-btn ${mode==='fixed'?'active':''}`;
+        btnAuto.className = `ag-mode-btn ${mode==='dynamic'?'active':''}`;
+    }
 }
 
+/* ===========================
+   RENDERIZAÇÃO DA BARRA DE ABAS
+=========================== */
 function renderBar(){
   const bar = document.getElementById('filterScroller');
   if(!bar) return;
   const order = getOrder();
   
-  // Limpa apenas os botões de categoria, mantém a estrutura se houver
   bar.innerHTML = '';
 
   order.forEach(id => {
     const item = findItem(id);
     if(!item) return;
+
     const btn = document.createElement('button');
     btn.className = 'filter-tag';
     btn.textContent = item.label || item.sessao;
     btn.dataset.id = id;
+    
     btn.onclick = () => {
+      // Remove classe ativa de todos
       document.querySelectorAll('#filterScroller .filter-tag').forEach(b=>b.classList.remove('active'));
       btn.classList.add('active');
       
-      // Fecha a gaveta ao clicar na aba
+      // Fecha a gaveta
       document.getElementById('ag-drawer').classList.remove('open');
       
+      // Lógica de URL
       const url = new URL(window.location);
       url.searchParams.set('secao', id);
       window.history.replaceState({}, '', url);
 
+      // Carrega conteúdo
       if(window.carregarSecao) window.carregarSecao(id);
     };
     bar.appendChild(btn);
   });
 
-  // Botão Engrenagem (sempre por último)
+  // Botão Engrenagem
   const cfg = document.createElement('button');
   cfg.className = 'filter-tag cfg-btn';
   cfg.innerHTML = '⚙';
@@ -516,21 +570,18 @@ function renderBar(){
   bar.appendChild(cfg);
 }
 
-function openDrawer() {
-    const drawer = document.getElementById('ag-drawer');
-    if(!drawer.classList.contains('open')) {
-        renderDrawer(document.querySelector('.ag-search-input').value);
-        drawer.classList.add('open');
-    }
-}
-
+/* ===========================
+   CONTROLE DO DRAWER
+=========================== */
 function toggleDrawer(){
   const drawer = document.getElementById('ag-drawer');
   if(drawer.classList.contains('open')){
     drawer.classList.remove('open');
   } else {
-    // Não foca automaticamente no input para evitar abrir teclado
-    openDrawer();
+    // Ao abrir pela engrenagem, apenas renderiza, não foca no teclado
+    const currentSearch = document.querySelector('.ag-search-input') ? document.querySelector('.ag-search-input').value : "";
+    renderDrawer(currentSearch);
+    drawer.classList.add('open');
   }
 }
 
@@ -539,21 +590,22 @@ function renderDrawer(filterText = ""){
   const currentOrder = getOrder();
   const currentMode = getMode();
 
-  // URL da Imagem da Capa
+  // URL da Imagem da Capa (Solicitada)
   const coverUrl = "https://i.postimg.cc/HWM72wfT/the-pensive-journey-by-chcofficial-dhme17e-pre.jpg";
   // URL da Imagem do Personagem
   const charUrl = "https://i.postimg.cc/W49RX3dK/anime-boy-render-04-by-luxio56lavi-d5xed2a.png";
 
   drawer.innerHTML = `
     <img src="${charUrl}" class="ag-char-fixed" alt="Character">
+    
     <div class="ag-drawer-scroll">
-      <div class="ag-drawer-inner">
+      <div class="ag-drawer-content">
         <img src="${coverUrl}" class="ag-drawer-cover" alt="Cover">
 
         <div id="ag-catalog-container"></div>
         
-        <div style="text-align:center; padding:20px 0; font-size:10px; color:#999;">
-             ${currentOrder.length} / ${CONFIG.MAX_TABS} categorias ativas
+        <div style="text-align:center; padding-top:20px; font-size:10px; color:#999; position:relative; z-index:10;">
+             ${currentOrder.length} de ${CONFIG.MAX_TABS} abas
         </div>
       </div>
     </div>
@@ -563,7 +615,7 @@ function renderDrawer(filterText = ""){
   const term = filterText.toLowerCase();
 
   CATALOGO.forEach(sec => {
-    // Lógica de Filtro
+    // Filtro
     const itensFiltrados = sec.itens.filter(i => i.label.toLowerCase().includes(term));
     const sessaoMatch = sec.sessao.toLowerCase().includes(term);
 
@@ -574,6 +626,7 @@ function renderDrawer(filterText = ""){
     sectionDiv.className = 'ag-section-block';
 
     const isCatSelected = currentOrder.includes(sec.id);
+    // Ícone condicional
     let catIcon = isCatSelected ? (currentMode === 'dynamic' ? ' ✕' : ' •••') : '';
 
     sectionDiv.innerHTML = `
@@ -584,7 +637,7 @@ function renderDrawer(filterText = ""){
       <div class="ag-grid-container"></div>
     `;
 
-    // Click no Título da Sessão
+    // Evento da Categoria Pai
     sectionDiv.querySelector('.ag-section-header-btn').onclick = () => {
         if(isCatSelected && currentMode === 'fixed') handleAction(sec.id, sec.sessao);
         else toggleItem(sec.id, sec.sessao);
@@ -606,7 +659,7 @@ function renderDrawer(filterText = ""){
       `;
 
       card.onclick = (e) => {
-        if(e.target.dataset.action) {
+        if(e.target.dataset.action || e.target.parentNode.dataset.action) {
           e.stopPropagation();
           handleAction(item.id, item.label);
           return;
@@ -618,9 +671,11 @@ function renderDrawer(filterText = ""){
   });
 }
 
-// Filtra visualmente sem recriar o HTML (preserva estado)
+// Filtro Otimizado (Sem recriar DOM para evitar fechar teclado se estiver aberto)
 function filterDrawer(term) {
   const termLower = term.toLowerCase();
+  
+  // Atualiza blocos
   document.querySelectorAll('.ag-section-block').forEach(block => {
     const catId = block.querySelector('.ag-section-header-btn').dataset.catId;
     const cat = CATALOGO.find(c => c.id === catId);
@@ -628,7 +683,6 @@ function filterDrawer(term) {
     const sessaoMatch = cat.sessao.toLowerCase().includes(termLower);
     const hasItems = cat.itens.some(i => i.label.toLowerCase().includes(termLower));
     
-    // Se não der match na sessão nem nos itens, esconde o bloco
     if (termLower !== "" && !sessaoMatch && !hasItems) {
       block.style.display = 'none';
       return;
@@ -645,38 +699,47 @@ function filterDrawer(term) {
 }
 
 /* ===========================
-   AÇÕES (ADD/REMOVE)
+   AÇÕES: ADICIONAR / REMOVER / AUTO-CLIQUE
 =========================== */
 function toggleItem(id, label){
   let order = getOrder();
 
   if(order.includes(id)){
-    // Remover
+    // REMOVER
     order = order.filter(x => x !== id);
     showToast(`Removido: <b>${label}</b>`);
     save(CONFIG.KEYS.ORDER, order);
     renderBar();
-    renderDrawer(document.querySelector('.ag-search-input').value);
+    // Atualiza drawer sem fechar
+    const currentSearch = document.querySelector('.ag-search-input') ? document.querySelector('.ag-search-input').value : "";
+    renderDrawer(currentSearch);
   } else {
-    // Adicionar
+    // ADICIONAR
     if(order.length >= CONFIG.MAX_TABS) {
       showToast(`Limite de abas atingido!`, 'error');
       return;
     }
     order.push(id);
     save(CONFIG.KEYS.ORDER, order);
+    
+    // 1. Renderiza a barra para o botão aparecer
     renderBar();
-    renderDrawer(document.querySelector('.ag-search-input').value);
+    // 2. Atualiza drawer visualmente
+    const currentSearch = document.querySelector('.ag-search-input') ? document.querySelector('.ag-search-input').value : "";
+    renderDrawer(currentSearch);
     showToast(`Adicionado: <b>${label}</b>`, 'success');
 
-    // --- AUTO-CLIQUE REAL RESTAURADO ---
-    // Aguarda o botão ser renderizado na barra e clica nele
+    // ==========================================================
+    // INSTRUÇÃO CRÍTICA: AUTO-CLIQUE REAL APÓS ADICIONAR
+    // ==========================================================
     setTimeout(() => {
+        // Busca o botão recém criado na barra
         const btn = document.querySelector(`#filterScroller .filter-tag[data-id="${id}"]`);
         if(btn) {
-            btn.click(); // Dispara o clique real
+            console.log("Auto-clicando na nova aba:", id);
+            btn.click(); // Simula o clique físico
         }
-    }, 100);
+    }, 150); // Delay curto para garantir que o DOM atualizou
   }
 }
 
@@ -698,41 +761,49 @@ function handleAction(id, label){
             order.splice(target, 0, id);
             save(CONFIG.KEYS.ORDER, order);
             renderBar();
-            renderDrawer(document.querySelector('.ag-search-input').value);
+            const currentSearch = document.querySelector('.ag-search-input') ? document.querySelector('.ag-search-input').value : "";
+            renderDrawer(currentSearch);
         }
     }
   }
 }
 
 /* ===========================
-   INICIALIZAÇÃO
+   INICIALIZAÇÃO & DEEP LINKING
 =========================== */
 window.addEventListener('DOMContentLoaded', () => {
-  initStructure();
+  initInterface();
   renderBar();
 
-  // Deep Linking (Check URL)
+  // Verifica URL para abrir aba específica
   const params = new URLSearchParams(window.location.search);
-  const id = params.get('secao') || params.get('id'); // Se tiver ID de noticia, tenta achar categoria compativel se necessario
+  const idNews = params.get('id'); // Notícia
+  const idSec = params.get('secao'); // Seção direta
   
-  // Se houver parametro, garantir que está ativo e clicar
-  if (id) {
-     let order = getOrder();
-     // Verifica se o ID existe no catalogo
-     const exists = findItem(id);
-     
-     if (exists && !order.includes(id)) {
-         if(order.length >= CONFIG.MAX_TABS) order.pop();
-         order.push(id); // Adiciona ao final (ou inicio se preferir unshift)
-         save(CONFIG.KEYS.ORDER, order);
-         renderBar();
-     }
-     
-     if(exists) {
+  let targetId = null;
+
+  // Lógica: Se tem ID de noticia, forçamos 'saihate_no_paladin' (conforme seu exemplo anterior)
+  if(idNews) targetId = 'saihate_no_paladin';
+  else if(idSec) targetId = idSec;
+
+  if (targetId) {
+     // Verifica se ID é válido no catálogo
+     const item = findItem(targetId);
+     if(item) {
+         let order = getOrder();
+         // Se não estiver nas abas, adiciona
+         if (!order.includes(targetId)) {
+             if(order.length >= CONFIG.MAX_TABS) order.pop();
+             order.push(targetId);
+             save(CONFIG.KEYS.ORDER, order);
+             renderBar();
+         }
+         
+         // Clica na aba
          setTimeout(() => {
-             const btn = document.querySelector(`.filter-tag[data-id="${id}"]`);
+             const btn = document.querySelector(`.filter-tag[data-id="${targetId}"]`);
              if(btn) btn.click();
-         }, 200);
+         }, 300);
      }
   }
 });
