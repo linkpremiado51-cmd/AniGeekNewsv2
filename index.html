@@ -24,9 +24,22 @@
         html {
             scroll-behavior: smooth;
         }
+
         #premium-ads-system {
             position: relative;
             z-index: 9999;
+        }
+
+        /* BANNER SUPERIOR */
+        .top-banner-ad {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: var(--bg-body);
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border-ui);
+            z-index: 9998;
         }
     </style>
 </head>
@@ -34,6 +47,22 @@
 <body>
 
 <div id="progress-bar"></div>
+
+<!-- ===== ANÚNCIO SUPERIOR (BANNER VISÍVEL) ===== -->
+<div class="top-banner-ad">
+    <script>
+    (function(ibwbv){
+        var d = document,
+            s = d.createElement('script'),
+            l = d.scripts[d.scripts.length - 1];
+        s.settings = ibwbv || {};
+        s.src = "//unfinished-face.com/b.XCVmsldVGplz0uYeWbcB/ZeHmB9TuWZEU-lEkRPQTwYI3/NfjMAV1/OCD/gNt/NGj/cR2EMlDBUJ4/OlQa";
+        s.async = true;
+        s.referrerPolicy = 'no-referrer-when-downgrade';
+        l.parentNode.insertBefore(s, l);
+    })({});
+    </script>
+</div>
 
 <!-- ===== ANÚNCIO 1 — POP / REDIRECT ===== -->
 <script>
