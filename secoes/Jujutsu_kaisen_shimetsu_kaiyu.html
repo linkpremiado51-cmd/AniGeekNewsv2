@@ -53,15 +53,11 @@
   if (isStandalone) {
     const link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = '/AniGeekNewsv2/css/global.css';
+    link.href = '/AniGeekNewsv2/css/global.css'; // caminho do seu global.css
     document.head.appendChild(link);
   }
 })();
 </script>
-
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-  ...
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
       import { getFirestore, collection, onSnapshot, doc, updateDoc, increment, getDoc, setDoc, arrayUnion, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
