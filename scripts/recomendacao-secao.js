@@ -36,27 +36,9 @@ const CATALOGO = [
     itens: []
   },
   {
-    sessao: "Solo Leveling 1 temporada",
-    id: 'solo_leveling',
-    cor: "#0f172a",
-    itens: []
-  },
-  {
     sessao: "Jujutsu Kaisen: Shimetsu Kaiyu",
     id: 'Jujutsu_kaisen_shimetsu_kaiyu',
     cor: "#7c0a02",
-    itens: []
-  },
-  {
-    sessao: "Attack on Titan 1 temporada",
-    id: 'attack_on_titan',
-    cor: "#3b3b3b",
-    itens: []
-  },
-  {
-    sessao: "Demon Slayer 1 temporada",
-    id: 'demon_slayer',
-    cor: "#1f2937",
     itens: []
   },
   {
