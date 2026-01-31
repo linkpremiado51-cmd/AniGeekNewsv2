@@ -24,8 +24,8 @@ const CONFIG = {
 =========================== */
 const CATALOGO = [
   {
-    sessao: "PAGINA INICIAL",
-    id: 'manchetes',
+    sessao: "Anime I Geek",
+    id: 'anime_i_geek',
     cor: "#FF4500",
     itens: []
   },
@@ -630,7 +630,7 @@ function getOrder(){
   const saved = load(CONFIG.KEYS.ORDER, null);
   if(saved) return saved;
   // Padrão inicial com alguns IDs
-  return ['manchetes', 'destaques', 'ultimas'];
+  return ['anime_i_geek', 'destaques', 'ultimas'];
 }
 
 // Encontra ITEM ou CATEGORIA PAI pelo ID
