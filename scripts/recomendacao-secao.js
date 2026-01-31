@@ -630,7 +630,7 @@ function getOrder(){
   const saved = load(CONFIG.KEYS.ORDER, null);
   if(saved) return saved;
   // Padrão inicial com alguns IDs
-  return ['anime_i_geek', '', ''];
+  return ['anime_i_geek', 'saihate_no_paladin', 'Jujutsu_kaisen_shimetsu_kaiyu'];
 }
 
 // Encontra ITEM ou CATEGORIA PAI pelo ID
