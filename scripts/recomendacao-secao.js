@@ -11,7 +11,7 @@
 (function(){
 
 const CONFIG = {
-  MAX_TABS: 12,
+  MAX_TABS: 19,
   KEYS: {
     ORDER: 'ag_v7_order',
     MODE:  'ag_v7_mode', // 'dynamic' ou 'fixed'
@@ -630,7 +630,7 @@ function getOrder(){
   const saved = load(CONFIG.KEYS.ORDER, null);
   if(saved) return saved;
   // Padrão inicial com alguns IDs
-  return ['anime_i_geek', 'destaques', 'ultimas'];
+  return ['anime_i_geek', '', ''];
 }
 
 // Encontra ITEM ou CATEGORIA PAI pelo ID
