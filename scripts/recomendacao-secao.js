@@ -66,23 +66,7 @@ const CATALOGO = [
     itens: []
   }
 ];
-const MAPA_NOTICIA_SESSAO = {};
 
-Object.values(CATALOGO).forEach(secao => {
-if (!secao.id) return;
-
-// 1️⃣ O pai também é um item
-MAPA_NOTICIA_SESSAO[secao.id] = secao.id;
-
-// 2️⃣ Os filhos (se existirem)
-if (Array.isArray(secao.itens)) {
-secao.itens.forEach(item => {
-if (item.id) {
-MAPA_NOTICIA_SESSAO[item.id] = secao.id;
-}
-});
-}
-});
 /* ===========================
    CSS INJETADO
 =========================== */
@@ -643,17 +627,23 @@ function getMode(){ return load(CONFIG.KEYS.MODE, 'dynamic'); }
 function setMode(m){ save(CONFIG.KEYS.MODE, m); renderDrawer(); }
 
 function getOrder(){
-const saved = load(CONFIG.KEYS.ORDER, []);
-return Array.isArray(saved) ? saved : [];
+  const saved = load(CONFIG.KEYS.ORDER, null);
+  if(saved) return saved;
+  // Padrão inicial com alguns IDs
+  return ['manchetes', 'destaques', 'ultimas'];
 }
 
 // Encontra ITEM ou CATEGORIA PAI pelo ID
 function findItem(id){
   for(let sec of CATALOGO){
-    if(sec.id === id) {
-      return { id: sec.id, label: sec.sessao, isRoot: true };
-    }
-    const item = Array.isArray(sec.itens) ? sec.itens.find(i => i.id === id) : null;
+    // Verifica se é a própria categoria
+    if(sec.id === id) return sec;
+    // Verifica itens internos
+    const item = sec.itens.find(i => i.id === id);
+    if(item) return item;
+  }
+  return null;
+}
 
 function track(id){
   if(getMode() !== 'dynamic') return;
@@ -662,7 +652,8 @@ function track(id){
   save(CONFIG.KEYS.STATS, stats);
 
   const order = getOrder();
-  order = order.filter(id => MAPA_NOTICIA_SESSAO[id]);
+  order.sort((a,b) => (stats[b]||0) - (stats[a]||0));
+  save(CONFIG.KEYS.ORDER, order);
 }
 
 /* ===========================
@@ -936,20 +927,18 @@ function handleAction(id, label){
    FUNÇÃO: Garante que a aba exista no order
 =========================== */
 function ensureTabExists(id){
-// fonte única de verdade
-if (!MAPA_NOTICIA_SESSAO[id]) return false;
+  const exists = CATALOGO.some(sec => sec.id === id || sec.itens.some(i => i.id === id));
+  if (!exists) return false;
 
-let order = getOrder();
-
-if (!order.includes(id)) {
-if (order.length >= CONFIG.MAX_TABS) {
-order.pop();
-}
-order.unshift(id);
-save(CONFIG.KEYS.ORDER, order);
-}
-
-return true;
+  let order = getOrder();
+  if (!order.includes(id)) {
+    if (order.length >= CONFIG.MAX_TABS) {
+      order.pop();
+    }
+    order.unshift(id);
+    save(CONFIG.KEYS.ORDER, order);
+  }
+  return true;
 }
 
 /* ===========================
@@ -965,9 +954,10 @@ window.addEventListener('DOMContentLoaded', () => {
   
   // 1. Prioridade: ID da Notícia (Link Compartilhado)
   if (newsId) {
-  
-    const abaAlvo = MAPA_NOTICIA_SESSAO[newsId];
-if (!abaAlvo) return;
+    // IMPORTANTE: Aqui definimos a coleção onde estão as notícias.
+    // Como no seu arquivo HTML você usou 'saihate_no_paladin' como coleção principal,
+    // forçamos a abertura dessa aba.
+    const abaAlvo = 'saihate_no_paladin';
     
     // Garante que a aba esteja na lista de abas ativas e renderiza
     if(ensureTabExists(abaAlvo)) {
