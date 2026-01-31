@@ -103,7 +103,7 @@ function verificarLinkCompartilhado() {
 
     // Tenta encontrar a origem se o array global de notícias existir
     const item = window.noticias?.find(n => n.id === id);
-    const secao = item?.origem || 'manchetes';
+    const secao = item?.origem || 'anime_i_geek';
 
     carregarSecao(secao);
 
@@ -155,11 +155,11 @@ window.addEventListener('DOMContentLoaded', () => {
         verificarLinkCompartilhado();
     } else {
         const savedStateStr = localStorage.getItem('anigeek_persistence_v2');
-        let secaoParaCarregar = 'manchetes';
+        let secaoParaCarregar = 'anime_i_geek';
 
         if (savedStateStr) {
             const state = JSON.parse(savedStateStr);
-            secaoParaCarregar = state.activeTabId || 'manchetes';
+            secaoParaCarregar = state.activeTabId || 'anime_i_geek';
             
             // Ativa visualmente a aba salva
             document.querySelectorAll('.filter-tag').forEach(t => {
