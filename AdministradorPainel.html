@@ -2,324 +2,351 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel Master AniGeek v2.9 - Capa Hero</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AniGeek Studio Enterprise - v12.1 Analytics Edition</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #4361ee; --secondary: #121212;
-            --success: #28a745; --danger: #dc3545; --bg: #f4f7f6; --warning: #ffc107;
-            --ecommerce: #25d366; --hero: #6366f1;
+            --primary: #4f46e5; --primary-dark: #3730a3;
+            --secondary: #0f172a; --accent: #0ea5e9;
+            --success: #10b981; --danger: #ef4444; --warning: #f59e0b;
+            --analytics: #8b5cf6;
+            --bg: #f1f5f9; --surface: #ffffff;
+            --border: #e2e8f0; --text-main: #1e293b; --text-muted: #64748b;
         }
-        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background: var(--bg); margin: 0; padding: 10px; color: #333; }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Inter', sans-serif; }
+        body { background: var(--bg); margin: 0; padding: 0; color: var(--text-main); font-size: 12px; line-height: 1.4; overflow-x: hidden; }
+
+        /* Loader IA */
+        #ai-loader-inline {
+            display: none; align-items: center; gap: 8px; color: var(--primary);
+            font-weight: 800; font-size: 10px; text-transform: uppercase; margin-bottom: 5px; padding: 0 20px;
+        }
+        .dot-pulse { width: 8px; height: 8px; background: var(--primary); border-radius: 50%; animation: pulse-glow 1s infinite alternate; }
+        @keyframes pulse-glow { from { opacity: 0.3; transform: scale(0.8); } to { opacity: 1; transform: scale(1.2); } }
+
+        /* Header */
+        .header-enterprise {
+            background: var(--secondary); color: white; padding: 12px 16px;
+            display: flex; align-items: center; justify-content: space-between;
+            position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .header-enterprise h2 { margin: 0; font-size: 14px; font-weight: 800; text-transform: uppercase; }
+
+        /* Modais */
+        .generic-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(4px);
+            z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px;
+        }
+        .modal-content {
+            background: var(--surface); width: 100%; max-width: 500px;
+            border-radius: 12px; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+            max-height: 85vh; display: flex; flex-direction: column;
+        }
+        .modal-header { padding: 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: #f8fafc; }
+        .modal-body { overflow-y: auto; flex: 1; padding: 15px; }
+
+        /* Container Principal */
+        .painel-container { max-width: 1100px; margin: 0 auto; padding: 12px; padding-bottom: 160px; }
+
+        /* Busca IA */
+        .smart-search-area {
+            background: var(--surface); border: 2px solid var(--primary);
+            border-radius: 12px; padding: 15px; margin-bottom: 15px;
+        }
+        .search-row { display: flex; gap: 8px; }
+        .search-row input { flex: 1; padding: 12px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 14px; }
+        .btn-search { background: var(--primary); color: white; border: none; padding: 0 20px; border-radius: 8px; cursor: pointer; font-weight: 800; }
+
+        .results-dropdown { 
+            background: white; border: 1px solid var(--border); max-height: 250px; 
+            overflow-y: auto; margin-top: 8px; display: none; border-radius: 8px; 
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+        }
+        .result-item { padding: 12px; border-bottom: 1px solid #f1f5f9; cursor: pointer; }
+        .result-item:hover { background: #f1f5f9; }
+
+        /* Cards Estilizados */
+        .secao-card { 
+            background: var(--surface); border: 1px solid var(--border); 
+            border-radius: 10px; padding: 15px; margin-bottom: 12px; position: relative;
+        }
+        .secao-card h3 { 
+            margin: 0 0 12px 0; font-size: 11px; text-transform: uppercase; 
+            color: var(--text-muted); display: flex; align-items: center; gap: 8px;
+            border-bottom: 1px solid #f1f5f9; padding-bottom: 8px; font-weight: 800;
+        }
+
+        .toggle-btn {
+            position: absolute; right: 15px; top: 12px; background: #f1f5f9; 
+            border: 1px solid var(--border); padding: 4px 8px; border-radius: 6px; 
+            font-size: 9px; font-weight: 800; color: var(--primary); cursor: pointer;
+        }
+
+        .grid-compact { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .campo-grupo { margin-bottom: 10px; position: relative; }
+        .campo-grupo label { font-weight: 700; font-size: 9px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px; display: block; }
         
-        .painel-container { max-width: 800px; margin: 0 auto; background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+        input, textarea, select { width: 100%; padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 13px; outline: none; }
         
-        .header-painel { background: var(--secondary); color: white; padding: 20px; text-align: center; }
-        .config-bar { background: var(--primary); padding: 15px; display: flex; flex-direction: column; gap: 8px; }
-        .config-bar label { color: white; font-weight: bold; font-size: 14px; }
-        select, input, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; outline: none; }
-        
-        /* SEÇÃO CAPA HERO */
-        .secao-hero { background: #f5f3ff; border: 2px solid var(--hero); padding: 15px; border-radius: 12px; margin-bottom: 20px; margin-top: 10px; }
-        .secao-hero h3 { margin-top: 0; color: var(--hero); font-size: 15px; display: flex; align-items: center; gap: 8px; }
+        .ai-chip { flex: 1; padding: 8px; background: white; border: 1px solid var(--border); border-radius: 8px; font-size: 10px; text-align: center; cursor: pointer; font-weight: 800; }
+        .ai-chip.active { background: var(--primary); color: white; border-color: var(--primary); }
 
-        .replicar-box { background: #fff3cd; padding: 12px; border-radius: 8px; display: flex; align-items: center; gap: 10px; border: 1px solid #ffeeba; margin-top: 5px; }
-        .replicar-box input { width: 22px; height: 22px; cursor: pointer; }
+        .btn-inspect { position: absolute; right: 8px; top: 22px; background: #f1f5f9; border: none; padding: 4px 8px; border-radius: 5px; color: var(--primary); font-size: 11px; }
+        .inspect-viewer { margin-top: 10px; background: #000; border-radius: 10px; overflow: hidden; display: none; width: 100%; aspect-ratio: 16/9; }
+        .inspect-viewer iframe, .inspect-viewer img { width: 100%; height: 100%; border: none; }
 
-        .secao-especial { background: #eef2ff; border: 2px solid var(--primary); padding: 15px; border-radius: 12px; margin-bottom: 20px; margin-top: 10px; }
-        .secao-especial h3 { margin-top: 0; color: var(--primary); font-size: 15px; display: flex; align-items: center; gap: 8px; }
+        .btn-add { padding: 10px; font-size: 11px; font-weight: 800; border: 2px dashed var(--border); border-radius: 8px; background: #f8fafc; color: var(--text-muted); width: 100%; cursor: pointer; margin-bottom: 10px; }
+        .item-flex { display: flex; gap: 8px; margin-bottom: 8px; align-items: center; }
+        .btn-remover { background: #fee2e2; color: var(--danger); border: none; padding: 8px 12px; border-radius: 8px; font-weight: 800; cursor: pointer; }
 
-        .secao-ecommerce { background: #f0fff4; border: 2px solid var(--ecommerce); padding: 15px; border-radius: 12px; margin-bottom: 20px; margin-top: 10px; }
-        .secao-ecommerce h3 { margin-top: 0; color: #1e7e34; font-size: 15px; display: flex; align-items: center; gap: 8px; }
+        /* Ações Fixas */
+        .acoes-wrapper {
+            position: fixed; bottom: 0; left: 0; right: 0; background: #fff; 
+            border-top: 1px solid var(--border); padding: 10px 15px 20px 15px; z-index: 1001;
+        }
+        .acoes { display: flex; gap: 8px; }
+        .btn-main { padding: 12px; border: none; border-radius: 8px; font-weight: 800; font-size: 11px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
+        .btn-save { background: var(--primary); color: white; flex: 2; }
+        .btn-delete { background: #fee2e2; color: var(--danger); flex: 0.5; }
+        .btn-sec { background: var(--secondary); color: white; flex: 1; }
 
-        .lixeira-container { background: #fff5f5; border: 2px solid #feb2b2; padding: 15px; border-radius: 12px; margin-top: 20px; }
-        .lixeira-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; flex-wrap: wrap; gap: 10px; }
-        .lixeira-busca { margin-bottom: 10px; border: 1px solid #feb2b2 !important; }
-        .lista-lixeira { max-height: 200px; overflow-y: auto; background: white; border-radius: 8px; border: 1px solid #eee; padding: 5px; }
-        .item-lixeira { display: flex; align-items: center; justify-content: space-between; padding: 8px; border-bottom: 1px solid #f9f9f9; font-size: 13px; }
-        .item-lixeira:hover { background: #fffafa; }
-        
-        .global-trash-option { background: #fee2e2; padding: 8px; border-radius: 6px; border: 1px solid #ef4444; display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: bold; color: #b91c1c; margin-bottom: 10px; cursor: pointer; }
-
-        .search-box { padding: 15px; background: #fff; border-bottom: 2px solid var(--bg); position: relative; }
-        #sugestoes { position: absolute; width: calc(100% - 30px); background: white; border: 1px solid #ddd; z-index: 100; max-height: 200px; overflow-y: auto; display: none; border-radius: 0 0 8px 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        .sugestao-item { padding: 12px; cursor: pointer; border-bottom: 1px solid #eee; font-size: 14px; }
-
-        .doc-list-container { padding: 15px; background: #f9f9f9; }
-        .doc-item { display: flex; justify-content: space-between; align-items: center; background: white; padding: 10px; margin-bottom: 5px; border-radius: 6px; border-left: 4px solid var(--primary); font-size: 13px; }
-        .btn-carregar-pelo-item { background: none; border: 1px solid var(--primary); color: var(--primary); padding: 4px 8px; border-radius: 4px; cursor: pointer; }
-
-        .form-corpo { padding: 20px; }
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .campo-grupo { margin-bottom: 15px; }
-        .campo-grupo label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #555; }
-        
-        .secao-dinamica { background: #f8f9fa; padding: 12px; border-radius: 10px; border: 1px dotted #ccc; margin-bottom: 15px; }
-        .item-flex { display: flex; gap: 5px; margin-bottom: 8px; }
-        .btn-add { background: var(--secondary); color: white; border: none; padding: 10px; border-radius: 6px; width: 100%; cursor: pointer; font-weight: bold; margin-bottom: 20px; }
-        .btn-remover { background: var(--danger); color: white; border: none; width: 35px; border-radius: 6px; cursor: pointer; }
-
-        .acoes { display: flex; flex-direction: column; gap: 10px; padding: 20px; }
-        .btn-main { padding: 18px; border: none; border-radius: 10px; font-weight: bold; font-size: 16px; cursor: pointer; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .btn-save { background: var(--success); color: white; }
-        .btn-delete { background: var(--danger); color: white; }
-        
-        .status { padding: 15px; text-align: center; font-weight: bold; border-radius: 8px; margin: 10px; display: none; }
-
-        @media (min-width: 600px) { .acoes { flex-direction: row; } .btn-main { flex: 1; } }
+        .status { position: fixed; top: 60px; left: 50%; transform: translateX(-50%); padding: 10px 25px; border-radius: 30px; font-size: 12px; font-weight: 800; z-index: 3000; display: none; color: white; }
     </style>
 </head>
 <body>
 
-<div class="painel-container">
-    <div class="header-painel">
-        <h2 style="margin:0"><i class="fa-solid fa-gears"></i> Painel Master AniGeek</h2>
-    </div>
+<div id="msgStatus" class="status"></div>
 
-   <div class="config-bar">
-    <label>1. Selecione a Coleção de Trabalho:</label>
-    <select id="colecaoAlvo">
-        <option value="analises">Análises Técnicas (Principal)</option>
-        <option value="noticias">Manchetes (Notícias)</option>
-        <option value="futebol">Futebol (Nova)</option>
-        <option value="entrevistas">Entrevistas</option>
-        <option value="lancamentos">Lançamentos</option>
-        <option value="podcast">Podcast</option>
-        <option value="tecnologia">Tecnologia</option>
-        <option value="smartphones">Smartphones</option>
-        <option value="comunidade_ent">Comunidade</option>
-        <option value="analisemercado">analisemercado</option>
-        <option value="manchetes">manchetes</option>
-        <option value="opiniao">opiniao</option>
-        <option value="atores">atores</option>
-        <option value="pod_back">pod_back</option>
-        <option value="cine_bast">cine_bast</option>
-        <option value="pod_ent">pod_ent</option>
-        <option value="cine_bilh">cine_bilh</option>
-        <option value="pod_games">pod_games</option>
-        <option value="cine_lanc">cine_lanc</option>
-        <option value="pod_geek">pod_geek</option>
-        <option value="cine_news">cine_news</option>
-        <option value="pod_pop">pod_pop</option>
-        <option value="cine_prem">cine_prem</option>
-        <option value="pod_recentes">pod_recentes</option>
-        <option value="cine_rev">cine_rev</option>
-        <option value="pod_tech">pod_tech</option>
-        <option value="cinema">cinema</option>
-        <option value="com_dest">com_dest</option>
-        <option value="pro_industria">pro_industria</option>
-        <option value="com_enq">com_enq</option>
-        <option value="rank_animes">rank_animes</option>
-        <option value="rank_ano">rank_ano</option>
-        <option value="com_fan">com_fan</option>
-        <option value="com_op">com_op</option>
-        <option value="rank_filmes">rank_filmes</option>
-        <option value="com_teo">com_teo</option>
-        <option value="rank_jogos">rank_jogos</option>
-        <option value="comparativos">comparativos</option>
-        <option value="rank_series">rank_series</option>
-        <option value="rank_voto">rank_voto</option>
-        <option value="cosp_com">cosp_com</option>
-        <option value="ranking">ranking</option>
-        <option value="cosp_dest">cosp_dest</option>
-        <option value="rev_animes">rev_animes</option>
-        <option value="cosp_ent">cosp_ent</option>
-        <option value="rev_eventos">rev_eventos</option>
-        <option value="cosp_event">cosp_event</option>
-        <option value="rev_filmes">rev_filmes</option>
-        <option value="cosp_fotos">cosp_fotos</option>
-        <option value="rev_geek">rev_geek</option>
-        <option value="cosp_guias">cosp_guias</option>
-        <option value="rev_jogos">rev_jogos</option>
-        <option value="cosplay">cosplay</option>
-        <option value="rev_series">rev_series</option>
-        <option value="criadores">criadores</option>
-        <option value="rev_stream">rev_stream</option>
-        <option value="critica">critica</option>
-        <option value="rev_tech">rev_tech</option>
-        <option value="datas">datas</option>
-        <option value="destaques">destaques</option>
-        <option value="rumores">rumores</option>
-        <option value="devs">devs</option>
-        <option value="editorpick">editorpick</option>
-        <option value="st_apple">st_apple</option>
-        <option value="st_crunchy">st_crunchy</option>
-        <option value="esp_agd">esp_agd</option>
-        <option value="st_disney">st_disney</option>
-        <option value="esp_ana">esp_ana</option>
-        <option value="st_hbo">st_hbo</option>
-        <option value="esp_camp">esp_camp</option>
-        <option value="st_netflix">st_netflix</option>
-        <option value="esp_jog">esp_jog</option>
-        <option value="st_prime">st_prime</option>
-        <option value="esp_res">esp_res</option>
-        <option value="st_semana">st_semana</option>
-        <option value="esp_times">esp_times</option>
-        <option value="st_star">st_star</option>
-        <option value="esports">esports</option>
-        <option value="streaming">streaming</option>
-        <option value="tech_ai">tech_ai</option>
-        <option value="evt_cal">evt_cal</option>
-        <option value="tech_gamestech">tech_gamestech</option>
-        <option value="evt_camp">evt_camp</option>
-        <option value="tech_hard">tech_hard</option>
-        <option value="evt_conv">evt_conv</option>
-        <option value="tech_inov">tech_inov</option>
-        <option value="evt_feiras">evt_feiras</option>
-        <option value="tech_sec">tech_sec</option>
-        <option value="evt_lanc">evt_lanc</option>
-        <option value="tech_soft">tech_soft</option>
-        <option value="evt_live">evt_live</option>
-        <option value="tech_start">tech_start</option>
-        <option value="exclusivos">exclusivos</option>
-        <option value="explicacoes">explicacoes</option>
-        <option value="teorias">teorias</option>
-        <option value="fut_analise">fut_analise</option>
-        <option value="tr_animes">tr_animes</option>
-        <option value="fut_estat">fut_estat</option>
-        <option value="tr_filmes">tr_filmes</option>
-        <option value="fut_inter">fut_inter</option>
-        <option value="tr_gameplay">tr_gameplay</option>
-        <option value="fut_mercado">fut_mercado</option>
-        <option value="tr_jogos">tr_jogos</option>
-        <option value="fut_nacional">fut_nacional</option>
-        <option value="tr_oficiais">tr_oficiais</option>
-        <option value="fut_news">fut_news</option>
-        <option value="tr_series">tr_series</option>
-        <option value="fut_opiniao">fut_opiniao</option>
-        <option value="tr_teasers">tr_teasers</option>
-        <option value="trailers">trailers</option>
-        <option value="impacto">impacto</option>
-        <option value="trending">trending</option>
-        <option value="influencers">influencers</option>
-        <option value="tv">tv</option>
-        <option value="lanc_animes">lanc_animes</option>
-        <option value="tv_bast">tv_bast</option>
-        <option value="lanc_filmes">lanc_filmes</option>
-        <option value="tv_eps">tv_eps</option>
-        <option value="lanc_jogos">lanc_jogos</option>
-        <option value="tv_lanc">tv_lanc</option>
-        <option value="lanc_mangas">lanc_mangas</option>
-        <option value="tv_news">tv_news</option>
-        <option value="lanc_series">lanc_series</option>
-        <option value="tv_renov">tv_renov</option>
-        <option value="lanc_tech">lanc_tech</option>
-        <option value="tv_rev">tv_rev</option>
-        <option value="ultimas">ultimas</option>
-        <option value="maislidas">maislidas</option>
-        <option value="urgente">urgente</option>
-    </select>
-
-    <div class="replicar-box">
-        <input type="checkbox" id="checkReplicar">
-        <label for="checkReplicar"><strong>MODO REPLICAR:</strong> Salvar esta notícia em TODAS as coleções acima.</label>
+<div id="dbModal" class="generic-modal" onclick="if(event.target==this) fecharModais()">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3><i class="fa-solid fa-cloud"></i> NUVEM ANIGEEK</h3>
+            <button onclick="fecharModais()">×</button>
+        </div>
+        <div style="padding:12px; background:#f8fafc; border-bottom:1px solid var(--border)">
+            <input type="text" id="dbSearch" placeholder="Pesquisar..." oninput="filtrarDB()">
+        </div>
+        <div id="dbList" class="modal-body"></div>
     </div>
 </div>
 
-    <div class="search-box">
-        <label style="font-size: 11px; font-weight: bold;">🔍 BUSCA RÁPIDA PARA EDIÇÃO</label>
-        <input type="text" id="inputBusca" placeholder="Pesquisar ID na coleção atual..." autocomplete="off">
-        <div id="sugestoes"></div>
+<div id="collectionModal" class="generic-modal" onclick="if(event.target==this) fecharModais()">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3><i class="fa-solid fa-folder-tree"></i> COLEÇÃO</h3>
+            <button onclick="fecharModais()">×</button>
+        </div>
+      <div class="modal-body">
+    <button onclick="selecionarColecao('saihate_no_paladin', 'Saihate no Paladin')" style="width:100%; padding:12px; margin-bottom:8px;">Saihate no Paladin</button>
+    <button onclick="selecionarColecao('Jujutsu_kaisen_shimetsu_kaiyu', 'Jujutsu Kaisen: Shimetsu Kaiyu')" style="width:100%; padding:12px; margin-bottom:8px;">Jujutsu Kaisen: Shimetsu Kaiyu</button>
+    <button onclick="selecionarColecao('anime_i_geek', 'anime_i_geek')" style="width:100%; padding:12px;">Anime i Geek</button>
+</div>
+    </div>
+</div>
+
+<header class="header-enterprise">
+    <h2><i class="fa-solid fa-brain"></i> ANIGEEK AI STUDIO</h2>
+    <span style="font-size:9px; background:var(--primary); padding:4px 8px; border-radius:4px;">V12.0 ULTIMATE</span>
+</header>
+
+<div class="painel-container">
+    
+    <div class="secao-card" style="border: 2px solid var(--warning);">
+        <h3><i class="fa-solid fa-bullhorn" style="color: var(--warning);"></i> Configurações Globais de Anúncio</h3>
+        <div class="campo-grupo">
+            <label>Link de Redirecionamento PADRÃO (Propaganda do Player)</label>
+            <input type="text" id="globalLinkPropaganda" placeholder="https://www.effectivegatecpm.com/...">
+        </div>
+        <div class="campo-grupo">
+            <label>Script/HTML do Banner Topo PADRÃO</label>
+            <textarea id="globalBannerTopo" style="min-height: 80px;" placeholder="Cole o script ou link do banner padrão aqui"></textarea>
+        </div>
+        <div class="campo-grupo">
+            <label>Script/HTML do Banner Fundo PADRÃO</label>
+            <textarea id="globalBannerFundo" style="min-height: 80px;" placeholder="Cole o script ou link do banner padrão aqui"></textarea>
+        </div>
+        <button class="btn-main btn-sec" style="width: 100%; background: var(--warning); color: #000;" onclick="salvarConfigAds()">
+            <i class="fa-solid fa-save"></i> SALVAR CONFIGURAÇÕES GLOBAIS
+        </button>
     </div>
 
-    <div class="doc-list-container">
-        <div id="listaDocumentos"></div>
-        <button id="btnVerMais" class="btn-add" style="background:#eee; color:#333; margin-top:10px; display:none;">Ver mais...</button>
-        
-        <div class="lixeira-container">
-            <div class="lixeira-header">
-                <h4 style="margin:0; color:var(--danger)"><i class="fa-solid fa-trash-can"></i> Lixeira Inteligente</h4>
-                <span><input type="checkbox" id="selectAllLixeira"> <label for="selectAllLixeira" style="font-size:12px">Marcar Tudo</label></span>
+    <div class="smart-search-area">
+        <div class="search-row">
+            <input type="text" id="animeQuery" placeholder="1. Buscar Anime no MyAnimeList...">
+            <button class="btn-search" onclick="buscarAnime()"><i class="fa-solid fa-wand-sparkles"></i></button>
+        </div>
+        <div id="animeResults" class="results-dropdown"></div>
+
+        <div id="episodeArea" style="display:none; margin-top: 15px; border-top: 1px solid var(--border); padding-top:15px;">
+            <label style="font-size:9px; font-weight:800; color:var(--primary); display:block; margin-bottom:8px;">2. REFINAR DOCUMENTO</label>
+            <select id="episodeSelect" style="margin-bottom: 12px;"><option value="series_main">Página Principal</option></select>
+            <div class="ai-options" style="display:flex; gap:8px; margin-bottom:12px;">
+                <div class="ai-chip" onclick="setAiMode('short', this)">Curto</div>
+                <div class="ai-chip active" onclick="setAiMode('medium', this)">Narrativo</div>
+                <div class="ai-chip" onclick="setAiMode('long', this)">Completo</div>
             </div>
-
-            <label class="global-trash-option">
-                <input type="checkbox" id="checkLixeiraGlobal"> 
-                <span><i class="fa-solid fa-earth-americas"></i> MODO GLOBAL: Procurar e apagar em TODAS as coleções</span>
-            </label>
-
-            <input type="text" id="buscaLixeira" class="lixeira-busca" placeholder="Digite o ID exato ou termo para buscar na lixeira...">
-            
-            <div id="listaLixeira" class="lista-lixeira"></div>
-            
-            <button class="btn-main btn-delete" style="margin-top:10px; padding:10px; font-size:13px;" onclick="deletarMarcadosLixeira()">
-                <i class="fa-solid fa-fire"></i> EXCLUIR SELECIONADOS
+            <button class="btn-search" style="background:var(--success); width: 100%;" onclick="carregarEpisodio()">
+                <i class="fa-solid fa-bolt"></i> EXTRAIR COM IA REAL (GEMINI)
             </button>
         </div>
     </div>
 
-    <div class="form-corpo">
+    <div class="grid-compact" style="margin-bottom: 12px;">
         <div class="campo-grupo">
-            <label>ID do Documento:</label>
-            <input type="text" id="docId" placeholder="ex: id-da-noticia-01">
+            <label>Coleção Ativa</label>
+            <input type="text" id="colecaoDisplay" readonly value="Saihate no Paladin" onclick="abrirModalColecao()" style="cursor:pointer; font-weight:800; color:var(--primary);">
+            <input type="hidden" id="colecaoAlvo" value="saihate_no_paladin">
         </div>
-
-        <div class="secao-hero">
-            <h3><i class="fa-solid fa-image"></i> Capa do Topo (Hero Horizontal)</h3>
-            <div class="campo-grupo">
-                <label>URL da Imagem da Capa:</label>
-                <input type="text" id="capaUrl" placeholder="Link da imagem que pega a horizontal completa...">
-            </div>
-            <div class="campo-grupo">
-                <label>Descrição da Capa (Abaixo da imagem):</label>
-                <textarea id="capaDesc" placeholder="Texto que aparecerá logo abaixo da capa de topo..." rows="2"></textarea>
-            </div>
+        <div class="campo-grupo">
+            <label id="ordemLabel">Ordem de Exibição</label>
+            <input type="number" id="ordemNoticia" value="1">
         </div>
-
-        <div class="secao-especial">
-            <h3><i class="fa-solid fa-id-badge"></i> Ficha Especial (Auto-preenchimento)</h3>
-            <div class="grid-2">
-                <div class="campo-grupo">
-                    <label>Cor da Ficha:</label>
-                    <input type="color" id="cat-cor" value="#ff0000">
-                </div>
-                <div class="campo-grupo">
-                    <label>URL Imagem Perfil:</label>
-                    <input type="text" id="cat-perfilImg" placeholder="Link da foto do editor...">
-                </div>
-            </div>
-            <label style="font-size: 11px; font-weight: bold; color: var(--primary);">Itens da Ficha (Ex: Seção: Análise):</label>
-            <div id="container-cat-info" class="secao-dinamica" style="border-color: var(--primary); border-style: solid;"></div>
-            <button class="btn-add" style="background: var(--primary); margin-bottom: 5px;" onclick="adicionarCatInfo()">+ Item na Ficha Especial</button>
-        </div>
-
-        <div class="secao-ecommerce">
-            <h3><i class="fa-solid fa-cart-shopping"></i> Produtos Relacionados (Afiliados)</h3>
-            <div id="container-produtos" class="secao-dinamica" style="border-color: var(--ecommerce); border-style: solid;"></div>
-            <button class="btn-add" style="background: var(--ecommerce); margin-bottom: 5px;" onclick="adicionarProduto()">+ Adicionar Produto</button>
-        </div>
-
-        <div class="grid-2">
-            <div class="campo-grupo"><label>Categoria:</label><input type="text" id="categoria"></div>
-            <div class="campo-grupo"><label>Cor Tema:</label><input type="color" id="cor" value="#121212"></div>
-        </div>
-
-        <div class="campo-grupo"><label>Título:</label><input type="text" id="titulo"></div>
-        <div class="campo-grupo"><label>Resumo:</label><textarea id="resumo" rows="2"></textarea></div>
-        <div class="campo-grupo"><label>Link do Artigo:</label><input type="text" id="linkArtigo"></div>
-        <div class="campo-grupo"><label>Vídeo Embed:</label><input type="text" id="videoPrincipal"></div>
-
-        <h3>Ficha Técnica Lateral</h3>
-        <div id="container-ficha" class="secao-dinamica"></div>
-        <button class="btn-add" onclick="adicionarFicha()">+ Ficha</button>
-
-        <h3>Vídeos Relacionados</h3>
-        <div id="container-relacionados" class="secao-dinamica"></div>
-        <button class="btn-add" onclick="adicionarRelacionado()">+ Vídeo</button>
     </div>
 
-    <div id="msgStatus" class="status"></div>
+    <div class="form-corpo">
+        
+        <div class="secao-card" style="border-left: 5px solid var(--analytics);">
+            <h3><i class="fa-solid fa-chart-pie" style="color: var(--analytics);"></i> Analytics & Monitoramento de Visitantes</h3>
+            <div class="grid-compact">
+                <div class="campo-grupo">
+                    <label>Total Visitantes Únicos</label>
+                    <input type="text" id="statsVisitantes" readonly value="0" style="background:#f8fafc; font-weight:bold; color:var(--analytics);">
+                </div>
+                <div class="campo-grupo">
+                    <label>Cliques no Player</label>
+                    <input type="text" id="statsPlayer" readonly value="0" style="background:#f8fafc;">
+                </div>
+                <div class="campo-grupo">
+                    <label>Cliques em Anúncios</label>
+                    <input type="text" id="statsAds" readonly value="0" style="background:#f8fafc;">
+                </div>
+            </div>
+            
+            <div class="campo-grupo">
+                <label>Log de Atividade Recente (Visitantes)</label>
+                <div id="logAtividades" style="max-height: 150px; overflow-y: auto; background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 10px;">
+                    <div style="font-size:10px; color:var(--text-muted); text-align:center;">Selecione um documento para carregar os dados.</div>
+                </div>
+            </div>
+        </div>
 
+        <div class="secao-card">
+            <h3><i class="fa-solid fa-fingerprint"></i> Identidade Digital</h3>
+            <div class="campo-grupo">
+                <label>Título Traduzido</label>
+                <input type="text" id="titulo" oninput="gerarSlug(this.value)" placeholder="Título do Card">
+            </div>
+            <div class="grid-compact">
+                <div class="campo-grupo"><label>Slug/ID</label><input type="text" id="docId" readonly style="background:#f8fafc"></div>
+                <div class="campo-grupo">
+                    <label>Hashtags</label>
+                    <input type="text" id="categoria" placeholder="Ação, Drama...">
+                </div>
+            </div>
+            <div class="campo-grupo"><label>Cor Identidade</label><input type="color" id="cor" value="#4f46e5" style="height:38px; padding:2px;"></div>
+        </div>
+
+        <div class="secao-card" style="border-left: 5px solid var(--accent);">
+            <h3><i class="fa-solid fa-rectangle-ad" style="color: var(--accent);"></i> Anúncios Exclusivos Deste Artigo</h3>
+            <div class="campo-grupo">
+                <label>Link de Propaganda Exclusivo (Player)</label>
+                <input type="text" id="linkPropagandaArtigo" placeholder="Deixe em branco para usar o Global">
+            </div>
+            <div class="campo-grupo">
+                <label>Script/HTML Banner Exclusivo (Abaixo dos Produtos)</label>
+                <textarea id="bannerAd" style="min-height: 80px;" placeholder="Script ou imagem que aparecerá apenas neste artigo"></textarea>
+            </div>
+        </div>
+
+        <div class="secao-card">
+            <h3><i class="fa-solid fa-photo-film"></i> Ativos de Mídia</h3>
+            <div class="campo-grupo">
+                <label>Thumbnail Card (16:9)</label>
+                <input type="text" id="capaNoticia">
+                <button class="btn-inspect" onclick="inspectMedia('capaNoticia')"><i class="fa-solid fa-eye"></i></button>
+                <div id="viewer-capaNoticia" class="inspect-viewer"></div>
+            </div>
+            <div class="grid-compact">
+                <div class="campo-grupo">
+                    <label>Banner HD Hero</label>
+                    <input type="text" id="capaUrl">
+                    <button class="btn-inspect" onclick="inspectMedia('capaUrl')"><i class="fa-solid fa-image"></i></button>
+                    <div id="viewer-capaUrl" class="inspect-viewer"></div>
+                </div>
+                <div class="campo-grupo"><label>Texto Banner</label><input type="text" id="capaDesc"></div>
+            </div>
+            <div class="campo-grupo">
+                <label>ID YouTube ou Link Google Drive</label>
+                <input type="text" id="videoPrincipal" placeholder="Ex: dQw4w9WgXcQ ou link do Drive">
+                <button class="btn-inspect" onclick="inspectMedia('videoPrincipal')"><i class="fa-solid fa-play"></i></button>
+                <div id="viewer-videoPrincipal" class="inspect-viewer"></div>
+            </div>
+        </div>
+
+        <div class="secao-card">
+            <h3><i class="fa-solid fa-pen-fancy"></i> Redação Inteligente</h3>
+            <button class="toggle-btn" onclick="rephraseContent()"><i class="fa-solid fa-wand-magic-sparkles"></i> IA REESCREVER</button>
+            <div class="campo-grupo">
+                <label>Conteúdo da Notícia/Review</label>
+                <textarea id="resumo" style="min-height: 220px;"></textarea>
+            </div>
+            <div class="campo-grupo">
+                <label>Fonte de Referência (Link Externo)</label>
+                <input type="text" id="linkArtigo" placeholder="https://...">
+            </div>
+        </div>
+
+        <div class="secao-card">
+            <h3><i class="fa-solid fa-list-check"></i> Ficha Técnica Detalhada</h3>
+            <div id="container-ficha"></div>
+            <button class="btn-add" onclick="adicionarFicha()">+ Adicionar Atributo</button>
+        </div>
+
+        <div class="grid-compact">
+            <div class="secao-card">
+                <h3><i class="fa-solid fa-user-gear"></i> Editor</h3>
+                <div class="campo-grupo"><label>Avatar</label><input type="text" id="perfilImg"></div>
+                <div id="container-ficha-editor"></div>
+                <button class="btn-add" onclick="adicionarFichaEditor()">+ Cargo</button>
+            </div>
+            <div class="secao-card">
+                <h3><i class="fa-solid fa-chart-line"></i> Métricas (Públicas)</h3>
+                <div class="campo-grupo"><label>Likes</label><input type="number" id="curtidas" value="0"></div>
+                <div class="campo-grupo"><label>Views Totais</label><input type="number" id="visualizacoes" value="0"></div>
+            </div>
+        </div>
+
+        <div class="secao-card">
+            <h3><i class="fa-brands fa-youtube"></i> Vídeos Vinculados (YouTube)</h3>
+            <div id="container-relacionados"></div>
+            <button class="btn-add" onclick="adicionarRelacionado()">+ Vincular Vídeo</button>
+        </div>
+
+        <div class="secao-card">
+            <h3><i class="fa-solid fa-cart-shopping"></i> Vitrine de Produtos</h3>
+            <div id="container-produtos"></div>
+            <button class="btn-add" onclick="adicionarProduto()">+ Adicionar Produto</button>
+        </div>
+    </div>
+</div>
+
+<div class="acoes-wrapper">
+    <div id="ai-loader-inline"><div class="dot-pulse"></div><span id="loader-text-inline">IA PROCESSANDO...</span></div>
     <div class="acoes">
-        <button class="btn-main btn-save" onclick="salvarGeral()"><i class="fa-solid fa-cloud-arrow-up"></i> SALVAR TUDO</button>
-        <button class="btn-main btn-delete" onclick="deletarDocumento()"><i class="fa-solid fa-trash"></i> APAGAR DOC</button>
+        <button class="btn-main btn-delete" onclick="deletarDocumento()"><i class="fa-solid fa-trash-can"></i></button>
+        <button class="btn-main btn-sec" onclick="abrirModalColecao()"><i class="fa-solid fa-folder-tree"></i> COLEÇÃO</button>
+        <button class="btn-main btn-sec" onclick="toggleCloud()"><i class="fa-solid fa-database"></i> BANCO</button>
+        <button class="btn-main btn-save" onclick="salvarGeral()"><i class="fa-solid fa-cloud-arrow-up"></i> PUBLICAR NO FIREBASE</button>
     </div>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getFirestore, doc, setDoc, getDoc, deleteDoc, collection, query, getDocs, limit, startAfter, writeBatch } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, doc, setDoc, getDoc, deleteDoc, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBC_ad4X9OwCHKvcG_pNQkKEl76Zw2tu6o",
@@ -332,236 +359,396 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    
+    let currentAnimeData = null;
+    let aiMode = 'medium';
 
-    let ultimoDocListado = null;
-    let todosDocumentosIds = []; 
-
-    window.adicionarProduto = (nome = '', link = '', img = '', desc = '') => {
-        const container = document.getElementById('container-produtos');
-        const div = document.createElement('div');
-        div.className = 'secao-dinamica';
-        div.style.border = "1px solid var(--ecommerce)";
-        div.innerHTML = `
-            <div class="campo-grupo"><input type="text" class="p-nome" value="${nome}" placeholder="Nome do Produto"></div>
-            <div class="campo-grupo"><textarea class="p-desc" placeholder="Breve descrição para o banner..." rows="2">${desc}</textarea></div>
-            <div class="campo-grupo"><input type="text" class="p-link" value="${link}" placeholder="Link (Shopee/Amazon)"></div>
-            <div class="item-flex">
-                <input type="text" class="p-img" value="${img}" placeholder="URL da Imagem" style="flex:1">
-                <button class="btn-remover" onclick="this.parentElement.parentElement.remove()">X</button>
-            </div>
-        `;
-        container.appendChild(div);
-    };
-
-    window.adicionarCatInfo = (label = '', valor = '') => {
-        const container = document.getElementById('container-cat-info');
-        const div = document.createElement('div');
-        div.className = 'item-flex';
-        div.innerHTML = `<input type="text" class="cat-label" value="${label}" placeholder="Ex: Seção"><input type="text" class="cat-valor" value="${valor}" placeholder="Ex: Análises"><button class="btn-remover" onclick="this.parentElement.remove()">X</button>`;
-        container.appendChild(div);
-    };
-
-    window.adicionarFicha = (label = '', valor = '') => {
-        const container = document.getElementById('container-ficha');
-        const div = document.createElement('div');
-        div.className = 'item-flex';
-        div.innerHTML = `<input type="text" class="f-label" value="${label}" placeholder="Label"><input type="text" class="f-valor" value="${valor}" placeholder="Valor"><button class="btn-remover" onclick="this.parentElement.remove()">X</button>`;
-        container.appendChild(div);
-    };
-
-    window.adicionarRelacionado = (idVid = '', titulo = '', thumb = '') => {
-        const container = document.getElementById('container-relacionados');
-        const div = document.createElement('div');
-        div.className = 'secao-dinamica';
-        div.innerHTML = `<input type="text" placeholder="ID YouTube" class="r-id" value="${idVid}"><input type="text" placeholder="Título" class="r-titulo" value="${titulo}"><div class="item-flex"><input type="text" placeholder="Thumb" class="r-thumb" value="${thumb}" style="flex:1"><button class="btn-remover" onclick="this.parentElement.parentElement.remove()">X</button></div>`;
-        container.appendChild(div);
-    };
-
-    const buscaLixeira = document.getElementById('buscaLixeira');
-    const checkLixeiraGlobal = document.getElementById('checkLixeiraGlobal');
-    const listaLixeiraDiv = document.getElementById('listaLixeira');
-
-    async function buscarNaLixeira() {
-        const termo = buscaLixeira.value.trim().toLowerCase();
-        const isGlobal = checkLixeiraGlobal.checked;
-        const colecaoAtual = document.getElementById('colecaoAlvo').value;
-        const todasColecoes = Array.from(document.getElementById('colecaoAlvo').options).map(opt => opt.value);
-
-        if (termo.length < 3) {
-            listaLixeiraDiv.innerHTML = '<div style="padding:10px; font-size:11px; color:gray">Digite pelo menos 3 caracteres...</div>';
-            return;
-        }
-
-        listaLixeiraDiv.innerHTML = '<div style="padding:10px; font-size:11px;">Buscando...</div>';
-        let html = '';
-
-        if (isGlobal) {
-            for (const col of todasColecoes) {
-                const docRef = doc(db, col, termo);
-                const snap = await getDoc(docRef);
-                if (snap.exists()) {
-                    html += `<div class="item-lixeira"><span><b>[${col}]</b> ${termo}</span><input type="checkbox" class="check-lixeira" data-id="${termo}" data-col="${col}"></div>`;
-                }
-            }
-        } else {
-            const filtrados = todosDocumentosIds.filter(id => id.includes(termo));
-            filtrados.forEach(id => {
-                html += `<div class="item-lixeira"><span>${id}</span><input type="checkbox" class="check-lixeira" data-id="${id}" data-col="${colecaoAtual}"></div>`;
-            });
-        }
-        listaLixeiraDiv.innerHTML = html || '<div style="padding:10px; font-size:11px;">Nenhum resultado.</div>';
-    }
-
-    buscaLixeira.addEventListener('input', buscarNaLixeira);
-
-    window.deletarMarcadosLixeira = async () => {
-        const selecionados = Array.from(document.querySelectorAll('.check-lixeira:checked'));
-        const todasColecoes = Array.from(document.getElementById('colecaoAlvo').options).map(opt => opt.value);
-        if(selecionados.length === 0) return;
-        if(confirm("Deseja apagar permanentemente?")) {
-            const batch = writeBatch(db);
-            selecionados.forEach(check => {
-                const id = check.getAttribute('data-id');
-                const colOrigem = check.getAttribute('data-col');
-                if(checkLixeiraGlobal.checked) { todasColecoes.forEach(col => batch.delete(doc(db, col, id))); }
-                else { batch.delete(doc(db, colOrigem, id)); }
-            });
-            await batch.commit();
-            mostrarStatus("Excluído!", "var(--danger)");
-            listaLixeiraDiv.innerHTML = ''; carregarLista(true);
-        }
-    };
-
-    const inputBusca = document.getElementById('inputBusca');
-    const sugestoesDiv = document.getElementById('sugestoes');
-
-    inputBusca.addEventListener('input', () => {
-        const termo = inputBusca.value.toLowerCase();
-        if(termo.length < 1) { sugestoesDiv.style.display = 'none'; return; }
-        const filtrados = todosDocumentosIds.filter(id => id.includes(termo)).slice(0, 8);
-        if(filtrados.length > 0) {
-            sugestoesDiv.innerHTML = filtrados.map(id => `<div class="sugestao-item" onclick="carregarPorID('${id}')">${id}</div>`).join('');
-            sugestoesDiv.style.display = 'block';
-        } else { sugestoesDiv.style.display = 'none'; }
-    });
-
-    async function carregarLista(reset = true) {
-        const colecao = document.getElementById('colecaoAlvo').value;
-        const listaDiv = document.getElementById('listaDocumentos');
-        if(reset) { listaDiv.innerHTML = 'Carregando...'; ultimoDocListado = null; todosDocumentosIds = []; }
+    // SALVAMENTO DE CONFIGS GLOBAIS
+    window.salvarConfigAds = async () => {
+        setLoader(true, "SALVANDO ANÚNCIOS...");
+        const dadosAds = {
+            linkPropaganda: document.getElementById('globalLinkPropaganda').value,
+            bannerTopo: document.getElementById('globalBannerTopo').value,
+            bannerFundo: document.getElementById('globalBannerFundo').value
+        };
         try {
-            const q = reset ? query(collection(db, colecao), limit(20)) : query(collection(db, colecao), startAfter(ultimoDocListado), limit(20));
-            const snap = await getDocs(q);
-            if(reset) listaDiv.innerHTML = '';
-            snap.forEach(d => {
-                todosDocumentosIds.push(d.id);
-                const item = document.createElement('div');
-                item.className = 'doc-item';
-                item.innerHTML = `<span>${d.id}</span> <button class="btn-carregar-pelo-item" onclick="carregarPorID('${d.id}')">Editar</button>`;
-                listaDiv.appendChild(item);
-                ultimoDocListado = d;
-            });
-            document.getElementById('btnVerMais').style.display = snap.size < 20 ? 'none' : 'block';
-        } catch(e) { console.error(e); }
-    }
-
-    window.carregarPorID = async (id) => {
-        const colecao = document.getElementById('colecaoAlvo').value;
-        sugestoesDiv.style.display = 'none';
-        const snap = await getDoc(doc(db, colecao, id));
-        if(snap.exists()){
-            const data = snap.data();
-            document.getElementById('docId').value = id;
-            document.getElementById('categoria').value = data.categoria || '';
-            document.getElementById('titulo').value = data.titulo || '';
-            document.getElementById('resumo').value = data.resumo || '';
-            document.getElementById('cor').value = data.cor || '#121212';
-            document.getElementById('linkArtigo').value = data.linkArtigo || '';
-            document.getElementById('videoPrincipal').value = data.videoPrincipal || '';
-            
-            // CARREGAR CAMPOS HERO
-            document.getElementById('capaUrl').value = data.capaUrl || '';
-            document.getElementById('capaDesc').value = data.capaDesc || '';
-
-            document.getElementById('container-cat-info').innerHTML = '';
-            if(data.fichaCategoria) {
-                document.getElementById('cat-cor').value = data.fichaCategoria.cor || '#ff0000';
-                document.getElementById('cat-perfilImg').value = data.fichaCategoria.perfilImg || '';
-                data.fichaCategoria.info?.forEach(i => adicionarCatInfo(i.label, i.valor));
-            }
-
-            document.getElementById('container-produtos').innerHTML = '';
-            data.produtos?.forEach(p => adicionarProduto(p.nome, p.link, p.img, p.desc));
-
-            document.getElementById('container-ficha').innerHTML = '';
-            data.ficha?.forEach(f => adicionarFicha(f.label, f.valor));
-
-            document.getElementById('container-relacionados').innerHTML = '';
-            data.relacionados?.forEach(r => adicionarRelacionado(r.idVid, r.titulo, r.thumb));
-
-            mostrarStatus("Editando: " + id, "var(--primary)");
-            window.scrollTo({ top: document.getElementById('docId').offsetTop - 50, behavior: 'smooth' });
-        }
+            await setDoc(doc(db, "configuracoes", "ads"), dadosAds);
+            setLoader(false);
+            mostrarStatus("ADS GLOBAIS ATUALIZADOS!", "var(--warning)");
+        } catch(e) { setLoader(false); alert("Erro ao salvar Ads"); }
     };
 
-    window.salvarGeral = async () => {
-        const id = document.getElementById('docId').value.trim();
-        const colecaoAtual = document.getElementById('colecaoAlvo').value;
-        if(!id) return alert("ID obrigatório!");
+    async function carregarConfigAds() {
+        const snap = await getDoc(doc(db, "configuracoes", "ads"));
+        if(snap.exists()){
+            const d = snap.data();
+            document.getElementById('globalLinkPropaganda').value = d.linkPropaganda || '';
+            document.getElementById('globalBannerTopo').value = d.bannerTopo || '';
+            document.getElementById('globalBannerFundo').value = d.bannerFundo || '';
+        }
+    }
 
+    // IA E TRADUÇÃO
+    async function callGeminiAI(prompt) {
+        return await smartTranslate(prompt, "en|pt-BR");
+    }
+
+    async function smartTranslate(text, pair = "en|pt-BR") {
+        if (!text) return "";
+        const chunks = text.match(/.{1,450}/g) || [text];
+        let results = [];
+        for (const chunk of chunks) {
+            try {
+                const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(chunk)}&langpair=${pair}`);
+                const data = await res.json();
+                results.push(data.responseData.translatedText || chunk);
+            } catch (e) { results.push(chunk); }
+        }
+        return results.join("");
+    }
+
+    window.setAiMode = (mode, el) => {
+        aiMode = mode;
+        document.querySelectorAll('.ai-chip').forEach(c => c.classList.remove('active'));
+        el.classList.add('active');
+    };
+
+    // MODAIS
+    window.fecharModais = () => document.querySelectorAll('.generic-modal').forEach(m => m.style.display = 'none');
+    window.abrirModalColecao = () => document.getElementById('collectionModal').style.display = 'flex';
+    window.toggleCloud = async () => {
+        document.getElementById('dbModal').style.display = 'flex';
+        await carregarListaCloud();
+    };
+
+    window.selecionarColecao = (id, nome) => {
+        document.getElementById('colecaoAlvo').value = id;
+        document.getElementById('colecaoDisplay').value = nome;
+        fecharModais();
+        carregarListaCloud();
+    };
+
+    function setLoader(show, text = "") {
+        const loader = document.getElementById('ai-loader-inline');
+        const txt = document.getElementById('loader-text-inline');
+        loader.style.display = show ? 'flex' : 'none';
+        if(text) txt.innerText = text;
+    }
+
+    window.rephraseContent = async () => {
+        const txt = document.getElementById('resumo').value;
+        if(!txt) return;
+        setLoader(true, "GEMINI REELABORANDO TEXTO...");
+        const en = await smartTranslate(txt, "pt-BR|en");
+        const pt = await smartTranslate(en, "en|pt-BR");
+        document.getElementById('resumo').value = pt;
+        setLoader(false);
+        mostrarStatus("TEXTO REESCRITO COM IA", "var(--success)");
+    };
+
+    // BUSCA MAL
+    window.buscarAnime = () => {
+        const q = document.getElementById('animeQuery').value;
+        const resBox = document.getElementById('animeResults');
+        if(q.length < 3) return;
+        resBox.style.display = 'block';
+        resBox.innerHTML = '<div class="result-item">Buscando na MAL...</div>';
+        fetch(`https://api.jikan.moe/v4/anime?q=${encodeURIComponent(q)}&limit=5`)
+            .then(r => r.json()).then(d => {
+                resBox.innerHTML = '';
+                d.data.forEach(a => {
+                    const div = document.createElement('div');
+                    div.className = 'result-item';
+                    div.innerHTML = `<strong>${a.title}</strong><br><small>${a.type} • ${a.year || ''}</small>`;
+                    div.onclick = () => selecionarSerie(a);
+                    resBox.appendChild(div);
+                });
+            });
+    };
+
+    async function selecionarSerie(anime) {
+        currentAnimeData = anime;
+        document.getElementById('animeResults').style.display = 'none';
+        document.getElementById('animeQuery').value = anime.title;
+        document.getElementById('episodeArea').style.display = 'block';
+        
+        const sel = document.getElementById('episodeSelect');
+        sel.innerHTML = '<option value="series_main">Página Principal</option>';
+        try {
+            const r = await fetch(`https://api.jikan.moe/v4/anime/${anime.mal_id}/episodes`);
+            const data = await r.json();
+            data.data.forEach(e => {
+                const opt = document.createElement('option');
+                opt.value = e.mal_id; opt.innerText = `Episódio ${e.mal_id}: ${e.title}`;
+                opt.dataset.title = e.title;
+                sel.appendChild(opt);
+            });
+        } catch(err) {}
+    }
+
+    window.carregarEpisodio = async () => {
+        if(!currentAnimeData) return;
+        setLoader(true, "IA EXTRAINDO DADOS...");
+        
+        const select = document.getElementById('episodeSelect');
+        let titleRaw = currentAnimeData.title;
+        if (select.value !== 'series_main') titleRaw = `EP ${select.value} - ${select.selectedOptions[0].dataset.title}`;
+
+        const [tit, sin] = await Promise.all([
+            callGeminiAI(titleRaw),
+            callGeminiAI(currentAnimeData.synopsis)
+        ]);
+
+        document.getElementById('titulo').value = tit;
+        gerarSlug(tit);
+        document.getElementById('resumo').value = sin;
+        document.getElementById('categoria').value = currentAnimeData.genres.map(g=>g.name).join(', ');
+        document.getElementById('capaNoticia').value = currentAnimeData.images.jpg.large_image_url;
+        document.getElementById('capaUrl').value = currentAnimeData.images.jpg.large_image_url;
+        document.getElementById('capaDesc').value = currentAnimeData.title;
+
+        const f = document.getElementById('container-ficha'); f.innerHTML = '';
+        adicionarFicha("Título Original", currentAnimeData.title_japanese || "N/A");
+        adicionarFicha("Estúdio", currentAnimeData.studios[0]?.name || "N/A");
+        adicionarFicha("Temporada", currentAnimeData.season ? `${currentAnimeData.season} ${currentAnimeData.year}` : "N/A");
+        adicionarFicha("Fonte", currentAnimeData.source || "N/A");
+        adicionarFicha("Score MAL", currentAnimeData.score || "N/A");
+        adicionarFicha("Popularidade", `#${currentAnimeData.popularity}`);
+        adicionarFicha("Membros", currentAnimeData.members.toLocaleString());
+        adicionarFicha("Licença", currentAnimeData.licensors[0]?.name || "N/A");
+
+        setLoader(false);
+        mostrarStatus("DADOS SINCRONIZADOS", "var(--success)");
+    };
+
+    // FORMULÁRIO DINÂMICO
+    window.adicionarFicha = (l='', v='') => {
+        const d = document.createElement('div'); d.className = 'item-flex';
+        d.innerHTML = `<input type="text" class="f-label" value="${l}" placeholder="Label"><input type="text" class="f-valor" value="${v}" placeholder="Valor"><button class="btn-remover" onclick="this.parentElement.remove()">×</button>`;
+        document.getElementById('container-ficha').appendChild(d);
+    };
+
+    window.adicionarFichaEditor = (l='', v='') => {
+        const d = document.createElement('div'); d.className = 'item-flex';
+        d.innerHTML = `<input type="text" class="fe-label" value="${l}" placeholder="Cargo"><input type="text" class="fe-valor" value="${v}" placeholder="Nome"><button class="btn-remover" onclick="this.parentElement.remove()">×</button>`;
+        document.getElementById('container-ficha-editor').appendChild(d);
+    };
+
+    window.adicionarRelacionado = (id='', t='', th='') => {
+        const d = document.createElement('div'); d.style.cssText = "background:#f8fafc; padding:10px; border-radius:8px; border:1px solid #e2e8f0; margin-bottom:10px;";
+        d.innerHTML = `<div class="item-flex"><input type="text" class="r-id" value="${id}" placeholder="ID YouTube"><button class="btn-remover" onclick="this.parentElement.remove()">×</button></div><input type="text" class="r-titulo" value="${t}" placeholder="Título Vídeo" style="margin-bottom:4px"><input type="text" class="r-thumb" value="${th}" placeholder="Thumb (Opcional)">`;
+        document.getElementById('container-relacionados').appendChild(d);
+    };
+
+    window.adicionarProduto = (n='', l='', i='', ds='') => {
+        const d = document.createElement('div'); d.style.cssText = "background:#f8fafc; padding:10px; border-radius:8px; border:1px solid #e2e8f0; margin-bottom:10px;";
+        d.innerHTML = `<div class="item-flex"><input type="text" class="p-nome" value="${n}" placeholder="Nome"><button class="btn-remover" onclick="this.parentElement.remove()">×</button></div><input type="text" class="p-link" value="${l}" placeholder="Link Loja" style="margin-bottom:4px"><input type="text" class="p-img" value="${i}" placeholder="URL Imagem" style="margin-bottom:4px"><textarea class="p-desc" placeholder="Descrição">${ds}</textarea>`;
+        document.getElementById('container-produtos').appendChild(d);
+    };
+
+    // FIREBASE - SALVAR E CARREGAR
+    window.salvarGeral = async () => {
+        const id = document.getElementById('docId').value;
+        const col = document.getElementById('colecaoAlvo').value;
+        if(!id) return alert("Slug necessário");
+        
+        setLoader(true, "SALVANDO...");
         const dados = {
-            categoria: document.getElementById('categoria').value,
+            ordem: parseInt(document.getElementById('ordemNoticia').value) || 0,
             titulo: document.getElementById('titulo').value,
+            categoria: document.getElementById('categoria').value,
             resumo: document.getElementById('resumo').value,
             cor: document.getElementById('cor').value,
             linkArtigo: document.getElementById('linkArtigo').value,
             videoPrincipal: document.getElementById('videoPrincipal').value,
-            capaUrl: document.getElementById('capaUrl').value, // SALVANDO HERO
-            capaDesc: document.getElementById('capaDesc').value, // SALVANDO DESC HERO
+            capaNoticia: document.getElementById('capaNoticia').value,
+            capaUrl: document.getElementById('capaUrl').value,
+            capaDesc: document.getElementById('capaDesc').value,
+            bannerAd: document.getElementById('bannerAd').value, 
+            linkPropagandaArtigo: document.getElementById('linkPropagandaArtigo').value,
+            curtidas: parseInt(document.getElementById('curtidas').value) || 0,
+            visualizacoes: parseInt(document.getElementById('visualizacoes').value) || 0,
             fichaCategoria: {
-                cor: document.getElementById('cat-cor').value,
-                perfilImg: document.getElementById('cat-perfilImg').value,
-                info: Array.from(document.querySelectorAll('#container-cat-info .item-flex')).map(el => ({
-                    label: el.querySelector('.cat-label').value,
-                    valor: el.querySelector('.cat-valor').value
-                }))
+                perfilImg: document.getElementById('perfilImg').value,
+                info: Array.from(document.querySelectorAll('#container-ficha-editor .item-flex')).map(el => ({ label: el.querySelector('.fe-label').value, valor: el.querySelector('.fe-valor').value }))
             },
-            produtos: Array.from(document.querySelectorAll('#container-produtos .secao-dinamica')).map(el => ({
-                nome: el.querySelector('.p-nome').value,
-                link: el.querySelector('.p-link').value,
-                img: el.querySelector('.p-img').value,
-                desc: el.querySelector('.p-desc').value
-            })),
             ficha: Array.from(document.querySelectorAll('#container-ficha .item-flex')).map(el => ({ label: el.querySelector('.f-label').value, valor: el.querySelector('.f-valor').value })),
-            relacionados: Array.from(document.querySelectorAll('#container-relacionados .secao-dinamica')).map(el => ({ idVid: el.querySelector('.r-id').value, titulo: el.querySelector('.r-titulo').value, thumb: el.querySelector('.r-thumb').value })),
-            timestamp: new Date().getTime()
+            relacionados: Array.from(document.querySelectorAll('#container-relacionados > div')).map(el => ({ idVid: el.querySelector('.r-id').value, titulo: el.querySelector('.r-titulo').value, thumb: el.querySelector('.r-thumb').value })),
+            produtos: Array.from(document.querySelectorAll('#container-produtos > div')).map(el => ({ nome: el.querySelector('.p-nome').value, link: el.querySelector('.p-link').value, img: el.querySelector('.p-img').value, desc: el.querySelector('.p-desc').value })),
+            timestamp: Date.now()
         };
 
         try {
-            if(document.getElementById('checkReplicar').checked) {
-                const batch = writeBatch(db);
-                Array.from(document.getElementById('colecaoAlvo').options).forEach(opt => {
-                    batch.set(doc(db, opt.value, id), dados, { merge: true });
-                });
-                await batch.commit();
-                mostrarStatus("Replicado!", "var(--success)");
-            } else {
-                await setDoc(doc(db, colecaoAtual, id), dados, { merge: true });
-                mostrarStatus("Salvo!", "var(--success)");
-            }
-            carregarLista(true);
-        } catch (e) { alert("Erro: " + e.message); }
+            await setDoc(doc(db, col, id), dados, { merge: true });
+            setLoader(false); mostrarStatus("SALVO NA NUVEM!", "var(--success)");
+            carregarListaCloud();
+        } catch (e) { setLoader(false); alert("Erro ao salvar"); }
     };
 
-    window.deletarDocumento = async () => {
-        const id = document.getElementById('docId').value.trim();
-        const colecao = document.getElementById('colecaoAlvo').value;
-        if(!id) return;
-        if(confirm("Deseja apagar este documento?")) {
-            await deleteDoc(doc(db, colecao, id));
-            mostrarStatus("Apagado!", "var(--danger)");
-            carregarLista(true);
+    // --- FUNÇÃO DE ANALYTICS (NOVA) ---
+    window.carregarAnalytics = async (col, docId) => {
+        const statsVisitantes = document.getElementById('statsVisitantes');
+        const statsPlayer = document.getElementById('statsPlayer');
+        const statsAds = document.getElementById('statsAds');
+        const logArea = document.getElementById('logAtividades');
+        
+        // Reset UI
+        statsVisitantes.value = "...";
+        statsPlayer.value = "...";
+        statsAds.value = "...";
+        logArea.innerHTML = '<div style="font-size:10px; color:var(--text-muted); text-align:center;">Carregando dados de visitantes...</div>';
+
+        try {
+            // Acessa a subcoleção 'visitantes' dentro do documento atual
+            // Estrutura esperada: colecao > documento > visitantes > {id_visitante}
+            const visitantesRef = collection(db, col, docId, "visitantes");
+            const snapshot = await getDocs(visitantesRef);
+
+            let totalV = snapshot.size;
+            let totalPlayer = 0;
+            let totalAds = 0;
+            let logHTML = "";
+
+            if (snapshot.empty) {
+                logArea.innerHTML = '<div style="font-size:10px; color:var(--text-muted); text-align:center;">Nenhum visitante registrado ainda.</div>';
+                statsVisitantes.value = 0;
+                statsPlayer.value = 0;
+                statsAds.value = 0;
+                return;
+            }
+
+            snapshot.forEach(docSnap => {
+                const data = docSnap.data();
+                const visitorId = docSnap.id;
+                
+                // Calcula ações baseadas em um array de ações (exemplo)
+                // Estrutura esperada do dado do visitante: 
+                // { actions: [{type: 'player_click', ts: 123}, {type: 'ad_click', ts: 124}] }
+                let actionsCount = 0;
+                if (data.actions && Array.isArray(data.actions)) {
+                    actionsCount = data.actions.length;
+                    data.actions.forEach(act => {
+                        if(act.type === 'player_click' || act.type === 'player') totalPlayer++;
+                        if(act.type === 'ad_click' || act.type === 'ad') totalAds++;
+                    });
+                }
+
+                // Adiciona ao log visual (ID parcial para não ocupar muito espaço)
+                logHTML += `
+                    <div style="font-size:10px; border-bottom:1px solid #eee; padding:6px; display:flex; justify-content:space-between;">
+                        <span><i class="fa-solid fa-user-secret"></i> ...${visitorId.slice(-8)}</span>
+                        <span><b>${actionsCount}</b> Ações</span>
+                    </div>
+                `;
+            });
+
+            statsVisitantes.value = totalV;
+            statsPlayer.value = totalPlayer;
+            statsAds.value = totalAds;
+            logArea.innerHTML = logHTML;
+
+        } catch (e) {
+            console.error(e);
+            logArea.innerHTML = '<div style="font-size:10px; color:var(--danger); text-align:center;">Erro ao carregar Analytics.</div>';
         }
+    };
+
+    window.carregarPorID = async (id) => {
+        setLoader(true);
+        const col = document.getElementById('colecaoAlvo').value;
+        
+        // 1. Carregar Documento Principal
+        const snap = await getDoc(doc(db, col, id));
+        
+        if(snap.exists()){
+            const d = snap.data();
+            document.getElementById('docId').value = id;
+            document.getElementById('ordemNoticia').value = d.ordem || 0;
+            document.getElementById('titulo').value = d.titulo || '';
+            document.getElementById('resumo').value = d.resumo || '';
+            document.getElementById('categoria').value = d.categoria || '';
+            document.getElementById('capaNoticia').value = d.capaNoticia || '';
+            document.getElementById('capaUrl').value = d.capaUrl || '';
+            document.getElementById('capaDesc').value = d.capaDesc || '';
+            document.getElementById('bannerAd').value = d.bannerAd || ''; 
+            document.getElementById('linkPropagandaArtigo').value = d.linkPropagandaArtigo || '';
+            document.getElementById('curtidas').value = d.curtidas || 0;
+            document.getElementById('visualizacoes').value = d.visualizacoes || 0;
+            document.getElementById('linkArtigo').value = d.linkArtigo || '';
+            document.getElementById('videoPrincipal').value = d.videoPrincipal || '';
+            document.getElementById('perfilImg').value = d.fichaCategoria?.perfilImg || '';
+            
+            document.getElementById('container-ficha').innerHTML = '';
+            d.ficha?.forEach(f => adicionarFicha(f.label, f.valor));
+            document.getElementById('container-ficha-editor').innerHTML = '';
+            d.fichaCategoria?.info?.forEach(i => adicionarFichaEditor(i.label, i.valor));
+            document.getElementById('container-relacionados').innerHTML = '';
+            d.relacionados?.forEach(r => adicionarRelacionado(r.idVid, r.titulo, r.thumb));
+            document.getElementById('container-produtos').innerHTML = '';
+            d.produtos?.forEach(p => adicionarProduto(p.nome, p.link, p.img, p.desc));
+
+            // 2. Carregar Analytics (Visitantes)
+            await carregarAnalytics(col, id);
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        setLoader(false);
+    };
+
+    async function carregarListaCloud() {
+        const col = document.getElementById('colecaoAlvo').value;
+        const q = query(collection(db, col), orderBy("ordem", "asc"));
+        const snap = await getDocs(q);
+        const listEl = document.getElementById('dbList');
+        listEl.innerHTML = '';
+        snap.forEach(d => {
+            const data = d.data();
+            const btn = document.createElement('button');
+            btn.className = 'btn-main btn-sec';
+            btn.style.width = '100%'; btn.style.marginBottom = '6px';
+            btn.innerHTML = `<span style="flex:1; text-align:left">#${data.ordem} - ${data.titulo}</span> <i class="fa-solid fa-chevron-right"></i>`;
+            btn.onclick = () => { carregarPorID(d.id); fecharModais(); };
+            listEl.appendChild(btn);
+        });
+    }
+
+    // UTILITÁRIOS
+    window.inspectMedia = (fieldId) => {
+        let val = document.getElementById(fieldId).value.trim();
+        const viewer = document.getElementById('viewer-' + fieldId);
+        if(!val) return;
+        
+        if(viewer.style.display === 'block') { 
+            viewer.style.display = 'none'; 
+            return; 
+        }
+
+        if (val.includes('drive.google.com')) {
+            let driveUrl = val;
+            if (val.includes('/file/d/')) {
+                const id = val.split('/file/d/')[1].split('/')[0];
+                driveUrl = `https://drive.google.com/file/d/${id}/preview`;
+            } else if (val.includes('id=')) {
+                const id = val.split('id=')[1].split('&')[0];
+                driveUrl = `https://drive.google.com/file/d/${id}/preview`;
+            }
+            viewer.innerHTML = `<iframe src="${driveUrl}" allowfullscreen></iframe>`;
+        } else if (val.length === 11 || val.includes('youtube') || val.includes('http://googleusercontent.com/youtube.com/')) {
+            let id = val;
+            if (val.includes('v=')) id = val.split('v=')[1].split('&')[0];
+            else if (val.includes('http://googleusercontent.com/youtube.com/')) id = val.split('youtu.be/')[1].split('?')[0];
+            viewer.innerHTML = `<iframe src="https://www.youtube.com/embed/$${id}" allowfullscreen></iframe>`;
+        } else {
+            viewer.innerHTML = `<img src="${val}" onerror="this.src='https://placehold.co/600x400?text=Midia+Invalida'">`;
+        }
+        
+        viewer.style.display = 'block';
+    };
+
+    window.gerarSlug = (v) => {
+        const s = v.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "").replace(/[^\w ]+/g, '').replace(/ +/g, '-');
+        document.getElementById('docId').value = s;
+        document.getElementById('ordemLabel').innerHTML = `Ordem (DOC: ${s})`;
     };
 
     function mostrarStatus(txt, cor) {
@@ -570,10 +757,25 @@
         setTimeout(() => s.style.display = "none", 3000);
     }
 
-    document.getElementById('colecaoAlvo').onchange = () => carregarLista(true);
-    document.getElementById('btnVerMais').onclick = () => carregarLista(false);
-    carregarLista(true);
-</script>
+    // DELETAR DOCUMENTO
+    window.deletarDocumento = async () => {
+        const id = document.getElementById('docId').value;
+        const col = document.getElementById('colecaoAlvo').value;
+        if(!id) return alert("Nenhum documento selecionado");
+        if(!confirm("Tem certeza que deseja deletar este documento?")) return;
+        
+        setLoader(true, "DELETANDO...");
+        try {
+            await deleteDoc(doc(db, col, id));
+            setLoader(false); mostrarStatus("DELETADO COM SUCESSO!", "var(--danger)");
+            carregarListaCloud();
+            // Limpa o form após deletar
+            location.reload(); 
+        } catch (e) { setLoader(false); alert("Erro ao deletar"); }
+    };
 
+    carregarListaCloud();
+    carregarConfigAds(); 
+</script>
 </body>
 </html>
