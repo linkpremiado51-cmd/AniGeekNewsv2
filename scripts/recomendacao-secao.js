@@ -66,23 +66,7 @@ const CATALOGO = [
     itens: []
   }
 ];
-const MAPA_NOTICIA_SESSAO = {};
 
-Object.values(CATALOGO).forEach(secao => {
-if (!secao.id) return;
-
-// 1️⃣ O pai também é um item
-MAPA_NOTICIA_SESSAO[secao.id] = secao.id;
-
-// 2️⃣ Os filhos (se existirem)
-if (Array.isArray(secao.itens)) {
-secao.itens.forEach(item => {
-if (item.id) {
-MAPA_NOTICIA_SESSAO[item.id] = secao.id;
-}
-});
-}
-});
 /* ===========================
    CSS INJETADO
 =========================== */
@@ -652,9 +636,9 @@ function getOrder(){
 // Encontra ITEM ou CATEGORIA PAI pelo ID
 function findItem(id){
   for(let sec of CATALOGO){
-    if(sec.id === id) {
-      return { id: sec.id, label: sec.sessao, isRoot: true };
-    }
+    // Verifica se é a própria categoria
+    if(sec.id === id) return sec;
+    // Verifica itens internos
     const item = sec.itens.find(i => i.id === id);
     if(item) return item;
   }
@@ -970,9 +954,10 @@ window.addEventListener('DOMContentLoaded', () => {
   
   // 1. Prioridade: ID da Notícia (Link Compartilhado)
   if (newsId) {
-  
-    const abaAlvo = MAPA_NOTICIA_SESSAO[newsId];
-if (!abaAlvo) return;
+    // IMPORTANTE: Aqui definimos a coleção onde estão as notícias.
+    // Como no seu arquivo HTML você usou 'saihate_no_paladin' como coleção principal,
+    // forçamos a abertura dessa aba.
+    const abaAlvo = 'saihate_no_paladin';
     
     // Garante que a aba esteja na lista de abas ativas e renderiza
     if(ensureTabExists(abaAlvo)) {
