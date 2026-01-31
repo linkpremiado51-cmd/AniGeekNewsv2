@@ -43,7 +43,25 @@
       #container-principal { min-height: 200px; }
       .destaque-secao { transition: opacity 0.3s ease; }
     </style>
+<!-- CSS global apenas em standalone -->
+<script>
+(function(){
+  const isStandalone =
+    !document.referrer ||
+    !document.referrer.includes('linkpremiado51-cmd.github.io/AniGeekNewsv2');
 
+  if (isStandalone) {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = '/AniGeekNewsv2/css/global.css';
+    document.head.appendChild(link);
+  }
+})();
+</script>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  ...
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
       import { getFirestore, collection, onSnapshot, doc, updateDoc, increment, getDoc, setDoc, arrayUnion, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
