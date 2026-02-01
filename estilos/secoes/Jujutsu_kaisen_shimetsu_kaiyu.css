@@ -832,6 +832,17 @@ footer .logo {
     .nav-menu { display: none; }
     .menu-toggle { display: block; }
 }
+/* Dentro do arquivo da seção */
+.destaque-secao {
+    background-color: white; /* Cor padrão light */
+    color: black;
+}
+
+/* Quando o body tiver a classe dark-mode, mude aqui também */
+body.dark-mode .destaque-secao {
+    background-color: #1a1a1a;
+    color: #ffffff;
+}
 
 
               
