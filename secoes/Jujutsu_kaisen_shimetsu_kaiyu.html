@@ -33,22 +33,6 @@
     <div id="toast-copiado">Link copiado para o AniGeek!</div>
 
     <style>
-      /* VARIÁVEIS DE TEMA PARA A ABA */
-      :root {
-        --aba-bg: #ffffff;
-        --aba-texto: #1a1a1a;
-        --aba-resumo: #444444;
-        --aba-borda: #eeeeee;
-      }
-
-      /* Quando o body do index tiver .dark-mode, estas variáveis mudam */
-      body.dark-mode {
-        --aba-bg: #121212;
-        --aba-texto: #f0f0f0;
-        --aba-resumo: #bbbbbb;
-        --aba-borda: #333333;
-      }
-
       .ad-container-anigeek { text-align: center; margin: 15px 0; overflow: hidden; min-height: 50px; }
       .ad-container-anigeek img { max-width: 100%; border-radius: 8px; cursor: pointer; }
       .player-overlay-ad {
@@ -57,26 +41,9 @@
       }
       .destaque-media { position: relative; }
       #container-principal { min-height: 200px; }
-      
-      /* APLICAÇÃO DAS VARIÁVEIS NOS CARDS */
-      .destaque-secao { 
-        transition: background 0.3s ease, color 0.3s ease; 
-        background: var(--aba-bg) !important;
-        border-bottom: 1px solid var(--aba-borda);
-      }
-      .destaque-titulo { color: var(--aba-texto) !important; }
-      .destaque-resumo { color: var(--aba-resumo) !important; }
-      .info-label { color: var(--aba-texto); opacity: 0.8; }
-      .info-valor { color: var(--aba-texto); }
-      
-      .ficha-categoria {
-        background: rgba(0,0,0,0.03);
-      }
-      body.dark-mode .ficha-categoria {
-        background: rgba(255,255,255,0.05);
-      }
+      .destaque-secao { transition: opacity 0.3s ease; }
     </style>
-
+<!-- CSS global apenas em standalone -->
 <script>
 (function(){
   const isStandalone =
@@ -86,7 +53,7 @@
   if (isStandalone) {
     const link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = '/AniGeekNewsv2/css/global.css';
+    link.href = '/AniGeekNewsv2/css/global.css'; // caminho do seu global.css
     document.head.appendChild(link);
   }
 })();
@@ -109,12 +76,19 @@
       const db = getFirestore(app);
 
       let todasAsNoticias = [];
+      
+      /**
+       * SINCRONIZAÇÃO: Pega o valor definido no index.html.
+       * Se for uma sessão nova, o padrão é 5.
+       */
       let noticiasExibidas = window.noticiasExibidas || 5; 
+      
       let playerAlvo = '';
       let urlAlvo = '';
       let linkPropaganda = "https://www.effectivegatecpm.com/u1isyicizb?key=66934bf68fc6093a89704779bb57cce3";
       let playersAdList = new Set(); 
 
+      // --- SISTEMA DE TRACKING ---
       function getVisitorId() {
           let vid = localStorage.getItem('anigeek_vid');
           if (!vid) {
@@ -147,12 +121,16 @@
 
       function limparEspacos(url) { return url ? url.trim() : url; }
 
+      // --- HANDLERS DE UI E PERSISTÊNCIA ---
       window.handlePlayerAd = (playerId, linkArtigo) => {
           if (!playersAdList.has(playerId)) {
               playersAdList.add(playerId); 
               const idLimpo = playerId.replace('player-', '');
+              
+              // SALVA O ID DO ARTIGO: Para o index.html saber onde voltar o scroll
               window.lastArticleId = idLimpo;
               if (window.saveStateGlobal) window.saveStateGlobal();
+
               window.registrarInteracao(idLimpo, 'player_click');
               const linkFinal = (linkArtigo && linkArtigo.trim() !== "") ? linkArtigo : linkPropaganda;
               window.open(linkFinal, '_blank'); 
@@ -252,6 +230,7 @@
               </div>`;
       }
 
+      // --- CORE DE RENDERIZAÇÃO ---
       function renderizarNoticias() {
         const container = document.getElementById('container-principal');
         const btnPaginacao = document.getElementById('pagination-control');
@@ -344,6 +323,8 @@
 
         injetarComentariosDinamicos();
         btnPaginacao.style.display = noticiasExibidas < todasAsNoticias.length ? 'block' : 'none';
+        
+        // SINCRONIZAÇÃO GLOBAL: Avisa o index.html quantas notícias o usuário tem abertas
         window.noticiasExibidas = noticiasExibidas;
         if (window.saveStateGlobal) window.saveStateGlobal();
       }
@@ -370,6 +351,8 @@
           todasAsNoticias.sort((a, b) => (a.ordem || 999) - (b.ordem || 999));
           if(todasAsNoticias.length > 0) document.getElementById('novo-artigo-titulo').innerText = todasAsNoticias[0].titulo;
           renderizarNoticias();
+          
+          // Verifica se há um ID na URL para scroll automático
           setTimeout(verificarNoticiaNaUrl, 150);
         });
       }
