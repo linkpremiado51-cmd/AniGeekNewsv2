@@ -2,49 +2,52 @@
 
 // Seleção dos elementos de alternância de tema
 const themeToggle = document.getElementById('mobileThemeToggle');
-const mobileThemeLabel = document.getElementById('mobileThemeLabel');
 
-// Função para aplicar o tema e salvar a preferência
-function alternarTema() {
-    document.body.classList.toggle('dark-mode');
-    
-    // Salva a escolha do usuário no navegador
-    const modoAtivo = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
-    localStorage.setItem('pref-theme', modoAtivo);
-    
-    console.log(`Tema alterado para: ${modoAtivo}`);
-}
-
-// Escuta o clique no interruptor (toggle)
-if (themeToggle) {
-    themeToggle.addEventListener('change', alternarTema);
-}
-
-// Verifica se o usuário já tinha uma preferência salva ao carregar a página
-function carregarTemaPreferido() {
-    const temaSalvo = localStorage.getItem('pref-theme');
-    
-    if (temaSalvo === 'dark') {
+/**
+ * Aplica o tema visual no Body e atualiza o estado do switch se ele existir
+ */
+function aplicarTema(modo) {
+    if (modo === 'dark') {
         document.body.classList.add('dark-mode');
         if (themeToggle) themeToggle.checked = true;
+    } else {
+        document.body.classList.remove('dark-mode');
+        if (themeToggle) themeToggle.checked = false;
     }
 }
 
-// Lógica da Barra de Progresso no topo (Scrolled)
-window.onscroll = function() {
-    let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-    let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-    let scrolled = (winScroll / height) * 100;
-    const progressBar = document.getElementById("progress-bar");
-    if (progressBar) {
-        progressBar.style.width = scrolled + "%";
+/**
+ * Alterna entre light e dark e salva no localStorage
+ */
+function alternarTema() {
+    const modoAtual = document.body.classList.contains('dark-mode') ? 'light' : 'dark';
+    localStorage.setItem('pref-theme', modoAtual);
+    aplicarTema(modoAtual);
+    console.log(`Tema definido como: ${modoAtual}`);
+}
+
+/**
+ * Inicializa a preferência do usuário
+ */
+function inicializarTema() {
+    const temaSalvo = localStorage.getItem('pref-theme');
+    
+    // Se não houver tema salvo, verifica preferência do sistema, se desejar. 
+    // Por enquanto, manteremos o padrão light caso não haja salvo.
+    if (temaSalvo) {
+        aplicarTema(temaSalvo);
     }
-};
 
-// Lógica do botão de voltar ao topo
+    // Adiciona o evento de clique apenas se o botão existir na página
+    if (themeToggle) {
+        themeToggle.addEventListener('change', alternarTema);
+    }
+}
+
+// Lógica do botão de voltar ao topo (Global)
 window.scrollToTop = function() {
-    window.scrollTo({top: 0, behavior: 'smooth'});
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
-// Inicializa o tema assim que o script carrega
-carregarTemaPreferido();
+// Executa a inicialização do tema
+inicializarTema();
