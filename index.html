@@ -44,39 +44,48 @@
             animation: destacarArtigo 1.5s ease-in-out; position: relative;
         }
         @keyframes destacarArtigo {
-            0 { box-shadow: 0 0 0 0 rgba(229, 9, 20, 0); }
+            0% { box-shadow: 0 0 0 0 rgba(229, 9, 20, 0); }
             25% { box-shadow: 0 0 0 8px rgba(229, 9, 20, 0.15); }
             100% { box-shadow: 0 0 0 0 rgba(229, 9, 20, 0); }
         }
 
-        /* Estilos do Toggle de Tema */
-        .theme-switch-wrapper {
+        /* AJUSTE DO TOGGLE NO HEADER */
+        .header-actions {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            padding: 15px;
-            border-bottom: 1px solid var(--border-ui, #eee);
+            gap: 12px;
         }
+
+        .switch-container {
+            display: flex;
+            align-items: center;
+            background: rgba(0,0,0,0.05);
+            padding: 4px 8px;
+            border-radius: 20px;
+        }
+
         .switch {
             position: relative;
             display: inline-block;
-            width: 40px;
-            height: 20px;
+            width: 34px;
+            height: 18px;
         }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider {
             position: absolute; cursor: pointer;
             top: 0; left: 0; right: 0; bottom: 0;
             background-color: #ccc;
-            transition: .4s; border-radius: 20px;
+            transition: .4s; border-radius: 18px;
         }
         .slider:before {
             position: absolute; content: "";
-            height: 14px; width: 14px; left: 3px; bottom: 3px;
+            height: 12px; width: 12px; left: 3px; bottom: 3px;
             background-color: white; transition: .4s; border-radius: 50%;
         }
         input:checked + .slider { background-color: var(--primary-color, #e50914); }
-        input:checked + .slider:before { transform: translateX(20px); }
+        input:checked + .slider:before { transform: translateX(16px); }
+        
+        .theme-icon { font-size: 12px; margin-right: 5px; color: var(--text-muted); }
     </style>
 </head>
 
@@ -112,6 +121,14 @@
                 <li class="nav-item" id="area-usuario"><span>Aguardando...</span></li>
             </ul>
             <div class="header-actions">
+                <div class="switch-container">
+                    <i class="fas fa-moon theme-icon"></i>
+                    <label class="switch">
+                        <input type="checkbox" id="mobileThemeToggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
                 <button class="menu-toggle" onclick="toggleMobileMenu()">
                     <i class="fas fa-bars"></i>
                 </button>
@@ -132,15 +149,6 @@
 <div class="mobile-menu" id="mobileMenu">
     <button class="close-menu" onclick="toggleMobileMenu()">×</button>
     <div id="container-menu-perfil"></div>
-    
-    <div class="theme-switch-wrapper">
-        <span id="mobileThemeLabel" style="font-weight: bold; font-size: 14px;">Modo Escuro</span>
-        <label class="switch">
-            <input type="checkbox" id="mobileThemeToggle">
-            <span class="slider"></span>
-        </label>
-    </div>
-
     <div class="mobile-menu-item"><a href="./index.html">Início</a></div>
     <div class="mobile-menu-item"><a href="#">Animes</a></div>
     <div class="mobile-menu-item"><a href="#">Games</a></div>
@@ -153,6 +161,12 @@
 <script src="scripts/recomendacao-secao.js"></script>
 
 <script>
+// FUNÇÃO PARA ABRIR O MENU (Caso não esteja em navegacao.js)
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobileMenu');
+    if(menu) menu.classList.toggle('active');
+}
+
 (function() {
     const PERSISTENCE_KEYS = {
         STATE: 'anigeek_persistence_v2',
