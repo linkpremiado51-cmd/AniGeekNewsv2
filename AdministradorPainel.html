@@ -15,7 +15,6 @@
             --bg: #f1f5f9; --surface: #ffffff;
             --border: #e2e8f0; --text-main: #1e293b; --text-muted: #64748b;
         }
-
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Inter', sans-serif; }
         body { background: var(--bg); margin: 0; padding: 0; color: var(--text-main); font-size: 12px; line-height: 1.4; overflow-x: hidden; }
 
@@ -61,37 +60,39 @@
         .search-row input { flex: 1; padding: 12px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 14px; }
         .btn-search { background: var(--primary); color: white; border: none; padding: 0 20px; border-radius: 8px; cursor: pointer; font-weight: 800; }
 
-        .results-dropdown { 
-            background: white; border: 1px solid var(--border); max-height: 250px; 
-            overflow-y: auto; margin-top: 8px; display: none; border-radius: 8px; 
+        .results-dropdown {
+            background: white; border: 1px solid var(--border); max-height: 250px;
+            overflow-y: auto; margin-top: 8px; display: none; border-radius: 8px;
             box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
         }
-        .result-item { padding: 12px; border-bottom: 1px solid #f1f5f9; cursor: pointer; }
+        .result-item {
+            padding: 12px; border-bottom: 1px solid #f1f5f9; cursor: pointer;
+        }
         .result-item:hover { background: #f1f5f9; }
 
         /* Cards Estilizados */
-        .secao-card { 
-            background: var(--surface); border: 1px solid var(--border); 
+        .secao-card {
+            background: var(--surface); border: 1px solid var(--border);
             border-radius: 10px; padding: 15px; margin-bottom: 12px; position: relative;
         }
-        .secao-card h3 { 
-            margin: 0 0 12px 0; font-size: 11px; text-transform: uppercase; 
+        .secao-card h3 {
+            margin: 0 0 12px 0; font-size: 11px; text-transform: uppercase;
             color: var(--text-muted); display: flex; align-items: center; gap: 8px;
             border-bottom: 1px solid #f1f5f9; padding-bottom: 8px; font-weight: 800;
         }
 
         .toggle-btn {
-            position: absolute; right: 15px; top: 12px; background: #f1f5f9; 
-            border: 1px solid var(--border); padding: 4px 8px; border-radius: 6px; 
+            position: absolute; right: 15px; top: 12px; background: #f1f5f9;
+            border: 1px solid var(--border); padding: 4px 8px; border-radius: 6px;
             font-size: 9px; font-weight: 800; color: var(--primary); cursor: pointer;
         }
 
         .grid-compact { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .campo-grupo { margin-bottom: 10px; position: relative; }
         .campo-grupo label { font-weight: 700; font-size: 9px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px; display: block; }
-        
+
         input, textarea, select { width: 100%; padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 13px; outline: none; }
-        
+
         .ai-chip { flex: 1; padding: 8px; background: white; border: 1px solid var(--border); border-radius: 8px; font-size: 10px; text-align: center; cursor: pointer; font-weight: 800; }
         .ai-chip.active { background: var(--primary); color: white; border-color: var(--primary); }
 
@@ -105,7 +106,7 @@
 
         /* Ações Fixas */
         .acoes-wrapper {
-            position: fixed; bottom: 0; left: 0; right: 0; background: #fff; 
+            position: fixed; bottom: 0; left: 0; right: 0; background: #fff;
             border-top: 1px solid var(--border); padding: 10px 15px 20px 15px; z-index: 1001;
         }
         .acoes { display: flex; gap: 8px; }
@@ -115,6 +116,25 @@
         .btn-sec { background: var(--secondary); color: white; flex: 1; }
 
         .status { position: fixed; top: 60px; left: 50%; transform: translateX(-50%); padding: 10px 25px; border-radius: 30px; font-size: 12px; font-weight: 800; z-index: 3000; display: none; color: white; }
+
+        /* Modal de Senha */
+        #passwordModal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(4px);
+            z-index: 3000; display: none; align-items: center; justify-content: center; padding: 20px;
+        }
+        #passwordModal .modal-content {
+            width: 100%; max-width: 400px;
+        }
+        #passwordModal .modal-body {
+            padding: 20px;
+        }
+        #passwordModal input {
+            width: 100%; padding: 12px; margin: 10px 0;
+        }
+        #passwordModal button {
+            width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 800; cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -140,12 +160,26 @@
             <h3><i class="fa-solid fa-folder-tree"></i> COLEÇÃO</h3>
             <button onclick="fecharModais()">×</button>
         </div>
-      <div class="modal-body">
-    <button onclick="selecionarColecao('saihate_no_paladin', 'Saihate no Paladin')" style="width:100%; padding:12px; margin-bottom:8px;">Saihate no Paladin</button>
-    <button onclick="selecionarColecao('Jujutsu_kaisen_shimetsu_kaiyu', 'Jujutsu Kaisen: Shimetsu Kaiyu')" style="width:100%; padding:12px; margin-bottom:8px;">Jujutsu Kaisen: Shimetsu Kaiyu</button>
-    <button onclick="selecionarColecao('anime_i_geek', 'anime_i_geek')" style="width:100%; padding:12px; margin-bottom:8px;">Anime i Geek</button>
-    <button onclick="selecionarColecao('chainsaw_man', 'chainsaw_man')" style="width:100%; padding:12px;">Chainsaw Man</button>
+        <div class="modal-body">
+            <button onclick="selecionarColecao('saihate_no_paladin', 'Saihate no Paladin')" style="width:100%; padding:12px; margin-bottom:8px;">Saihate no Paladin</button>
+            <button onclick="selecionarColecao('Jujutsu_kaisen_shimetsu_kaiyu', 'Jujutsu Kaisen: Shimetsu Kaiyu')" style="width:100%; padding:12px; margin-bottom:8px;">Jujutsu Kaisen: Shimetsu Kaiyu</button>
+            <button onclick="selecionarColecao('anime_i_geek', 'anime_i_geek')" style="width:100%; padding:12px; margin-bottom:8px;">Anime i Geek</button>
+            <button onclick="selecionarColecao('chainsaw_man', 'chainsaw_man')" style="width:100%; padding:12px;">Chainsaw Man</button>
+        </div>
+    </div>
 </div>
+
+<div id="passwordModal" class="generic-modal" onclick="if(event.target==this) fecharModais()">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3><i class="fa-solid fa-lock"></i> SENHA DO DOCUMENTO</h3>
+            <button onclick="fecharModais()">×</button>
+        </div>
+        <div class="modal-body">
+            <p style="font-size: 12px; margin-bottom: 10px;">Insira a senha para acessar este documento:</p>
+            <input type="password" id="passwordInput" placeholder="Senha do Documento">
+            <button onclick="verificarSenha()">ACESSAR</button>
+        </div>
     </div>
 </div>
 
@@ -155,7 +189,6 @@
 </header>
 
 <div class="painel-container">
-    
     <div class="secao-card" style="border: 2px solid var(--warning);">
         <h3><i class="fa-solid fa-bullhorn" style="color: var(--warning);"></i> Configurações Globais de Anúncio</h3>
         <div class="campo-grupo">
@@ -209,7 +242,7 @@
     </div>
 
     <div class="form-corpo">
-        
+
         <div class="secao-card" style="border-left: 5px solid var(--analytics);">
             <h3><i class="fa-solid fa-chart-pie" style="color: var(--analytics);"></i> Analytics & Monitoramento de Visitantes</h3>
             <div class="grid-compact">
@@ -226,7 +259,7 @@
                     <input type="text" id="statsAds" readonly value="0" style="background:#f8fafc;">
                 </div>
             </div>
-            
+
             <div class="campo-grupo">
                 <label>Log de Atividade Recente (Visitantes)</label>
                 <div id="logAtividades" style="max-height: 150px; overflow-y: auto; background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 10px;">
@@ -249,6 +282,10 @@
                 </div>
             </div>
             <div class="campo-grupo"><label>Cor Identidade</label><input type="color" id="cor" value="#4f46e5" style="height:38px; padding:2px;"></div>
+            <div class="campo-grupo">
+                <label>Senha do Documento</label>
+                <input type="password" id="senhaDocumento" placeholder="Crie uma senha única para este documento">
+            </div>
         </div>
 
         <div class="secao-card" style="border-left: 5px solid var(--accent);">
@@ -360,9 +397,11 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
-    
+
     let currentAnimeData = null;
     let aiMode = 'medium';
+    let currentDocPassword = '';
+    let currentDocId = '';
 
     // SALVAMENTO DE CONFIGS GLOBAIS
     window.salvarConfigAds = async () => {
@@ -472,7 +511,7 @@
         document.getElementById('animeResults').style.display = 'none';
         document.getElementById('animeQuery').value = anime.title;
         document.getElementById('episodeArea').style.display = 'block';
-        
+
         const sel = document.getElementById('episodeSelect');
         sel.innerHTML = '<option value="series_main">Página Principal</option>';
         try {
@@ -490,7 +529,7 @@
     window.carregarEpisodio = async () => {
         if(!currentAnimeData) return;
         setLoader(true, "IA EXTRAINDO DADOS...");
-        
+
         const select = document.getElementById('episodeSelect');
         let titleRaw = currentAnimeData.title;
         if (select.value !== 'series_main') titleRaw = `EP ${select.value} - ${select.selectedOptions[0].dataset.title}`;
@@ -552,7 +591,10 @@
         const id = document.getElementById('docId').value;
         const col = document.getElementById('colecaoAlvo').value;
         if(!id) return alert("Slug necessário");
-        
+
+        const senha = document.getElementById('senhaDocumento').value;
+        if(!senha) return alert("Por favor, crie uma senha única para este documento.");
+
         setLoader(true, "SALVANDO...");
         const dados = {
             ordem: parseInt(document.getElementById('ordemNoticia').value) || 0,
@@ -565,7 +607,7 @@
             capaNoticia: document.getElementById('capaNoticia').value,
             capaUrl: document.getElementById('capaUrl').value,
             capaDesc: document.getElementById('capaDesc').value,
-            bannerAd: document.getElementById('bannerAd').value, 
+            bannerAd: document.getElementById('bannerAd').value,
             linkPropagandaArtigo: document.getElementById('linkPropagandaArtigo').value,
             curtidas: parseInt(document.getElementById('curtidas').value) || 0,
             visualizacoes: parseInt(document.getElementById('visualizacoes').value) || 0,
@@ -576,7 +618,8 @@
             ficha: Array.from(document.querySelectorAll('#container-ficha .item-flex')).map(el => ({ label: el.querySelector('.f-label').value, valor: el.querySelector('.f-valor').value })),
             relacionados: Array.from(document.querySelectorAll('#container-relacionados > div')).map(el => ({ idVid: el.querySelector('.r-id').value, titulo: el.querySelector('.r-titulo').value, thumb: el.querySelector('.r-thumb').value })),
             produtos: Array.from(document.querySelectorAll('#container-produtos > div')).map(el => ({ nome: el.querySelector('.p-nome').value, link: el.querySelector('.p-link').value, img: el.querySelector('.p-img').value, desc: el.querySelector('.p-desc').value })),
-            timestamp: Date.now()
+            timestamp: Date.now(),
+            senha: senha
         };
 
         try {
@@ -592,7 +635,7 @@
         const statsPlayer = document.getElementById('statsPlayer');
         const statsAds = document.getElementById('statsAds');
         const logArea = document.getElementById('logAtividades');
-        
+
         // Reset UI
         statsVisitantes.value = "...";
         statsPlayer.value = "...";
@@ -600,8 +643,6 @@
         logArea.innerHTML = '<div style="font-size:10px; color:var(--text-muted); text-align:center;">Carregando dados de visitantes...</div>';
 
         try {
-            // Acessa a subcoleção 'visitantes' dentro do documento atual
-            // Estrutura esperada: colecao > documento > visitantes > {id_visitante}
             const visitantesRef = collection(db, col, docId, "visitantes");
             const snapshot = await getDocs(visitantesRef);
 
@@ -621,10 +662,7 @@
             snapshot.forEach(docSnap => {
                 const data = docSnap.data();
                 const visitorId = docSnap.id;
-                
-                // Calcula ações baseadas em um array de ações (exemplo)
-                // Estrutura esperada do dado do visitante: 
-                // { actions: [{type: 'player_click', ts: 123}, {type: 'ad_click', ts: 124}] }
+
                 let actionsCount = 0;
                 if (data.actions && Array.isArray(data.actions)) {
                     actionsCount = data.actions.length;
@@ -634,7 +672,6 @@
                     });
                 }
 
-                // Adiciona ao log visual (ID parcial para não ocupar muito espaço)
                 logHTML += `
                     <div style="font-size:10px; border-bottom:1px solid #eee; padding:6px; display:flex; justify-content:space-between;">
                         <span><i class="fa-solid fa-user-secret"></i> ...${visitorId.slice(-8)}</span>
@@ -654,14 +691,9 @@
         }
     };
 
-    window.carregarPorID = async (id) => {
-        setLoader(true);
-        const col = document.getElementById('colecaoAlvo').value;
-        
-        // 1. Carregar Documento Principal
+    async function carregarDadosDocumento(id, col) {
         const snap = await getDoc(doc(db, col, id));
-        
-        if(snap.exists()){
+        if (snap.exists()) {
             const d = snap.data();
             document.getElementById('docId').value = id;
             document.getElementById('ordemNoticia').value = d.ordem || 0;
@@ -671,14 +703,15 @@
             document.getElementById('capaNoticia').value = d.capaNoticia || '';
             document.getElementById('capaUrl').value = d.capaUrl || '';
             document.getElementById('capaDesc').value = d.capaDesc || '';
-            document.getElementById('bannerAd').value = d.bannerAd || ''; 
+            document.getElementById('bannerAd').value = d.bannerAd || '';
             document.getElementById('linkPropagandaArtigo').value = d.linkPropagandaArtigo || '';
             document.getElementById('curtidas').value = d.curtidas || 0;
             document.getElementById('visualizacoes').value = d.visualizacoes || 0;
             document.getElementById('linkArtigo').value = d.linkArtigo || '';
             document.getElementById('videoPrincipal').value = d.videoPrincipal || '';
             document.getElementById('perfilImg').value = d.fichaCategoria?.perfilImg || '';
-            
+            document.getElementById('senhaDocumento').value = d.senha || '';
+
             document.getElementById('container-ficha').innerHTML = '';
             d.ficha?.forEach(f => adicionarFicha(f.label, f.valor));
             document.getElementById('container-ficha-editor').innerHTML = '';
@@ -688,12 +721,39 @@
             document.getElementById('container-produtos').innerHTML = '';
             d.produtos?.forEach(p => adicionarProduto(p.nome, p.link, p.img, p.desc));
 
-            // 2. Carregar Analytics (Visitantes)
             await carregarAnalytics(col, id);
-
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
         setLoader(false);
+    }
+
+    window.carregarPorID = async (id) => {
+        setLoader(true);
+        const col = document.getElementById('colecaoAlvo').value;
+        currentDocId = id;
+
+        const snap = await getDoc(doc(db, col, id));
+        if (snap.exists()) {
+            const d = snap.data();
+            currentDocPassword = d.senha || '';
+            if (currentDocPassword) {
+                document.getElementById('passwordModal').style.display = 'flex';
+                setLoader(false);
+                return;
+            } else {
+                await carregarDadosDocumento(id, col);
+            }
+        }
+    };
+
+    window.verificarSenha = () => {
+        const senhaDigitada = document.getElementById('passwordInput').value;
+        if (senhaDigitada === currentDocPassword) {
+            fecharModais();
+            carregarDadosDocumento(currentDocId, document.getElementById('colecaoAlvo').value);
+        } else {
+            alert("Senha incorreta! Tente novamente.");
+        }
     };
 
     async function carregarListaCloud() {
@@ -708,7 +768,7 @@
             btn.className = 'btn-main btn-sec';
             btn.style.width = '100%'; btn.style.marginBottom = '6px';
             btn.innerHTML = `<span style="flex:1; text-align:left">#${data.ordem} - ${data.titulo}</span> <i class="fa-solid fa-chevron-right"></i>`;
-            btn.onclick = () => { carregarPorID(d.id); fecharModais(); };
+            btn.onclick = () => { document.getElementById('docId').value = d.id; carregarPorID(d.id); fecharModais(); };
             listEl.appendChild(btn);
         });
     }
@@ -718,10 +778,10 @@
         let val = document.getElementById(fieldId).value.trim();
         const viewer = document.getElementById('viewer-' + fieldId);
         if(!val) return;
-        
-        if(viewer.style.display === 'block') { 
-            viewer.style.display = 'none'; 
-            return; 
+
+        if(viewer.style.display === 'block') {
+            viewer.style.display = 'none';
+            return;
         }
 
         if (val.includes('drive.google.com')) {
@@ -738,11 +798,11 @@
             let id = val;
             if (val.includes('v=')) id = val.split('v=')[1].split('&')[0];
             else if (val.includes('http://googleusercontent.com/youtube.com/')) id = val.split('youtu.be/')[1].split('?')[0];
-            viewer.innerHTML = `<iframe src="https://www.youtube.com/embed/$${id}" allowfullscreen></iframe>`;
+            viewer.innerHTML = `<iframe src="https://www.youtube.com/embed/${id}" allowfullscreen></iframe>`;
         } else {
             viewer.innerHTML = `<img src="${val}" onerror="this.src='https://placehold.co/600x400?text=Midia+Invalida'">`;
         }
-        
+
         viewer.style.display = 'block';
     };
 
@@ -763,20 +823,26 @@
         const id = document.getElementById('docId').value;
         const col = document.getElementById('colecaoAlvo').value;
         if(!id) return alert("Nenhum documento selecionado");
+
+        const senhaDigitada = prompt("⚠️ Amigo, esta coleção tem dono! Digite a senha para apagar:");
+        if (senhaDigitada !== currentDocPassword) {
+            alert("Senha incorreta! Ação cancelada.");
+            return;
+        }
+
         if(!confirm("Tem certeza que deseja deletar este documento?")) return;
-        
+
         setLoader(true, "DELETANDO...");
         try {
             await deleteDoc(doc(db, col, id));
             setLoader(false); mostrarStatus("DELETADO COM SUCESSO!", "var(--danger)");
             carregarListaCloud();
-            // Limpa o form após deletar
-            location.reload(); 
+            location.reload();
         } catch (e) { setLoader(false); alert("Erro ao deletar"); }
     };
 
     carregarListaCloud();
-    carregarConfigAds(); 
+    carregarConfigAds();
 </script>
 </body>
 </html>
