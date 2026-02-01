@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-      <!-- ===== VERIFICAÇÕES ===== -->
-<!-- =====   <meta name="monetag" content="e06df971ba6dd42eb5581027c13cb0a7"> ===== -->
-
     <meta name="ppck-ver" content="68939c8da52b56e7fdbd2814436b04db" />
     <meta name="6a97888e-site-verification" content="ccb57535b53ed6b31254339d34d7ea73">
 
@@ -24,9 +21,6 @@
     <link rel="stylesheet" href="estilos/geral.css">
     <link rel="stylesheet" href="estilos/cabecalho-rodape.css">
     <link rel="stylesheet" href="estilos/componentes.css">
-        
-        
-<!-- =====   <script src="https://quge5.com/88/tag.min.js" data-zone="207000" async data-cfasync="false"></script>===== -->
 
     <style>
         html { scroll-behavior: smooth; }
@@ -40,7 +34,6 @@
             background: var(--bg-body); padding: 8px 0; border-bottom: 1px solid var(--border-ui); z-index: 9998;
         }
         
-        /* ESTABILIDADE DE LAYOUT: Evita o pulo de página enquanto o Firebase carrega */
         #conteudo_de_destaque {
             min-height: 100vh;
             display: flex;
@@ -51,29 +44,51 @@
             animation: destacarArtigo 1.5s ease-in-out; position: relative;
         }
         @keyframes destacarArtigo {
-            0% { box-shadow: 0 0 0 0 rgba(229, 9, 20, 0); }
+            0 { box-shadow: 0 0 0 0 rgba(229, 9, 20, 0); }
             25% { box-shadow: 0 0 0 8px rgba(229, 9, 20, 0.15); }
             100% { box-shadow: 0 0 0 0 rgba(229, 9, 20, 0); }
         }
+
+        /* Estilos do Toggle de Tema */
+        .theme-switch-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            border-bottom: 1px solid var(--border-ui, #eee);
+        }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 40px;
+            height: 20px;
+        }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute; cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #ccc;
+            transition: .4s; border-radius: 20px;
+        }
+        .slider:before {
+            position: absolute; content: "";
+            height: 14px; width: 14px; left: 3px; bottom: 3px;
+            background-color: white; transition: .4s; border-radius: 50%;
+        }
+        input:checked + .slider { background-color: var(--primary-color, #e50914); }
+        input:checked + .slider:before { transform: translateX(20px); }
     </style>
 </head>
 
 <body>
 
 <script>
-    /**
-     * BLOCO DE RECUPERAÇÃO IMEDIATA (Anti-Flicker)
-     * Executa antes do carregamento do body para preparar variáveis e altura.
-     */
     (function() {
         try {
             const saved = localStorage.getItem('anigeek_persistence_v2');
             if (saved) {
                 const state = JSON.parse(saved);
-                // Define globalmente para as seções lerem
                 if (state.newsLoaded) window.noticiasExibidas = state.newsLoaded;
-                
-                // Pré-ajuste de scroll para evitar que a página comece no topo e pule
                 if (state.scrollY > 0) {
                     window.scrollTo(0, state.scrollY);
                 }
@@ -117,6 +132,15 @@
 <div class="mobile-menu" id="mobileMenu">
     <button class="close-menu" onclick="toggleMobileMenu()">×</button>
     <div id="container-menu-perfil"></div>
+    
+    <div class="theme-switch-wrapper">
+        <span id="mobileThemeLabel" style="font-weight: bold; font-size: 14px;">Modo Escuro</span>
+        <label class="switch">
+            <input type="checkbox" id="mobileThemeToggle">
+            <span class="slider"></span>
+        </label>
+    </div>
+
     <div class="mobile-menu-item"><a href="./index.html">Início</a></div>
     <div class="mobile-menu-item"><a href="#">Animes</a></div>
     <div class="mobile-menu-item"><a href="#">Games</a></div>
@@ -129,9 +153,6 @@
 <script src="scripts/recomendacao-secao.js"></script>
 
 <script>
-/**
- * SISTEMA DE PERSISTÊNCIA DE SESSÃO V2
- */
 (function() {
     const PERSISTENCE_KEYS = {
         STATE: 'anigeek_persistence_v2',
@@ -159,7 +180,6 @@
             if (!saved) return null;
             const state = JSON.parse(saved);
             const ts = parseInt(localStorage.getItem(PERSISTENCE_KEYS.SESSION_TS) || '0');
-            // Expira após 45 minutos de inatividade
             if (Date.now() - ts > 45 * 60 * 1000) return null;
             return state;
         } catch (e) { return null; }
@@ -169,10 +189,8 @@
         const state = loadState();
         if (!state) return;
 
-        // 1. Aplica a quantidade de notícias global
         if (state.newsLoaded) window.noticiasExibidas = state.newsLoaded;
 
-        // 2. Restaura Aba Ativa
         if (state.activeTabId) {
             const checkTab = setInterval(() => {
                 const tab = document.querySelector(`.filter-tag[data-section="${state.activeTabId}"]`);
@@ -184,7 +202,6 @@
             setTimeout(() => clearInterval(checkTab), 3000);
         }
 
-        // 3. Restaura Posição de Leitura e Artigo Específico
         const perseguirArtigo = (attempts = 0) => {
             const article = state.lastArticleId ? document.getElementById(`artigo-${state.lastArticleId}`) : null;
             const btnMais = document.getElementById('btn-carregar-mais');
@@ -193,22 +210,18 @@
                 article.scrollIntoView({ behavior: 'instant', block: 'center' });
                 article.classList.add('destacado');
             } else if (btnMais && btnMais.offsetParent !== null && attempts < 10) {
-                // Se o artigo não está aqui mas o botão sim, o usuário carregou mais notícias antes
                 btnMais.click();
                 setTimeout(() => perseguirArtigo(attempts + 1), 600);
             } else if (state.scrollY > 0) {
-                // Se não há artigo específico, apenas restaura os pixels do scroll
                 window.scrollTo({ top: state.scrollY, behavior: 'instant' });
             }
         };
 
-        // Delay para garantir que o Firebase injetou o primeiro lote
         setTimeout(perseguirArtigo, 1500);
     }
 
     document.addEventListener('DOMContentLoaded', () => {
         restoreState();
-        // Autosave a cada 5 segundos ou no scroll
         setInterval(saveState, 5000);
         window.addEventListener('scroll', () => {
             clearTimeout(window.scTimer);
@@ -221,7 +234,6 @@
 </script>
 
 <script>
-// Barra de Progresso de Leitura
 window.addEventListener('load', () => {
     let lastScroll = 0;
     window.addEventListener('scroll', () => {
@@ -229,7 +241,8 @@ window.addEventListener('load', () => {
         const docHeight = document.documentElement.scrollHeight - window.innerHeight;
         const scrollPercent = (scrollTop / docHeight) * 100;
         if (Math.abs(scrollTop - lastScroll) > 5) {
-            document.getElementById('progress-bar').style.width = `${scrollPercent}%`;
+            const pb = document.getElementById('progress-bar');
+            if(pb) pb.style.width = `${scrollPercent}%`;
             lastScroll = scrollTop;
         }
     });
