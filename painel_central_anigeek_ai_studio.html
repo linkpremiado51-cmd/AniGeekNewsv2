@@ -1,0 +1,2405 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>AniGeek Studio Enterprise — v14.0 Executive Edition</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@0.343.0/dist/umd/lucide.js"></script>
+<style>
+:root {
+/* Paleta Executiva Premium */
+--primary-50: #f0f5ff;
+--primary-100: #e0e7ff;
+--primary-500: #B42431;
+--primary-600: #71AD88;
+--primary-700: #3730a3;
+--primary-800: #312e81;
+--neutral-50: #fafafa;
+--neutral-100: #f5f5f5;
+--neutral-200: #e5e5e5;
+--neutral-300: #d4d4d4;
+--neutral-400: #a3a3a3;
+--neutral-500: #737373;
+--neutral-600: #525252;
+--neutral-700: #404040;
+--neutral-800: #262626;
+--neutral-900: #171717;
+--surface-50: #fcfcfd;
+--surface-100: #f8f9fc;
+--surface-200: #f1f3f8;
+--success-500: #10b981;
+--warning-500: #71AD88;
+--danger-500: #ef4444;
+--analytics-500: #8b5cf6;
+--ops-500: #71AD88;
+--accent-500: #0ea5e9;
+--shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+--shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+--shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+--shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+--border-radius-sm: 4px;
+--border-radius-md: 8px;
+--border-radius-lg: 12px;
+--border-radius-xl: 16px;
+--transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+--transition-normal: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+--transition-slow: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+/* Tema Padrão - Mantendo compatibilidade com código original */
+--primary: var(--primary-500);
+--primary-dark: var(--primary-700);
+--secondary: var(--neutral-900);
+--accent: var(--accent-500);
+--success: var(--success-500);
+--danger: var(--danger-500);
+--warning: var(--warning-500);
+--analytics: var(--analytics-500);
+--ops: var(--ops-500);
+--bg: var(--surface-100);
+--surface: var(--neutral-50);
+--border: var(--neutral-300);
+--text-main: var(--neutral-900);
+--text-muted: var(--neutral-600);
+--elevation-1: var(--shadow-sm);
+--elevation-2: var(--shadow-md);
+--elevation-3: var(--shadow-lg);
+--elevation-4: var(--shadow-xl);
+}
+/* Dark Mode Executivo */
+[data-theme="dark"] {
+--bg: #0f1115;
+--surface: #14171d;
+--surface-raised: #1a1e24;
+--border: #252a33;
+--border-strong: #333944;
+--text-main: #f0f2f8;
+--text-secondary: #cbd0dc;
+--text-muted: #f0f2f8;
+--text-placeholder: #f0f2f8;
+--neutral-50: #1a1d24;
+--neutral-100: #1e222b;
+--neutral-200: #252a33;
+--neutral-300: #171a20;
+--neutral-400: #3a414e;
+--neutral-500: #171a20;
+--neutral-600: #171a20;
+--neutral-700: #171a20;
+--neutral-800: #1a1b26;
+--neutral-900: #1a1b26;
+--surface-100: #171a20;
+--surface-200: #1c2028;
+--primary-50: #1a1b26;
+--primary-100: #222436;
+--primary-500: #666763;
+--primary-600: #666763;
+--primary-700: #71AD88;
+--primary-800: #71AD88;
+}
+* {
+box-sizing: border-box;
+-webkit-tap-highlight-color: transparent;
+margin: 0;
+padding: 0;
+font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+body {
+background: var(--bg);
+color: var(--text-main);
+font-size: 12px;
+line-height: 1.4;
+overflow-x: hidden;
+transition: var(--transition-normal);
+}
+/* Header Executivo */
+.header-enterprise {
+background: var(--secondary);
+color: white;
+padding: 14px 20px;
+display: flex;
+align-items: center;
+justify-content: space-between;
+position: sticky;
+top: 0;
+z-index: 1000;
+box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+transition: var(--transition-normal);
+}
+.header-enterprise h2 {
+margin: 0;
+font-size: 16px;
+font-weight: 800;
+text-transform: uppercase;
+letter-spacing: -0.025em;
+display: flex;
+align-items: center;
+gap: 10px;
+}
+.header-enterprise span {
+font-size: 9px;
+background: var(--primary);
+padding: 4px 8px;
+border-radius: 4px;
+letter-spacing: 0.5px;
+}
+.header-actions {
+display: flex;
+align-items: center;
+gap: 10px;
+}
+.theme-toggle-btn {
+background: var(--primary);
+border: none;
+width: 36px;
+height: 36px;
+border-radius: 8px;
+color: white;
+cursor: pointer;
+display: flex;
+align-items: center;
+justify-content: center;
+transition: var(--transition-fast);
+box-shadow: var(--elevation-2);
+}
+.theme-toggle-btn:hover {
+background: var(--primary-600);
+transform: rotate(30deg);
+}
+.theme-toggle-btn svg {
+width: 10px;
+height: 10px;
+transition: var(--transition-fast);
+}
+/* Modais Premium */
+.generic-modal {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: rgba(15, 23, 42, 0.92);
+backdrop-filter: blur(8px);
+z-index: 2000;
+display: none;
+align-items: center;
+justify-content: center;
+padding: 20px;
+animation: fadeIn 0.2s ease;
+}
+@keyframes fadeIn {
+from { opacity: 0; }
+to { opacity: 1; }
+}
+.modal-content {
+background: var(--surface);
+width: 100%;
+max-width: 520px;
+border-radius: var(--border-radius-lg);
+overflow: hidden;
+box-shadow: var(--elevation-4);
+max-height: 85vh;
+display: flex;
+flex-direction: column;
+border: 1px solid var(--border);
+}
+.modal-header {
+padding: 18px 20px;
+border-bottom: 1px solid var(--border);
+display: flex;
+justify-content: space-between;
+align-items: center;
+background: var(--surface-100);
+font-weight: 700;
+font-size: 14px;
+}
+.modal-header button {
+background: var(--neutral-200);
+border: none;
+width: 32px;
+height: 32px;
+border-radius: 8px;
+font-weight: 700;
+cursor: pointer;
+transition: var(--transition-fast);
+}
+.modal-header button:hover {
+background: var(--neutral-300);
+}
+.modal-body {
+overflow-y: auto;
+flex: 1;
+padding: 16px;
+}
+/* Container Principal */
+.painel-container {
+max-width: 1150px;
+margin: 0 auto;
+padding: 16px;
+padding-bottom: 180px;
+}
+/* Busca IA Premium */
+.smart-search-area {
+background: var(--surface);
+border: 2px solid var(--primary);
+border-radius: var(--border-radius-lg);
+padding: 18px;
+margin-bottom: 16px;
+box-shadow: var(--elevation-2);
+transition: var(--transition-normal);
+}
+.smart-search-area:hover {
+box-shadow: var(--elevation-3);
+border-color: var(--primary-600);
+}
+.search-row {
+display: flex;
+gap: 10px;
+}
+.search-row input {
+flex: 1;
+padding: 12px 16px;
+border: 1.5px solid var(--border);
+border-radius: var(--border-radius-md);
+font-size: 14px;
+background: var(--surface);
+color: var(--text-main);
+transition: var(--transition-fast);
+}
+.search-row input:focus {
+outline: none;
+border-color: var(--primary);
+box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+.btn-search {
+background: var(--primary);
+color: white;
+border: none;
+padding: 0 24px;
+border-radius: var(--border-radius-md);
+cursor: pointer;
+font-weight: 800;
+font-size: 13px;
+transition: var(--transition-fast);
+display: flex;
+align-items: center;
+justify-content: center;
+min-width: 100px;
+}
+.btn-search:hover {
+background: var(--primary-600);
+transform: translateY(-1px);
+}
+.btn-search:active {
+transform: translateY(0);
+}
+.results-dropdown {
+background: var(--surface);
+border: 1px solid var(--border);
+max-height: 280px;
+overflow-y: auto;
+margin-top: 10px;
+display: none;
+border-radius: var(--border-radius-md);
+box-shadow: var(--elevation-2);
+}
+.result-item {
+padding: 14px;
+border-bottom: 1px solid var(--neutral-200);
+cursor: pointer;
+transition: var(--transition-fast);
+font-size: 13px;
+}
+.result-item:hover {
+background: var(--primary-50);
+border-left: 3px solid var(--primary);
+padding-left: 11px;
+}
+.result-item:last-child {
+border-bottom: none;
+}
+/* Cards Estilizados Premium */
+.secao-card {
+background: var(--surface);
+border: 1px solid var(--border);
+border-radius: var(--border-radius-lg);
+padding: 18px;
+margin-bottom: 14px;
+position: relative;
+box-shadow: var(--elevation-1);
+transition: var(--transition-normal);
+}
+.secao-card:hover {
+box-shadow: var(--elevation-2);
+transform: translateY(-1px);
+}
+.secao-card h3 {
+margin: 0 0 14px 0;
+font-size: 11px;
+text-transform: uppercase;
+color: var(--text-muted);
+display: flex;
+align-items: center;
+gap: 10px;
+border-bottom: 1px solid var(--neutral-200);
+padding-bottom: 10px;
+font-weight: 800;
+letter-spacing: 0.05em;
+}
+.toggle-btn {
+position: absolute;
+right: 16px;
+top: 14px;
+background: var(--surface-100);
+border: 1px solid var(--border);
+padding: 6px 12px;
+border-radius: var(--border-radius-sm);
+font-size: 9px;
+font-weight: 800;
+color: var(--primary);
+cursor: pointer;
+transition: var(--transition-fast);
+}
+.toggle-btn:hover {
+background: var(--primary-50);
+border-color: var(--primary-300);
+}
+.grid-compact {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 12px;
+}
+.campo-grupo {
+margin-bottom: 12px;
+position: relative;
+}
+.campo-grupo label {
+font-weight: 700;
+font-size: 9px;
+color: var(--text-muted);
+text-transform: uppercase;
+margin-bottom: 6px;
+display: block;
+letter-spacing: 0.05em;
+}
+input, textarea, select {
+width: 100%;
+padding: 10px 14px;
+border: 1px solid var(--border);
+border-radius: var(--border-radius-md);
+font-size: 13px;
+outline: none;
+background: var(--surface);
+color: var(--text-main);
+transition: var(--transition-fast);
+font-family: 'IBM Plex Sans', sans-serif;
+}
+input:focus, textarea:focus, select:focus {
+border-color: var(--primary);
+box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+input::placeholder, textarea::placeholder {
+color: var(--text-muted);
+opacity: 0.7;
+}
+.ai-chip {
+flex: 1;
+padding: 10px;
+background: var(--surface);
+border: 1px solid var(--border);
+border-radius: var(--border-radius-md);
+font-size: 10px;
+text-align: center;
+cursor: pointer;
+font-weight: 800;
+transition: var(--transition-fast);
+}
+.ai-chip:hover {
+background: var(--primary-50);
+border-color: var(--primary-300);
+}
+.ai-chip.active {
+background: var(--primary);
+color: white;
+border-color: var(--primary);
+}
+.btn-inspect {
+position: absolute;
+right: 10px;
+top: 26px;
+background: var(--surface-100);
+border: 1px solid var(--border);
+padding: 6px 10px;
+border-radius: var(--border-radius-sm);
+color: var(--primary);
+font-size: 11px;
+cursor: pointer;
+transition: var(--transition-fast);
+}
+.btn-inspect:hover {
+background: var(--primary-50);
+border-color: var(--primary-300);
+}
+.inspect-viewer {
+margin-top: 12px;
+background: var(--neutral-900);
+border-radius: var(--border-radius-md);
+overflow: hidden;
+display: none;
+width: 100%;
+aspect-ratio: 16/9;
+border: 2px solid var(--neutral-800);
+}
+.inspect-viewer iframe, .inspect-viewer img {
+width: 100%;
+height: 100%;
+border: none;
+object-fit: cover;
+}
+.btn-add {
+padding: 12px;
+font-size: 11px;
+font-weight: 800;
+border: 2px dashed var(--border);
+border-radius: var(--border-radius-md);
+background: var(--surface-100);
+color: var(--text-muted);
+width: 100%;
+cursor: pointer;
+margin-bottom: 10px;
+transition: var(--transition-fast);
+}
+.btn-add:hover {
+background: var(--primary-50);
+border-color: var(--primary-300);
+color: var(--primary-700);
+}
+.item-flex {
+display: flex;
+gap: 10px;
+margin-bottom: 10px;
+align-items: center;
+}
+.btn-remover {
+background: rgba(239, 68, 68, 0.1);
+color: var(--danger);
+border: 1px solid rgba(239, 68, 68, 0.2);
+padding: 8px 12px;
+border-radius: var(--border-radius-md);
+font-weight: 800;
+cursor: pointer;
+transition: var(--transition-fast);
+min-width: 40px;
+}
+.btn-remover:hover {
+background: rgba(239, 68, 68, 0.15);
+}
+/* Ações Fixas Premium */
+.acoes-wrapper {
+position: fixed;
+bottom: 0;
+left: 0;
+right: 0;
+background: var(--surface);
+border-top: 1px solid var(--border);
+padding: 14px 16px 24px 16px;
+z-index: 1001;
+box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+transition: var(--transition-normal);
+}
+.acoes {
+display: flex;
+gap: 10px;
+}
+.btn-main {
+padding: 14px;
+border: none;
+border-radius: var(--border-radius-md);
+font-weight: 800;
+font-size: 11px;
+cursor: pointer;
+display: flex;
+align-items: center;
+justify-content: center;
+gap: 8px;
+transition: var(--transition-fast);
+letter-spacing: 0.025em;
+min-width: 48px;
+}
+.btn-save {
+background: var(--primary);
+color: white;
+flex: 2;
+}
+.btn-save:hover {
+background: var(--primary-600);
+transform: translateY(-2px);
+box-shadow: var(--elevation-2);
+}
+.btn-ops {
+background: var(--ops);
+color: white;
+flex: 1;
+}
+.btn-ops:hover {
+background: #db2777;
+transform: translateY(-2px);
+}
+.btn-delete {
+background: rgba(239, 68, 68, 0.1);
+color: var(--danger);
+flex: 0.5;
+border: 1px solid rgba(239, 68, 68, 0.2);
+}
+.btn-delete:hover {
+background: rgba(239, 68, 68, 0.15);
+transform: scale(1.1);
+}
+.btn-sec {
+background: var(--secondary);
+color: white;
+flex: 1;
+}
+.btn-sec:hover {
+background: #0c1424;
+transform: translateY(-2px);
+}
+.status {
+position: fixed;
+top: 70px;
+left: 50%;
+transform: translateX(-50%);
+padding: 12px 28px;
+border-radius: 30px;
+font-size: 12px;
+font-weight: 800;
+z-index: 3000;
+display: none;
+color: white;
+box-shadow: var(--elevation-3);
+animation: slideDown 0.3s ease;
+}
+@keyframes slideDown {
+from {
+opacity: 0;
+transform: translate(-50%, -20px);
+}
+to {
+opacity: 1;
+transform: translate(-50%, 0);
+}
+}
+/* Contador de caracteres */
+.char-counter {
+font-size: 9px;
+color: var(--text-muted);
+text-align: right;
+margin-top: 4px;
+font-weight: 600;
+}
+.char-counter.warning {
+color: var(--danger);
+font-weight: 700;
+}
+/* Organização de coleções em pastas */
+.collection-folder {
+background: var(--surface-100);
+border: 1px solid var(--border);
+border-radius: var(--border-radius-md);
+padding: 12px;
+margin-bottom: 12px;
+transition: var(--transition-fast);
+}
+.collection-folder:hover {
+border-color: var(--primary-300);
+background: var(--primary-50);
+}
+.folder-header {
+font-weight: 800;
+font-size: 11px;
+color: var(--primary);
+cursor: pointer;
+display: flex;
+align-items: center;
+gap: 10px;
+padding: 8px 0;
+transition: var(--transition-fast);
+}
+.folder-header:hover {
+color: var(--primary-700);
+}
+.folder-content {
+margin-top: 10px;
+display: none;
+}
+.folder-content.active {
+display: block;
+}
+.folder-item {
+padding: 8px 12px;
+margin-bottom: 6px;
+background: var(--surface);
+border: 1px solid var(--border);
+border-radius: var(--border-radius-sm);
+cursor: pointer;
+font-size: 11px;
+transition: var(--transition-fast);
+display: flex;
+align-items: center;
+gap: 8px;
+}
+.folder-item:hover {
+background: var(--primary-50);
+border-color: var(--primary-300);
+color: var(--primary-700);
+}
+.folder-item.locked::before {
+content: "🔒";
+margin-right: 6px;
+font-size: 12px;
+}
+/* Loader IA Premium */
+#ai-loader-inline {
+display: none;
+align-items: center;
+gap: 10px;
+color: var(--primary);
+font-weight: 800;
+font-size: 10px;
+text-transform: uppercase;
+margin-bottom: 8px;
+padding: 8px 20px;
+background: rgba(79, 70, 229, 0.08);
+border-radius: 20px;
+letter-spacing: 0.05em;
+}
+.dot-pulse {
+width: 8px;
+height: 8px;
+background: var(--primary);
+border-radius: 50%;
+animation: pulse-glow 1.2s infinite ease-in-out;
+}
+@keyframes pulse-glow {
+0%, 100% {
+opacity: 0.4;
+transform: scale(0.8);
+}
+50% {
+opacity: 1;
+transform: scale(1.1);
+}
+}
+/* Estilo Específico Modal de Migração */
+.migration-option {
+background: var(--surface-100);
+border: 1px solid var(--border);
+padding: 12px;
+border-radius: var(--border-radius-md);
+margin-bottom: 12px;
+}
+.migration-option label {
+display: block;
+font-weight: 800;
+font-size: 10px;
+color: var(--text-muted);
+margin-bottom: 6px;
+text-transform: uppercase;
+letter-spacing: 0.05em;
+}
+.ops-btn-group {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 12px;
+margin-top: 16px;
+}
+/* Form Corpo */
+.form-corpo {
+display: flex;
+flex-direction: column;
+gap: 14px;
+}
+/* Modal de Autenticação */
+.auth-modal {
+background: var(--surface);
+border-radius: var(--border-radius-lg);
+padding: 24px;
+text-align: center;
+animation: slideUp 0.3s ease;
+}
+@keyframes slideUp {
+from {
+opacity: 0;
+transform: translateY(20px);
+}
+to {
+opacity: 1;
+transform: translateY(0);
+}
+}
+.auth-modal h3 {
+margin-bottom: 16px;
+font-size: 16px;
+font-weight: 800;
+color: var(--primary);
+}
+.auth-input {
+width: 100%;
+padding: 12px;
+border: 2px solid var(--border);
+border-radius: var(--border-radius-md);
+font-size: 13px;
+margin-bottom: 16px;
+background: var(--surface);
+color: var(--text-main);
+transition: var(--transition-fast);
+}
+.auth-input:focus {
+border-color: var(--primary);
+box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+.auth-btn {
+width: 100%;
+padding: 12px;
+border: none;
+border-radius: var(--border-radius-md);
+font-weight: 800;
+font-size: 12px;
+cursor: pointer;
+margin-top: 8px;
+transition: var(--transition-fast);
+}
+.auth-btn.primary {
+background: var(--primary);
+color: white;
+}
+.auth-btn.primary:hover {
+background: var(--primary-600);
+transform: translateY(-2px);
+box-shadow: var(--elevation-2);
+}
+.auth-btn.secondary {
+background: var(--neutral-200);
+color: var(--text-main);
+}
+.auth-btn.secondary:hover {
+background: var(--neutral-300);
+}
+/* Checkbox Personalizado */
+.checkbox-container {
+display: flex;
+align-items: center;
+gap: 8px;
+margin-top: 12px;
+cursor: pointer;
+}
+.checkbox-custom {
+width: 18px;
+height: 18px;
+border: 2px solid var(--border);
+border-radius: 4px;
+display: flex;
+align-items: center;
+justify-content: center;
+cursor: pointer;
+transition: var(--transition-fast);
+}
+.checkbox-custom.checked {
+background: var(--primary);
+border-color: var(--primary);
+}
+.checkbox-custom.checked::after {
+content: "✓";
+color: white;
+font-weight: 800;
+font-size: 12px;
+}
+/* Responsive */
+@media (max-width: 768px) {
+.grid-compact {
+grid-template-columns: 1fr;
+}
+.header-enterprise {
+padding: 12px 16px;
+flex-direction: column;
+gap: 10px;
+}
+.header-enterprise h2 {
+font-size: 14px;
+}
+.header-actions {
+width: 100%;
+justify-content: space-between;
+}
+.search-row {
+flex-direction: column;
+}
+.acoes {
+flex-wrap: wrap;
+}
+.btn-main {
+flex: 1;
+min-width: auto;
+}
+.btn-save {
+flex: 1 1 100%;
+}
+.painel-container {
+padding: 12px;
+}
+}
+</style>
+</head>
+<body>
+    <div id="msgStatus" class="status"></div>
+
+    <div id="dbModal" class="generic-modal" onclick="if(event.target==this) fecharModais()">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i data-lucide="cloud" style="width:18px;height:18px"></i> NUVEM ANIGEEK</h3>
+                <button onclick="fecharModais()">×</button>
+            </div>
+            <div style="padding:14px; background:var(--surface-100); border-bottom:1px solid var(--border)">
+                <input type="text" id="dbSearch" placeholder="Pesquisar..." oninput="filtrarDB()" style="width:100%; padding:10px 14px; border:1px solid var(--border); border-radius:var(--border-radius-md); font-size:13px">
+            </div>
+            <div id="dbList" class="modal-body"></div>
+        </div>
+    </div>
+
+    <div id="migrationModal" class="generic-modal" onclick="if(event.target==this) fecharModais()">
+        <div class="modal-content" style="border: 2px solid var(--ops);">
+            <div class="modal-header">
+                <h3 style="color: var(--ops);"><i data-lucide="truck" style="width:18px;height:18px"></i> OPERAÇÕES DE DADOS (PRO)</h3>
+                <button onclick="fecharModais()">×</button>
+            </div>
+            <div class="modal-body">
+                <div style="background: rgba(239, 68, 68, 0.08); padding: 12px; border-radius: var(--border-radius-md); color: var(--danger); font-size: 11px; margin-bottom: 16px; border: 1px solid rgba(239, 68, 68, 0.2);">
+                    <i data-lucide="alert-triangle" style="width:16px;height:16px; vertical-align:middle"></i> <b>CUIDADO:</b> Você está prestes a modificar o banco de dados.
+                </div>
+                <div class="migration-option" style="background: var(--surface); border: 2px solid var(--warning); padding: 16px; margin-bottom: 16px;">
+                    <label style="color: var(--warning); font-weight: 800; margin-bottom: 10px; display: block;">📄 DOCUMENTO ATUAL (ORIGEM)</label>
+                    <div style="background: var(--surface-100); padding: 12px; border-radius: var(--border-radius-md); font-family: 'IBM Plex Mono', monospace; font-size: 11px; word-break: break-all; color: var(--text-main);">
+                        <span style="color: var(--ops); font-weight: 800;">Coleção:</span> <span id="migracaoOrigemColecao">-</span><br>
+                        <span style="color: var(--ops); font-weight: 800;">Documento ID:</span> <span id="migracaoOrigemDoc">-</span>
+                    </div>
+                </div>
+                <div class="migration-option">
+                    <label>COLEÇÃO DE DESTINO</label>
+                    <select id="migracaoDestinoColecao" style="font-weight: 800; padding:10px; border-radius:var(--border-radius-md); border:1px solid var(--border); width:100%"></select>
+                </div>
+                <div class="migration-option">
+                    <label>ID DO DOCUMENTO (DESTINO)</label>
+                    <input type="text" id="migracaoDestinoID" placeholder="Mantenha igual ou digite novo ID">
+                </div>
+                <div class="migration-option" id="multiDestinoContainer" style="display: none;">
+                    <label style="color: var(--analytics);">🎯 MÚLTIPLAS COLEÇÕES</label>
+                    <div id="multiDestinoCheckboxes" style="max-height: 200px; overflow-y: auto;"></div>
+                    <div class="checkbox-container" onclick="toggleSelectAll()">
+                        <div class="checkbox-custom" id="selectAllCheckbox"></div>
+                        <span style="font-size: 11px;">Selecionar todas</span>
+                    </div>
+                </div>
+                <div class="ops-btn-group" id="migrationFooter">
+                    <button class="btn-main" style="background: var(--ops); color: white;" onclick="executarMigracao('copiar')">COPIAR</button>
+                    <button class="btn-main" style="background: var(--secondary); color: white;" onclick="executarMigracao('mover')">MOVER</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="collectionModal" class="generic-modal" onclick="if(event.target==this) fecharModais()">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i data-lucide="folder-tree" style="width:18px;height:18px"></i> SELECIONAR COLEÇÃO</h3>
+                <button onclick="fecharModais()">×</button>
+            </div>
+            <div class="modal-body" id="listaColecoesBtn"></div>
+        </div>
+    </div>
+
+    <div id="authModal" class="generic-modal" style="display: none;" onclick="if(event.target==this) fecharModais()">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="auth-modal">
+                <h3><i data-lucide="lock" style="width:20px;height:20px;"></i> AUTENTICAÇÃO</h3>
+                <p style="color: var(--text-muted); font-size: 11px; margin-bottom: 16px;">Insira a senha da coleção.</p>
+                <input type="password" id="authPassword" class="auth-input" placeholder="Senha..." onkeypress="if(event.key==='Enter') autenticarColecao()">
+                
+                <div style="margin: 15px 0; border-top: 1px solid var(--border); padding-top: 15px;">
+                    <div id="btn-ad-reward" onclick="liberarPorPropaganda()" style="cursor:pointer; background:rgba(79,70,229,0.1); border:1px dashed var(--primary); padding:10px; border-radius:8px; font-size:11px; font-weight:800; color:var(--primary); text-align:center;">
+                        🎁 LIBERAR GRÁTIS VIA ANÚNCIO (5s)
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 10px;">
+                    <button class="auth-btn secondary" onclick="fecharModais()">VOLTAR</button>
+                    <button class="auth-btn primary" onclick="autenticarColecao()">ACESSAR</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <header class="header-enterprise">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <h2><i data-lucide="cpu" style="width:18px;height:18px"></i>PAINEL CENTRAL ANIGEEK AI STUDIO</h2>
+            <span>V14.0 PRO DATA OPS</span>
+        </div>
+        <div class="header-actions">
+            <button class="theme-toggle-btn" onclick="toggleTheme()"><i data-lucide="moon" id="themeIcon"></i></button>
+        </div>
+    </header>
+
+    <div class="painel-container">
+        
+        <div class="smart-search-area">
+            <div class="search-row">
+                <input type="text" id="animeQuery" placeholder="1. Buscar Anime no MyAnimeList...">
+                <button class="btn-search" onclick="buscarAnime()"><i data-lucide="sparkle" style="width:16px;height:16px"></i></button>
+            </div>
+            <div id="animeResults" class="results-dropdown"></div>
+            
+            <div id="episodeArea" style="display:none; margin-top: 16px; border-top: 1px solid var(--border); padding-top:16px;">
+                <label style="font-size:9px; font-weight:800; color:var(--primary); display:block; margin-bottom:10px; text-transform:uppercase;">2. REFINAR DOCUMENTO</label>
+                <select id="episodeSelect" style="margin-bottom: 14px; width:100%; padding:10px; border:1px solid var(--border); border-radius:var(--border-radius-md); background:var(--surface)">
+                    <option value="series_main">Página Principal</option>
+                </select>
+                <div class="ai-options" style="display:flex; gap:10px; margin-bottom:14px;">
+                    <div class="ai-chip" onclick="setAiMode('short', this)">Curto</div>
+                    <div class="ai-chip active" onclick="setAiMode('medium', this)">Narrativo</div>
+                    <div class="ai-chip" onclick="setAiMode('long', this)">Completo</div>
+                </div>
+                <button class="btn-search" style="background:var(--success); width: 100%;" onclick="carregarEpisodio()">
+                    <i data-lucide="zap" style="width:16px;height:16px"></i> EXTRAIR COM IA REAL (GEMINI)
+                </button>
+            </div>
+        </div>
+
+        <div class="grid-compact" style="margin-bottom: 14px;">
+            <div class="secao-card" style="border-left: 4px solid var(--primary);">
+                <h3><i data-lucide="folder-tree"></i> Coleção Ativa</h3>
+                <div class="campo-grupo">
+                    <input type="text" id="colecaoDisplay" readonly value="Selecione..." onclick="abrirModalColecao()" style="cursor:pointer; font-weight:800; color:var(--primary);">
+                    <input type="hidden" id="colecaoAlvo">
+                    <input type="hidden" id="colecaoSenha">
+                </div>
+                <div class="campo-grupo">
+                    <label id="ordemLabel">Ordem de Exibição</label>
+                    <input type="number" id="ordemNoticia" value="1">
+                </div>
+            </div>
+
+            <div class="secao-card" style="border-left: 4px solid var(--analytics);">
+                <h3><i data-lucide="pie-chart"></i> Monitoramento</h3>
+                <div class="grid-compact" style="grid-template-columns: 1fr 1fr 1fr; gap: 5px;">
+                    <div class="campo-grupo">
+                        <label>Visits</label>
+                        <input type="text" id="statsVisitantes" readonly value="0" style="background:var(--surface-100); font-size: 11px;">
+                    </div>
+                    <div class="campo-grupo">
+                        <label>Player</label>
+                        <input type="text" id="statsPlayer" readonly value="0" style="background:var(--surface-100); font-size: 11px;">
+                    </div>
+                    <div class="campo-grupo">
+                        <label>Ads</label>
+                        <input type="text" id="statsAds" readonly value="0" style="background:var(--surface-100); font-size: 11px;">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-corpo">
+            
+            <div class="secao-card">
+                <h3><i data-lucide="fingerprint"></i> Identidade Digital</h3>
+                <div class="campo-grupo">
+                    <label>Título Traduzido</label>
+                    <input type="text" id="titulo" oninput="gerarSlug(this.value)" placeholder="Título do Card">
+                </div>
+                <div class="grid-compact">
+                    <div class="campo-grupo"><label>Slug/ID</label><input type="text" id="docId" readonly style="background:var(--surface-100)"></div>
+                    <div class="campo-grupo"><label>Hashtags</label><input type="text" id="categoria" placeholder="Ação, Drama..."></div>
+                </div>
+                <div class="campo-grupo">
+                    <label>Cor Identidade</label>
+                    <input type="color" id="cor" value="#71AD88" style="height:42px; width:100%; border-radius:8px;" oninput="atualizarCoresPainel()">
+                </div>
+            </div>
+
+            <div class="secao-card">
+                <h3><i data-lucide="photo-film"></i> Ativos de Mídia</h3>
+                <div class="campo-grupo">
+                    <label>Thumbnail Card (16:9)</label>
+                    <input type="text" id="capaNoticia">
+                    <button class="btn-inspect" onclick="inspectMedia('capaNoticia')"><i data-lucide="eye"></i></button>
+                    <div id="viewer-capaNoticia" class="inspect-viewer"></div>
+                </div>
+                <div class="grid-compact">
+                    <div class="campo-grupo">
+                        <label>Banner HD Hero</label>
+                        <input type="text" id="capaUrl">
+                        <button class="btn-inspect" onclick="inspectMedia('capaUrl')"><i data-lucide="image"></i></button>
+                        <div id="viewer-capaUrl" class="inspect-viewer"></div>
+                    </div>
+                    <div class="campo-grupo">
+                        <label>Texto Banner</label>
+                        <input type="text" id="capaDesc">
+                    </div>
+                </div>
+                <div class="campo-grupo">
+                    <label>ID YouTube ou Link Drive</label>
+                    <input type="text" id="videoPrincipal" placeholder="Ex: dQw4w9WgXcQ">
+                    <button class="btn-inspect" onclick="inspectMedia('videoPrincipal')"><i data-lucide="play"></i></button>
+                    <div id="viewer-videoPrincipal" class="inspect-viewer"></div>
+                </div>
+            </div>
+
+            <div class="secao-card">
+                <h3><i data-lucide="pen-tool"></i> Redação Inteligente</h3>
+                <button class="toggle-btn" onclick="rephraseContent()"><i data-lucide="wand-sparkles"></i> IA REESCREVER</button>
+                <div class="campo-grupo">
+                    <label>Conteúdo da Notícia/Review</label>
+                    <textarea id="resumo" style="min-height: 220px;" oninput="contarCaracteres()"></textarea>
+                    <div class="char-counter" id="charCounter">1000 caracteres restantes</div>
+                </div>
+                <div class="campo-grupo">
+                    <label>Fonte de Referência (Link)</label>
+                    <input type="text" id="linkArtigo" placeholder="https://...">
+                </div>
+            </div>
+
+            <div class="secao-card" style="border-left: 5px solid var(--accent);">
+                <h3><i data-lucide="rectangle-ad"></i> Anúncios Exclusivos</h3>
+                <div class="campo-grupo">
+                    <label>Link Propaganda Exclusivo</label>
+                    <input type="text" id="linkPropagandaArtigo" placeholder="Vazio = Global">
+                </div>
+                <div class="campo-grupo">
+                    <label>Script/HTML Banner Exclusivo</label>
+                    <textarea id="bannerAd" style="min-height: 80px;" placeholder="HTML aqui..."></textarea>
+                </div>
+            </div>
+
+            <div class="grid-compact">
+                <div class="secao-card">
+                    <h3><i data-lucide="list-check"></i> Ficha Técnica</h3>
+                    <div id="container-ficha"></div>
+                    <button class="btn-add" onclick="adicionarFicha()">+ Atributo</button>
+                </div>
+                <div class="secao-card">
+                    <h3><i data-lucide="user-cog"></i> Editor</h3>
+                    <div class="campo-grupo"><label>Avatar</label><input type="text" id="perfilImg"></div>
+                    <div id="container-ficha-editor"></div>
+                    <button class="btn-add" onclick="adicionarFichaEditor()">+ Cargo</button>
+                </div>
+            </div>
+
+            <div class="secao-card">
+                <h3><i data-lucide="history"></i> Log de Atividades</h3>
+                <div id="logAtividades" style="max-height: 120px; overflow-y: auto; background: var(--surface); border: 1px solid var(--border); padding: 10px; font-size: 10px;">
+                </div>
+            </div>
+
+            <div class="secao-card" style="border: 2px solid var(--warning); opacity: 0.9;">
+                <h3><i data-lucide="megaphone" style="color: var(--warning);"></i> Configurações Globais de Anúncio</h3>
+                <div class="campo-grupo">
+                    <label>Link Global PADRÃO</label>
+                    <input type="text" id="globalLinkPropaganda">
+                </div>
+                <div class="grid-compact">
+                    <div class="campo-grupo"><label>Banner Topo</label><textarea id="globalBannerTopo" style="min-height: 60px;"></textarea></div>
+                    <div class="campo-grupo"><label>Banner Fundo</label><textarea id="globalBannerFundo" style="min-height: 60px;"></textarea></div>
+                </div>
+                <button class="btn-main" style="width: 100%; background: var(--warning); color: #000; margin-top: 10px;" onclick="salvarConfigAds()">
+                    <i data-lucide="save"></i> SALVAR SETUP GLOBAL
+                </button>
+            </div>
+            
+            <div class="secao-card">
+                <h3><i data-lucide="youtube"></i> Vídeos Vinculados</h3>
+                <div id="container-relacionados"></div>
+                <button class="btn-add" onclick="adicionarRelacionado()">+ Vincular Vídeo</button>
+            </div>
+
+            <div class="secao-card">
+                <h3><i data-lucide="shopping-cart"></i> Vitrine de Produtos</h3>
+                <div id="container-produtos"></div>
+                <button class="btn-add" onclick="adicionarProduto()">+ Adicionar Produto</button>
+            </div>
+
+            <div class="secao-card">
+                <h3><i data-lucide="trending-up"></i> Métricas Manuais</h3>
+                <div class="grid-compact">
+                    <div class="campo-grupo"><label>Likes</label><input type="number" id="curtidas" value="0"></div>
+                    <div class="campo-grupo"><label>Views</label><input type="number" id="visualizacoes" value="0"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="acoes-wrapper">
+        <div id="ai-loader-inline"><div class="dot-pulse"></div><span id="loader-text-inline">IA PROCESSANDO...</span></div>
+        <div class="acoes">
+            <button class="btn-main btn-delete" onclick="deletarDocumento()" title="Deletar"><i data-lucide="trash-2"></i></button>
+            <button class="btn-main btn-ops" onclick="prepararMigracao()" title="Migrar"><i data-lucide="truck"></i></button>
+            <button class="btn-main btn-sec" onclick="toggleCloud()" title="Banco de Dados"><i data-lucide="database"></i></button>
+            <button class="btn-main btn-save" onclick="salvarGeral()" title="Publicar na Nuvem"><i data-lucide="cloud-upload"></i> PUBLICAR</button>
+            <button class="btn-main" style="background: var(--ops); color: white; min-width: 40px;" onclick="prepararMigracaoMassa()" title="Migração em Massa">
+                <i data-lucide="layers"></i>
+            </button>
+        </div>
+    </div>
+
+</body>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, doc, setDoc, getDoc, deleteDoc, collection, getDocs, query, orderBy, writeBatch } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+const firebaseConfig = {
+apiKey: "AIzaSyBC_ad4X9OwCHKvcG_pNQkKEl76Zw2tu6o",
+authDomain: "anigeeknews.firebaseapp.com",
+projectId: "anigeeknews",
+storageBucket: "anigeeknews.firebasestorage.app",
+messagingSenderId: "769322939926",
+appId: "1:769322939926:web:6eb91a96a3f74670882737"
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+// CONFIGURAÇÃO DOS CAMINHOS DO USUÁRIO COM SENHAS
+const COLLECTIONS_MAP = [
+// --- WACHE ---
+
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/akame_ga_kill", "label": "[Wache] Akame ga Kill", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/angel_beats", "label": "[Wache] Angel Beats", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/angelic_layer", "label": "[Wache] Angelic Layer", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/anime_i_geek", "label": "[Wache] Anime i Geek", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/assassination_classroom", "label": "[Wache] Assassination Classroom", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/attack_on_titan_final_season", "label": "[Wache] Attack on Titan Final Season", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/attack_on_titan_final_season_part_2", "label": "[Wache] Attack on Titan Final Season Part 2", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/bakuman", "label": "[Wache] Bakuman", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/black_bullet", "label": "[Wache] Black Bullet", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/black_clover", "label": "[Wache] Black Clover", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/bleach", "label": "[Wache] Bleach", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/blue_lock", "label": "[Wache] Blue Lock", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/blue_period", "label": "[Wache] Blue Period", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/boku_no_hero_academia_season_5", "label": "[Wache] Boku no Hero Academia Season 5", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/boku_no_hero_academia_season_6", "label": "[Wache] Boku no Hero Academia Season 6", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/boruto", "label": "[Wache] Boruto", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/cells_at_work", "label": "[Wache] Cells at Work", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/cells_at_work_black", "label": "[Wache] Cells at Work Black", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/chainsaw_man", "label": "[Wache] Chainsaw Man", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/chainsaw_man_part_2", "label": "[Wache] Chainsaw Man Part 2", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/clannad", "label": "[Wache] Clannad", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/classroom_of_the_elite", "label": "[Wache] Classroom of the Elite", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/classroom_of_the_elite_season_2", "label": "[Wache] Classroom of the Elite Season 2", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/code_geass", "label": "[Wache] Code Geass", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/cowboy_bebop", "label": "[Wache] Cowboy Bebop", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/death_note", "label": "[Wache] Death Note", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/demon_slayer_kimetsu_no_yaiba", "label": "[Wache] Demon Slayer: Kimetsu no Yaiba", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/demon_slayer_kimetsu_no_yaiba_entertainment_district", "label": "[Wache] Demon Slayer: Entertainment District", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/demon_slayer_kimetsu_no_yaiba_mugen_train", "label": "[Wache] Demon Slayer: Mugen Train", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/demon_slayer_kimetsu_no_yaiba_swordsmith_village", "label": "[Wache] Demon Slayer: Swordsmith Village", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/devilman_crybaby", "label": "[Wache] Devilman Crybaby", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/dr_stone", "label": "[Wache] Dr. Stone", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/elfen_lied", "label": "[Wache] Elfen Lied", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/eromanga_sensei", "label": "[Wache] Eromanga Sensei", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/fire_force", "label": "[Wache] Fire Force", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/food_wars_shokugeki_no_soma", "label": "[Wache] Food Wars: Shokugeki no Soma", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/fullmetal_alchemist_brotherhood", "label": "[Wache] Fullmetal Alchemist Brotherhood", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/guilty_crown", "label": "[Wache] Guilty Crown", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/haikyuu", "label": "[Wache] Haikyuu!!", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/hells_paradise", "label": "[Wache] Hell's Paradise", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/horimiya", "label": "[Wache] Horimiya", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/hunter_x_hunter", "label": "[Wache] Hunter x Hunter", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/jujutsu_kaisen", "label": "[Wache] Jujutsu Kaisen", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/kaguya_sama_love_is_war", "label": "[Wache] Kaguya-sama Love is War", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/kaguya_sama_love_is_war_season_2", "label": "[Wache] Kaguya-sama Love is War Season 2", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/kaguya_sama_love_is_war_season_3", "label": "[Wache] Kaguya-sama Love is War Season 3", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/kimi_no_suizou_wo_tabetai", "label": "[Wache] Kimi no Suizou wo Tabetai", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/kingdom", "label": "[Wache] Kingdom", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/komi_cant_communicate", "label": "[Wache] Komi Can't Communicate", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/komi_cant_communicate_season_2", "label": "[Wache] Komi Can't Communicate Season 2", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/kuroko_no_basket", "label": "[Wache] Kuroko no Basket", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/kuroshitsuji", "label": "[Wache] Kuroshitsuji", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/made_in_abyss", "label": "[Wache] Made in Abyss", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/made_in_abyss_dawn_of_the_deep_soul", "label": "[Wache] Made in Abyss: Dawn of the Deep Soul", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/made_in_abyss_retsujitsu", "label": "[Wache] Made in Abyss: Retsujitsu", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/maiden_slayer", "label": "[Wache] Maiden Slayer", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/mob_psycho_100", "label": "[Wache] Mob Psycho 100", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/my_hero_academia", "label": "[Wache] My Hero Academia", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/my_next_life_as_a_villainess", "label": "[Wache] My Next Life as a Villainess", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/naruto", "label": "[Wache] Naruto", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/neon_genesis_evangelion", "label": "[Wache] Neon Genesis Evangelion", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/noragami", "label": "[Wache] Noragami", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/oddtaxi", "label": "[Wache] Odd Taxi", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/one_piece", "label": "[Wache] One Piece", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/one_punch_man", "label": "[Wache] One Punch Man", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/oregairu", "label": "[Wache] Oregairu", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/oregairu_season_2", "label": "[Wache] Oregairu Season 2", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/owari_no_seraph", "label": "[Wache] Owari no Seraph", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/platinum_end", "label": "[Wache] Platinum End", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/psycho_pass", "label": "[Wache] Psycho-Pass", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/re_zero_kara_hajimeru_isekai_seikatsu", "label": "[Wache] Re:Zero", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/rent_a_girlfriend", "label": "[Wache] Rent-a-Girlfriend", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/rent_a_girlfriend_season_2", "label": "[Wache] Rent-a-Girlfriend Season 2", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/rurouni_kenshin", "label": "[Wache] Rurouni Kenshin", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/saihate_no_paladin", "label": "[Wache] Saihate no Paladin", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/samurai_champloo", "label": "[Wache] Samurai Champloo", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/sentenced_to_be_a_hero", "label": "[Wache] Sentenced to be a Hero", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/seven_deadly_sins", "label": "[Wache] Seven Deadly Sins", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/shadows_house", "label": "[Wache] Shadows House", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/shadows_house_season_2", "label": "[Wache] Shadows House Season 2", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/shaman_king", "label": "[Wache] Shaman King", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/shingeki_no_kyojin", "label": "[Wache] Shingeki no Kyojin", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/solo_leveling", "label": "[Wache] Solo Leveling", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/spy_x_family", "label": "[Wache] Spy x Family", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/steins_gate", "label": "[Wache] Steins;Gate", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/steins_gate_0", "label": "[Wache] Steins;Gate 0", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/sword_art_online", "label": "[Wache] Sword Art Online", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/the_ancient_magus_bride", "label": "[Wache] The Ancient Magus' Bride", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/the_case_study_of_vanitas", "label": "[Wache] The Case Study of Vanitas", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/the_case_study_of_vanitas_season_2", "label": "[Wache] The Case Study of Vanitas Season 2", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/the_quintessential_quintuplets", "label": "[Wache] The Quintessential Quintuplets", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/the_rising_of_the_shield_hero", "label": "[Wache] The Rising of the Shield Hero", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/the_world_god_only_knows", "label": "[Wache] The World God Only Knows", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/tokyo_revengers", "label": "[Wache] Tokyo Revengers", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/toradora", "label": "[Wache] Toradora!", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/vinland_saga", "label": "[Wache] Vinland Saga", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/vinland_saga_season_2", "label": "[Wache] Vinland Saga Season 2", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/weathering_with_you", "label": "[Wache] Weathering With You", "folder": "Wache", "senha": "wache123" },
+  { "id": "wache.web.app/animes_filmes_series_games_noticias/your_lie_in_april", "label": "[Wache] Your Lie in April", "folder": "Wache", "senha": "wache123" }
+
+,
+{ id: "wache.web.app/animes_filmes_series_games_noticias/chainsaw_man", label: "[Wache] Chainsaw Man", folder: "Wache", senha: "wache123" },
+{ id: "wache.web.app/animes_filmes_series_games_noticias/saihate_no_paladin", label: "[Wache] Saihate no Paladin", folder: "Wache", senha: "wache123" },
+{ id: "wache.web.app/animes_filmes_series_games_noticias/sentenced_to_be_a_hero", label: "[Wache] Sentenced to be a Hero", folder: "Wache", senha: "wache123" },
+// --- MELIODAS ---
+
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/akame_ga_kill", "label": "[Meliodas] Akame ga Kill", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/angel_beats", "label": "[Meliodas] Angel Beats", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/angelic_layer", "label": "[Meliodas] Angelic Layer", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/anime_i_geek", "label": "[Meliodas] Anime i Geek", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/assassination_classroom", "label": "[Meliodas] Assassination Classroom", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/attack_on_titan_final_season", "label": "[Meliodas] Attack on Titan Final Season", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/attack_on_titan_final_season_part_2", "label": "[Meliodas] Attack on Titan Final Season Part 2", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/bakuman", "label": "[Meliodas] Bakuman", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/black_bullet", "label": "[Meliodas] Black Bullet", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/black_clover", "label": "[Meliodas] Black Clover", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/bleach", "label": "[Meliodas] Bleach", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/blue_lock", "label": "[Meliodas] Blue Lock", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/blue_period", "label": "[Meliodas] Blue Period", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/boku_no_hero_academia_season_5", "label": "[Meliodas] Boku no Hero Academia Season 5", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/boku_no_hero_academia_season_6", "label": "[Meliodas] Boku no Hero Academia Season 6", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/boruto", "label": "[Meliodas] Boruto", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/cells_at_work", "label": "[Meliodas] Cells at Work", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/cells_at_work_black", "label": "[Meliodas] Cells at Work Black", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/chainsaw_man", "label": "[Meliodas] Chainsaw Man", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/chainsaw_man_part_2", "label": "[Meliodas] Chainsaw Man Part 2", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/clannad", "label": "[Meliodas] Clannad", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/classroom_of_the_elite", "label": "[Meliodas] Classroom of the Elite", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/classroom_of_the_elite_season_2", "label": "[Meliodas] Classroom of the Elite Season 2", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/code_geass", "label": "[Meliodas] Code Geass", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/cowboy_bebop", "label": "[Meliodas] Cowboy Bebop", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/death_note", "label": "[Meliodas] Death Note", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/demon_slayer_kimetsu_no_yaiba", "label": "[Meliodas] Demon Slayer: Kimetsu no Yaiba", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/demon_slayer_kimetsu_no_yaiba_entertainment_district", "label": "[Meliodas] Demon Slayer: Entertainment District", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/demon_slayer_kimetsu_no_yaiba_mugen_train", "label": "[Meliodas] Demon Slayer: Mugen Train", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/demon_slayer_kimetsu_no_yaiba_swordsmith_village", "label": "[Meliodas] Demon Slayer: Swordsmith Village", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/devilman_crybaby", "label": "[Meliodas] Devilman Crybaby", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/dr_stone", "label": "[Meliodas] Dr. Stone", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/elfen_lied", "label": "[Meliodas] Elfen Lied", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/eromanga_sensei", "label": "[Meliodas] Eromanga Sensei", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/fire_force", "label": "[Meliodas] Fire Force", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/food_wars_shokugeki_no_soma", "label": "[Meliodas] Food Wars: Shokugeki no Soma", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/fullmetal_alchemist_brotherhood", "label": "[Meliodas] Fullmetal Alchemist Brotherhood", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/guilty_crown", "label": "[Meliodas] Guilty Crown", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/haikyuu", "label": "[Meliodas] Haikyuu!!", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/hells_paradise", "label": "[Meliodas] Hell's Paradise", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/horimiya", "label": "[Meliodas] Horimiya", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/hunter_x_hunter", "label": "[Meliodas] Hunter x Hunter", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/jujutsu_kaisen", "label": "[Meliodas] Jujutsu Kaisen", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/kaguya_sama_love_is_war", "label": "[Meliodas] Kaguya-sama Love is War", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/kaguya_sama_love_is_war_season_2", "label": "[Meliodas] Kaguya-sama Love is War Season 2", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/kaguya_sama_love_is_war_season_3", "label": "[Meliodas] Kaguya-sama Love is War Season 3", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/kimi_no_suizou_wo_tabetai", "label": "[Meliodas] Kimi no Suizou wo Tabetai", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/kingdom", "label": "[Meliodas] Kingdom", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/komi_cant_communicate", "label": "[Meliodas] Komi Can't Communicate", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/komi_cant_communicate_season_2", "label": "[Meliodas] Komi Can't Communicate Season 2", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/kuroko_no_basket", "label": "[Meliodas] Kuroko no Basket", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/kuroshitsuji", "label": "[Meliodas] Kuroshitsuji", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/made_in_abyss", "label": "[Meliodas] Made in Abyss", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/made_in_abyss_dawn_of_the_deep_soul", "label": "[Meliodas] Made in Abyss: Dawn of the Deep Soul", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/made_in_abyss_retsujitsu", "label": "[Meliodas] Made in Abyss: Retsujitsu", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/maiden_slayer", "label": "[Meliodas] Maiden Slayer", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/mob_psycho_100", "label": "[Meliodas] Mob Psycho 100", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/my_hero_academia", "label": "[Meliodas] My Hero Academia", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/my_next_life_as_a_villainess", "label": "[Meliodas] My Next Life as a Villainess", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/naruto", "label": "[Meliodas] Naruto", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/neon_genesis_evangelion", "label": "[Meliodas] Neon Genesis Evangelion", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/noragami", "label": "[Meliodas] Noragami", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/oddtaxi", "label": "[Meliodas] Odd Taxi", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/one_piece", "label": "[Meliodas] One Piece", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/one_punch_man", "label": "[Meliodas] One Punch Man", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/oregairu", "label": "[Meliodas] Oregairu", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/oregairu_season_2", "label": "[Meliodas] Oregairu Season 2", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/owari_no_seraph", "label": "[Meliodas] Owari no Seraph", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/platinum_end", "label": "[Meliodas] Platinum End", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/psycho_pass", "label": "[Meliodas] Psycho-Pass", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/re_zero_kara_hajimeru_isekai_seikatsu", "label": "[Meliodas] Re:Zero", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/rent_a_girlfriend", "label": "[Meliodas] Rent-a-Girlfriend", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/rent_a_girlfriend_season_2", "label": "[Meliodas] Rent-a-Girlfriend Season 2", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/rurouni_kenshin", "label": "[Meliodas] Rurouni Kenshin", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/saihate_no_paladin", "label": "[Meliodas] Saihate no Paladin", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/samurai_champloo", "label": "[Meliodas] Samurai Champloo", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/sentenced_to_be_a_hero", "label": "[Meliodas] Sentenced to be a Hero", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/seven_deadly_sins", "label": "[Meliodas] Seven Deadly Sins", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/shadows_house", "label": "[Meliodas] Shadows House", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/shadows_house_season_2", "label": "[Meliodas] Shadows House Season 2", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/shaman_king", "label": "[Meliodas] Shaman King", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/shingeki_no_kyojin", "label": "[Meliodas] Shingeki no Kyojin", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/solo_leveling", "label": "[Meliodas] Solo Leveling", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/spy_x_family", "label": "[Meliodas] Spy x Family", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/steins_gate", "label": "[Meliodas] Steins;Gate", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/steins_gate_0", "label": "[Meliodas] Steins;Gate 0", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/sword_art_online", "label": "[Meliodas] Sword Art Online", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/the_ancient_magus_bride", "label": "[Meliodas] The Ancient Magus' Bride", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/the_case_study_of_vanitas", "label": "[Meliodas] The Case Study of Vanitas", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/the_case_study_of_vanitas_season_2", "label": "[Meliodas] The Case Study of Vanitas Season 2", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/the_quintessential_quintuplets", "label": "[Meliodas] The Quintessential Quintuplets", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/the_rising_of_the_shield_hero", "label": "[Meliodas] The Rising of the Shield Hero", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/the_world_god_only_knows", "label": "[Meliodas] The World God Only Knows", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/tokyo_revengers", "label": "[Meliodas] Tokyo Revengers", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/toradora", "label": "[Meliodas] Toradora!", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/vinland_saga", "label": "[Meliodas] Vinland Saga", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/vinland_saga_season_2", "label": "[Meliodas] Vinland Saga Season 2", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/weathering_with_you", "label": "[Meliodas] Weathering With You", "folder": "Meliodas", "senha": "meliodas456" },
+  { "id": "meliodas.web.app/animes_filmes_series_games_noticias/your_lie_in_april", "label": "[Meliodas] Your Lie in April", "folder": "Meliodas", "senha": "meliodas456" }
+
+,
+// --- DANIEL ---
+
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/akame_ga_kill", "label": "[Daniel] Akame ga Kill", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/angel_beats", "label": "[Daniel] Angel Beats", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/angelic_layer", "label": "[Daniel] Angelic Layer", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/anime_i_geek", "label": "[Daniel] Anime i Geek", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/assassination_classroom", "label": "[Daniel] Assassination Classroom", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/attack_on_titan_final_season", "label": "[Daniel] Attack on Titan Final Season", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/attack_on_titan_final_season_part_2", "label": "[Daniel] Attack on Titan Final Season Part 2", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/bakuman", "label": "[Daniel] Bakuman", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/black_bullet", "label": "[Daniel] Black Bullet", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/black_clover", "label": "[Daniel] Black Clover", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/bleach", "label": "[Daniel] Bleach", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/blue_lock", "label": "[Daniel] Blue Lock", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/blue_period", "label": "[Daniel] Blue Period", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/boku_no_hero_academia_season_5", "label": "[Daniel] Boku no Hero Academia Season 5", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/boku_no_hero_academia_season_6", "label": "[Daniel] Boku no Hero Academia Season 6", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/boruto", "label": "[Daniel] Boruto", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/cells_at_work", "label": "[Daniel] Cells at Work", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/cells_at_work_black", "label": "[Daniel] Cells at Work Black", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/chainsaw_man", "label": "[Daniel] Chainsaw Man", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/chainsaw_man_part_2", "label": "[Daniel] Chainsaw Man Part 2", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/clannad", "label": "[Daniel] Clannad", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/classroom_of_the_elite", "label": "[Daniel] Classroom of the Elite", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/classroom_of_the_elite_season_2", "label": "[Daniel] Classroom of the Elite Season 2", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/code_geass", "label": "[Daniel] Code Geass", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/cowboy_bebop", "label": "[Daniel] Cowboy Bebop", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/death_note", "label": "[Daniel] Death Note", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/demon_slayer_kimetsu_no_yaiba", "label": "[Daniel] Demon Slayer: Kimetsu no Yaiba", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/demon_slayer_kimetsu_no_yaiba_entertainment_district", "label": "[Daniel] Demon Slayer: Entertainment District", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/demon_slayer_kimetsu_no_yaiba_mugen_train", "label": "[Daniel] Demon Slayer: Mugen Train", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/demon_slayer_kimetsu_no_yaiba_swordsmith_village", "label": "[Daniel] Demon Slayer: Swordsmith Village", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/devilman_crybaby", "label": "[Daniel] Devilman Crybaby", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/dr_stone", "label": "[Daniel] Dr. Stone", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/elfen_lied", "label": "[Daniel] Elfen Lied", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/eromanga_sensei", "label": "[Daniel] Eromanga Sensei", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/fire_force", "label": "[Daniel] Fire Force", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/food_wars_shokugeki_no_soma", "label": "[Daniel] Food Wars: Shokugeki no Soma", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/fullmetal_alchemist_brotherhood", "label": "[Daniel] Fullmetal Alchemist Brotherhood", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/guilty_crown", "label": "[Daniel] Guilty Crown", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/haikyuu", "label": "[Daniel] Haikyuu!!", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/hells_paradise", "label": "[Daniel] Hell's Paradise", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/horimiya", "label": "[Daniel] Horimiya", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/hunter_x_hunter", "label": "[Daniel] Hunter x Hunter", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/jujutsu_kaisen", "label": "[Daniel] Jujutsu Kaisen", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/kaguya_sama_love_is_war", "label": "[Daniel] Kaguya-sama Love is War", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/kaguya_sama_love_is_war_season_2", "label": "[Daniel] Kaguya-sama Love is War Season 2", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/kaguya_sama_love_is_war_season_3", "label": "[Daniel] Kaguya-sama Love is War Season 3", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/kimi_no_suizou_wo_tabetai", "label": "[Daniel] Kimi no Suizou wo Tabetai", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/kingdom", "label": "[Daniel] Kingdom", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/komi_cant_communicate", "label": "[Daniel] Komi Can't Communicate", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/komi_cant_communicate_season_2", "label": "[Daniel] Komi Can't Communicate Season 2", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/kuroko_no_basket", "label": "[Daniel] Kuroko no Basket", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/kuroshitsuji", "label": "[Daniel] Kuroshitsuji", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/made_in_abyss", "label": "[Daniel] Made in Abyss", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/made_in_abyss_dawn_of_the_deep_soul", "label": "[Daniel] Made in Abyss: Dawn of the Deep Soul", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/made_in_abyss_retsujitsu", "label": "[Daniel] Made in Abyss: Retsujitsu", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/maiden_slayer", "label": "[Daniel] Maiden Slayer", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/mob_psycho_100", "label": "[Daniel] Mob Psycho 100", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/my_hero_academia", "label": "[Daniel] My Hero Academia", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/my_next_life_as_a_villainess", "label": "[Daniel] My Next Life as a Villainess", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/naruto", "label": "[Daniel] Naruto", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/neon_genesis_evangelion", "label": "[Daniel] Neon Genesis Evangelion", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/noragami", "label": "[Daniel] Noragami", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/oddtaxi", "label": "[Daniel] Odd Taxi", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/one_piece", "label": "[Daniel] One Piece", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/one_punch_man", "label": "[Daniel] One Punch Man", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/oregairu", "label": "[Daniel] Oregairu", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/oregairu_season_2", "label": "[Daniel] Oregairu Season 2", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/owari_no_seraph", "label": "[Daniel] Owari no Seraph", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/platinum_end", "label": "[Daniel] Platinum End", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/psycho_pass", "label": "[Daniel] Psycho-Pass", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/re_zero_kara_hajimeru_isekai_seikatsu", "label": "[Daniel] Re:Zero", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/rent_a_girlfriend", "label": "[Daniel] Rent-a-Girlfriend", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/rent_a_girlfriend_season_2", "label": "[Daniel] Rent-a-Girlfriend Season 2", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/rurouni_kenshin", "label": "[Daniel] Rurouni Kenshin", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/saihate_no_paladin", "label": "[Daniel] Saihate no Paladin", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/samurai_champloo", "label": "[Daniel] Samurai Champloo", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/sentenced_to_be_a_hero", "label": "[Daniel] Sentenced to be a Hero", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/seven_deadly_sins", "label": "[Daniel] Seven Deadly Sins", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/shadows_house", "label": "[Daniel] Shadows House", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/shadows_house_season_2", "label": "[Daniel] Shadows House Season 2", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/shaman_king", "label": "[Daniel] Shaman King", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/shingeki_no_kyojin", "label": "[Daniel] Shingeki no Kyojin", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/solo_leveling", "label": "[Daniel] Solo Leveling", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/spy_x_family", "label": "[Daniel] Spy x Family", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/steins_gate", "label": "[Daniel] Steins;Gate", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/steins_gate_0", "label": "[Daniel] Steins;Gate 0", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/sword_art_online", "label": "[Daniel] Sword Art Online", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/the_ancient_magus_bride", "label": "[Daniel] The Ancient Magus' Bride", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/the_case_study_of_vanitas", "label": "[Daniel] The Case Study of Vanitas", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/the_case_study_of_vanitas_season_2", "label": "[Daniel] The Case Study of Vanitas Season 2", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/the_quintessential_quintuplets", "label": "[Daniel] The Quintessential Quintuplets", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/the_rising_of_the_shield_hero", "label": "[Daniel] The Rising of the Shield Hero", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/the_world_god_only_knows", "label": "[Daniel] The World God Only Knows", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/tokyo_revengers", "label": "[Daniel] Tokyo Revengers", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/toradora", "label": "[Daniel] Toradora!", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/vinland_saga", "label": "[Daniel] Vinland Saga", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/vinland_saga_season_2", "label": "[Daniel] Vinland Saga Season 2", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/weathering_with_you", "label": "[Daniel] Weathering With You", "folder": "Daniel", "senha": "daniel789" },
+  { "id": "daniel.web.app/animes_filmes_series_games_noticias/your_lie_in_april", "label": "[Daniel] Your Lie in April", "folder": "Daniel", "senha": "daniel789" }
+
+,
+// --- ANIGEEK NEWS ---
+
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/akame_ga_kill", "label": "[AniGeek] Akame ga Kill", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/angel_beats", "label": "[AniGeek] Angel Beats", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/angelic_layer", "label": "[AniGeek] Angelic Layer", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/anime_i_geek", "label": "[AniGeek] Anime i Geek", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/assassination_classroom", "label": "[AniGeek] Assassination Classroom", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/attack_on_titan_final_season", "label": "[AniGeek] Attack on Titan Final Season", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/attack_on_titan_final_season_part_2", "label": "[AniGeek] Attack on Titan Final Season Part 2", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/bakuman", "label": "[AniGeek] Bakuman", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/black_bullet", "label": "[AniGeek] Black Bullet", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/black_clover", "label": "[AniGeek] Black Clover", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/bleach", "label": "[AniGeek] Bleach", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/blue_lock", "label": "[AniGeek] Blue Lock", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/blue_period", "label": "[AniGeek] Blue Period", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/boku_no_hero_academia_season_5", "label": "[AniGeek] Boku no Hero Academia Season 5", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/boku_no_hero_academia_season_6", "label": "[AniGeek] Boku no Hero Academia Season 6", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/boruto", "label": "[AniGeek] Boruto", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/cells_at_work", "label": "[AniGeek] Cells at Work", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/cells_at_work_black", "label": "[AniGeek] Cells at Work Black", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/chainsaw_man", "label": "[AniGeek] Chainsaw Man", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/chainsaw_man_part_2", "label": "[AniGeek] Chainsaw Man Part 2", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/clannad", "label": "[AniGeek] Clannad", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/classroom_of_the_elite", "label": "[AniGeek] Classroom of the Elite", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/classroom_of_the_elite_season_2", "label": "[AniGeek] Classroom of the Elite Season 2", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/code_geass", "label": "[AniGeek] Code Geass", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/cowboy_bebop", "label": "[AniGeek] Cowboy Bebop", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/death_note", "label": "[AniGeek] Death Note", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/demon_slayer_kimetsu_no_yaiba", "label": "[AniGeek] Demon Slayer: Kimetsu no Yaiba", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/demon_slayer_kimetsu_no_yaiba_entertainment_district", "label": "[AniGeek] Demon Slayer: Entertainment District", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/demon_slayer_kimetsu_no_yaiba_mugen_train", "label": "[AniGeek] Demon Slayer: Mugen Train", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/demon_slayer_kimetsu_no_yaiba_swordsmith_village", "label": "[AniGeek] Demon Slayer: Swordsmith Village", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/devilman_crybaby", "label": "[AniGeek] Devilman Crybaby", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/dr_stone", "label": "[AniGeek] Dr. Stone", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/elfen_lied", "label": "[AniGeek] Elfen Lied", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/eromanga_sensei", "label": "[AniGeek] Eromanga Sensei", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/fire_force", "label": "[AniGeek] Fire Force", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/food_wars_shokugeki_no_soma", "label": "[AniGeek] Food Wars: Shokugeki no Soma", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/fullmetal_alchemist_brotherhood", "label": "[AniGeek] Fullmetal Alchemist Brotherhood", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/guilty_crown", "label": "[AniGeek] Guilty Crown", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/haikyuu", "label": "[AniGeek] Haikyuu!!", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/hells_paradise", "label": "[AniGeek] Hell's Paradise", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/horimiya", "label": "[AniGeek] Horimiya", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/hunter_x_hunter", "label": "[AniGeek] Hunter x Hunter", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/jujutsu_kaisen", "label": "[AniGeek] Jujutsu Kaisen", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/kaguya_sama_love_is_war", "label": "[AniGeek] Kaguya-sama Love is War", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/kaguya_sama_love_is_war_season_2", "label": "[AniGeek] Kaguya-sama Love is War Season 2", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/kaguya_sama_love_is_war_season_3", "label": "[AniGeek] Kaguya-sama Love is War Season 3", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/kimi_no_suizou_wo_tabetai", "label": "[AniGeek] Kimi no Suizou wo Tabetai", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/kingdom", "label": "[AniGeek] Kingdom", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/komi_cant_communicate", "label": "[AniGeek] Komi Can't Communicate", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/komi_cant_communicate_season_2", "label": "[AniGeek] Komi Can't Communicate Season 2", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/kuroko_no_basket", "label": "[AniGeek] Kuroko no Basket", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/kuroshitsuji", "label": "[AniGeek] Kuroshitsuji", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/made_in_abyss", "label": "[AniGeek] Made in Abyss", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/made_in_abyss_dawn_of_the_deep_soul", "label": "[AniGeek] Made in Abyss: Dawn of the Deep Soul", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/made_in_abyss_retsujitsu", "label": "[AniGeek] Made in Abyss: Retsujitsu", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/maiden_slayer", "label": "[AniGeek] Maiden Slayer", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/mob_psycho_100", "label": "[AniGeek] Mob Psycho 100", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/my_hero_academia", "label": "[AniGeek] My Hero Academia", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/my_next_life_as_a_villainess", "label": "[AniGeek] My Next Life as a Villainess", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/naruto", "label": "[AniGeek] Naruto", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/neon_genesis_evangelion", "label": "[AniGeek] Neon Genesis Evangelion", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/noragami", "label": "[AniGeek] Noragami", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/oddtaxi", "label": "[AniGeek] Odd Taxi", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/one_piece", "label": "[AniGeek] One Piece", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/one_punch_man", "label": "[AniGeek] One Punch Man", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/oregairu", "label": "[AniGeek] Oregairu", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/oregairu_season_2", "label": "[AniGeek] Oregairu Season 2", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/owari_no_seraph", "label": "[AniGeek] Owari no Seraph", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/platinum_end", "label": "[AniGeek] Platinum End", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/psycho_pass", "label": "[AniGeek] Psycho-Pass", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/re_zero_kara_hajimeru_isekai_seikatsu", "label": "[AniGeek] Re:Zero", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/rent_a_girlfriend", "label": "[AniGeek] Rent-a-Girlfriend", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/rent_a_girlfriend_season_2", "label": "[AniGeek] Rent-a-Girlfriend Season 2", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/rurouni_kenshin", "label": "[AniGeek] Rurouni Kenshin", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/saihate_no_paladin", "label": "[AniGeek] Saihate no Paladin", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/samurai_champloo", "label": "[AniGeek] Samurai Champloo", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/sentenced_to_be_a_hero", "label": "[AniGeek] Sentenced to be a Hero", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/seven_deadly_sins", "label": "[AniGeek] Seven Deadly Sins", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/shadows_house", "label": "[AniGeek] Shadows House", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/shadows_house_season_2", "label": "[AniGeek] Shadows House Season 2", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/shaman_king", "label": "[AniGeek] Shaman King", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/shingeki_no_kyojin", "label": "[AniGeek] Shingeki no Kyojin", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/solo_leveling", "label": "[AniGeek] Solo Leveling", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/spy_x_family", "label": "[AniGeek] Spy x Family", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/steins_gate", "label": "[AniGeek] Steins;Gate", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/steins_gate_0", "label": "[AniGeek] Steins;Gate 0", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/sword_art_online", "label": "[AniGeek] Sword Art Online", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/the_ancient_magus_bride", "label": "[AniGeek] The Ancient Magus' Bride", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/the_case_study_of_vanitas", "label": "[AniGeek] The Case Study of Vanitas", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/the_case_study_of_vanitas_season_2", "label": "[AniGeek] The Case Study of Vanitas Season 2", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/the_quintessential_quintuplets", "label": "[AniGeek] The Quintessential Quintuplets", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/the_rising_of_the_shield_hero", "label": "[AniGeek] The Rising of the Shield Hero", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/the_world_god_only_knows", "label": "[AniGeek] The World God Only Knows", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/tokyo_revengers", "label": "[AniGeek] Tokyo Revengers", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/toradora", "label": "[AniGeek] Toradora!", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/vinland_saga", "label": "[AniGeek] Vinland Saga", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/vinland_saga_season_2", "label": "[AniGeek] Vinland Saga Season 2", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/weathering_with_you", "label": "[AniGeek] Weathering With You", "folder": "AniGeek", "senha": "anigeek2024" },
+  { "id": "anigeeknews.web.app/animes_filmes_series_games_noticias/your_lie_in_april", "label": "[AniGeek] Your Lie in April", "folder": "AniGeek", "senha": "anigeek2024" }
+
+,
+// --- RAIZ / OUTROS ---
+{ id: "chainsaw_man", label: "Chainsaw Man (Raiz)", folder: "Raiz", senha: null },
+{ id: "Jujutsu_kaisen_shimetsu_kaiyu", label: "Jujutsu Kaisen (Raiz)", folder: "Raiz", senha: null },
+{ id: "saihate_no_paladin", label: "Saihate no Paladin (Raiz)", folder: "Raiz", senha: null },
+{ id: "Animes_adm_luiz/animes/daniel.web.app/animes_filmes_series_games_noticias/", label: "Animes ADM Luiz (Complexo)", folder: "Raiz", senha: null }
+];
+let currentAnimeData = null;
+let aiMode = 'medium';
+let debounceTimer;
+let hasUnsavedChanges = false;
+let colecaoAutenticada = {};
+let temaAtual = localStorage.getItem('tema') || 'light';
+// ============================================
+// SISTEMA DE TEMA
+// ============================================
+function toggleTheme() {
+temaAtual = temaAtual === 'light' ? 'dark' : 'light';
+document.documentElement.setAttribute('data-theme', temaAtual);
+localStorage.setItem('tema', temaAtual);
+atualizarIconeTema();
+mostrarStatus(temaAtual === 'dark' ? '🌙 Modo Escuro Ativado' : '☀️ Modo Claro Ativado', temaAtual === 'dark' ? 'var(--surface)' : 'var(--primary)');
+}
+function atualizarIconeTema() {
+const icon = document.getElementById('themeIcon');
+if (temaAtual === 'dark') {
+icon.setAttribute('data-lucide', 'sun');
+} else {
+icon.setAttribute('data-lucide', 'moon');
+}
+lucide.createIcons();
+}
+// Inicializa tema ao carregar
+document.documentElement.setAttribute('data-theme', temaAtual);
+atualizarIconeTema();
+// ============================================
+// SISTEMA DE AUTENTICAÇÃO POR COLEÇÃO
+// ============================================
+async function verificarSenhaColecao(colecaoId, senha) {
+const colecao = COLLECTIONS_MAP.find(c => c.id === colecaoId);
+if (!colecao || !colecao.senha) return true; // Sem senha = acesso livre
+if (colecaoAutenticada[colecaoId]) return true; // Já autenticado
+if (senha === colecao.senha) {
+colecaoAutenticada[colecaoId] = true;
+return true;
+}
+return false;
+}
+window.autenticarColecao = async () => {
+const senha = document.getElementById('authPassword').value;
+const colecaoId = document.getElementById('colecaoAlvo').value;
+const colecao = COLLECTIONS_MAP.find(c => c.id === colecaoId);
+if (senha === colecao.senha) {
+colecaoAutenticada[colecaoId] = true;
+document.getElementById('authPassword').value = '';
+fecharModais();
+mostrarStatus(`✅ Acesso concedido à coleção ${colecao.label}`, "var(--success)");
+carregarListaCloud();
+carregarDraftLocal();
+} else {
+mostrarStatus("❌ Senha incorreta!", "var(--danger)");
+document.getElementById('authPassword').value = '';
+document.getElementById('authPassword').focus();
+}
+};
+async function solicitarAutenticacao(colecaoId) {
+const colecao = COLLECTIONS_MAP.find(c => c.id === colecaoId);
+if (!colecao || !colecao.senha) return true;
+if (colecaoAutenticada[colecaoId]) return true;
+document.getElementById('authModal').style.display = 'flex';
+document.getElementById('authPassword').focus();
+return false;
+}
+// ============================================
+// NOVAS FUNCIONALIDADES
+// ============================================
+// 1. Salvamento automático com debounce e localStorage
+function setupAutoSave() {
+const formFields = ['titulo', 'categoria', 'resumo', 'cor', 'linkArtigo', 'videoPrincipal', 'capaNoticia', 'capaUrl', 'capaDesc', 'bannerAd', 'linkPropagandaArtigo', 'curtidas', 'visualizacoes', 'perfilImg'];
+formFields.forEach(id => {
+document.getElementById(id).addEventListener('input', () => {
+hasUnsavedChanges = true;
+clearTimeout(debounceTimer);
+debounceTimer = setTimeout(salvarDraftLocal, 1000);
+});
+});
+}
+function salvarDraftLocal() {
+const draftKey = `draft_${document.getElementById('colecaoAlvo').value}_${document.getElementById('docId').value}`;
+const dados = coletarDadosFormulario();
+localStorage.setItem(draftKey, JSON.stringify(dados));
+mostrarStatus("Draft salvo localmente!", "var(--success)");
+}
+function carregarDraftLocal() {
+const col = document.getElementById('colecaoAlvo').value;
+const docId = document.getElementById('docId').value;
+if (!col || !docId) return;
+const draftKey = `draft_${col}_${docId}`;
+const draft = localStorage.getItem(draftKey);
+if (draft) {
+const dados = JSON.parse(draft);
+document.getElementById('titulo').value = dados.titulo || '';
+document.getElementById('categoria').value = dados.categoria || '';
+document.getElementById('resumo').value = dados.resumo || '';
+document.getElementById('cor').value = dados.cor || '#4f46e5';
+document.getElementById('linkArtigo').value = dados.linkArtigo || '';
+document.getElementById('videoPrincipal').value = dados.videoPrincipal || '';
+document.getElementById('capaNoticia').value = dados.capaNoticia || '';
+document.getElementById('capaUrl').value = dados.capaUrl || '';
+document.getElementById('capaDesc').value = dados.capaDesc || '';
+document.getElementById('bannerAd').value = dados.bannerAd || '';
+document.getElementById('linkPropagandaArtigo').value = dados.linkPropagandaArtigo || '';
+document.getElementById('curtidas').value = dados.curtidas || 0;
+document.getElementById('visualizacoes').value = dados.visualizacoes || 0;
+document.getElementById('perfilImg').value = dados.perfilImg || '';
+// Recarrega arrays
+document.getElementById('container-ficha').innerHTML = '';
+dados.ficha?.forEach(f => adicionarFicha(f.label, f.valor));
+document.getElementById('container-ficha-editor').innerHTML = '';
+dados.fichaCategoria?.info?.forEach(i => adicionarFichaEditor(i.label, i.valor));
+document.getElementById('container-relacionados').innerHTML = '';
+dados.relacionados?.forEach(r => adicionarRelacionado(r.idVid, r.titulo, r.thumb));
+document.getElementById('container-produtos').innerHTML = '';
+dados.produtos?.forEach(p => adicionarProduto(p.nome, p.link, p.img, p.desc));
+atualizarCoresPainel();
+contarCaracteres();
+}
+}
+// 2. Validação de formulário pré-Firebase
+function validarFormulario() {
+const titulo = document.getElementById('titulo').value.trim();
+const capaNoticia = document.getElementById('capaNoticia').value.trim();
+const docId = document.getElementById('docId').value.trim();
+if (!titulo || !capaNoticia || !docId) {
+alert("Preencha os campos essenciais: Título, Imagem e Slug!");
+return false;
+}
+return true;
+}
+// 3. Pré-visualização dinâmica de cores
+function atualizarCoresPainel() {
+const cor = document.getElementById('cor').value;
+document.documentElement.style.setProperty('--primary', cor);
+document.documentElement.style.setProperty('--primary-dark', ajustarCorEscura(cor));
+}
+function ajustarCorEscura(hex) {
+let r = parseInt(hex.slice(1, 3), 16);
+let g = parseInt(hex.slice(3, 5), 16);
+let b = parseInt(hex.slice(5, 7), 16);
+r = Math.max(0, r - 50);
+g = Math.max(0, g - 50);
+b = Math.max(0, b - 50);
+return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
+}
+// 4. Contador de caracteres
+function contarCaracteres() {
+const resumo = document.getElementById('resumo').value;
+const max = 1000;
+const restantes = max - resumo.length;
+const counter = document.getElementById('charCounter');
+counter.textContent = `${restantes} caracteres restantes`;
+counter.className = restantes < 100 ? 'char-counter warning' : 'char-counter';
+}
+// 5. Feedback visual de progresso detalhado
+function setLoader(show, text = "") {
+const loader = document.getElementById('ai-loader-inline');
+const txt = document.getElementById('loader-text-inline');
+loader.style.display = show ? 'flex' : 'none';
+if (text) txt.innerText = text;
+}
+// 6. Confirmação de saída
+window.addEventListener('beforeunload', (e) => {
+if (hasUnsavedChanges) {
+e.preventDefault();
+e.returnValue = 'Você tem alterações não salvas. Tem certeza que deseja sair?';
+}
+});
+// 7. Organização de coleções em pastas com ícones de cadeado
+function renderCollectionsList() {
+const container = document.getElementById('listaColecoesBtn');
+container.innerHTML = '';
+// Agrupa por pasta
+const folders = {};
+COLLECTIONS_MAP.forEach(c => {
+if (!folders[c.folder]) folders[c.folder] = [];
+folders[c.folder].push(c);
+});
+// Renderiza cada pasta
+for (const [folderName, items] of Object.entries(folders)) {
+const folderDiv = document.createElement('div');
+folderDiv.className = 'collection-folder';
+const header = document.createElement('div');
+header.className = 'folder-header';
+header.innerHTML = `<i data-lucide="folder" style="width:16px;height:16px"></i> ${folderName} 📁`;
+header.onclick = () => {
+const content = header.nextElementSibling;
+content.classList.toggle('active');
+lucide.createIcons();
+};
+const content = document.createElement('div');
+content.className = 'folder-content';
+items.forEach(c => {
+const btn = document.createElement('div');
+btn.className = 'folder-item';
+const temSenha = c.senha ? 'locked' : '';
+btn.innerHTML = `<i data-lucide="${c.senha ? 'lock' : 'file'}" style="width:14px;height:14px"></i> ${c.label}`;
+btn.onclick = (e) => {
+e.stopPropagation();
+selecionarColecao(c.id, c.label, c.senha);
+};
+content.appendChild(btn);
+});
+folderDiv.appendChild(header);
+folderDiv.appendChild(content);
+container.appendChild(folderDiv);
+}
+lucide.createIcons();
+}
+// ============================================
+// GESTÃO DE COLEÇÕES COM AUTENTICAÇÃO
+// ============================================
+renderCollectionsList();
+// ============================================
+// LÓGICA DE MIGRAÇÃO APRIMORADA (PRO)
+// ============================================
+window.prepararMigracao = async () => {
+const docId = document.getElementById('docId').value;
+const colOrigem = document.getElementById('colecaoAlvo').value;
+if(!docId) return alert("Selecione ou crie um documento primeiro.");
+// Verifica autenticação da coleção de origem
+if (!(await verificarSenhaColecao(colOrigem))) {
+mostrarStatus("⚠️ Autentique-se na coleção de origem primeiro", "var(--warning)");
+return;
+}
+// Restaura o footer original caso tenha sido alterado pela migração em massa
+const footer = document.getElementById('migrationFooter');
+footer.innerHTML = `
+<button class="btn-main" style="background: var(--ops); color: white;" onclick="executarMigracao('copiar')">
+<i data-lucide="copy" style="width:16px;height:16px"></i> COPIAR / SOBRESCREVER
+</button>
+<button class="btn-main" style="background: var(--secondary); color: white;" onclick="executarMigracao('mover')">
+<i data-lucide="arrow-right-left" style="width:16px;height:16px"></i> MOVER (RECORTAR)
+</button>
+`;
+// Atualiza visualmente o painel de origem
+document.getElementById('migracaoOrigemColecao').textContent = colOrigem;
+document.getElementById('migracaoOrigemDoc').textContent = docId;
+document.getElementById('migracaoDestinoID').value = docId;
+// Carrega coleções de destino
+const sel = document.getElementById('migracaoDestinoColecao');
+sel.innerHTML = '';
+COLLECTIONS_MAP.forEach(c => {
+const opt = document.createElement('option');
+opt.value = c.id;
+opt.textContent = c.label;
+if(c.id === colOrigem) opt.selected = true;
+sel.appendChild(opt);
+});
+// Esconde múltiplos destinos
+document.getElementById('multiDestinoContainer').style.display = 'none';
+document.getElementById('migrationModal').style.display = 'flex';
+lucide.createIcons();
+};
+window.prepararMigracaoMassa = async () => {
+const docId = document.getElementById('docId').value;
+const colOrigem = document.getElementById('colecaoAlvo').value;
+if(!docId) return alert("Selecione um documento primeiro.");
+// Verifica autenticação
+if (!(await verificarSenhaColecao(colOrigem))) {
+mostrarStatus("⚠️ Autentique-se na coleção de origem primeiro", "var(--warning)");
+return;
+}
+// Mostra interface de múltiplos destinos
+document.getElementById('multiDestinoContainer').style.display = 'block';
+const checkboxesDiv = document.getElementById('multiDestinoCheckboxes');
+checkboxesDiv.innerHTML = '';
+COLLECTIONS_MAP.forEach(c => {
+if (c.id !== colOrigem) { // Não inclui a coleção de origem
+const div = document.createElement('div');
+div.style.cssText = "display: flex; align-items: center; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--border);";
+const checkbox = document.createElement('div');
+checkbox.className = 'checkbox-custom';
+checkbox.dataset.colecao = c.id;
+checkbox.onclick = function() {
+this.classList.toggle('checked');
+};
+const label = document.createElement('span');
+label.style.cssText = "font-size: 11px; color: var(--text-main);";
+label.textContent = c.label;
+div.appendChild(checkbox);
+div.appendChild(label);
+checkboxesDiv.appendChild(div);
+}
+});
+// Muda o comportamento dos botões do modal para o modo "Massa"
+const footer = document.getElementById('migrationFooter');
+footer.innerHTML = `
+<button class="btn-main" style="background: var(--success); color: white; grid-column: span 2;" onclick="executarMigracaoEmMassa()">
+<i data-lucide="check-circle"></i> MIGRAR PARA COLEÇÕES SELECIONADAS
+</button>
+`;
+// Atualiza visualmente o painel de origem
+document.getElementById('migracaoOrigemColecao').textContent = colOrigem;
+document.getElementById('migracaoOrigemDoc').textContent = docId;
+document.getElementById('migrationModal').style.display = 'flex';
+lucide.createIcons();
+};
+window.toggleSelectAll = () => {
+const checkboxes = document.querySelectorAll('#multiDestinoCheckboxes .checkbox-custom');
+const allChecked = Array.from(checkboxes).every(c => c.classList.contains('checked'));
+checkboxes.forEach(c => {
+c.classList.toggle('checked', !allChecked);
+});
+document.getElementById('selectAllCheckbox').classList.toggle('checked', !allChecked);
+};
+window.executarMigracaoEmMassa = async () => {
+const docIdOrigem = document.getElementById('docId').value;
+const colOrigem = document.getElementById('colecaoAlvo').value;
+const checkboxes = document.querySelectorAll('#multiDestinoCheckboxes .checkbox-custom.checked');
+const colecoesDestino = Array.from(checkboxes).map(c => c.dataset.colecao);
+if (colecoesDestino.length === 0) {
+return alert("Selecione pelo menos uma coleção de destino.");
+}
+if (!confirm(`Deseja COPIAR o documento "${docIdOrigem}" para ${colecoesDestino.length} coleções selecionadas?`)) return;
+setLoader(true, "INICIANDO MIGRAÇÃO EM MASSA...");
+try {
+const dados = coletarDadosFormulario();
+let sucesso = 0;
+let falha = 0;
+// Verifica autenticação para cada coleção de destino
+for (const colDestino of colecoesDestino) {
+const autenticado = await verificarSenhaColecao(colDestino);
+if (!autenticado) {
+falha++;
+continue;
+}
+try {
+await setDoc(doc(db, colDestino, docIdOrigem), dados);
+sucesso++;
+} catch (e) {
+console.error(`Erro ao migrar para ${colDestino}:`, e);
+falha++;
+}
+}
+mostrarStatus(`SUCESSO: ${sucesso} coleções atualizadas! ${falha > 0 ? `(${falha} falhas)` : ''}`, "var(--success)");
+fecharModais();
+} catch (e) {
+console.error("Erro na migração:", e);
+alert("Erro crítico: " + e.message);
+} finally {
+setLoader(false);
+}
+};
+window.executarMigracao = async (acao) => {
+const docIdOrigem = document.getElementById('docId').value;
+const colOrigem = document.getElementById('colecaoAlvo').value;
+const colDestino = document.getElementById('migracaoDestinoColecao').value;
+let docIdDestino = document.getElementById('migracaoDestinoID').value.trim();
+if(!docIdDestino) docIdDestino = docIdOrigem;
+// Verifica autenticação para coleção de destino
+if (!(await verificarSenhaColecao(colDestino))) {
+mostrarStatus("⚠️ Autentique-se na coleção de destino", "var(--warning)");
+return;
+}
+if(!confirm(`Confirmar ação: ${acao.toUpperCase()}?
+De: ${colOrigem}
+Para: ${colDestino}`)) return;
+setLoader(true, `EXECUTANDO: ${acao.toUpperCase()}...`);
+try {
+const dados = coletarDadosFormulario();
+await setDoc(doc(db, colDestino, docIdDestino), dados);
+if (acao === 'mover') {
+if(colOrigem !== colDestino || docIdOrigem !== docIdDestino) {
+await deleteDoc(doc(db, colOrigem, docIdOrigem));
+mostrarStatus("MOVIDO COM SUCESSO!", "var(--success)");
+selecionarColecao(colDestino, COLLECTIONS_MAP.find(c=>c.id===colDestino)?.label || colDestino);
+document.getElementById('docId').value = docIdDestino;
+document.getElementById('ordemLabel').innerHTML = `Ordem (DOC: ${docIdDestino})`;
+} else {
+mostrarStatus("DADOS ATUALIZADOS (MESMO LOCAL)", "var(--success)");
+}
+} else {
+mostrarStatus("COPIADO COM SUCESSO!", "var(--success)");
+}
+fecharModais();
+} catch (error) {
+console.error(error);
+alert("Erro na operação: " + error.message);
+} finally {
+setLoader(false);
+}
+};
+// ============================================
+// FUNÇÕES PADRÃO (MANTIDAS E APRIMORADAS)
+// ============================================
+window.salvarConfigAds = async () => {
+setLoader(true, "SALVANDO ANÚNCIOS...");
+const dadosAds = {
+linkPropaganda: document.getElementById('globalLinkPropaganda').value,
+bannerTopo: document.getElementById('globalBannerTopo').value,
+bannerFundo: document.getElementById('globalBannerFundo').value
+};
+try {
+await setDoc(doc(db, "configuracoes", "ads"), dadosAds);
+setLoader(false);
+mostrarStatus("ADS GLOBAIS ATUALIZADOS!", "var(--warning)");
+} catch(e) {
+setLoader(false);
+alert("Erro ao salvar Ads");
+}
+};
+async function carregarConfigAds() {
+const snap = await getDoc(doc(db, "configuracoes", "ads"));
+if(snap.exists()){
+const d = snap.data();
+document.getElementById('globalLinkPropaganda').value = d.linkPropaganda || '';
+document.getElementById('globalBannerTopo').value = d.bannerTopo || '';
+document.getElementById('globalBannerFundo').value = d.bannerFundo || '';
+}
+}
+async function callGeminiAI(prompt) {
+return await smartTranslate(prompt, "en|pt-BR");
+}
+async function smartTranslate(text, pair = "en|pt-BR") {
+if (!text) return "";
+const chunks = text.match(/.{1,450}/g) || [text];
+let results = [];
+for (const chunk of chunks) {
+try {
+const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(chunk)}&langpair=${pair}`);
+const data = await res.json();
+results.push(data.responseData.translatedText || chunk);
+} catch (e) {
+results.push(chunk);
+}
+}
+return results.join("");
+}
+window.setAiMode = (mode, el) => {
+aiMode = mode;
+document.querySelectorAll('.ai-chip').forEach(c => c.classList.remove('active'));
+el.classList.add('active');
+};
+window.fecharModais = () => document.querySelectorAll('.generic-modal').forEach(m => m.style.display = 'none');
+window.abrirModalColecao = () => document.getElementById('collectionModal').style.display = 'flex';
+window.toggleCloud = async () => {
+document.getElementById('dbModal').style.display = 'flex';
+await carregarListaCloud();
+};
+window.selecionarColecao = async (id, nome, senha) => {
+document.getElementById('colecaoAlvo').value = id;
+document.getElementById('colecaoDisplay').value = nome;
+document.getElementById('colecaoSenha').value = senha || '';
+fecharModais();
+// Verifica autenticação antes de carregar
+if (await solicitarAutenticacao(id)) {
+carregarListaCloud();
+carregarDraftLocal();
+}
+};
+window.rephraseContent = async () => {
+const txt = document.getElementById('resumo').value;
+if(!txt) return;
+setLoader(true, "GEMINI REELABORANDO TEXTO...");
+const en = await smartTranslate(txt, "pt-BR|en");
+const pt = await smartTranslate(en, "en|pt-BR");
+document.getElementById('resumo').value = pt;
+setLoader(false);
+mostrarStatus("TEXTO REESCRITO COM IA", "var(--success)");
+};
+window.buscarAnime = () => {
+const q = document.getElementById('animeQuery').value;
+const resBox = document.getElementById('animeResults');
+if(q.length < 3) return;
+resBox.style.display = 'block';
+resBox.innerHTML = '<div class="result-item">Buscando na MAL...</div>';
+fetch(`https://api.jikan.moe/v4/anime?q=${encodeURIComponent(q)}&limit=5`)
+.then(r => r.json()).then(d => {
+resBox.innerHTML = '';
+d.data.forEach(a => {
+const div = document.createElement('div');
+div.className = 'result-item';
+div.innerHTML = `<strong>${a.title}</strong><br><small>${a.type} • ${a.year || ''}</small>`;
+div.onclick = () => selecionarSerie(a);
+resBox.appendChild(div);
+});
+});
+};
+async function selecionarSerie(anime) {
+currentAnimeData = anime;
+document.getElementById('animeResults').style.display = 'none';
+document.getElementById('animeQuery').value = anime.title;
+document.getElementById('episodeArea').style.display = 'block';
+const sel = document.getElementById('episodeSelect');
+sel.innerHTML = '<option value="series_main">Página Principal</option>';
+try {
+const r = await fetch(`https://api.jikan.moe/v4/anime/${anime.mal_id}/episodes`);
+const data = await r.json();
+data.data.forEach(e => {
+const opt = document.createElement('option');
+opt.value = e.mal_id;
+opt.innerText = `Episódio ${e.mal_id}: ${e.title}`;
+opt.dataset.title = e.title;
+sel.appendChild(opt);
+});
+} catch(err) {}
+}
+window.carregarEpisodio = async () => {
+if(!currentAnimeData) return;
+setLoader(true, "IA EXTRAINDO DADOS...");
+const select = document.getElementById('episodeSelect');
+let titleRaw = currentAnimeData.title;
+if (select.value !== 'series_main') titleRaw = `EP ${select.value} - ${select.selectedOptions[0].dataset.title}`;
+const [tit, sin] = await Promise.all([
+callGeminiAI(titleRaw),
+callGeminiAI(currentAnimeData.synopsis)
+]);
+document.getElementById('titulo').value = tit;
+gerarSlug(tit);
+document.getElementById('resumo').value = sin;
+document.getElementById('categoria').value = currentAnimeData.genres.map(g=>g.name).join(', ');
+document.getElementById('capaNoticia').value = currentAnimeData.images.jpg.large_image_url;
+document.getElementById('capaUrl').value = currentAnimeData.images.jpg.large_image_url;
+document.getElementById('capaDesc').value = currentAnimeData.title;
+const f = document.getElementById('container-ficha');
+f.innerHTML = '';
+adicionarFicha("Título Original", currentAnimeData.title_japanese || "N/A");
+adicionarFicha("Estúdio", currentAnimeData.studios[0]?.name || "N/A");
+adicionarFicha("Temporada", currentAnimeData.season ? `${currentAnimeData.season} ${currentAnimeData.year}` : "N/A");
+adicionarFicha("Fonte", currentAnimeData.source || "N/A");
+adicionarFicha("Score MAL", currentAnimeData.score || "N/A");
+adicionarFicha("Popularidade", `#${currentAnimeData.popularity}`);
+adicionarFicha("Membros", currentAnimeData.members.toLocaleString());
+adicionarFicha("Licença", currentAnimeData.licensors[0]?.name || "N/A");
+setLoader(false);
+mostrarStatus("DADOS SINCRONIZADOS", "var(--success)");
+};
+window.adicionarFicha = (l='', v='') => {
+const d = document.createElement('div');
+d.className = 'item-flex';
+d.innerHTML = `<input type="text" class="f-label" value="${l}" placeholder="Label"><input type="text" class="f-valor" value="${v}" placeholder="Valor"><button class="btn-remover" onclick="this.parentElement.remove()">×</button>`;
+document.getElementById('container-ficha').appendChild(d);
+};
+window.adicionarFichaEditor = (l='', v='') => {
+const d = document.createElement('div');
+d.className = 'item-flex';
+d.innerHTML = `<input type="text" class="fe-label" value="${l}" placeholder="Cargo"><input type="text" class="fe-valor" value="${v}" placeholder="Nome"><button class="btn-remover" onclick="this.parentElement.remove()">×</button>`;
+document.getElementById('container-ficha-editor').appendChild(d);
+};
+window.adicionarRelacionado = (id='', t='', th='') => {
+const d = document.createElement('div');
+d.style.cssText = "background:var(--surface-100); padding:12px; border-radius:var(--border-radius-md); border:1px solid var(--border); margin-bottom:12px;";
+d.innerHTML = `<div class="item-flex"><input type="text" class="r-id" value="${id}" placeholder="ID YouTube"><button class="btn-remover" onclick="this.parentElement.remove()">×</button></div><input type="text" class="r-titulo" value="${t}" placeholder="Título Vídeo" style="margin-bottom:6px"><input type="text" class="r-thumb" value="${th}" placeholder="Thumb (Opcional)">`;
+document.getElementById('container-relacionados').appendChild(d);
+};
+window.adicionarProduto = (n='', l='', i='', ds='') => {
+const d = document.createElement('div');
+d.style.cssText = "background:var(--surface-100); padding:12px; border-radius:var(--border-radius-md); border:1px solid var(--border); margin-bottom:12px;";
+d.innerHTML = `<div class="item-flex"><input type="text" class="p-nome" value="${n}" placeholder="Nome"><button class="btn-remover" onclick="this.parentElement.remove()">×</button></div><input type="text" class="p-link" value="${l}" placeholder="Link Loja" style="margin-bottom:6px"><input type="text" class="p-img" value="${i}" placeholder="URL Imagem" style="margin-bottom:6px"><textarea class="p-desc" placeholder="Descrição">${ds}</textarea>`;
+document.getElementById('container-produtos').appendChild(d);
+};
+window.salvarGeral = async () => {
+if (!validarFormulario()) return;
+const id = document.getElementById('docId').value;
+const col = document.getElementById('colecaoAlvo').value;
+if(!id) return alert("Slug necessário");
+// Verifica autenticação antes de salvar
+if (!(await verificarSenhaColecao(col))) {
+mostrarStatus("⚠️ Autentique-se para salvar", "var(--warning)");
+return;
+}
+setLoader(true, "VALIDANDO DADOS...");
+await new Promise(resolve => setTimeout(resolve, 500));
+setLoader(true, "PROCESSANDO IA...");
+await new Promise(resolve => setTimeout(resolve, 800));
+setLoader(true, "ENVIANDO PARA O FIREBASE...");
+const dados = coletarDadosFormulario();
+try {
+await setDoc(doc(db, col, id), dados, { merge: true });
+hasUnsavedChanges = false;
+localStorage.removeItem(`draft_${col}_${id}`);
+setLoader(false);
+mostrarStatus("SALVO NA NUVEM!", "var(--success)");
+carregarListaCloud();
+} catch (e) {
+setLoader(false);
+alert("Erro ao salvar: " + e.message);
+}
+};
+window.carregarAnalytics = async (col, docId) => {
+const statsVisitantes = document.getElementById('statsVisitantes');
+const statsPlayer = document.getElementById('statsPlayer');
+const statsAds = document.getElementById('statsAds');
+const logArea = document.getElementById('logAtividades');
+statsVisitantes.value = "...";
+statsPlayer.value = "...";
+statsAds.value = "...";
+logArea.innerHTML = '<div style="font-size:10px; color:var(--text-muted); text-align:center;">Carregando dados de visitantes...</div>';
+try {
+const visitantesRef = collection(db, col, docId, "visitantes");
+const snapshot = await getDocs(visitantesRef);
+let totalV = snapshot.size;
+let totalPlayer = 0;
+let totalAds = 0;
+let logHTML = "";
+if (snapshot.empty) {
+logArea.innerHTML = '<div style="font-size:10px; color:var(--text-muted); text-align:center;">Nenhum visitante registrado ainda.</div>';
+statsVisitantes.value = 0;
+statsPlayer.value = 0;
+statsAds.value = 0;
+return;
+}
+snapshot.forEach(docSnap => {
+const data = docSnap.data();
+const visitorId = docSnap.id;
+let actionsCount = 0;
+if (data.actions && Array.isArray(data.actions)) {
+actionsCount = data.actions.length;
+data.actions.forEach(act => {
+if(act.type === 'player_click' || act.type === 'player') totalPlayer++;
+if(act.type === 'ad_click' || act.type === 'ad') totalAds++;
+});
+}
+logHTML += `
+<div style="font-size:10px; border-bottom:1px solid var(--neutral-200); padding:8px 0; display:flex; justify-content:space-between;">
+<span><i data-lucide="user" style="width:12px;height:12px; vertical-align:middle"></i> ...${visitorId.slice(-8)}</span>
+<span><b>${actionsCount}</b> Ações</span>
+</div>
+`;
+});
+statsVisitantes.value = totalV;
+statsPlayer.value = totalPlayer;
+statsAds.value = totalAds;
+logArea.innerHTML = logHTML;
+lucide.createIcons(logArea);
+} catch (e) {
+console.error(e);
+logArea.innerHTML = '<div style="font-size:10px; color:var(--danger); text-align:center;">Erro ao carregar Analytics.</div>';
+}
+};
+window.carregarPorID = async (id) => {
+setLoader(true);
+const col = document.getElementById('colecaoAlvo').value;
+// Verifica autenticação
+if (!(await verificarSenhaColecao(col))) {
+setLoader(false);
+return;
+}
+const snap = await getDoc(doc(db, col, id));
+if(snap.exists()){
+const d = snap.data();
+document.getElementById('docId').value = id;
+document.getElementById('ordemNoticia').value = d.ordem || 0;
+document.getElementById('titulo').value = d.titulo || '';
+document.getElementById('resumo').value = d.resumo || '';
+document.getElementById('categoria').value = d.categoria || '';
+document.getElementById('capaNoticia').value = d.capaNoticia || '';
+document.getElementById('capaUrl').value = d.capaUrl || '';
+document.getElementById('capaDesc').value = d.capaDesc || '';
+document.getElementById('bannerAd').value = d.bannerAd || '';
+document.getElementById('linkPropagandaArtigo').value = d.linkPropagandaArtigo || '';
+document.getElementById('curtidas').value = d.curtidas || 0;
+document.getElementById('visualizacoes').value = d.visualizacoes || 0;
+document.getElementById('linkArtigo').value = d.linkArtigo || '';
+document.getElementById('videoPrincipal').value = d.videoPrincipal || '';
+document.getElementById('perfilImg').value = d.fichaCategoria?.perfilImg || '';
+document.getElementById('cor').value = d.cor || '#4f46e5';
+document.getElementById('container-ficha').innerHTML = '';
+d.ficha?.forEach(f => adicionarFicha(f.label, f.valor));
+document.getElementById('container-ficha-editor').innerHTML = '';
+d.fichaCategoria?.info?.forEach(i => adicionarFichaEditor(i.label, i.valor));
+document.getElementById('container-relacionados').innerHTML = '';
+d.relacionados?.forEach(r => adicionarRelacionado(r.idVid, r.titulo, r.thumb));
+document.getElementById('container-produtos').innerHTML = '';
+d.produtos?.forEach(p => adicionarProduto(p.nome, p.link, p.img, p.desc));
+await carregarAnalytics(col, id);
+window.scrollTo({ top: 0, behavior: 'smooth' });
+atualizarCoresPainel();
+contarCaracteres();
+hasUnsavedChanges = false;
+}
+setLoader(false);
+};
+async function carregarListaCloud() {
+const col = document.getElementById('colecaoAlvo').value;
+if(!col) return;
+// Verifica autenticação antes de carregar
+if (!(await verificarSenhaColecao(col))) {
+document.getElementById('dbList').innerHTML = '<div style="padding:14px; text-align:center; color:var(--warning);">🔒 Autenticação necessária para visualizar documentos</div>';
+return;
+}
+const q = query(collection(db, col), orderBy("ordem", "asc"));
+try {
+const snap = await getDocs(q);
+const listEl = document.getElementById('dbList');
+listEl.innerHTML = '';
+if (snap.empty) {
+listEl.innerHTML = '<div style="padding:14px; text-align:center; color:var(--text-muted);">Nenhum documento encontrado nesta coleção.</div>';
+return;
+}
+snap.forEach(d => {
+const data = d.data();
+const btn = document.createElement('button');
+btn.className = 'btn-main btn-sec';
+btn.style.width = '100%';
+btn.style.marginBottom = '8px';
+btn.style.justifyContent = 'space-between';
+btn.innerHTML = `<span style="flex:1; text-align:left; font-size:13px">#${data.ordem} - ${data.titulo}</span> <i data-lucide="chevron-right" style="width:16px;height:16px"></i>`;
+btn.onclick = () => { carregarPorID(d.id); fecharModais(); };
+listEl.appendChild(btn);
+});
+lucide.createIcons(listEl);
+} catch(e) {
+console.log("Erro ao carregar lista (pode ser a primeira vez): ", e);
+document.getElementById('dbList').innerHTML = '<div style="padding:14px; text-align:center; color:var(--text-muted);">Coleção vazia ou não inicializada.</div>';
+}
+}
+window.inspectMedia = (fieldId) => {
+let val = document.getElementById(fieldId).value.trim();
+const viewer = document.getElementById('viewer-' + fieldId);
+if(!val) return;
+if(viewer.style.display === 'block') {
+viewer.style.display = 'none';
+return;
+}
+if (val.includes('drive.google.com')) {
+let driveUrl = val;
+if (val.includes('/file/d/')) {
+const id = val.split('/file/d/')[1].split('/')[0];
+driveUrl = `https://drive.google.com/file/d/${id}/preview`;
+} else if (val.includes('id=')) {
+const id = val.split('id=')[1].split('&')[0];
+driveUrl = `https://drive.google.com/file/d/${id}/preview`;
+}
+viewer.innerHTML = `<iframe src="${driveUrl}" allowfullscreen style="border:none"></iframe>`;
+} else if (val.length === 11 || val.includes('youtube') || val.includes('http://googleusercontent.com/youtube.com/')) {
+let id = val;
+if (val.includes('v=')) id = val.split('v=')[1].split('&')[0];
+else if (val.includes('youtu.be/')) id = val.split('youtu.be/')[1].split('?')[0];
+viewer.innerHTML = `<iframe src="https://www.youtube.com/embed/${id}" allowfullscreen style="border:none"></iframe>`;
+} else {
+viewer.innerHTML = `<img src="${val}" onerror="this.src='https://placehold.co/600x400?text=Midia+Invalida'" style="object-fit:cover">`;
+}
+viewer.style.display = 'block';
+};
+window.gerarSlug = (v) => {
+const s = v.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "").replace(/[^\w ]+/g, '').replace(/ +/g, '-');
+document.getElementById('docId').value = s;
+document.getElementById('ordemLabel').innerHTML = `Ordem (DOC: ${s})`;
+};
+function mostrarStatus(txt, cor) {
+const s = document.getElementById('msgStatus');
+s.style.display = "block";
+s.style.background = cor;
+s.innerText = txt;
+setTimeout(() => s.style.display = "none", 3000);
+}
+window.deletarDocumento = async () => {
+const id = document.getElementById('docId').value;
+const col = document.getElementById('colecaoAlvo').value;
+if(!id) return alert("Nenhum documento selecionado");
+// Verifica autenticação
+if (!(await verificarSenhaColecao(col))) {
+mostrarStatus("⚠️ Autentique-se para deletar", "var(--warning)");
+return;
+}
+if(!confirm("Tem certeza que deseja deletar este documento?")) return;
+setLoader(true, "DELETANDO...");
+try {
+await deleteDoc(doc(db, col, id));
+setLoader(false);
+mostrarStatus("DELETADO COM SUCESSO!", "var(--danger)");
+carregarListaCloud();
+location.reload();
+} catch (e) {
+setLoader(false);
+alert("Erro ao deletar: " + e.message);
+}
+};
+function coletarDadosFormulario() {
+return {
+ordem: parseInt(document.getElementById('ordemNoticia').value) || 0,
+titulo: document.getElementById('titulo').value,
+categoria: document.getElementById('categoria').value,
+resumo: document.getElementById('resumo').value,
+cor: document.getElementById('cor').value,
+linkArtigo: document.getElementById('linkArtigo').value,
+videoPrincipal: document.getElementById('videoPrincipal').value,
+capaNoticia: document.getElementById('capaNoticia').value,
+capaUrl: document.getElementById('capaUrl').value,
+capaDesc: document.getElementById('capaDesc').value,
+bannerAd: document.getElementById('bannerAd').value,
+linkPropagandaArtigo: document.getElementById('linkPropagandaArtigo').value,
+curtidas: parseInt(document.getElementById('curtidas').value) || 0,
+visualizacoes: parseInt(document.getElementById('visualizacoes').value) || 0,
+fichaCategoria: {
+perfilImg: document.getElementById('perfilImg').value,
+info: Array.from(document.querySelectorAll('#container-ficha-editor .item-flex')).map(el => ({ label: el.querySelector('.fe-label').value, valor: el.querySelector('.fe-valor').value }))
+},
+ficha: Array.from(document.querySelectorAll('#container-ficha .item-flex')).map(el => ({ label: el.querySelector('.f-label').value, valor: el.querySelector('.f-valor').value })),
+relacionados: Array.from(document.querySelectorAll('#container-relacionados > div')).map(el => ({ idVid: el.querySelector('.r-id').value, titulo: el.querySelector('.r-titulo').value, thumb: el.querySelector('.r-thumb').value })),
+produtos: Array.from(document.querySelectorAll('#container-produtos > div')).map(el => ({ nome: el.querySelector('.p-nome').value, link: el.querySelector('.p-link').value, img: el.querySelector('.p-img').value, desc: el.querySelector('.p-desc').value })),
+timestamp: Date.now()
+};
+}
+// Inicializa ícones Lucide
+lucide.createIcons();
+// Inicia
+setupAutoSave();
+carregarConfigAds();
+// Exporta para o escopo global as funções que precisam ser acessadas via onclick nos botões dinâmicos
+window.prepararMigracaoMassa = prepararMigracaoMassa;
+window.executarMigracaoEmMassa = executarMigracaoEmMassa;
+window.toggleTheme = toggleTheme;
+window.autenticarColecao = autenticarColecao;
+
+</script>
+
+</body>
+</html>
