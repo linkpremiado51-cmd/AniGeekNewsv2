@@ -1,382 +1,310 @@
-<body>
-<div class="destaque-wrapper">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-
-  <div id="notificacao-novo-artigo">
-    <i class="fa-solid fa-satellite-dish"></i>
-    <div>
-      <div style="font-size: 7px; font-weight: 800; opacity: 0.8; text-transform: uppercase;">Atualização via Cloud</div>
-      <div id="novo-artigo-titulo" style="font-size: 9.1px; font-weight: 700;">Conectando ao AniGeek...</div>
-    </div>
-  </div>
-
-  <div id="hero-area"></div>
-
-  <div id="container-principal"></div>
-  
-  <div id="pagination-control" style="text-align: center; padding: 21px; display: none;">
-      <button id="btn-carregar-mais" class="btn-paginacao-geek">
-          <i class="fa-solid fa-chevron-down"></i> Carregar mais conteúdos
-      </button>
-  </div>
-
-  <div id="notificacao-video">
-    <div style="flex: 1;">
-      <div style="font-size: 7px; font-weight: 800; opacity: 0.6; text-transform: uppercase;">Deseja assistir?</div>
-      <div id="notif-titulo" style="font-size: 9.1px; font-weight: 700;">Título</div>
-    </div>
-    <button class="btn-confirmar-video" id="btn-confirmar">Confirmar</button>
-    <i class="fa-solid fa-xmark" style="cursor:pointer; padding: 3.5px;" onclick="window.fecharNotif()"></i>
-  </div>
-
-  <div id="toast-copiado">Link copiado!</div>
-
-  <div id="modal-noticia">
-    <div id="modal-conteudo">
-      <button id="modal-fechar" onclick="window.fecharModal()">×</button>
-      
-      <div id="modal-capa-container" style="margin: -20px -20px 15px -20px; display: none;">
-          <img id="modal-capa-img" src="" style="width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 12px 12px 0 0;">
-      </div>
-
-      <div id="modal-header-layout">
-         <div id="modal-titulo" class="destaque-titulo" style="margin-top: 0;"></div>
-         <div id="modal-categoria" class="destaque-categoria"></div>
-      </div>
-      <p id="modal-resumo" class="destaque-resumo"></p>
-      <a id="modal-link" class="btn-ver-artigo" target="_blank"><i class="fa-solid fa-book-open"></i> Ler artigo completo</a>
-      <div id="modal-ficha" class="destaque-info-grid"></div>
-      <iframe id="modal-video" allowfullscreen style="width: 100%; aspect-ratio: 16 / 9; border: none; border-radius: 8px; margin-top: 15px;"></iframe>
-    </div>
-  </div>
-
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getFirestore, collection, onSnapshot, doc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyBC_ad4X9OwCHKvcG_pNQkKEl76Zw2tu6o",
-      authDomain: "anigeeknews.firebaseapp.com",
-      projectId: "anigeeknews",
-      storageBucket: "anigeeknews.firebasestorage.app",
-      messagingSenderId: "769322939926",
-      appId: "1:769322939926:web:6eb91a96a3f74670882737",
-      measurementId: "G-G5T8CCRGZT"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    let todasAsNoticias = [];
-    let noticiasExibidas = 5;
-    let playerAlvo = '';
-    let urlAlvo = '';
-
-    function limparEspacos(url) {
-      return url ? url.trim() : url;
-    }
-
-    window.shareNews = (titulo, url) => {
-      if (navigator.share) {
-        navigator.share({ title: titulo, url }).catch(console.error);
-      } else {
-        window.copiarLink(url);
-      }
-    };
-
-    window.copiarLink = async (url) => {
-      try {
-        await navigator.clipboard.writeText(url);
-        const toast = document.getElementById('toast-copiado');
-        toast.classList.add('mostrar');
-        setTimeout(() => toast.classList.remove('mostrar'), 2500);
-      } catch (err) { console.error("Erro copiar:", err); }
-    };
-
-    // --- AQUI ESTÁ A ALTERAÇÃO ---
-    // Agora aceita tanto ID do YouTube quanto Link direto (Drive)
-    window.pedirTroca = (idPlayer, idVideo, titulo, cor) => {
-      playerAlvo = idPlayer;
-      const entrada = limparEspacos(idVideo);
-
-      // Se começar com http, usa o link direto (Google Drive / Outros)
-      if (entrada.startsWith('http')) {
-          urlAlvo = entrada;
-      } else {
-          // Se não, usa a sua formatação de proxy para YouTube
-          // Corrigi apenas a sintaxe do ${} que estava faltando no seu original
-          urlAlvo = `https://www.youtube.com/embed/$${entrada}?autoplay=1`;
-      }
-
-      const notif = document.getElementById('notificacao-video');
-      document.getElementById('notif-titulo').innerText = titulo;
-      notif.style.setProperty('--notif-cor', cor);
-      notif.classList.add('visivel');
-    };
-    // --- FIM DA ALTERAÇÃO ---
-
-    window.fecharNotif = () => {
-      document.getElementById('notificacao-video').classList.remove('visivel');
-    };
-
-    const btnConfirmar = document.getElementById('btn-confirmar');
-    if(btnConfirmar) {
-        btnConfirmar.onclick = () => {
-          const player = document.getElementById(playerAlvo);
-          if (player) player.src = urlAlvo;
-          window.fecharNotif();
-        };
-    }
-
-    window.fecharModal = () => {
-      document.getElementById('modal-noticia').style.display = 'none';
-      document.getElementById('modal-video').src = ""; 
-      const url = new URL(window.location);
-      url.searchParams.delete('id');
-      window.history.pushState({}, '', url);
-    };
-
-    async function incrementarVisualizacao(idNoticia) {
-      try {
-        const noticiaRef = doc(db, "anime_i_geek", idNoticia);
-        await updateDoc(noticiaRef, { visualizacoes: increment(1) });
-      } catch(err) { console.error("Erro visualização:", err); }
-    }
-
-    window.abrirNoticiaEmModal = (noticia) => {
-      document.getElementById('modal-titulo').innerText = noticia.titulo;
-      document.getElementById('modal-categoria').innerHTML = `<i class="fa-solid fa-video"></i> ${noticia.categoria}`;
-      document.getElementById('modal-resumo').innerText = noticia.resumo;
-      document.getElementById('modal-link').href = noticia.linkArtigo;
-
-      // LOGICA DE CAPA NO MODAL (Prioriza capaNoticia)
-      const modalCapaContainer = document.getElementById('modal-capa-container');
-      const modalCapaImg = document.getElementById('modal-capa-img');
-      const imgCapa = noticia.capaNoticia || noticia.capaUrl;
-
-      if(imgCapa) {
-          modalCapaImg.src = limparEspacos(imgCapa);
-          modalCapaContainer.style.display = 'block';
-      } else {
-          modalCapaContainer.style.display = 'none';
-      }
-
-      let fichaHtml = "";
-      if (noticia.ficha) {
-          fichaHtml = noticia.ficha.map(item =>
-            `<div class="info-item"><span class="info-label">${item.label}</span><span class="info-valor">${item.valor}</span></div>`
-          ).join('');
-      }
-      document.getElementById('modal-ficha').innerHTML = fichaHtml;
-
-      if (noticia.fichaCategoria) {
-        const modalFichaCat = `
-        <div class="ficha-categoria" style="border-left: 4px solid ${noticia.fichaCategoria.cor};">
-            <img src="${limparEspacos(noticia.fichaCategoria.perfilImg)}" alt="Imagem do editor">
-            <div class="ficha-info">
-                ${noticia.fichaCategoria.info.map(item => `
-                    <div class="info-item">
-                        <span class="info-label">${item.label}:</span>
-                        <span class="info-valor">${item.valor}</span>
-                    </div>
-                `).join('')}
-            </div>
-        </div>`;
-        document.getElementById('modal-ficha').insertAdjacentHTML('beforebegin', modalFichaCat);
-      }
-
-      document.getElementById('modal-video').src = limparEspacos(noticia.videoPrincipal);
-      document.getElementById('modal-noticia').style.display = 'block';
-
-      setTimeout(() => incrementarVisualizacao(noticia.id), 50);
-    }
-
-    window.curtirNoticia = async (idNoticia) => {
-      try {
-        const spanCurtidas = document.querySelector(`#artigo-${idNoticia} .num-like`);
-        if(spanCurtidas) {
-           let atual = parseInt(spanCurtidas.innerText) || 0;
-           spanCurtidas.innerText = atual + 1;
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Original Gemini Layout - Cinematic</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* RESET TOTAL E REMOÇÃO DE CURVAS */
+        * {
+            box-sizing: border-box;
+            outline: none;
+            border-radius: 0 !important; /* Estética retangular pura */
         }
-        const noticiaRef = doc(db, "anime_i_geek", idNoticia);
-        await updateDoc(noticiaRef, { curtidas: increment(1) });
-      } catch(err) { console.error("Erro curtir:", err); }
-    };
 
-    function verificarNoticiaNaUrl() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const id = urlParams.get('id');
-      if (id && todasAsNoticias.length > 0) {
-        const noticia = todasAsNoticias.find(n => n.id === id);
-        if (noticia) { window.abrirNoticiaEmModal(noticia); }
-      }
-    }
-
-    async function injetarComentariosDinamicos() {
-      const containers = document.querySelectorAll('.container-comentarios-dinamico');
-      if (containers.length === 0) return;
-      try {
-        await import('./comentarios/comentarios.js');
-      } catch (err) { console.error("Erro scripts comentarios", err); }
-    }
-
-    function renderizarHero(primeiraNoticia) {
-        const heroArea = document.getElementById('hero-area');
-        if (!heroArea || !primeiraNoticia) return;
-        if (primeiraNoticia.capaUrl) {
-            heroArea.innerHTML = `
-                <div class="hero-topo-container">
-                    <img src="${limparEspacos(primeiraNoticia.capaUrl)}" class="hero-topo-img" alt="Capa">
-                    ${primeiraNoticia.capaDesc ? `<div class="hero-topo-desc">${primeiraNoticia.capaDesc}</div>` : ''}
-                </div>
-            `;
-            heroArea.style.display = 'block';
-        } else {
-            heroArea.style.display = 'none';
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', 'Lato', sans-serif;
+            background-color: #0b0b0b;
+            color: #ffffff;
+            overflow-x: hidden;
         }
-    }
 
-    function renderizarNoticias() {
-      const container = document.getElementById('container-principal');
-      const btnPaginacao = document.getElementById('pagination-control');
-      if (!container) return;
+        /* =========================================
+           HERO SECTION (LAYOUT ORIGINAL GEMINI)
+           ========================================= */
+        .hero-container {
+            position: relative;
+            width: 100%;
+            height: 90vh; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background-color: #000;
+        }
 
-      const baseUrl = window.location.origin + window.location.pathname;
-      if (todasAsNoticias.length > 0) { renderizarHero(todasAsNoticias[0]); }
+        .hero-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://images4.alphacoders.com/133/1333796.jpeg'); 
+            background-size: cover;
+            background-position: center;
+            z-index: 1;
+            filter: brightness(0.7);
+        }
 
-      const listaParaExibir = todasAsNoticias.slice(0, noticiasExibidas);
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(0,0,0,0) 0%, rgba(0,0,0,0.95) 85%);
+            z-index: 2;
+        }
 
-      listaParaExibir.forEach(news => {
-        const artigoExistente = document.getElementById(`artigo-${news.id}`);
-        const shareUrl = `${baseUrl}?id=${encodeURIComponent(news.id)}`;
+        .hero-content {
+            position: relative;
+            z-index: 3;
+            padding: 20px;
+            max-width: 1000px;
+        }
 
-        if (artigoExistente) {
-            const spanLike = artigoExistente.querySelector('.num-like');
-            if(spanLike) spanLike.innerText = news.curtidas || 0;
-            const spanView = artigoExistente.querySelector('.num-view');
-            if(spanView) spanView.innerText = news.visualizacoes || 0;
-        } else {
-            // LOGICA DA CAPA DO CARD: 16:9 SANGREADA (LARGURA TOTAL)
-            const imgFeed = news.capaNoticia || news.capaUrl;
-            const capaHTML = imgFeed ? `
-                <div class="noticia-capa" style="margin: -15px -15px 15px -15px;">
-                    <img src="${limparEspacos(imgFeed)}" style="width: 100%; aspect-ratio: 16 / 9; border-radius: 12px 12px 0 0; object-fit: cover; display: block;">
-                </div>` : '';
+        .hero-logo-text {
+            font-family: 'Georgia', serif; 
+            font-size: clamp(40px, 12vw, 90px);
+            text-transform: uppercase; 
+            font-weight: 900;
+            letter-spacing: 15px; 
+            margin-bottom: 0px; 
+            line-height: 1;
+            opacity: 0.95;
+        }
 
-            let fichaCategoriaHtml = '';
-            if (news.fichaCategoria) {
-                fichaCategoriaHtml = `
-                <div class="ficha-categoria" style="border-left: 4px solid ${news.fichaCategoria.cor};">
-                    <img src="${limparEspacos(news.fichaCategoria.perfilImg)}" alt="Imagem do editor">
-                    <div class="ficha-info">
-                        ${news.fichaCategoria.info.map(item => `
-                            <div class="info-item">
-                                <span class="info-label">${item.label}:</span>
-                                <span class="info-valor">${item.valor}</span>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>`;
+        .hero-subtext {
+            font-size: clamp(12px, 3vw, 22px);
+            font-weight: 300;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            margin-bottom: 40px;
+            color: #aaa;
+        }
+
+        .meta-tags {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        .rating-badge {
+            background-color: #f47521;
+            color: #000;
+            padding: 4px 12px;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-primary {
+            background-color: #fff;
+            color: #000;
+            border: none;
+            padding: 16px 35px;
+            font-size: 13px;
+            font-weight: 900;
+            text-transform: uppercase;
+            cursor: pointer;
+            letter-spacing: 1px;
+            transition: 0.2s;
+        }
+
+        .btn-primary:hover { background-color: #f47521; color: #fff; }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: #fff;
+            border: 2px solid #fff;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-secondary:hover { background-color: #fff; color: #000; }
+
+        /* =========================================
+           CARDS (ESTILO WIDE)
+           ========================================= */
+        .content-section { padding: 50px 5%; }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #eee;
+        }
+
+        .cards-row {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            padding-bottom: 20px;
+            scrollbar-width: none;
+        }
+        .cards-row::-webkit-scrollbar { display: none; }
+
+        .anime-card { min-width: 300px; width: 300px; }
+
+        .poster-wrapper {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9; 
+            margin-bottom: 15px;
+            overflow: hidden;
+            border: 1px solid #333;
+        }
+
+        .poster-img { width: 100%; height: 100%; object-fit: cover; transition: 0.4s; }
+        .anime-card:hover .poster-img { transform: scale(1.1); filter: saturate(1.2); }
+
+        .anime-title { font-size: 16px; font-weight: 700; text-transform: uppercase; }
+        .anime-meta { font-size: 12px; color: #666; margin-top: 5px; letter-spacing: 1px; }
+
+        /* =========================================
+           GEMINI BRANDING
+           ========================================= */
+        .gemini-footer {
+            padding: 40px;
+            text-align: center;
+            background: linear-gradient(to bottom, transparent, #000);
+            border-top: 1px solid #222;
+        }
+
+        .gemini-mark {
+            font-size: 11px;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            color: #444;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .gemini-mark i { color: #f47521; font-size: 8px; }
+
+        /* =========================================
+           RESPONSIVIDADE MOBILE (3 CARDS)
+           ========================================= */
+        @media (max-width: 768px) {
+            .hero-container { height: 75vh; }
+            .hero-logo-text { letter-spacing: 8px; }
+            
+            .content-section { 
+                padding: 30px 15px; /* Margem lateral menor no mobile */
             }
 
-            const html = `
-            <article class="destaque-secao" id="artigo-${news.id}" style="--tema-cor: ${news.cor}">
-              <div class="destaque-padding">
-                ${capaHTML}
-                <div class="destaque-categoria"><i class="fa-solid fa-hashtag"></i> ${news.categoria}</div>
-                
-                <div class="destaque-header">
-                  <h2 class="destaque-titulo" onclick='window.abrirNoticiaEmModal(${JSON.stringify(news).replace(/'/g, "'")})' style="cursor:pointer">${news.titulo}</h2>
-                  <div class="menu-opcoes-container" tabindex="0">
-                    <button class="btn-tres-pontos"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-                    <div class="dropdown-conteudo header-dropdown">
-                      <a href="#" onclick="event.preventDefault(); window.copiarLink('${shareUrl}');"><i class="fa-regular fa-copy"></i> Copiar Link</a>
-                    </div>
-                  </div>
-                </div>
+            .cards-row {
+                gap: 10px; /* Gap reduzido para caber mais itens */
+            }
 
-                ${fichaCategoriaHtml}
+            .anime-card { 
+                /* Cálculo para 3 cards: (100% / 3) - o gap proporcional */
+                min-width: calc((100% / 3) - 7px); 
+                width: calc((100% / 3) - 7px); 
+            }
 
-                <p class="destaque-resumo">${news.resumo}</p>
-                <a href="${news.linkArtigo}" class="btn-ver-artigo" target="_blank"><i class="fa-solid fa-book-open"></i> Ver artigo completo</a>
-                
-                <div class="destaque-info-grid">
-                  ${news.ficha ? news.ficha.map(item => `<div class="info-item"><span class="info-label">${item.label}</span><span class="info-valor">${item.valor}</span></div>`).join('') : ''}
-                </div>
-              </div>
-              
-              <div class="destaque-media">
-                <iframe id="player-${news.id}" src="${limparEspacos(news.videoPrincipal)}" allowfullscreen style="width: 100%; aspect-ratio: 16 / 9; border: none;"></iframe>
-              </div>
-              
-              <div class="premium-actions-bar">
-                  <button class="btn-premium-icon" onclick="curtirNoticia('${news.id}')">
-                    <i class="fa-regular fa-thumbs-up"></i> Útil (<span class="num-like">${news.curtidas || 0}</span>)
-                  </button>
-                  <button class="btn-premium-icon" onclick="window.shareNews('${news.titulo.replace(/'/g, "\\'")}', '${shareUrl}')">
-                    <i class="fa-solid fa-share-nodes"></i> Compartilhar
-                  </button>
-                  <button class="btn-premium-icon btn-stats">
-                    <i class="fa-solid fa-chart-column"></i>
-                    <span class="stats-num num-view">${news.visualizacoes || 0}</span>
-                  </button>
-              </div>
+            .anime-title { 
+                font-size: 10px; /* Texto menor para não quebrar */
+                letter-spacing: 0;
+            }
 
-              <div class="carrossel-temas">
-                <div class="carrossel-header"><span class="temas-label">Vídeos Relacionados</span></div>
-                <div class="temas-scroll-wrapper"><div class="temas-container">
-                    ${news.relacionados ? news.relacionados.map(rel => `
-                      <div class="tema-card" onclick="window.pedirTroca('player-${news.id}', '${rel.idVid}', '${rel.titulo.replace(/'/g, "\\'")}', '${news.cor}')">
-                        <img src="${limparEspacos(rel.thumb)}" class="tema-thumb">
-                        <div class="tema-titulo">${rel.titulo}</div>
-                      </div>`).join('') : ''}
-                </div></div>
-              </div>
+            .anime-meta { font-size: 8px; }
 
-              <div class="secao-produtos-banner">
-                <div class="banner-header"><i class="fa-solid fa-cart-shopping"></i> Produtos Recomendados</div>
-                <div class="banner-lista">
-                    ${news.produtos ? news.produtos.map(prod => `
-                      <a href="${limparEspacos(prod.link)}" target="_blank" class="banner-produto-item">
-                        <div class="banner-img-box">
-                          <img src="${limparEspacos(prod.img)}" class="banner-thumb">
-                        </div>
-                        <div class="banner-info">
-                          <div class="banner-titulo">${prod.nome}</div>
-                          <div class="banner-desc">${prod.desc || 'Item selecionado pela nossa equipe Geek.'}</div>
-                          <div class="banner-link-fake">Ver na loja <i class="fa-solid fa-chevron-right"></i></div>
-                        </div>
-                      </a>`).join('') : ''}
-                </div>
-              </div>
-
-              <div class="container-comentarios-dinamico" data-noticia-id="${news.id}"></div>
-            </article>
-            `;
-            container.insertAdjacentHTML('beforeend', html);
+            .section-title {
+                font-size: 16px;
+                margin-bottom: 20px;
+            }
         }
-      });
+    </style>
+</head>
+<body>
 
-      injetarComentariosDinamicos();
-      btnPaginacao.style.display = noticiasExibidas < todasAsNoticias.length ? 'block' : 'none';
-    }
+    <div class="hero-container">
+        <div class="hero-background"></div>
+        <div class="hero-overlay"></div>
 
-    document.getElementById('btn-carregar-mais').onclick = () => {
-        noticiasExibidas += 5;
-        renderizarNoticias();
-    };
+        <div class="hero-content">
+            <div class="hero-logo-text">FRIEREN</div>
+            <div class="hero-subtext">Beyond Journey's End</div>
 
-    function carregarTudoRealTime() {
-      onSnapshot(collection(db, "anime_i_geek"), (snapshot) => {
-        todasAsNoticias = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        todasAsNoticias.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-        if(todasAsNoticias.length > 0) { document.getElementById('novo-artigo-titulo').innerText = todasAsNoticias[0].titulo; }
-        renderizarNoticias();
-        verificarNoticiaNaUrl();
-      });
-    }
+            <div class="meta-tags">
+                <span class="rating-badge">A14</span>
+                <span>LEGENDADO</span>
+                <span>•</span>
+                <span>DUBLADO</span>
+            </div>
 
-    carregarTudoRealTime();
-  </script>
-</div>
+            <div class="action-buttons">
+                <button class="btn-primary">ASSISTIR</button>
+                <button class="btn-secondary"><i class="fas fa-plus"></i></button>
+                <button class="btn-secondary"><i class="fas fa-share-alt"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <section class="content-section">
+        <h2 class="section-title">Em Alta Agora</h2>
+        <div class="cards-row">
+            <div class="anime-card">
+                <div class="poster-wrapper">
+                    <img src="https://image.tmdb.org/t/p/w500/phuYuzqWW9ru8oa3mPfKoQV7htB.jpg" class="poster-img">
+                </div>
+                <div class="anime-title">My Hero Academia</div>
+                <div class="anime-meta">Série • Dublado</div>
+            </div>
+            <div class="anime-card">
+                <div class="poster-wrapper">
+                    <img src="https://image.tmdb.org/t/p/w500/cMD9Ygz11VJmK195pWr35WDtthE.jpg" class="poster-img">
+                </div>
+                <div class="anime-title">One Piece</div>
+                <div class="anime-meta">Série • Legendado</div>
+            </div>
+            <div class="anime-card">
+                <div class="poster-wrapper">
+                    <img src="https://image.tmdb.org/t/p/w500/ffvf4axfxWB6j55q8B3PjF9N0p2.jpg" class="poster-img">
+                </div>
+                <div class="anime-title">Jujutsu Kaisen</div>
+                <div class="anime-meta">Série • Legendado</div>
+            </div>
+            <div class="anime-card">
+                <div class="poster-wrapper">
+                    <img src="https://image.tmdb.org/t/p/w500/hTP1DtLGFamjfu8WqjnuQdP1n4i.jpg" class="poster-img">
+                </div>
+                <div class="anime-title">Attack on Titan</div>
+                <div class="anime-meta">Série • Dublado</div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="gemini-footer">
+        <div class="gemini-mark">
+            <i class="fas fa-circle"></i>
+            Designed by Gemini AI
+            <i class="fas fa-circle"></i>
+        </div>
+    </footer>
+
 </body>
+</html>
