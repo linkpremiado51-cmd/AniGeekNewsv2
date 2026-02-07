@@ -3,21 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AniGeek TV - Live Data (16:9)</title>
+    <title>AniGeek TV - 16:9 Light</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* VARIÁVEIS DE TEMA */
+        /* DEFINIÇÃO DE CORES FIXA (MODO CLARO) */
         :root {
-            --bg: #0b0b0b;
-            --text: #ffffff;
-            --card-bg: #1a1a1a;
-            --meta: #666666;
-            --border: #333333;
-            --btn-primary-bg: #ffffff;
-            --btn-primary-text: #000000;
-        }
-
-        [data-theme="light"] {
             --bg: #f5f5f5;
             --text: #1a1a1a;
             --card-bg: #ffffff;
@@ -25,42 +15,41 @@
             --border: #dddddd;
             --btn-primary-bg: #1a1a1a;
             --btn-primary-text: #ffffff;
+            --accent: #f47521;
         }
 
         /* RESET TOTAL */
-        * { box-sizing: border-box; outline: none; border-radius: 0 !important; transition: background 0.3s, color 0.3s; }
-        body { margin: 0; padding: 0; font-family: 'Inter', 'Lato', sans-serif; background-color: var(--bg); color: var(--text); overflow-x: hidden; }
-
-        /* BOTÃO DE TEMA */
-        .theme-toggle {
-            position: fixed; top: 20px; right: 20px; z-index: 1000;
-            background: #f47521; color: white; border: none;
-            width: 40px; height: 40px; cursor: pointer;
-            display: flex; align-items: center; justify-content: center; font-size: 18px;
+        * { box-sizing: border-box; outline: none; border-radius: 0 !important; }
+        body { 
+            margin: 0; padding: 0; 
+            font-family: 'Inter', 'Lato', sans-serif; 
+            background-color: var(--bg); 
+            color: var(--text); 
+            overflow-x: hidden; 
         }
 
         /* HERO SECTION */
         .hero-container { position: relative; width: 100%; height: 45vh; display: flex; align-items: center; justify-content: center; text-align: center; background-color: #000; }
         .hero-background { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: url('https://images4.alphacoders.com/133/1333796.jpeg'); background-size: cover; background-position: center top; z-index: 1; filter: brightness(0.6); }
-        .hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, var(--bg) 95%); z-index: 2; }
+        .hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, var(--bg) 95%); z-index: 2; }
         .hero-content { position: relative; z-index: 3; padding: 20px; max-width: 1000px; }
-        .hero-logo-text { font-family: 'Georgia', serif; font-size: clamp(30px, 8vw, 60px); text-transform: uppercase; font-weight: 900; letter-spacing: 10px; margin-bottom: 5px; line-height: 1; }
-        .hero-subtext { font-size: clamp(10px, 2vw, 16px); font-weight: 300; letter-spacing: 5px; text-transform: uppercase; margin-bottom: 20px; color: #aaa; }
+        .hero-logo-text { font-family: 'Georgia', serif; font-size: clamp(30px, 8vw, 60px); text-transform: uppercase; font-weight: 900; letter-spacing: 10px; margin-bottom: 5px; line-height: 1; color: #fff; }
+        .hero-subtext { font-size: clamp(10px, 2vw, 16px); font-weight: 300; letter-spacing: 5px; text-transform: uppercase; margin-bottom: 20px; color: #ccc; }
         
-        .meta-tags { display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 20px; font-size: 10px; font-weight: bold; letter-spacing: 1px; }
-        .rating-badge { background-color: #f47521; color: #000; padding: 3px 10px; }
+        .meta-tags { display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 20px; font-size: 10px; font-weight: bold; letter-spacing: 1px; color: #fff; }
+        .rating-badge { background-color: var(--accent); color: #000; padding: 3px 10px; }
 
-        .btn-primary { background-color: var(--btn-primary-bg); color: var(--btn-primary-text); border: none; padding: 12px 25px; font-size: 11px; font-weight: 900; text-transform: uppercase; cursor: pointer; }
-        .btn-primary:hover { background-color: #f47521; color: #fff; }
+        .btn-primary { background-color: var(--btn-primary-bg); color: var(--btn-primary-text); border: none; padding: 12px 25px; font-size: 11px; font-weight: 900; text-transform: uppercase; cursor: pointer; transition: 0.3s; }
+        .btn-primary:hover { background-color: var(--accent); color: #fff; }
 
         /* CARDS - FORMATO 16:9 */
         .content-section { padding: 30px 5%; }
-        .section-title { font-size: 16px; font-weight: 800; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 2px; }
+        .section-title { font-size: 16px; font-weight: 800; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 2px; color: var(--text); }
         
         .cards-row { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 20px; scrollbar-width: none; }
         .cards-row::-webkit-scrollbar { display: none; }
 
-        .anime-card { min-width: 280px; width: 280px; cursor: pointer; }
+        .anime-card { min-width: 280px; width: 280px; cursor: pointer; transition: transform 0.3s; }
         
         .poster-wrapper { 
             position: relative; 
@@ -70,16 +59,17 @@
             overflow: hidden; 
             border: 1px solid var(--border); 
             background-color: var(--card-bg); 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
         }
         
         .poster-img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s ease; }
-        .anime-card:hover .poster-img { transform: scale(1.1); }
+        .anime-card:hover .poster-img { transform: scale(1.08); }
         
-        .anime-title { font-size: 12px; font-weight: 700; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .anime-title { font-size: 12px; font-weight: 700; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text); }
         .anime-meta { font-size: 9px; color: var(--meta); margin-top: 4px; letter-spacing: 1px; }
 
         /* FOOTER */
-        .gemini-footer { padding: 40px; text-align: center; border-top: 1px solid var(--border); opacity: 0.6; }
+        .gemini-footer { padding: 40px; text-align: center; border-top: 1px solid var(--border); background: #fff; }
         .gemini-mark { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--meta); display: flex; align-items: center; justify-content: center; gap: 10px; }
 
         @media (max-width: 768px) {
@@ -90,11 +80,7 @@
         }
     </style>
 </head>
-<body data-theme="dark">
-
-    <button class="theme-toggle" onclick="toggleTheme()">
-        <i class="fas fa-adjust"></i>
-    </button>
+<body>
 
     <div class="hero-container">
         <div class="hero-background"></div>
@@ -121,14 +107,6 @@
             <i class="fas fa-circle"></i> AniGeek Global Network <i class="fas fa-circle"></i>
         </div>
     </footer>
-
-    <script>
-        function toggleTheme() {
-            const body = document.body;
-            const currentTheme = body.getAttribute('data-theme');
-            body.setAttribute('data-theme', currentTheme === 'dark' ? 'light' : 'dark');
-        }
-    </script>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -164,7 +142,7 @@
                 section.innerHTML = `
                     <h2 class="section-title">${conf.titulo}</h2>
                     <div class="cards-row" id="row-${conf.sub}">
-                        <p style="font-size:11px; opacity:0.5">Carregando...</p>
+                        <p style="font-size:11px; opacity:0.5; color: #888;">Carregando...</p>
                     </div>
                 `;
                 mainContainer.appendChild(section);
@@ -180,12 +158,11 @@
                     snap.forEach(doc => {
                         const data = doc.data();
                         
-                        // VARIÁVEIS DO BANCO DE DADOS
                         const cardTitulo = data.titulo || doc.id.replace(/_/g, ' ');
                         const cardCat = data.categoria || "Série";
                         const cardImg = data.capaNoticia || "https://via.placeholder.com/640x360?text=AniGeek+TV";
                         
-                        // CONFIGURAÇÃO DO LINK (Captura linkArtigo do documento)
+                        // Captura o linkArtigo do documento Firebase
                         const linkDestino = data.linkArtigo || `index.html?id=${doc.id}`;
 
                         row.innerHTML += `
@@ -199,9 +176,9 @@
                         `;
                     });
 
-                    if(snap.empty) row.innerHTML = "<p style='font-size:11px; opacity:0.5'>Nenhum conteúdo.</p>";
+                    if(snap.empty) row.innerHTML = "<p style='font-size:11px; opacity:0.5'>Nenhum conteúdo disponível.</p>";
 
-                } catch (e) { console.error("Erro ao carregar:", e); }
+                } catch (e) { console.error("Erro na busca:", e); }
             }
         }
 
