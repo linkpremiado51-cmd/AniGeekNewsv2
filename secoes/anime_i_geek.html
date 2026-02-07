@@ -1,12 +1,5 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AniGeek TV - 16:9 Light</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<div id="anigeek-container">
     <style>
-        /* DEFINIÇÃO DE CORES FIXA (MODO CLARO) */
         :root {
             --bg: #f5f5f5;
             --text: #1a1a1a;
@@ -18,38 +11,135 @@
             --accent: #f47521;
         }
 
-        /* RESET TOTAL */
-        * { box-sizing: border-box; outline: none; border-radius: 0 !important; }
-        body { 
-            margin: 0; padding: 0; 
+        #anigeek-container {
             font-family: 'Inter', 'Lato', sans-serif; 
             background-color: var(--bg); 
             color: var(--text); 
-            overflow-x: hidden; 
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        /* HERO SECTION */
-        .hero-container { position: relative; width: 100%; height: 45vh; display: flex; align-items: center; justify-content: center; text-align: center; background-color: #000; }
-        .hero-background { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: url('https://images4.alphacoders.com/133/1333796.jpeg'); background-size: cover; background-position: center top; z-index: 1; filter: brightness(0.6); }
-        .hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, var(--bg) 95%); z-index: 2; }
-        .hero-content { position: relative; z-index: 3; padding: 20px; max-width: 1000px; }
-        .hero-logo-text { font-family: 'Georgia', serif; font-size: clamp(30px, 8vw, 60px); text-transform: uppercase; font-weight: 900; letter-spacing: 10px; margin-bottom: 5px; line-height: 1; color: #fff; }
-        .hero-subtext { font-size: clamp(10px, 2vw, 16px); font-weight: 300; letter-spacing: 5px; text-transform: uppercase; margin-bottom: 20px; color: #ccc; }
-        
-        .meta-tags { display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 20px; font-size: 10px; font-weight: bold; letter-spacing: 1px; color: #fff; }
-        .rating-badge { background-color: var(--accent); color: #000; padding: 3px 10px; }
+        #anigeek-container * { box-sizing: border-box; }
 
-        .btn-primary { background-color: var(--btn-primary-bg); color: var(--btn-primary-text); border: none; padding: 12px 25px; font-size: 11px; font-weight: 900; text-transform: uppercase; cursor: pointer; transition: 0.3s; }
-        .btn-primary:hover { background-color: var(--accent); color: #fff; }
-
-        /* CARDS - FORMATO 16:9 */
-        .content-section { padding: 30px 5%; }
-        .section-title { font-size: 16px; font-weight: 800; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 2px; color: var(--text); }
+        .hero-container {
+            position: relative;
+            width: 100%;
+            height: 45vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background-color: #000;
+        }
+        .hero-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://images4.alphacoders.com/133/1333796.jpeg');
+            background-size: cover;
+            background-position: center top;
+            z-index: 1;
+            filter: brightness(0.6);
+        }
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, var(--bg) 95%);
+            z-index: 2;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 3;
+            padding: 20px;
+            max-width: 1000px;
+        }
+        .hero-logo-text {
+            font-family: 'Georgia', serif;
+            font-size: clamp(30px, 8vw, 60px);
+            text-transform: uppercase;
+            font-weight: 900;
+            letter-spacing: 10px;
+            margin-bottom: 5px;
+            line-height: 1;
+            color: #fff;
+        }
+        .hero-subtext {
+            font-size: clamp(10px, 2vw, 16px);
+            font-weight: 300;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            color: #ccc;
+        }
         
-        .cards-row { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 20px; scrollbar-width: none; }
+        .meta-tags {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            font-size: 10px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            color: #fff;
+        }
+        .rating-badge {
+            background-color: var(--accent);
+            color: #000;
+            padding: 3px 10px;
+            border-radius: 3px;
+        }
+
+        .btn-primary {
+            background-color: var(--btn-primary-bg);
+            color: var(--btn-primary-text);
+            border: none;
+            padding: 12px 25px;
+            font-size: 11px;
+            font-weight: 900;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn-primary:hover {
+            background-color: var(--accent);
+            color: #fff;
+        }
+
+        .content-section {
+            padding: 30px 5%;
+        }
+        .section-title {
+            font-size: 16px;
+            font-weight: 800;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text);
+        }
+        
+        .cards-row {
+            display: flex;
+            gap: 15px;
+            overflow-x: auto;
+            padding-bottom: 20px;
+            scrollbar-width: none;
+        }
         .cards-row::-webkit-scrollbar { display: none; }
 
-        .anime-card { min-width: 280px; width: 280px; cursor: pointer; transition: transform 0.3s; }
+        .anime-card {
+            min-width: 280px;
+            width: 280px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
         
         .poster-wrapper { 
             position: relative; 
@@ -60,17 +150,53 @@
             border: 1px solid var(--border); 
             background-color: var(--card-bg); 
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border-radius: 8px;
         }
         
-        .poster-img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s ease; }
-        .anime-card:hover .poster-img { transform: scale(1.08); }
+        .poster-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: 0.5s ease;
+        }
+        .anime-card:hover .poster-img {
+            transform: scale(1.08);
+        }
         
-        .anime-title { font-size: 12px; font-weight: 700; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text); }
-        .anime-meta { font-size: 9px; color: var(--meta); margin-top: 4px; letter-spacing: 1px; }
+        .anime-title {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: var(--text);
+            margin-top: 8px;
+        }
+        .anime-meta {
+            font-size: 9px;
+            color: var(--meta);
+            margin-top: 4px;
+            letter-spacing: 1px;
+        }
 
-        /* FOOTER */
-        .gemini-footer { padding: 40px; text-align: center; border-top: 1px solid var(--border); background: #fff; }
-        .gemini-mark { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--meta); display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .gemini-footer {
+            padding: 40px;
+            text-align: center;
+            border-top: 1px solid var(--border);
+            background: #fff;
+            margin-top: 40px;
+        }
+        .gemini-mark {
+            font-size: 10px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--meta);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
 
         @media (max-width: 768px) {
             .hero-container { height: 35vh; }
@@ -79,8 +205,6 @@
             .section-title { font-size: 14px; }
         }
     </style>
-</head>
-<body>
 
     <div class="hero-container">
         <div class="hero-background"></div>
@@ -94,9 +218,7 @@
                 <span>•</span>
                 <span>DUBLADO</span>
             </div>
-            <div class="action-buttons">
-                <button class="btn-primary">ASSISTIR AGORA</button>
-            </div>
+            <button class="btn-primary">ASSISTIR AGORA</button>
         </div>
     </div>
 
@@ -134,6 +256,7 @@
 
         async function carregarConteudo() {
             const mainContainer = document.getElementById('dynamic-sections');
+            if(!mainContainer) return;
             mainContainer.innerHTML = "";
 
             for (const conf of configSessoes) {
@@ -153,22 +276,20 @@
                     const snap = await getDocs(q);
                     
                     const row = document.getElementById(`row-${conf.sub}`);
+                    if(!row) continue;
                     row.innerHTML = "";
 
                     snap.forEach(doc => {
                         const data = doc.data();
-                        
                         const cardTitulo = data.titulo || doc.id.replace(/_/g, ' ');
                         const cardCat = data.categoria || "Série";
                         const cardImg = data.capaNoticia || "https://via.placeholder.com/640x360?text=AniGeek+TV";
-                        
-                        // Captura o linkArtigo do documento Firebase
                         const linkDestino = data.linkArtigo || `index.html?id=${doc.id}`;
 
                         row.innerHTML += `
                             <div class="anime-card" onclick="location.href='${linkDestino}'">
                                 <div class="poster-wrapper">
-                                    <img src="${cardImg}" class="poster-img" loading="lazy">
+                                    <img src="${cardImg}" class="poster-img" loading="lazy" alt="${cardTitulo}">
                                 </div>
                                 <div class="anime-title">${cardTitulo}</div>
                                 <div class="anime-meta">${cardCat} • ${doc.id.substring(0,5)}</div>
@@ -178,11 +299,14 @@
 
                     if(snap.empty) row.innerHTML = "<p style='font-size:11px; opacity:0.5'>Nenhum conteúdo disponível.</p>";
 
-                } catch (e) { console.error("Erro na busca:", e); }
+                } catch (e) { 
+                    console.error("Erro na busca:", e);
+                    const row = document.getElementById(`row-${conf.sub}`);
+                    if(row) row.innerHTML = "<p style='color:red; font-size:11px'>Erro ao carregar conteúdo</p>";
+                }
             }
         }
 
         carregarConteudo();
     </script>
-</body>
-</html>
+</div>
