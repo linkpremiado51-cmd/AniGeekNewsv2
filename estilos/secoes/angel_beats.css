@@ -834,7 +834,72 @@ footer .logo {
 }
 
 
-              
+           /* ======================================================
+   AJUSTES EXCLUSIVOS PARA PC (DESKTOP)
+   ====================================================== */
+@media (min-width: 1024px) {
+    /* Impede que o conteúdo ocupe a tela inteira, centralizando-o */
+    .destaque-padding {
+        max-width: 1000px; /* Aumentado para PC */
+    }
+
+    /* Título maior no PC */
+    .destaque-titulo {
+        font-size: 38px;
+        margin-bottom: 20px;
+    }
+
+    /* Grid de informações com mais colunas no PC */
+    .destaque-info-grid {
+        grid-template-columns: repeat(4, 1fr);
+        padding: 20px;
+    }
+
+    /* Layout de dois lados para o corpo da notícia: 
+       Texto à esquerda e Ficha Técnica/Ads à direita */
+    .destaque-secao {
+        max-width: 1100px;
+        margin: 0 auto 60px auto;
+        padding-bottom: 30px;
+    }
+
+    /* Faz os vídeos relacionados (carrossel) ficarem maiores no PC */
+    .tema-card {
+        flex: 0 0 180px;
+    }
+    .tema-thumb {
+        width: 180px;
+        height: 101px;
+    }
+    .tema-titulo {
+        font-size: 11px;
+    }
+
+    /* Ajuste nos botões de ação para ficarem em linha no PC */
+    .premium-actions-bar {
+        justify-content: center;
+        gap: 20px;
+        padding: 15px;
+    }
+
+    .btn-premium-icon {
+        font-size: 11px;
+        padding: 8px 15px;
+    }
+
+    /* Banner de produtos: 2 colunas no PC em vez de uma lista vertical longa */
+    .banner-lista {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+
+    /* Modal de vídeo maior no PC */
+    #modal-conteudo {
+        max-width: 900px;
+    }
+}
+   
 
 
   
