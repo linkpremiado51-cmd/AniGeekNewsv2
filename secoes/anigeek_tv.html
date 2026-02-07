@@ -35,7 +35,7 @@
         appId: "1:769322939926:web:6eb91a96a3f74670882737"
     };
 
-    // Prevenção de erro: verifica se o app já foi inicializado
+    // Ajuste para não travar quando injetado via navegação modular
     const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
     const db = getFirestore(app);
 
@@ -64,8 +64,8 @@
             mainContainer.appendChild(section);
 
             try {
-                // CORREÇÃO DO PATH: Removendo o prefixo que pode estar causando erro de busca
-                const colRef = collection(db, "animes_filmes_series_games_noticias", conf.sub);
+                // Mantendo o seu Path exatamente como ele é no banco
+                const colRef = collection(db, "anigeeknews.web.app/animes_filmes_series_games_noticias/" + conf.sub);
                 const q = query(colRef, limit(conf.qtd));
                 const snap = await getDocs(q);
                 
@@ -94,9 +94,9 @@
                 if(snap.empty) row.innerHTML = "<p style='font-size:11px; opacity:0.5'>Nenhum conteúdo disponível.</p>";
 
             } catch (e) { 
-                console.error("Erro na busca para " + conf.sub + ":", e);
+                console.error("Erro na busca:", e);
                 const row = document.getElementById(`row-${conf.sub}`);
-                if(row) row.innerHTML = "<p style='color:red; font-size:11px'>Erro de conexão com Firebase.</p>";
+                if(row) row.innerHTML = "<p style='color:red; font-size:11px'>Erro ao carregar do Firebase.</p>";
             }
         }
     }
