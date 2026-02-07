@@ -19,7 +19,7 @@ const CONFIG = {
     MODE:  'ag_v7_mode', // 'dynamic' ou 'fixed'
     STATS: 'ag_v7_stats'
   },
-  FIXED_TAB: 'anime_i_geek' // Aba fixa que não pode ser removida
+  FIXED_TAB: 'anigeek_tv' // Aba fixa que não pode ser removida
 };
 
 /* ===========================
