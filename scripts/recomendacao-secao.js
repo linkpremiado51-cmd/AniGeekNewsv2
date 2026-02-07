@@ -28,9 +28,9 @@ const CONFIG = {
 const CATALOGO = [
 { sessao: "Jujutsu Kaisen Shimetsu Kaiyu", id: "Jujutsu_kaisen_shimetsu_kaiyu", cor: "#e63946", itens: [] },
 { sessao: "Akame Ga Kill", id: "akame_ga_kill", cor: "#f1faee", itens: [] },
-{ sessao: "Anigeek Tv", id: "anigeek_tv", cor: "#a8dadc", itens: [] },
+{ sessao: "Noticias Geek", id: "", cor: "#a8dadc", itens: [] },
 { sessao: "Angelic Layer", id: "angelic_layer", cor: "#457b9d", itens: [] },
-{ sessao: "Anime I Geek", id: "anime_i_geek", cor: "#1d3557", itens: [] },
+{ sessao: "Anime I Geek TV", id: "anigeek_tv", cor: "#1d3557", itens: [] },
 { sessao: "Assassination Classroom", id: "assassination_classroom", cor: "#fca311", itens: [] },
 { sessao: "Attack On Titan Final Season", id: "attack_on_titan_final_season", cor: "#ff6b6b", itens: [] },
 { sessao: "Attack On Titan Final Season Part 2", id: "attack_on_titan_final_season_part_2", cor: "#6a4c93", itens: [] },
