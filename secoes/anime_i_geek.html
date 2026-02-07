@@ -3,308 +3,209 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Original Gemini Layout - Cinematic</title>
+    <title>AniGeek TV - Live Data (16:9)</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <style>
-        /* RESET TOTAL E REMOÇÃO DE CURVAS */
-        * {
-            box-sizing: border-box;
-            outline: none;
-            border-radius: 0 !important; /* Estética retangular pura */
+        /* VARIÁVEIS DE TEMA */
+        :root {
+            --bg: #0b0b0b;
+            --text: #ffffff;
+            --card-bg: #1a1a1a;
+            --meta: #666666;
+            --border: #333333;
+            --btn-primary-bg: #ffffff;
+            --btn-primary-text: #000000;
         }
 
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Inter', 'Lato', sans-serif;
-            background-color: #0b0b0b;
-            color: #ffffff;
-            overflow-x: hidden;
+        [data-theme="light"] {
+            --bg: #f5f5f5;
+            --text: #1a1a1a;
+            --card-bg: #ffffff;
+            --meta: #888888;
+            --border: #dddddd;
+            --btn-primary-bg: #1a1a1a;
+            --btn-primary-text: #ffffff;
         }
 
-        /* =========================================
-           HERO SECTION (LAYOUT ORIGINAL GEMINI)
-           ========================================= */
-        .hero-container {
-            position: relative;
-            width: 100%;
-            height: 90vh; 
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            background-color: #000;
+        /* RESET TOTAL */
+        * { box-sizing: border-box; outline: none; border-radius: 0 !important; transition: background 0.3s, color 0.3s; }
+        body { margin: 0; padding: 0; font-family: 'Inter', 'Lato', sans-serif; background-color: var(--bg); color: var(--text); overflow-x: hidden; }
+
+        /* BOTÃO DE TEMA */
+        .theme-toggle {
+            position: fixed; top: 20px; right: 20px; z-index: 1000;
+            background: #f47521; color: white; border: none;
+            width: 40px; height: 40px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; font-size: 18px;
         }
 
-        .hero-background {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url('https://images4.alphacoders.com/133/1333796.jpeg'); 
-            background-size: cover;
-            background-position: center;
-            z-index: 1;
-            filter: brightness(0.7);
-        }
+        /* HERO SECTION */
+        .hero-container { position: relative; width: 100%; height: 45vh; display: flex; align-items: center; justify-content: center; text-align: center; background-color: #000; }
+        .hero-background { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: url('https://images4.alphacoders.com/133/1333796.jpeg'); background-size: cover; background-position: center top; z-index: 1; filter: brightness(0.6); }
+        .hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, var(--bg) 95%); z-index: 2; }
+        .hero-content { position: relative; z-index: 3; padding: 20px; max-width: 1000px; }
+        .hero-logo-text { font-family: 'Georgia', serif; font-size: clamp(30px, 8vw, 60px); text-transform: uppercase; font-weight: 900; letter-spacing: 10px; margin-bottom: 5px; line-height: 1; }
+        .hero-subtext { font-size: clamp(10px, 2vw, 16px); font-weight: 300; letter-spacing: 5px; text-transform: uppercase; margin-bottom: 20px; color: #aaa; }
+        
+        .meta-tags { display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 20px; font-size: 10px; font-weight: bold; letter-spacing: 1px; }
+        .rating-badge { background-color: #f47521; color: #000; padding: 3px 10px; }
 
-        .hero-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at center, rgba(0,0,0,0) 0%, rgba(0,0,0,0.95) 85%);
-            z-index: 2;
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 3;
-            padding: 20px;
-            max-width: 1000px;
-        }
-
-        .hero-logo-text {
-            font-family: 'Georgia', serif; 
-            font-size: clamp(40px, 12vw, 90px);
-            text-transform: uppercase; 
-            font-weight: 900;
-            letter-spacing: 15px; 
-            margin-bottom: 0px; 
-            line-height: 1;
-            opacity: 0.95;
-        }
-
-        .hero-subtext {
-            font-size: clamp(12px, 3vw, 22px);
-            font-weight: 300;
-            letter-spacing: 8px;
-            text-transform: uppercase;
-            margin-bottom: 40px;
-            color: #aaa;
-        }
-
-        .meta-tags {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 20px;
-            margin-bottom: 30px;
-            font-size: 12px;
-            font-weight: bold;
-            letter-spacing: 2px;
-        }
-
-        .rating-badge {
-            background-color: #f47521;
-            color: #000;
-            padding: 4px 12px;
-        }
-
-        .action-buttons {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .btn-primary {
-            background-color: #fff;
-            color: #000;
-            border: none;
-            padding: 16px 35px;
-            font-size: 13px;
-            font-weight: 900;
-            text-transform: uppercase;
-            cursor: pointer;
-            letter-spacing: 1px;
-            transition: 0.2s;
-        }
-
+        .btn-primary { background-color: var(--btn-primary-bg); color: var(--btn-primary-text); border: none; padding: 12px 25px; font-size: 11px; font-weight: 900; text-transform: uppercase; cursor: pointer; }
         .btn-primary:hover { background-color: #f47521; color: #fff; }
 
-        .btn-secondary {
-            background-color: transparent;
-            color: #fff;
-            border: 2px solid #fff;
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .btn-secondary:hover { background-color: #fff; color: #000; }
-
-        /* =========================================
-           CARDS (ESTILO WIDE)
-           ========================================= */
-        .content-section { padding: 50px 5%; }
-
-        .section-title {
-            font-size: 20px;
-            font-weight: 800;
-            margin-bottom: 30px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: #eee;
-        }
-
-        .cards-row {
-            display: flex;
-            gap: 20px;
-            overflow-x: auto;
-            padding-bottom: 20px;
-            scrollbar-width: none;
-        }
+        /* CARDS - FORMATO 16:9 */
+        .content-section { padding: 30px 5%; }
+        .section-title { font-size: 16px; font-weight: 800; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 2px; }
+        
+        .cards-row { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 20px; scrollbar-width: none; }
         .cards-row::-webkit-scrollbar { display: none; }
 
-        .anime-card { min-width: 300px; width: 300px; }
-
-        .poster-wrapper {
-            position: relative;
-            width: 100%;
+        .anime-card { min-width: 280px; width: 280px; cursor: pointer; }
+        
+        .poster-wrapper { 
+            position: relative; 
+            width: 100%; 
             aspect-ratio: 16 / 9; 
-            margin-bottom: 15px;
-            overflow: hidden;
-            border: 1px solid #333;
+            margin-bottom: 10px; 
+            overflow: hidden; 
+            border: 1px solid var(--border); 
+            background-color: var(--card-bg); 
         }
+        
+        .poster-img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s ease; }
+        .anime-card:hover .poster-img { transform: scale(1.1); }
+        
+        .anime-title { font-size: 12px; font-weight: 700; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .anime-meta { font-size: 9px; color: var(--meta); margin-top: 4px; letter-spacing: 1px; }
 
-        .poster-img { width: 100%; height: 100%; object-fit: cover; transition: 0.4s; }
-        .anime-card:hover .poster-img { transform: scale(1.1); filter: saturate(1.2); }
+        /* FOOTER */
+        .gemini-footer { padding: 40px; text-align: center; border-top: 1px solid var(--border); opacity: 0.6; }
+        .gemini-mark { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--meta); display: flex; align-items: center; justify-content: center; gap: 10px; }
 
-        .anime-title { font-size: 16px; font-weight: 700; text-transform: uppercase; }
-        .anime-meta { font-size: 12px; color: #666; margin-top: 5px; letter-spacing: 1px; }
-
-        /* =========================================
-           GEMINI BRANDING
-           ========================================= */
-        .gemini-footer {
-            padding: 40px;
-            text-align: center;
-            background: linear-gradient(to bottom, transparent, #000);
-            border-top: 1px solid #222;
-        }
-
-        .gemini-mark {
-            font-size: 11px;
-            letter-spacing: 5px;
-            text-transform: uppercase;
-            color: #444;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .gemini-mark i { color: #f47521; font-size: 8px; }
-
-        /* =========================================
-           RESPONSIVIDADE MOBILE (3 CARDS)
-           ========================================= */
         @media (max-width: 768px) {
-            .hero-container { height: 75vh; }
-            .hero-logo-text { letter-spacing: 8px; }
-            
-            .content-section { 
-                padding: 30px 15px; /* Margem lateral menor no mobile */
-            }
-
-            .cards-row {
-                gap: 10px; /* Gap reduzido para caber mais itens */
-            }
-
-            .anime-card { 
-                /* Cálculo para 3 cards: (100% / 3) - o gap proporcional */
-                min-width: calc((100% / 3) - 7px); 
-                width: calc((100% / 3) - 7px); 
-            }
-
-            .anime-title { 
-                font-size: 10px; /* Texto menor para não quebrar */
-                letter-spacing: 0;
-            }
-
-            .anime-meta { font-size: 8px; }
-
-            .section-title {
-                font-size: 16px;
-                margin-bottom: 20px;
-            }
+            .hero-container { height: 35vh; }
+            .content-section { padding: 20px 15px; }
+            .anime-card { min-width: 220px; width: 220px; }
+            .section-title { font-size: 14px; }
         }
     </style>
 </head>
-<body>
+<body data-theme="dark">
+
+    <button class="theme-toggle" onclick="toggleTheme()">
+        <i class="fas fa-adjust"></i>
+    </button>
 
     <div class="hero-container">
         <div class="hero-background"></div>
         <div class="hero-overlay"></div>
-
         <div class="hero-content">
             <div class="hero-logo-text">FRIEREN</div>
             <div class="hero-subtext">Beyond Journey's End</div>
-
             <div class="meta-tags">
                 <span class="rating-badge">A14</span>
                 <span>LEGENDADO</span>
                 <span>•</span>
                 <span>DUBLADO</span>
             </div>
-
             <div class="action-buttons">
-                <button class="btn-primary">ASSISTIR</button>
-                <button class="btn-secondary"><i class="fas fa-plus"></i></button>
-                <button class="btn-secondary"><i class="fas fa-share-alt"></i></button>
+                <button class="btn-primary">ASSISTIR AGORA</button>
             </div>
         </div>
     </div>
 
-    <section class="content-section">
-        <h2 class="section-title">Em Alta Agora</h2>
-        <div class="cards-row">
-            <div class="anime-card">
-                <div class="poster-wrapper">
-                    <img src="https://image.tmdb.org/t/p/w500/phuYuzqWW9ru8oa3mPfKoQV7htB.jpg" class="poster-img">
-                </div>
-                <div class="anime-title">My Hero Academia</div>
-                <div class="anime-meta">Série • Dublado</div>
-            </div>
-            <div class="anime-card">
-                <div class="poster-wrapper">
-                    <img src="https://image.tmdb.org/t/p/w500/cMD9Ygz11VJmK195pWr35WDtthE.jpg" class="poster-img">
-                </div>
-                <div class="anime-title">One Piece</div>
-                <div class="anime-meta">Série • Legendado</div>
-            </div>
-            <div class="anime-card">
-                <div class="poster-wrapper">
-                    <img src="https://image.tmdb.org/t/p/w500/ffvf4axfxWB6j55q8B3PjF9N0p2.jpg" class="poster-img">
-                </div>
-                <div class="anime-title">Jujutsu Kaisen</div>
-                <div class="anime-meta">Série • Legendado</div>
-            </div>
-            <div class="anime-card">
-                <div class="poster-wrapper">
-                    <img src="https://image.tmdb.org/t/p/w500/hTP1DtLGFamjfu8WqjnuQdP1n4i.jpg" class="poster-img">
-                </div>
-                <div class="anime-title">Attack on Titan</div>
-                <div class="anime-meta">Série • Dublado</div>
-            </div>
-        </div>
-    </section>
+    <div id="dynamic-sections"></div>
 
     <footer class="gemini-footer">
         <div class="gemini-mark">
-            <i class="fas fa-circle"></i>
-            Designed by Gemini AI
-            <i class="fas fa-circle"></i>
+            <i class="fas fa-circle"></i> AniGeek Global Network <i class="fas fa-circle"></i>
         </div>
     </footer>
 
+    <script>
+        function toggleTheme() {
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            body.setAttribute('data-theme', currentTheme === 'dark' ? 'light' : 'dark');
+        }
+    </script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, getDocs, limit, query } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBC_ad4X9OwCHKvcG_pNQkKEl76Zw2tu6o",
+            authDomain: "anigeeknews.firebaseapp.com",
+            projectId: "anigeeknews",
+            storageBucket: "anigeeknews.firebasestorage.app",
+            messagingSenderId: "769322939926",
+            appId: "1:769322939926:web:6eb91a96a3f74670882737"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const configSessoes = [
+            { titulo: "Recomendados", sub: "chainsaw_man", qtd: 10 },
+            { titulo: "Em Alta Agora", sub: "fire_force", qtd: 6 },
+            { titulo: "Novos Episódios", sub: "Jujutsu_kaisen_shimetsu_kaiyu", qtd: 6 },
+            { titulo: "Clássicos AniGeek", sub: "naruto", qtd: 8 },
+            { titulo: "Melhores da Temporada", sub: "jujutsu_kaisen", qtd: 5 }
+        ];
+
+        async function carregarConteudo() {
+            const mainContainer = document.getElementById('dynamic-sections');
+            mainContainer.innerHTML = "";
+
+            for (const conf of configSessoes) {
+                const section = document.createElement('section');
+                section.className = 'content-section';
+                section.innerHTML = `
+                    <h2 class="section-title">${conf.titulo}</h2>
+                    <div class="cards-row" id="row-${conf.sub}">
+                        <p style="font-size:11px; opacity:0.5">Carregando...</p>
+                    </div>
+                `;
+                mainContainer.appendChild(section);
+
+                try {
+                    const colRef = collection(db, "anigeeknews.web.app", "animes_filmes_series_games_noticias", conf.sub);
+                    const q = query(colRef, limit(conf.qtd));
+                    const snap = await getDocs(q);
+                    
+                    const row = document.getElementById(`row-${conf.sub}`);
+                    row.innerHTML = "";
+
+                    snap.forEach(doc => {
+                        const data = doc.data();
+                        
+                        // VARIÁVEIS DO BANCO DE DADOS
+                        const cardTitulo = data.titulo || doc.id.replace(/_/g, ' ');
+                        const cardCat = data.categoria || "Série";
+                        const cardImg = data.capaNoticia || "https://via.placeholder.com/640x360?text=AniGeek+TV";
+                        
+                        // CONFIGURAÇÃO DO LINK (Captura linkArtigo do documento)
+                        const linkDestino = data.linkArtigo || `index.html?id=${doc.id}`;
+
+                        row.innerHTML += `
+                            <div class="anime-card" onclick="location.href='${linkDestino}'">
+                                <div class="poster-wrapper">
+                                    <img src="${cardImg}" class="poster-img" loading="lazy">
+                                </div>
+                                <div class="anime-title">${cardTitulo}</div>
+                                <div class="anime-meta">${cardCat} • ${doc.id.substring(0,5)}</div>
+                            </div>
+                        `;
+                    });
+
+                    if(snap.empty) row.innerHTML = "<p style='font-size:11px; opacity:0.5'>Nenhum conteúdo.</p>";
+
+                } catch (e) { console.error("Erro ao carregar:", e); }
+            }
+        }
+
+        carregarConteudo();
+    </script>
 </body>
 </html>
