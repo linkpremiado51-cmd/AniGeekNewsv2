@@ -1,108 +1,313 @@
-<div class="mega-menu-overlay" id="megaOverlay">
-    <button class="close-mega" id="btnFecharMega" type="button">×</button>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AniGeek TV - 16:9 Light</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg: #f5f5f5;
+            --text: #1a1a1a;
+            --card-bg: #ffffff;
+            --meta: #888888;
+            --border: #dddddd;
+            --btn-primary-bg: #1a1a1a;
+            --btn-primary-text: #ffffff;
+            --accent: #f47521;
+        }
 
-    <!-- ===============================
-         🔥 ÁREA DO USUÁRIO
-    ================================ -->
-    <div class="mega-user-area">
-        <div class="user-cover" id="userCover"></div>
+        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
+        body { 
+            font-family: 'Inter', 'Lato', sans-serif; 
+            background-color: var(--bg); 
+            color: var(--text); 
+            overflow-x: hidden; 
+        }
 
-        <!-- ===============================
-             🔓 NÃO LOGADO
-        ================================ -->
-        <div
-            class="user-auth user-logged-out"
-            data-auth="logged-out"
-            id="menuUserLoggedOut"
-        >
-            <p class="user-msg">Entre ou crie sua conta</p>
+        .hero-container {
+            position: relative;
+            width: 100%;
+            height: 45vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background-color: #000;
+        }
+        .hero-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://images4.alphacoders.com/133/1333796.jpeg');
+            background-size: cover;
+            background-position: center top;
+            z-index: 1;
+            filter: brightness(0.6);
+        }
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, var(--bg) 95%);
+            z-index: 2;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 3;
+            padding: 20px;
+            max-width: 1000px;
+        }
+        .hero-logo-text {
+            font-family: 'Georgia', serif;
+            font-size: clamp(30px, 8vw, 60px);
+            text-transform: uppercase;
+            font-weight: 900;
+            letter-spacing: 10px;
+            margin-bottom: 5px;
+            line-height: 1;
+            color: #fff;
+        }
+        .hero-subtext {
+            font-size: clamp(10px, 2vw, 16px);
+            font-weight: 300;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            color: #ccc;
+        }
+        
+        .meta-tags {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            font-size: 10px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            color: #fff;
+        }
+        .rating-badge {
+            background-color: var(--accent);
+            color: #000;
+            padding: 3px 10px;
+            border-radius: 3px;
+        }
 
-            <div class="user-actions">
-                <a
-                    href="javascript:void(0)"
-                    class="btn-login"
-                    id="btnAbrirLogin"
-                    role="button"
-                >
-                    Entrar
-                </a>
+        .btn-primary {
+            background-color: var(--btn-primary-bg);
+            color: var(--btn-primary-text);
+            border: none;
+            padding: 12px 25px;
+            font-size: 11px;
+            font-weight: 900;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn-primary:hover {
+            background-color: var(--accent);
+            color: #fff;
+        }
 
-                <a
-                    href="javascript:void(0)"
-                    class="btn-signup"
-                    id="btnAbrirCadastro"
-                    role="button"
-                >
-                    Criar conta
-                </a>
+        .content-section {
+            padding: 30px 5%;
+        }
+        .section-title {
+            font-size: 16px;
+            font-weight: 800;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text);
+        }
+        
+        .cards-row {
+            display: flex;
+            gap: 15px;
+            overflow-x: auto;
+            padding-bottom: 20px;
+            scrollbar-width: none;
+        }
+        .cards-row::-webkit-scrollbar { display: none; }
+
+        .anime-card {
+            min-width: 280px;
+            width: 280px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        
+        .poster-wrapper { 
+            position: relative; 
+            width: 100%; 
+            aspect-ratio: 16 / 9; 
+            margin-bottom: 10px; 
+            overflow: hidden; 
+            border: 1px solid var(--border); 
+            background-color: var(--card-bg); 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border-radius: 8px;
+        }
+        
+        .poster-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: 0.5s ease;
+        }
+        .anime-card:hover .poster-img {
+            transform: scale(1.08);
+        }
+        
+        .anime-title {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: var(--text);
+            margin-top: 8px;
+        }
+        .anime-meta {
+            font-size: 9px;
+            color: var(--meta);
+            margin-top: 4px;
+            letter-spacing: 1px;
+        }
+
+        .gemini-footer {
+            padding: 40px;
+            text-align: center;
+            border-top: 1px solid var(--border);
+            background: #fff;
+            margin-top: 40px;
+        }
+        .gemini-mark {
+            font-size: 10px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--meta);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .hero-container { height: 35vh; }
+            .content-section { padding: 20px 15px; }
+            .anime-card { min-width: 220px; width: 220px; }
+            .section-title { font-size: 14px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="hero-container">
+        <div class="hero-background"></div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <div class="hero-logo-text">FRIEREN</div>
+            <div class="hero-subtext">Beyond Journey's End</div>
+            <div class="meta-tags">
+                <span class="rating-badge">A14</span>
+                <span>LEGENDADO</span>
+                <span>•</span>
+                <span>DUBLADO</span>
             </div>
-        </div>
-
-        <!-- ===============================
-             🔐 LOGADO
-        ================================ -->
-        <div
-            class="user-auth user-logged-in"
-            data-auth="logged-in"
-            id="menuUserLoggedIn"
-            style="display: none;"
-        >
-            <p class="user-welcome">
-                Bem-vindo,
-                <strong id="userName">Usuário</strong>
-            </p>
-
-            <button
-                class="btn-logout"
-                id="btnLogoutMenu"
-                title="Sair"
-                type="button"
-            >
-                Sair
-            </button>
+            <button class="btn-primary">ASSISTIR AGORA</button>
         </div>
     </div>
 
-    <!-- ===============================
-         🔥 CONTEÚDO DO MEGA MENU
-    ================================ -->
-    <div class="mega-menu-content">
-        <div class="menu-col">
-            <h3>Seções</h3>
-            <ul>
-                <li><a href="#" data-secao="manchetes">Animes</a></li>
-                <li><a href="#" data-secao="tecnologia">Tecnologia</a></li>
-                <li><a href="#" data-secao="smartphones">Smartphones</a></li>
-                <li><a href="#" data-secao="lancamentos">Lançamentos</a></li>
-                <li><a href="#" data-secao="podcast">Podcast</a></li>
-            </ul>
-        </div>
+    <div id="dynamic-sections"></div>
 
-        <div class="menu-col">
-            <h3>Mundo Geek</h3>
-            <ul>
-                <li><a href="#" data-secao="eventos">Eventos</a></li>
-                <li><a href="#" data-secao="cosplay">Cosplay</a></li>
-                <li><a href="#" data-secao="quadrinhos">Quadrinhos</a></li>
-                <li><a href="#" data-secao="cultura-pop">Cultura Pop</a></li>
-            </ul>
+    <footer class="gemini-footer">
+        <div class="gemini-mark">
+            <i class="fas fa-circle"></i> AniGeek Global Network <i class="fas fa-circle"></i>
         </div>
+    </footer>
 
-        <div class="menu-col">
-            <h3>Podcasts</h3>
-            <div class="menu-highlight">
-                <h4>O Diário AniGeek</h4>
-                <p>As maiores notícias geek do dia.</p>
-            </div>
-        </div>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, getDocs, limit, query } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        <div class="menu-col">
-            <h3>Boletins</h3>
-            <div class="promo-box">
-                <h4>A Manhã</h4>
-                <p>Resumo diário da cultura pop.</p>
-                <button type="button">INSCREVER-SE</button>
-            </div>
-        </div>
-    </div>
-</div>
+        const firebaseConfig = {
+            apiKey: "AIzaSyBC_ad4X9OwCHKvcG_pNQkKEl76Zw2tu6o",
+            authDomain: "anigeeknews.firebaseapp.com",
+            projectId: "anigeeknews",
+            storageBucket: "anigeeknews.firebasestorage.app",
+            messagingSenderId: "769322939926",
+            appId: "1:769322939926:web:6eb91a96a3f74670882737"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const configSessoes = [
+            { titulo: "Recomendados", sub: "chainsaw_man", qtd: 10 },
+            { titulo: "Em Alta Agora", sub: "fire_force", qtd: 6 },
+            { titulo: "Novos Episódios", sub: "Jujutsu_kaisen_shimetsu_kaiyu", qtd: 6 },
+            { titulo: "Clássicos AniGeek", sub: "naruto", qtd: 8 },
+            { titulo: "Melhores da Temporada", sub: "jujutsu_kaisen", qtd: 5 }
+        ];
+
+        async function carregarConteudo() {
+            const mainContainer = document.getElementById('dynamic-sections');
+            mainContainer.innerHTML = "";
+
+            for (const conf of configSessoes) {
+                const section = document.createElement('section');
+                section.className = 'content-section';
+                section.innerHTML = `
+                    <h2 class="section-title">${conf.titulo}</h2>
+                    <div class="cards-row" id="row-${conf.sub}">
+                        <p style="font-size:11px; opacity:0.5; color: #888;">Carregando...</p>
+                    </div>
+                `;
+                mainContainer.appendChild(section);
+
+                try {
+                    const colRef = collection(db, "anigeeknews.web.app", "animes_filmes_series_games_noticias", conf.sub);
+                    const q = query(colRef, limit(conf.qtd));
+                    const snap = await getDocs(q);
+                    
+                    const row = document.getElementById(`row-${conf.sub}`);
+                    row.innerHTML = "";
+
+                    snap.forEach(doc => {
+                        const data = doc.data();
+                        const cardTitulo = data.titulo || doc.id.replace(/_/g, ' ');
+                        const cardCat = data.categoria || "Série";
+                        const cardImg = data.capaNoticia || "https://via.placeholder.com/640x360?text=AniGeek+TV";
+                        const linkDestino = data.linkArtigo || `index.html?id=${doc.id}`;
+
+                        row.innerHTML += `
+                            <div class="anime-card" onclick="location.href='${linkDestino}'">
+                                <div class="poster-wrapper">
+                                    <img src="${cardImg}" class="poster-img" loading="lazy" alt="${cardTitulo}">
+                                </div>
+                                <div class="anime-title">${cardTitulo}</div>
+                                <div class="anime-meta">${cardCat} • ${doc.id.substring(0,5)}</div>
+                            </div>
+                        `;
+                    });
+
+                    if(snap.empty) row.innerHTML = "<p style='font-size:11px; opacity:0.5'>Nenhum conteúdo disponível.</p>";
+
+                } catch (e) { 
+                    console.error("Erro na busca:", e);
+                    document.getElementById(`row-${conf.sub}`).innerHTML = "<p style='color:red; font-size:11px'>Erro ao carregar conteúdo</p>";
+                }
+            }
+        }
+
+        carregarConteudo();
+    </script>
+</body>
+</html>
