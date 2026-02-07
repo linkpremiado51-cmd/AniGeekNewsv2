@@ -6,6 +6,8 @@
    • Design Harmônico
    • URLs Compartilháveis por Aba
    • Deep Linking: Abre aba correta ao receber ID de notícia
+   • Anime I Geek fixada como primeira aba (não removível)
+   • Scroll automático para abas selecionadas
 ====================================================== */
 
 (function(){
@@ -16,7 +18,8 @@ const CONFIG = {
     ORDER: 'ag_v7_order',
     MODE:  'ag_v7_mode', // 'dynamic' ou 'fixed'
     STATS: 'ag_v7_stats'
-  }
+  },
+  FIXED_TAB: 'anime_i_geek' // Aba fixa que não pode ser removida
 };
 
 /* ===========================
@@ -162,7 +165,7 @@ const styles = `
     position: relative;
     width: 100%;
     height: 120px;
-    background-image: url('https://i.postimg.cc/HWM72wfT/the-pensive-journey-by-chcofficial-dhme17e-pre.jpg');
+    background-image: url('https://i.postimg.cc/HWM72wfT/the-pensive-journey-by-chcofficial-dhme17e-pre.jpg  ');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -689,8 +692,20 @@ function setMode(m){ save(CONFIG.KEYS.MODE, m); renderDrawer(); }
 function getOrder(){
   const saved = load(CONFIG.KEYS.ORDER, null);
   if(saved) return saved;
-  // Padrão inicial com alguns IDs
-  return ['anime_i_geek', 'saihate_no_paladin', 'Jujutsu_kaisen_shimetsu_kaiyu'];
+  // Padrão inicial com Anime I Geek fixada como primeira
+  return [CONFIG.FIXED_TAB, 'saihate_no_paladin', 'Jujutsu_kaisen_shimetsu_kaiyu'];
+}
+
+// Função para garantir que a aba fixa esteja sempre na primeira posição
+function ensureFixedTab(order) {
+  if (!order.includes(CONFIG.FIXED_TAB)) {
+    order.unshift(CONFIG.FIXED_TAB);
+  } else {
+    // Remove e re-adiciona na primeira posição
+    order = order.filter(id => id !== CONFIG.FIXED_TAB);
+    order.unshift(CONFIG.FIXED_TAB);
+  }
+  return order;
 }
 
 // Encontra ITEM ou CATEGORIA PAI pelo ID
@@ -730,7 +745,7 @@ function renderBar(){
     bar.parentNode.insertBefore(drawer, bar.nextSibling);
   }
 
-  const order = getOrder();
+  const order = ensureFixedTab(getOrder());
   bar.innerHTML = '';
 
   order.forEach(id => {
@@ -754,6 +769,11 @@ function renderBar(){
 
       if(window.carregarSecao) window.carregarSecao(id);
       else console.log("Carregando:", id);
+      
+      // Scroll automático para garantir que a aba fique visível
+      setTimeout(() => {
+        ensureTabVisible(btn);
+      }, 50);
     };
     bar.appendChild(btn);
   });
@@ -763,6 +783,27 @@ function renderBar(){
   cfg.innerHTML = '⚙';
   cfg.onclick = toggleDrawer;
   bar.appendChild(cfg);
+}
+
+// Função para garantir que uma aba fique visível na barra de rolagem
+function ensureTabVisible(tabElement) {
+  const scroller = document.getElementById('filterScroller');
+  if (!scroller || !tabElement) return;
+
+  const tabRect = tabElement.getBoundingClientRect();
+  const scrollerRect = scroller.getBoundingClientRect();
+
+  // Verifica se a aba está fora da área visível
+  if (tabRect.left < scrollerRect.left || tabRect.right > scrollerRect.right) {
+    // Calcula a posição de scroll para centralizar a aba
+    const tabCenter = tabElement.offsetLeft + tabElement.offsetWidth / 2;
+    const scrollerCenter = scroller.offsetWidth / 2;
+    
+    scroller.scrollTo({
+      left: tabCenter - scrollerCenter,
+      behavior: 'smooth'
+    });
+  }
 }
 
 /* ===========================
@@ -782,14 +823,14 @@ function toggleDrawer(){
 
 function renderDrawer(filterText = ""){
   const drawer = document.getElementById('ag-drawer');
-  const currentOrder = getOrder();
+  let order = ensureFixedTab(getOrder());
   const currentMode = getMode();
 
   const searchIcon = `<svg class="ag-search-icon-svg" viewBox="0 0 24 24"><path d="M21.71 20.29l-5.01-5.01C17.54 13.68 18 11.91 18 10c0-4.41-3.59-8-8-8S2 5.59 2 10s3.59 8 8 8c1.91 0 3.68-.46 5.28-1.3l5.01 5.01c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41z"/></svg>`;
 
   let html = `
     <div class="ag-drawer-cover"></div>
-    <img src="https://i.postimg.cc/W49RX3dK/anime-boy-render-04-by-luxio56lavi-d5xed2a.png" class="ag-char-fixed" alt="Anime Character">
+    <img src="https://i.postimg.cc/W49RX3dK/anime-boy-render-04-by-luxio56lavi-d5xed2a.png  " class="ag-char-fixed" alt="Anime Character">
     <div class="ag-drawer-scroll">
       <div class="ag-drawer-header">
         <div class="ag-search-wrapper">
@@ -806,7 +847,7 @@ function renderDrawer(filterText = ""){
       <div id="ag-catalog-container"></div>
 
       <div style="text-align:center; padding-top:20px; font-size:12px; color:#888;">
-        ${currentOrder.length} de ${CONFIG.MAX_TABS} abas ativas
+        ${order.length} de ${CONFIG.MAX_TABS} abas ativas
       </div>
     </div>
   `;
@@ -826,7 +867,7 @@ function renderDrawer(filterText = ""){
     const sectionDiv = document.createElement('div');
     sectionDiv.className = 'ag-section-block';
 
-    const isCatSelected = currentOrder.includes(sec.id);
+    const isCatSelected = order.includes(sec.id);
     let catIcon = '';
     if(isCatSelected) {
        catIcon = currentMode === 'dynamic' ? ' <span style="font-size:10px; opacity:0.6; margin-left:5px">✕</span>' : ' <span style="font-size:10px; opacity:0.6; margin-left:5px">•••</span>';
@@ -852,7 +893,7 @@ function renderDrawer(filterText = ""){
     const grid = sectionDiv.querySelector('.ag-grid-container');
 
     itensParaMostrar.forEach(item => {
-      const isSelected = currentOrder.includes(item.id);
+      const isSelected = order.includes(item.id);
 
       const card = document.createElement('div');
       card.className = `ag-card ${isSelected ? 'is-selected' : ''}`;
@@ -923,7 +964,13 @@ function filterDrawer(term) {
    AÇÕES & NOTIFICAÇÕES
 =========================== */
 function toggleItem(id, label){
-  let order = getOrder();
+  // Não permite remover a aba fixa
+  if (id === CONFIG.FIXED_TAB) {
+    showToast('Esta aba é fixa e não pode ser removida!', 'error');
+    return;
+  }
+
+  let order = ensureFixedTab(getOrder());
 
   if(order.includes(id)){
     order = order.filter(x => x !== id);
@@ -950,8 +997,14 @@ function toggleItem(id, label){
 }
 
 function handleAction(id, label){
+  // Não permite remover a aba fixa
+  if (id === CONFIG.FIXED_TAB) {
+    showToast('Esta aba é fixa e não pode ser removida!', 'error');
+    return;
+  }
+
   const mode = getMode();
-  let order = getOrder();
+  let order = ensureFixedTab(getOrder());
 
   if(mode === 'dynamic') {
     order = order.filter(x => x !== id);
@@ -990,12 +1043,12 @@ function ensureTabExists(id){
   const exists = CATALOGO.some(sec => sec.id === id || sec.itens.some(i => i.id === id));
   if (!exists) return false;
 
-  let order = getOrder();
+  let order = ensureFixedTab(getOrder());
   if (!order.includes(id)) {
     if (order.length >= CONFIG.MAX_TABS) {
       order.pop();
     }
-    order.unshift(id);
+    order.push(id);
     save(CONFIG.KEYS.ORDER, order);
   }
   return true;
