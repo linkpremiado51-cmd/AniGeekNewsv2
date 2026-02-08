@@ -30,18 +30,20 @@
 
     for (const conf of configSessoes) {
       try {
+        // ✅ CAMINHO CORRETO DO FIRESTORE
         const colRef = collection(
           db,
-          "anigeeknews.web.app/animes_filmes_series_games_noticias/" + conf.sub
+          "animes_filmes_series_games_noticias",
+          conf.sub
         );
 
         const q = query(colRef, limit(conf.qtd));
         const snap = await getDocs(q);
 
-        // 🔥 SE NÃO TEM NADA → NÃO CRIA A SEÇÃO
+        // ❌ se não tem docs → não cria seção nenhuma
         if (snap.empty) continue;
 
-        // ✅ SÓ CRIA A SEÇÃO SE EXISTIR CONTEÚDO
+        // ✅ cria seção SOMENTE se houver conteúdo
         const section = document.createElement("section");
         section.className = "content-section";
 
@@ -59,7 +61,7 @@
         snap.forEach(doc => {
           const data = doc.data();
 
-          const cardTitulo = data.titulo || "";
+          const cardTitulo = data.titulo || doc.id.replace(/_/g, " ");
           const cardCat = data.categoria || "Série";
 
           const cardImg =
@@ -83,7 +85,7 @@
         });
 
       } catch (e) {
-        console.error("Erro na sessão:", conf.sub, e);
+        console.error("Erro ao carregar sessão:", conf.sub, e);
       }
     }
   }
