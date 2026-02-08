@@ -10,7 +10,7 @@
     --accent: #f47521;
 }
 
-/* Variáveis para Modo Escuro (Detecta automaticamente a classe no body) */
+/* Variáveis para Modo Escuro */
 body.dark-mode, 
 body.dark,
 [data-theme="dark"] {
@@ -26,7 +26,6 @@ body.dark,
 /* Reset e Base */
 * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
 
-/* O body agora transiciona as cores suavemente */
 body { 
     font-family: 'Inter', 'Lato', sans-serif; 
     background-color: var(--bg); 
@@ -66,7 +65,6 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    /* O gradiente agora termina na cor variável --bg para não ofuscar */
     background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, var(--bg) 98%);
     z-index: 2;
 }
@@ -86,7 +84,7 @@ body {
     letter-spacing: 10px;
     margin-bottom: 5px;
     line-height: 1;
-    color: #fff; /* Fixo branco para contraste com a imagem escura */
+    color: #fff;
 }
 
 .hero-subtext {
@@ -135,7 +133,7 @@ body {
     color: #fff;
 }
 
-/* Seções de Conteúdo */
+/* --- SEÇÕES DE CONTEÚDO (EDITADO PARA GRID DE 3) --- */
 .content-section {
     padding: 30px 5%;
 }
@@ -143,26 +141,23 @@ body {
 .section-title {
     font-size: 16px;
     font-weight: 800;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
     text-transform: uppercase;
     letter-spacing: 2px;
-    color: var(--text); /* Cor variável corrige o ofuscamento */
+    color: var(--text);
 }
 
 .cards-row {
-    display: flex;
+    display: grid;
+    /* Divide em exatamente 3 colunas iguais */
+    grid-template-columns: repeat(3, 1fr); 
     gap: 15px;
-    overflow-x: auto;
     padding-bottom: 20px;
-    scrollbar-width: none;
 }
 
-.cards-row::-webkit-scrollbar { display: none; }
-
-/* Anime Cards */
+/* --- ANIME CARDS (EDITADO PARA TAMANHO POSTER) --- */
 .anime-card {
-    min-width: 280px;
-    width: 280px;
+    width: 100%; /* Ocupa a largura da coluna do grid */
     cursor: pointer;
     transition: transform 0.3s;
 }
@@ -170,20 +165,25 @@ body {
 .poster-wrapper { 
     position: relative; 
     width: 100%; 
-    aspect-ratio: 16 / 9; 
+    /* Proporção 2:3 (Vertical estilo Streaming) */
+    aspect-ratio: 2 / 3; 
     margin-bottom: 10px; 
     overflow: hidden; 
     border: 1px solid var(--border); 
     background-color: var(--card-bg); 
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     border-radius: 8px;
 }
 
 .poster-img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: cover; /* Garante que a imagem preencha sem distorcer */
     transition: 0.5s ease;
+}
+
+.anime-card:hover {
+    transform: translateY(-5px);
 }
 
 .anime-card:hover .poster-img {
@@ -197,7 +197,7 @@ body {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    color: var(--text); /* CORRIGIDO: Usa var(--text) para mudar no modo escuro */
+    color: var(--text);
     margin-top: 8px;
 }
 
@@ -213,7 +213,7 @@ body {
     padding: 40px;
     text-align: center;
     border-top: 1px solid var(--border);
-    background: var(--card-bg); /* CORRIGIDO: Agora acompanha o tema */
+    background: var(--card-bg);
     margin-top: 40px;
 }
 
@@ -228,10 +228,16 @@ body {
     gap: 10px;
 }
 
-/* Responsividade */
+/* Responsividade Aprimorada */
 @media (max-width: 768px) {
     .hero-container { height: 35vh; }
     .content-section { padding: 20px 15px; }
-    .anime-card { min-width: 220px; width: 220px; }
+    /* No celular, 2 cards por linha fica mais visível, mas se quiser 3, mude para repeat(3, 1fr) */
+    .cards-row { grid-template-columns: repeat(2, 1fr); gap: 10px; }
     .section-title { font-size: 14px; }
+}
+
+@media (max-width: 480px) {
+    /* Para telas muito pequenas, mantemos 2 para não espremer o conteúdo */
+    .cards-row { grid-template-columns: repeat(2, 1fr); }
 }
