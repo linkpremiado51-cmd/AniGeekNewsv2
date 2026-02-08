@@ -97,15 +97,16 @@
                     `;
         });
         
-        if (snap.empty) row.innerHTML = "<p style='font-size:11px; opacity:0.5'>Nenhum conteúdo disponível.</p>";
-        
-      } catch (e) {
-        console.error("Erro na busca:", e);
-        const row = document.getElementById(`row-${conf.sub}`);
-        if (row) row.innerHTML = "<p style='color:red; font-size:11px'>Erro ao carregar do Firebase.</p>";
-      }
-    }
-  }
+        if (snap.empty) {
+  row.innerHTML = "";
+  return;
+}
+
+} catch (e) {
+  console.error("Erro na busca:", e);
+  const row = document.getElementById(`row-${conf.sub}`);
+  if (row) row.innerHTML = "<p style='color:red; font-size:11px'>Erro ao carregar do Firebase.</p>";
+}
   
   carregarConteudo();
 </script>
