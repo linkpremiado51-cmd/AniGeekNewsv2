@@ -1,6 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AniGeek TV</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-color: #0b0b0b;
+            --primary-color: #ffcc00; /* Cor de destaque */
+            --text-color: #ffffff;
+            --gap: 8px;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* --- HERO SECTION --- */
+        .hero-container {
+            position: relative;
+            height: 60vh;
+            display: flex;
+            align-items: flex-end;
+            padding: 20px;
+            background: linear-gradient(to top, var(--bg-color), transparent), url('https://via.placeholder.com/1280x720?text=Hero+Banner');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .hero-content { z-index: 2; width: 100%; }
+        .hero-logo-text { font-size: 24px; font-weight: bold; }
+        .hero-subtext { font-size: 14px; opacity: 0.8; margin-bottom: 10px; }
+        .meta-tags { font-size: 12px; margin-bottom: 15px; }
+        .rating-badge { background: #333; padding: 2px 6px; border-radius: 4px; margin-right: 5px; }
+        .btn-primary { 
+            background: var(--primary-color); border: none; padding: 10px 20px; 
+            font-weight: bold; border-radius: 4px; cursor: pointer;
+        }
+
+        /* --- GRID DE CARDS (O CORAÇÃO DO LAYOUT) --- */
+        .content-section { padding: 20px 10px; }
+        .section-title { font-size: 18px; margin-bottom: 15px; padding-left: 5px; border-left: 4px solid var(--primary-color); }
+
+        .cards-row {
+            display: grid;
+            /* Força 3 colunas no Mobile (Mi 9) */
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--gap);
+        }
+
+        .anime-card {
+            width: 100%;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .anime-card:active { transform: scale(0.95); }
+
+        .poster-wrapper {
+            width: 100%;
+            /* Proporção 2:3 estilo poster de cinema/anime */
+            aspect-ratio: 2 / 3;
+            border-radius: 6px;
+            overflow: hidden;
+            background: #1a1a1a;
+        }
+
+        .poster-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .anime-title {
+            font-size: 11px;
+            font-weight: 500;
+            margin-top: 6px;
+            color: #efefef;
+            line-height: 1.2;
+            height: 2.4em; /* Reserva espaço para 2 linhas */
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+
+        .anime-meta {
+            font-size: 10px;
+            opacity: 0.6;
+            margin-top: 2px;
+            text-transform: uppercase;
+        }
+
+        /* --- RESPONSIVIDADE (TABLET E DESKTOP) --- */
+        @media (min-width: 600px) {
+            .cards-row { grid-template-columns: repeat(4, 1fr); gap: 12px; }
+            .section-title { font-size: 22px; }
+        }
+
+        @media (min-width: 1024px) {
+            .cards-row { grid-template-columns: repeat(6, 1fr); gap: 15px; }
+            .anime-title { font-size: 13px; }
+        }
+
+        /* --- FOOTER --- */
+        .gemini-footer { padding: 40px 20px; text-align: center; opacity: 0.5; font-size: 12px; }
+        .gemini-mark i { font-size: 8px; vertical-align: middle; margin: 0 5px; }
+    </style>
+</head>
+<body>
+
 <div class="hero-container">
-  <div class="hero-background"></div>
-  <div class="hero-overlay"></div>
   <div class="hero-content">
     <div class="hero-logo-text">ANIME I GEEK TV</div>
     <div class="hero-subtext">streaming de animes filmes e series</div>
@@ -39,11 +156,11 @@
   const db = getFirestore(app);
   
   const configSessoes = [
-    { titulo: "Recomendações AnigeekTv", sub: "chainsaw_man", qtd: 10 },
+    { titulo: "Recomendações AnigeekTv", sub: "chainsaw_man", qtd: 9 }, // Ajustado para múltiplo de 3
     { titulo: "Em Alta Agora", sub: "fire_force", qtd: 6 },
     { titulo: "Novos Episódios", sub: "jujutsu_kaisen", qtd: 6 },
-    { titulo: "Clássicos AniGeek", sub: "naruto", qtd: 8 },
-    { titulo: "Melhores da Temporada", sub: "jujutsu_kaisen", qtd: 5 }
+    { titulo: "Clássicos AniGeek", sub: "naruto", qtd: 9 },
+    { titulo: "Melhores da Temporada", sub: "jujutsu_kaisen", qtd: 6 }
   ];
   
   async function carregarConteudo() {
@@ -57,7 +174,7 @@
       section.innerHTML = `
                 <h2 class="section-title">${conf.titulo}</h2>
                 <div class="cards-row" id="row-${conf.sub}">
-                    <p style="font-size:11px; opacity:0.5; color: #888;">Carregando...</p>
+                    <p style="font-size:11px; opacity:0.3; color: #fff; grid-column: span 3; text-align: center;">Carregando...</p>
                 </div>
             `;
       mainContainer.appendChild(section);
@@ -76,13 +193,9 @@
           const cardTitulo = data.titulo || doc.id.replace(/_/g, ' ');
           const cardCat = data.categoria || "Série";
           
-          // --- EDIÇÃO REALIZADA AQUI ---
-          // Ele tenta pegar o perfilImg dentro de fichaCategoria. 
-          // Se não existir, ele usa o perfilImg solto (se houver) ou a capaNoticia/capaUrl.
           const cardImg = (data.fichaCategoria && data.fichaCategoria.perfilImg) 
                           ? data.fichaCategoria.perfilImg 
-                          : (data.perfilImg || data.capaNoticia || data.capaUrl || "https://via.placeholder.com/640x360?text=AniGeek+TV");
-          // -----------------------------
+                          : (data.perfilImg || data.capaNoticia || data.capaUrl || "https://via.placeholder.com/400x600?text=AniGeek+TV");
 
           const linkDestino = data.linkArtigo || `index.html?id=${doc.id}`;
           
@@ -92,20 +205,23 @@
                                 <img src="${cardImg.trim()}" class="poster-img" loading="lazy" alt="${cardTitulo}">
                             </div>
                             <div class="anime-title">${cardTitulo}</div>
-                            <div class="anime-meta">${cardCat} • ${doc.id.substring(0,5)}</div>
+                            <div class="anime-meta">${cardCat}</div>
                         </div>
                     `;
         });
         
-        if (snap.empty) row.innerHTML = "<p style='font-size:11px; opacity:0.5'>Nenhum conteúdo disponível.</p>";
+        if (snap.empty) row.innerHTML = "<p style='font-size:11px; opacity:0.5; grid-column: span 3; text-align: center;'>Nenhum conteúdo disponível.</p>";
         
       } catch (e) {
         console.error("Erro na busca:", e);
         const row = document.getElementById(`row-${conf.sub}`);
-        if (row) row.innerHTML = "<p style='color:red; font-size:11px'>Erro ao carregar do Firebase.</p>";
+        if (row) row.innerHTML = "<p style='color:red; font-size:11px; grid-column: span 3; text-align: center;'>Erro ao carregar.</p>";
       }
     }
   }
   
   carregarConteudo();
 </script>
+
+</body>
+</html>
