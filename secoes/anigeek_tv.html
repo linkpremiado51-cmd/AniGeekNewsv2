@@ -46,14 +46,12 @@
     { titulo: "Melhores da Temporada", sub: "melhores_da_temporada", qtd: 24 }
   ];
 
-  let conteudoJaCarregado = false;
-
   async function carregarConteudo() {
-    if (conteudoJaCarregado) return;
-    conteudoJaCarregado = true;
-
     const mainContainer = document.getElementById("dynamic-sections");
-    if (!mainContainer) return;
+
+    // 🔒 TRAVA DEFINITIVA CONTRA DUPLICAÇÃO
+    if (!mainContainer || mainContainer.dataset.loaded === "true") return;
+    mainContainer.dataset.loaded = "true";
 
     mainContainer.innerHTML = "";
 
@@ -67,13 +65,10 @@
         const q = query(colRef, limit(conf.qtd));
         const snap = await getDocs(q);
 
-        // 🔴 SE NÃO TIVER DADOS, NÃO CRIA A SEÇÃO
-        if (snap.empty) {
-          console.log(`Sessão ignorada (vazia): ${conf.sub}`);
-          continue;
-        }
+        // ❌ não cria seção vazia
+        if (snap.empty) continue;
 
-        // ✅ CRIA A SEÇÃO SOMENTE SE TIVER CONTEÚDO
+        // ✅ cria seção apenas uma vez
         const section = document.createElement("section");
         section.className = "content-section";
         section.innerHTML = `
