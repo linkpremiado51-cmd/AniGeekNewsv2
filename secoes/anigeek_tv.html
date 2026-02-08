@@ -73,17 +73,17 @@
         
         snap.forEach(doc => {
           const data = doc.data();
-          const cardTitulo = data.titulo || doc.id.replace(/_/g, ' ');
+          const cardTitulo = data.titulo ?? "";
           const cardCat = data.categoria || "Série";
           
           // --- EDIÇÃO REALIZADA AQUI ---
           // Ele tenta pegar o perfilImg dentro de fichaCategoria. 
           // Se não existir, ele usa o perfilImg solto (se houver) ou a capaNoticia/capaUrl.
-          const cardImg = (data.fichaCategoria && data.fichaCategoria.perfilImg) 
-                          ? data.fichaCategoria.perfilImg 
-                          : (data.perfilImg || data.capaNoticia || data.capaUrl || "https://via.placeholder.com/640x360?text=AniGeek+TV");
+          const cardImg = (data.fichaCategoria && data.fichaCategoria.perfilImg) ?
+            data.fichaCategoria.perfilImg :
+            (data.perfilImg || data.capaNoticia || data.capaUrl || "https://via.placeholder.com/640x360?text=AniGeek+TV");
           // -----------------------------
-
+          
           const linkDestino = data.linkArtigo || `index.html?id=${doc.id}`;
           
           row.innerHTML += `
