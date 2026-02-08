@@ -25,7 +25,7 @@
 <script type="module">
   import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
   import { getFirestore, collection, getDocs, limit, query } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-  
+
   const firebaseConfig = {
     apiKey: "AIzaSyBC_ad4X9OwCHKvcG_pNQkKEl76Zw2tu6o",
     authDomain: "anigeeknews.firebaseapp.com",
@@ -34,10 +34,10 @@
     messagingSenderId: "769322939926",
     appId: "1:769322939926:web:6eb91a96a3f74670882737"
   };
-  
+
   const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
   const db = getFirestore(app);
-  
+
   const configSessoes = [
     { titulo: "Recomendações AnigeekTv", sub: "recomendacoes", qtd: 24 },
     { titulo: "Lançamentos", sub: "lancamentos", qtd: 24 },
@@ -45,68 +45,79 @@
     { titulo: "Clássicos AnigeekTv", sub: "classicos_anigeektv", qtd: 24 },
     { titulo: "Melhores da Temporada", sub: "melhores_da_temporada", qtd: 24 }
   ];
-  
+
   async function carregarConteudo() {
-    const mainContainer = document.getElementById('dynamic-sections');
+    const mainContainer = document.getElementById("dynamic-sections");
     if (!mainContainer) return;
+
     mainContainer.innerHTML = "";
-    
+
     for (const conf of configSessoes) {
-      const section = document.createElement('section');
-      section.className = 'content-section';
+      const section = document.createElement("section");
+      section.className = "content-section";
       section.innerHTML = `
-                <h2 class="section-title">${conf.titulo}</h2>
-                <div class="cards-row" id="row-${conf.sub}">
-                    <p style="font-size:11px; opacity:0.5; color: #888;">Carregando...</p>
-                </div>
-            `;
+        <h2 class="section-title">${conf.titulo}</h2>
+        <div class="cards-row" id="row-${conf.sub}">
+          <p style="font-size:11px; opacity:0.5; color:#888;">Carregando...</p>
+        </div>
+      `;
       mainContainer.appendChild(section);
-      
+
       try {
-        const colRef = collection(db, "anigeeknews.web.app/animes_filmes_series_games_noticias/" + conf.sub);
+        const colRef = collection(
+          db,
+          "anigeeknews.web.app/animes_filmes_series_games_noticias/" + conf.sub
+        );
+
         const q = query(colRef, limit(conf.qtd));
         const snap = await getDocs(q);
-        
+
         const row = document.getElementById(`row-${conf.sub}`);
         if (!row) continue;
+
         row.innerHTML = "";
-        
+
+        if (snap.empty) {
+          // seção vazia → simplesmente não renderiza cards
+          continue;
+        }
+
         snap.forEach(doc => {
           const data = doc.data();
-          const cardTitulo = data.titulo ?? "";
-          const cardCat = data.categoria || "Série";
-          
-          // --- EDIÇÃO REALIZADA AQUI ---
-          // Ele tenta pegar o perfilImg dentro de fichaCategoria. 
-          // Se não existir, ele usa o perfilImg solto (se houver) ou a capaNoticia/capaUrl.
-          const cardImg = (data.fichaCategoria && data.fichaCategoria.perfilImg) ?
-            data.fichaCategoria.perfilImg :
-            (data.perfilImg || data.capaNoticia || data.capaUrl || "https://via.placeholder.com/640x360?text=AniGeek+TV");
-          // -----------------------------
-          
-          const linkDestino = data.linkArtigo || `index.html?id=${doc.id}`;
-          
-          row.innerHTML += `
-                        <div class="anime-card" onclick="location.href='${linkDestino}'">
-                            <div class="poster-wrapper">
-                                <img src="${cardImg.trim()}" class="poster-img" loading="lazy" alt="${cardTitulo}">
-                            </div>
-                            <div class="anime-title">${cardTitulo}</div>
-                            <div class="anime-meta">${cardCat} • ${doc.id.substring(0,5)}</div>
-                        </div>
-                    `;
-        });
-        
-        if (snap.empty) {
-  row.innerHTML = "";
-  return;
-}
 
-} catch (e) {
-  console.error("Erro na busca:", e);
-  const row = document.getElementById(`row-${conf.sub}`);
-  if (row) row.innerHTML = "<p style='color:red; font-size:11px'>Erro ao carregar do Firebase.</p>";
-}
-  
+          const cardTitulo = data.titulo || "";
+          const cardCat = data.categoria || "Série";
+
+          const cardImg =
+            data?.fichaCategoria?.perfilImg ||
+            data.perfilImg ||
+            data.capaNoticia ||
+            data.capaUrl ||
+            "https://via.placeholder.com/640x360?text=AniGeek+TV";
+
+          const linkDestino = data.linkArtigo || `index.html?id=${doc.id}`;
+
+          row.innerHTML += `
+            <div class="anime-card" onclick="location.href='${linkDestino}'">
+              <div class="poster-wrapper">
+                <img src="${cardImg}" class="poster-img" loading="lazy" alt="${cardTitulo}">
+              </div>
+              <div class="anime-title">${cardTitulo}</div>
+              <div class="anime-meta">${cardCat}</div>
+            </div>
+          `;
+        });
+
+      } catch (e) {
+        console.error("Erro na busca:", e);
+        const row = document.getElementById(`row-${conf.sub}`);
+        if (row) {
+          row.innerHTML =
+            "<p style='color:red; font-size:11px'>Erro ao carregar do Firebase.</p>";
+        }
+      }
+    }
+  }
+
   carregarConteudo();
 </script>
