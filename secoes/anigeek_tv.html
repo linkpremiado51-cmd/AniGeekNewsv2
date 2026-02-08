@@ -46,7 +46,12 @@
     { titulo: "Melhores da Temporada", sub: "melhores_da_temporada", qtd: 24 }
   ];
   
+  let conteudoJaCarregado = false;
+  
   async function carregarConteudo() {
+    if (conteudoJaCarregado) return;
+    conteudoJaCarregado = true;
+    
     const mainContainer = document.getElementById('dynamic-sections');
     if (!mainContainer) return;
     mainContainer.innerHTML = "";
@@ -82,7 +87,7 @@
             data.capaNoticia ||
             data.capaUrl ||
             "https://via.placeholder.com/640x360?text=AniGeek+TV";
-
+          
           const linkDestino = data.linkArtigo || `index.html?id=${doc.id}`;
           
           row.innerHTML += `
