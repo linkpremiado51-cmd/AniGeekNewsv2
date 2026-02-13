@@ -1,7 +1,95 @@
+<style>
+  /* Estilização da Barra de Pesquisa */
+  .search-container {
+    position: relative;
+    max-width: 600px;
+    margin: 0 auto 30px auto;
+    z-index: 1000;
+  }
+  .search-input-wrapper {
+    display: flex;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50px;
+    padding: 12px 25px;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .search-input-wrapper:focus-within {
+    border-color: #00d4ff;
+    background: rgba(0, 0, 0, 0.8);
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
+    transform: translateY(-2px);
+  }
+  #search-input {
+    background: transparent;
+    border: none;
+    color: white;
+    width: 100%;
+    outline: none;
+    font-size: 16px;
+    margin-left: 10px;
+  }
+  .search-results {
+    position: absolute;
+    top: 110%;
+    left: 0;
+    right: 0;
+    background: #121212;
+    border: 1px solid #333;
+    border-radius: 15px;
+    max-height: 450px;
+    overflow-y: auto;
+    display: none;
+    box-shadow: 0 15px 50px rgba(0,0,0,0.8);
+    scrollbar-width: thin;
+    scrollbar-color: #00d4ff #1a1a1a;
+  }
+  .search-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    cursor: pointer;
+    border-bottom: 1px solid #222;
+    transition: all 0.2s;
+  }
+  .search-item:hover { background: #1a1a1a; transform: x(5px); }
+  .search-item img {
+    width: 45px;
+    height: 65px;
+    object-fit: cover;
+    border-radius: 6px;
+    margin-right: 15px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  }
+  .search-item-info { flex: 1; }
+  .search-item-title { color: white; font-weight: 600; font-size: 14px; margin-bottom: 5px; }
+  .search-item-cat { 
+    font-size: 10px; 
+    padding: 3px 10px; 
+    border-radius: 4px; 
+    display: inline-block; 
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+</style>
+
 <div class="hero-container">
   <div class="hero-background"></div>
   <div class="hero-overlay"></div>
   <div class="hero-content">
+    
+    <div class="search-container">
+      <div class="search-input-wrapper">
+        <i class="fas fa-search" style="color: #00d4ff;"></i>
+        <input type="text" id="search-input" placeholder="O que vamos assistir hoje?">
+      </div>
+      <div id="search-results" class="search-results"></div>
+    </div>
+
     <div class="hero-logo-text">ANIME I GEEK TV</div>
     <div class="hero-subtext">streaming de animes filmes e series</div>
     <div class="meta-tags">
@@ -38,101 +126,145 @@
   const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
   const db = getFirestore(app);
 
-  const configSessoes = [
-    { titulo: "Recomendações AnigeekTv", sub: "recomendacoes", qtd: 24 },
-    { titulo: "Lançamentos", sub: "lancamentos", qtd: 24 },
-    { titulo: "Novos Episódios", sub: "novos_episodios", qtd: 24 },
-    { titulo: "Clássicos AnigeekTv", sub: "classicos_anigeektv", qtd: 24 },
-    { titulo: "Melhores da Temporada", sub: "melhores_da_temporada", qtd: 24 }
+  // Lista completa de subcoleções fornecida
+  const todasSubColecoes = [
+    "recomendacoes", "lancamentos", "novos_episodios", "classicos_anigeektv", "melhores_da_temporada",
+    "Jujutsu_kaisen_shimetsu_kaiyu", "akame_ga_kill", "angel_beats", "angelic_layer", "assassination_classroom",
+    "attack_on_titan_final_season", "attack_on_titan_final_season_part_2", "bakuman", "black_bullet", "black_clover",
+    "bleach", "blue_lock", "blue_period", "boku_no_hero_academia_season_5", "boku_no_hero_academia_season_6",
+    "boruto", "cells_at_work", "cells_at_work_black", "chainsaw_man", "chainsaw_man_part_2", "clannad",
+    "classroom_of_the_elite", "classroom_of_the_elite_season_2", "code_geass", "cowboy_bebop", "death_note",
+    "demon_slayer_kimetsu_no_yaiba", "demon_slayer_kimetsu_no_yaiba_entertainment_district", "demon_slayer_kimetsu_no_yaiba_mugen_train",
+    "demon_slayer_kimetsu_no_yaiba_swordsmith_village", "devilman_crybaby", "dr_stone", "elfen_lied", "eromanga_sensei",
+    "fire_force", "food_wars_shokugeki_no_soma", "fullmetal_alchemist_brotherhood", "guilty_crown", "haikyuu",
+    "hells_paradise", "horimiya", "hunter_x_hunter", "jujutsu_kaisen", "kaguya_sama_love_is_war", "kaguya_sama_love_is_war_season_2",
+    "kaguya_sama_love_is_war_season_3", "kimi_no_suizou_wo_tabetai", "kingdom", "komi_cant_communicate", "komi_cant_communicate_season_2",
+    "kuroko_no_basket", "kuroshitsuji", "made_in_abyss", "made_in_abyss_dawn_of_the_deep_soul", "made_in_abyss_retsujitsu",
+    "maiden_slayer", "mob_psycho_100", "my_hero_academia", "my_next_life_as_a_villainess", "naruto", "neon_genesis_evangelion",
+    "noragami", "oddtaxi", "one_piece", "one_punch_man", "oregairu", "oregairu_season_2", "owari_no_seraph", "platinum_end",
+    "psycho_pass", "re_zero_kara_hajimeru_isekai_seikatsu", "rent_a_girlfriend", "rent_a_girlfriend_season_2", "rurouni_kenshin",
+    "saihate_no_paladin", "samurai_champloo", "sentenced_to_be_a_hero", "seven_deadly_sins", "shadows_house", "shadows_house_season_2",
+    "shaman_king", "shingeki_no_kyojin", "solo_leveling", "spy_x_family", "steins_gate", "steins_gate_0", "sword_art_online",
+    "the_ancient_magus_bride", "the_case_study_of_vanitas", "the_case_study_of_vanitas_season_2", "the_quintessential_quintuplets",
+    "the_rising_of_the_shield_hero", "the_world_god_only_knows", "tokyo_revengers", "toradora", "vinland_saga", "vinland_saga_season_2",
+    "weathering_with_you", "your_lie_in_april"
   ];
 
+  let todosOsDadosBusca = [];
+
+  window.executarAcaoClique = function(data, docId) {
+    const linkArtigo = data.linkArtigo || "";
+    if (linkArtigo.includes("secao=")) {
+      const idExtraido = linkArtigo.split("secao=")[1].split("&")[0];
+      if (typeof window.abrirAbaPorId === 'function') window.abrirAbaPorId(idExtraido);
+    } else {
+      location.href = linkArtigo || `index.html?id=${docId}`;
+    }
+  };
+
+  // Carrega as seções iniciais e depois indexa o resto
   async function carregarConteudo() {
     const mainContainer = document.getElementById("dynamic-sections");
-
-    if (!mainContainer || mainContainer.dataset.loaded === "true") return;
-    mainContainer.dataset.loaded = "true";
-
-    // Criamos um array de promessas para carregar tudo em paralelo
-    const promises = configSessoes.map(async (conf) => {
-      try {
-        const colRef = collection(
-          db,
-          "anigeeknews.web.app/animes_filmes_series_games_noticias/" + conf.sub
-        );
-
-        const q = query(colRef, limit(conf.qtd));
-        const snap = await getDocs(q);
-
-        if (snap.empty) return null;
-
-        let cardsHTML = "";
-
-        snap.forEach(doc => {
-          const data = doc.data();
-          
-          // Limpeza do Título: Prioriza data.titulo, senão limpa o ID do documento
-          const cardTitulo = data.titulo || doc.id.replace(/_/g, " ").toUpperCase();
-          
-          // Meta info: Categoria + Ano (se houver) ou apenas categoria
-          const cardCat = data.categoria || "Série";
-          const infoMeta = data.ano ? `${cardCat} • ${data.ano}` : cardCat;
-
-          const cardImg = (data.fichaCategoria && data.fichaCategoria.perfilImg) || 
-                          data.perfilImg || data.capaNoticia || data.capaUrl || 
-                          "https://via.placeholder.com/640x360?text=AniGeek+TV";
-
-          // Lógica de Redirecionamento
-          const linkArtigo = data.linkArtigo || "";
-          let acaoClique = "";
-
-          if (linkArtigo.includes("secao=")) {
-            const idExtraido = linkArtigo.split("secao=")[1].split("&")[0];
-            acaoClique = `window.abrirAbaPorId('${idExtraido}')`;
-          } else {
-            const linkDestino = linkArtigo || `index.html?id=${doc.id}`;
-            acaoClique = `location.href='${linkDestino}'`;
-          }
-
-          // Construção da string do card
-          cardsHTML += `
-            <div class="anime-card" onclick="${acaoClique}" role="button" tabindex="0">
-              <div class="poster-wrapper">
-                <img
-                  src="${cardImg.trim()}"
-                  class="poster-img"
-                  loading="lazy"
-                  alt="${cardTitulo}"
-                  onerror="this.src='https://via.placeholder.com/640x360?text=Imagem+Indisponível'"
-                >
-              </div>
-              <div class="anime-title">${cardTitulo}</div>
-              <div class="anime-meta">${infoMeta}</div>
-            </div>
-          `;
-        });
-
-        return {
-          titulo: conf.titulo,
-          html: cardsHTML
-        };
-
-      } catch (e) {
-        console.error("Erro ao carregar sessão:", conf.sub, e);
-        return null;
-      }
+    const sessoesHome = ["recomendacoes", "lancamentos", "novos_episodios", "classicos_anigeektv", "melhores_da_temporada"];
+    
+    // 1. Carregar Seções da Home
+    const homePromises = sessoesHome.map(async (sub) => {
+      const colRef = collection(db, "anigeeknews.web.app/animes_filmes_series_games_noticias/" + sub);
+      const snap = await getDocs(query(colRef, limit(24)));
+      let cardsHTML = "";
+      
+      snap.forEach(doc => {
+        const data = doc.data();
+        todosOsDadosBusca.push({ ...data, id: doc.id }); // Alimenta a busca
+        const titulo = data.titulo || doc.id.replace(/_/g, " ").toUpperCase();
+        const img = data.perfilImg || (data.fichaCategoria && data.fichaCategoria.perfilImg) || data.capaNoticia || "https://via.placeholder.com/640x360";
+        
+        cardsHTML += `
+          <div class="anime-card" onclick="executarAcaoClique(${JSON.stringify(data).replace(/"/g, '&quot;')}, '${doc.id}')">
+            <div class="poster-wrapper"><img src="${img}" class="poster-img" loading="lazy"></div>
+            <div class="anime-title">${titulo}</div>
+            <div class="anime-meta">${data.categoria || 'Anime'}</div>
+          </div>
+        `;
+      });
+      return { sub, html: cardsHTML };
     });
 
-    // Aguarda todas as sessões carregarem e renderiza de uma vez
-    const resultados = await Promise.all(promises);
-    
-    mainContainer.innerHTML = resultados
-      .filter(res => res !== null)
-      .map(res => `
-        <section class="content-section">
-          <h2 class="section-title">${res.titulo}</h2>
-          <div class="cards-row">${res.html}</div>
-        </section>
-      `).join('');
+    const resultadosHome = await Promise.all(homePromises);
+    mainContainer.innerHTML = resultadosHome.map(res => `
+      <section class="content-section">
+        <h2 class="section-title">${res.sub.replace(/_/g, ' ').toUpperCase()}</h2>
+        <div class="cards-row">${res.html}</div>
+      </section>
+    `).join('');
+
+    iniciarBusca();
+    indexarRestante(); // Começa carregar as outras subcoleções em silêncio
+  }
+
+  // Indexa as subcoleções que não estão na home para a busca
+  async function indexarRestante() {
+    const sessoesHome = ["recomendacoes", "lancamentos", "novos_episodios", "classicos_anigeektv", "melhores_da_temporada"];
+    const restantes = todasSubColecoes.filter(s => !sessoesHome.includes(s));
+
+    for (const sub of restantes) {
+      try {
+        const colRef = collection(db, "anigeeknews.web.app/animes_filmes_series_games_noticias/" + sub);
+        const snap = await getDocs(query(colRef, limit(10))); // Pega os principais de cada subcoleção
+        snap.forEach(doc => {
+          todosOsDadosBusca.push({ ...doc.data(), id: doc.id });
+        });
+      } catch (e) { console.warn("Erro ao indexar:", sub); }
+    }
+  }
+
+  function iniciarBusca() {
+    const input = document.getElementById('search-input');
+    const resultsContainer = document.getElementById('search-results');
+
+    input.addEventListener('input', (e) => {
+      const termo = e.target.value.toLowerCase();
+      if (termo.length < 2) {
+        resultsContainer.style.display = 'none';
+        return;
+      }
+
+      const filtrados = todosOsDadosBusca.filter(item => {
+        const titulo = (item.titulo || "").toLowerCase();
+        const categoria = (item.categoria || "").toLowerCase();
+        const docId = (item.id || "").toLowerCase();
+        return titulo.includes(termo) || categoria.includes(termo) || docId.includes(termo);
+      });
+
+      exibirResultados(filtrados);
+    });
+  }
+
+  function exibirResultados(itens) {
+    const resultsContainer = document.getElementById('search-results');
+    if (itens.length === 0) {
+      resultsContainer.innerHTML = '<div style="padding:20px; color: #888; text-align:center;">Nenhum resultado encontrado...</div>';
+    } else {
+      // Remover duplicatas caso o mesmo anime esteja em duas coleções
+      const únicos = Array.from(new Map(itens.map(item => [item.id, item])).values()).slice(0, 15);
+      
+      resultsContainer.innerHTML = únicos.map(item => {
+        const titulo = item.titulo || item.id.replace(/_/g, " ").toUpperCase();
+        const img = item.perfilImg || (item.fichaCategoria && item.fichaCategoria.perfilImg) || "https://via.placeholder.com/100";
+        const cor = item.cor || "#00d4ff";
+        
+        return `
+          <div class="search-item" onclick="executarAcaoClique(${JSON.stringify(item).replace(/"/g, '&quot;')}, '${item.id}')">
+            <img src="${img}" alt="${titulo}">
+            <div class="search-item-info">
+              <div class="search-item-title">${titulo}</div>
+              <div class="search-item-cat" style="background: ${cor}">${item.categoria || 'Geral'}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+    resultsContainer.style.display = 'block';
   }
 
   carregarConteudo();
