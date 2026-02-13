@@ -1,5 +1,5 @@
 /* ======================================================
-   AniGeekNews – Enterprise Section System v9.0 (Custom Edit)
+   AniGeekNews – Enterprise Section System v8.0 (Custom Edit)
    • Títulos de Sessão Clicáveis
    • Notificações Toast
    • Layout Estático (Imagem e Container não pulam)
@@ -7,18 +7,16 @@
    • Menu Flutuante (Context Menu) nas abas ativas
    • Status de Visualização (Borda Amarela/Azul persistente)
    • Substituição automática de abas ao atingir limite
-   • Filtro por Watchlist e Concluídos
-   • Botão de Voltar para visualização normal
 ====================================================== */
 (function(){
 
 const CONFIG = {
   MAX_TABS: 19,
   KEYS: {
-    ORDER: 'ag_v9_order',
-    MODE:  'ag_v9_mode', // 'dynamic' ou 'fixed'
-    STATS: 'ag_v9_stats',
-    STATUS: 'ag_v9_status' // Salva se é 'watched' ou 'later'
+    ORDER: 'ag_v7_order',
+    MODE:  'ag_v7_mode', // 'dynamic' ou 'fixed'
+    STATS: 'ag_v7_stats',
+    STATUS: 'ag_v7_status' // Salva se é 'watched' ou 'later'
   },
   FIXED_TAB: 'anigeek_tv' // Aba fixa que não pode ser removida
 };
@@ -307,32 +305,6 @@ const styles = `
     background: #333;
     color: #fff;
   }
-  /* --- BOTÕES DE FILTRO --- */
-  .ag-filter-buttons {
-    display: flex;
-    gap: 7px;
-    margin-top: 14px;
-    justify-content: center;
-  }
-  .ag-filter-btn {
-    padding: 7px 14px;
-    border: none;
-    background: rgba(0,0,0,0.05);
-    border-radius: 7px;
-    font-size: 9.8px;
-    font-weight: 600;
-    color: #555;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  body.dark-mode .ag-filter-btn {
-    background: rgba(255,255,255,0.05);
-    color: #ccc;
-  }
-  .ag-filter-btn.active {
-    background: var(--primary-color, #e50914);
-    color: #fff;
-  }
   /* --- SESSÕES (CABEÇALHOS CLICÁVEIS) --- */
   .ag-section-block {
     margin-bottom: 24.5px;
@@ -415,7 +387,7 @@ const styles = `
     font-weight: 700;
   }
   body.dark-mode .ag-card.is-selected { background: #1a1a1a; }
-
+  
   /* ESTADOS PERSISTENTES (CORES) */
   .ag-card.status-later {
     border-color: #ffd700 !important; /* Amarelo */
@@ -607,11 +579,7 @@ function getOrder(){
 function getStatusMap(){ return load(CONFIG.KEYS.STATUS, {}); }
 function setStatus(id, status) {
   const map = getStatusMap();
-  if (status === null) {
-    delete map[id];
-  } else {
-    map[id] = status; // 'later', 'watched', ou null
-  }
+  map[id] = status; // 'later', 'watched', ou null
   save(CONFIG.KEYS.STATUS, map);
   renderDrawer(document.getElementById('ag-search-input')?.value || "");
 }
@@ -619,6 +587,7 @@ function ensureFixedTab(order) {
   if (!order.includes(CONFIG.FIXED_TAB)) {
     order.unshift(CONFIG.FIXED_TAB);
   } else {
+    // Garante que seja o primeiro se já existe
     const idx = order.indexOf(CONFIG.FIXED_TAB);
     if(idx > 0) {
        order.splice(idx, 1);
@@ -643,6 +612,7 @@ function track(id){
   stats[id] = (stats[id] || 0) + 1;
   save(CONFIG.KEYS.STATS, stats);
   const order = getOrder();
+  // Não reordena automaticamente no modo FIFO simples, mas mantém tracking
 }
 
 /* ===========================
@@ -660,38 +630,11 @@ function openContextMenu(e, id, label) {
 
   const menu = document.createElement('div');
   menu.className = 'ag-context-menu';
-
-  const statusMap = getStatusMap();
-  const currentStatus = statusMap[id];
-
+  
   // Opções
   const ops = [
-    {
-      text: currentStatus === 'later' ? 'Remover de "Assistir Depois"' : 'Assistir mais tarde',
-      color: '#ffd700',
-      action: () => {
-        if (currentStatus === 'later') {
-          setStatus(id, null);
-          showToast('Removido de "Assistir Depois"');
-        } else {
-          setStatus(id, 'later');
-          showToast('Marcado para assistir mais tarde');
-        }
-      }
-    },
-    {
-      text: currentStatus === 'watched' ? 'Remover de "Assistidos"' : 'Marcar como assistido',
-      color: '#00bfff',
-      action: () => {
-        if (currentStatus === 'watched') {
-          setStatus(id, null);
-          showToast('Removido de "Assistidos"');
-        } else {
-          setStatus(id, 'watched');
-          showToast('Marcado como assistido');
-        }
-      }
-    },
+    { text: 'Assistir mais tarde', color: '#ffd700', action: () => { setStatus(id, 'later'); showToast('Marcado para assistir mais tarde'); } },
+    { text: 'Marcar como assistido', color: '#00bfff', action: () => { setStatus(id, 'watched'); showToast('Marcado como assistido'); } },
     { text: 'Retirar aba', color: null, danger: true, action: () => { toggleItem(id, label); } }
   ];
 
@@ -778,8 +721,6 @@ function ensureTabVisible(tabElement) {
 /* ===========================
    GAVETA (DRAWER)
 =========================== */
-let currentFilter = 'all'; // 'all', 'later', 'watched'
-
 function toggleDrawer(){
   const drawer = document.getElementById('ag-drawer');
   if(!drawer) return;
@@ -790,23 +731,13 @@ function toggleDrawer(){
     drawer.classList.add('open');
   }
 }
-
-function setFilter(filter) {
-  currentFilter = filter;
-  const buttons = document.querySelectorAll('.ag-filter-btn');
-  buttons.forEach(btn => btn.classList.remove('active'));
-  const activeBtn = document.querySelector(`.ag-filter-btn[data-filter="${filter}"]`);
-  if (activeBtn) activeBtn.classList.add('active');
-  renderDrawer(document.getElementById('ag-search-input')?.value || "");
-}
-
 function renderDrawer(filterText = ""){
   const drawer = document.getElementById('ag-drawer');
   let order = ensureFixedTab(getOrder());
   const statusMap = getStatusMap();
   const currentMode = getMode();
   const searchIcon = `<svg class="ag-search-icon-svg" viewBox="0 0 24 24"><path d="M21.71 20.29l-5.01-5.01C17.54 13.68 18 11.91 18 10c0-4.41-3.59-8-8-8S2 5.59 2 10s3.59 8 8 8c1.91 0 3.68-.46 5.28-1.3l5.01 5.01c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41z"/></svg>`;
-
+  
   let html = `
     <div class="ag-drawer-cover"></div>
     <img src="https://i.postimg.cc/W49RX3dK/anime-boy-render-04-by-luxio56lavi-d5xed2a.png" class="ag-char-fixed" alt="Anime Character">
@@ -821,11 +752,6 @@ function renderDrawer(filterText = ""){
           <button id="btn-dinamico" class="ag-mode-btn ${currentMode==='dynamic'?'active':''}">Automático</button>
         </div>
       </div>
-      <div class="ag-filter-buttons">
-        <button class="ag-filter-btn ${currentFilter === 'all' ? 'active' : ''}" data-filter="all">Todas</button>
-        <button class="ag-filter-btn ${currentFilter === 'later' ? 'active' : ''}" data-filter="later">Watchlist</button>
-        <button class="ag-filter-btn ${currentFilter === 'watched' ? 'active' : ''}" data-filter="watched">Concluídos</button>
-      </div>
       <div id="ag-catalog-container"></div>
       <div style="text-align:center; padding-top:20px; padding-bottom: 20px; font-size:12px; color:#888;">
         ${order.length} de ${CONFIG.MAX_TABS} abas ativas
@@ -833,28 +759,23 @@ function renderDrawer(filterText = ""){
     </div>
   `;
   drawer.innerHTML = html;
-
+  
   const container = document.getElementById('ag-catalog-container');
   const term = filterText.toLowerCase();
-
-  // Botões de filtro
-  document.querySelectorAll('.ag-filter-btn').forEach(btn => {
-    btn.onclick = () => setFilter(btn.dataset.filter);
-  });
 
   CATALOGO.forEach(sec => {
     const itens = sec.itens || [];
     const itensFiltrados = itens.filter(i => i.label && i.label.toLowerCase().includes(term));
     const sessaoMatch = sec.sessao.toLowerCase().includes(term);
     if(term !== "" && !sessaoMatch && itensFiltrados.length === 0) return;
-
+    
     const itensParaMostrar = sessaoMatch ? itens : itensFiltrados;
     const sectionDiv = document.createElement('div');
     sectionDiv.className = 'ag-section-block';
-
+    
     const isCatSelected = order.includes(sec.id);
     const catStatus = statusMap[sec.id];
-
+    
     // Icone indicador
     let catIcon = '';
     if(isCatSelected) {
@@ -868,7 +789,7 @@ function renderDrawer(filterText = ""){
       </button>
       <div class="ag-grid-container"></div>
     `;
-
+    
     // Lógica de clique na Sessão
     sectionDiv.querySelector('.ag-section-header-btn').onclick = (e) => {
         if(isCatSelected) {
@@ -884,18 +805,14 @@ function renderDrawer(filterText = ""){
     itensParaMostrar.forEach(item => {
       const isSelected = order.includes(item.id);
       const itemStatus = statusMap[item.id];
-
-      // Filtro por status
-      if (currentFilter === 'later' && itemStatus !== 'later') return;
-      if (currentFilter === 'watched' && itemStatus !== 'watched') return;
-
+      
       let statusClass = '';
       if(itemStatus === 'later') statusClass = 'status-later';
       if(itemStatus === 'watched') statusClass = 'status-watched';
 
       const card = document.createElement('div');
       card.className = `ag-card ${isSelected ? 'is-selected' : ''} ${statusClass}`;
-
+      
       let actionIcon = '';
       if(isSelected) {
         actionIcon = '✓';
@@ -920,14 +837,16 @@ function renderDrawer(filterText = ""){
 
   const searchInput = document.getElementById('ag-search-input');
   searchInput.oninput = (e) => { filterDrawer(e.target.value); };
-  searchInput.focus();
-
+  searchInput.focus(); // Mantém o foco
+  
   document.getElementById('btn-fixo').onclick = () => setMode('fixed');
   document.getElementById('btn-dinamico').onclick = () => setMode('dynamic');
 }
 
 function filterDrawer(term) {
+  // Recarrega o drawer completamente para manter a estrutura e não quebrar o layout da imagem
   renderDrawer(term);
+  // Recoloca o cursor no final do input
   const input = document.getElementById('ag-search-input');
   if(input) {
       input.setSelectionRange(term.length, term.length);
@@ -943,7 +862,7 @@ function toggleItem(id, label){
     return;
   }
   let order = ensureFixedTab(getOrder());
-
+  
   if(order.includes(id)){
     // REMOVER
     order = order.filter(x => x !== id);
@@ -951,20 +870,24 @@ function toggleItem(id, label){
   } else {
     // ADICIONAR
     if(order.length >= CONFIG.MAX_TABS) {
-      const removed = order.pop();
+      // SUBSTITUIÇÃO: Remove o último elemento do array (o mais recente adicionado em lógica de push, ou o último da fila visual)
+      // Como o usuário pediu: "última aba adicionada seja retirada para que a que foi adicionada seja adicionada"
+      const removed = order.pop(); 
       showToast(`Limite atingido. Substituindo aba antiga.`, 'normal');
     }
     order.push(id);
     showToast(`Adicionado: <b>${label}</b>`, 'success');
   }
-
+  
   save(CONFIG.KEYS.ORDER, order);
   renderBar();
-
+  
+  // Atualiza visual do drawer sem perder filtro
   const currentInput = document.getElementById('ag-search-input');
   const currentValue = currentInput ? currentInput.value : '';
   renderDrawer(currentValue);
-
+  
+  // Se foi adição, tenta rolar para a aba
   if(order.includes(id)) {
       setTimeout(() => {
         const button = document.querySelector(`#filterScroller .filter-tag[data-id="${id}"]`);
