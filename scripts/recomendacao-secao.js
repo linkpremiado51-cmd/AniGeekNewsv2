@@ -652,6 +652,18 @@ const styles = `
   }
 `;
 
+/* ======================================================
+   AniGeekNews – Enterprise Section System v7.2 (Integrated)
+   • Conectado ao Firebase Grid
+   • Sistema de Deep Linking Refinado
+   • Controle de Foco e Scroll Automático
+====================================================== */
+
+(function(){
+
+// Verificação de segurança para o objeto CONFIG e CATALOGO (Devem estar definidos no início do seu arquivo original)
+// Se você moveu este bloco para um arquivo separado, certifique-se que o CATALOGO venha antes.
+
 const styleSheet = document.createElement("style");
 styleSheet.innerText = styles;
 document.head.appendChild(styleSheet);
@@ -673,7 +685,6 @@ function showToast(message, type = 'normal') {
 
   container.appendChild(toast);
 
-  // Remove após 3 segundos
   setTimeout(() => {
     toast.style.animation = 'agFadeOut 0.3s forwards';
     setTimeout(() => toast.remove(), 300);
@@ -692,30 +703,26 @@ function setMode(m){ save(CONFIG.KEYS.MODE, m); renderDrawer(); }
 function getOrder(){
   const saved = load(CONFIG.KEYS.ORDER, null);
   if(saved) return saved;
-  // Padrão inicial com Anime I Geek fixada como primeira
   return [CONFIG.FIXED_TAB, 'saihate_no_paladin', 'Jujutsu_kaisen_shimetsu_kaiyu'];
 }
 
-// Função para garantir que a aba fixa esteja sempre na primeira posição
 function ensureFixedTab(order) {
   if (!order.includes(CONFIG.FIXED_TAB)) {
     order.unshift(CONFIG.FIXED_TAB);
   } else {
-    // Remove e re-adiciona na primeira posição
     order = order.filter(id => id !== CONFIG.FIXED_TAB);
     order.unshift(CONFIG.FIXED_TAB);
   }
   return order;
 }
 
-// Encontra ITEM ou CATEGORIA PAI pelo ID
 function findItem(id){
   for(let sec of CATALOGO){
-    // Verifica se é a própria categoria
     if(sec.id === id) return sec;
-    // Verifica itens internos
-    const item = sec.itens.find(i => i.id === id);
-    if(item) return item;
+    if(sec.itens){
+        const item = sec.itens.find(i => i.id === id);
+        if(item) return item;
+    }
   }
   return null;
 }
@@ -732,7 +739,7 @@ function track(id){
 }
 
 /* ===========================
-   RENDERIZAÇÃO BARRA HORIZONTAL
+   INTERFACE: BARRA HORIZONTAL
 =========================== */
 function renderBar(){
   const bar = document.getElementById('filterScroller');
@@ -762,18 +769,13 @@ function renderBar(){
       track(id);
       document.getElementById('ag-drawer').classList.remove('open');
 
-      // 🔗 Atualiza URL sem recarregar (usando replaceState para navegação interna)
       const url = new URL(window.location);
       url.searchParams.set('secao', id);
       window.history.replaceState({}, '', url);
 
       if(window.carregarSecao) window.carregarSecao(id);
-      else console.log("Carregando:", id);
       
-      // Scroll automático para garantir que a aba fique visível
-      setTimeout(() => {
-        ensureTabVisible(btn);
-      }, 50);
+      setTimeout(() => ensureTabVisible(btn), 50);
     };
     bar.appendChild(btn);
   });
@@ -785,34 +787,25 @@ function renderBar(){
   bar.appendChild(cfg);
 }
 
-// Função para garantir que uma aba fique visível na barra de rolagem
 function ensureTabVisible(tabElement) {
   const scroller = document.getElementById('filterScroller');
   if (!scroller || !tabElement) return;
-
   const tabRect = tabElement.getBoundingClientRect();
   const scrollerRect = scroller.getBoundingClientRect();
 
-  // Verifica se a aba está fora da área visível
   if (tabRect.left < scrollerRect.left || tabRect.right > scrollerRect.right) {
-    // Calcula a posição de scroll para centralizar a aba
     const tabCenter = tabElement.offsetLeft + tabElement.offsetWidth / 2;
     const scrollerCenter = scroller.offsetWidth / 2;
-    
-    scroller.scrollTo({
-      left: tabCenter - scrollerCenter,
-      behavior: 'smooth'
-    });
+    scroller.scrollTo({ left: tabCenter - scrollerCenter, behavior: 'smooth' });
   }
 }
 
 /* ===========================
-   GAVETA (DRAWER)
+   GAVETA E CATALOGO
 =========================== */
 function toggleDrawer(){
   const drawer = document.getElementById('ag-drawer');
   if(!drawer) return;
-
   if(drawer.classList.contains('open')){
     drawer.classList.remove('open');
   } else {
@@ -825,53 +818,42 @@ function renderDrawer(filterText = ""){
   const drawer = document.getElementById('ag-drawer');
   let order = ensureFixedTab(getOrder());
   const currentMode = getMode();
-
   const searchIcon = `<svg class="ag-search-icon-svg" viewBox="0 0 24 24"><path d="M21.71 20.29l-5.01-5.01C17.54 13.68 18 11.91 18 10c0-4.41-3.59-8-8-8S2 5.59 2 10s3.59 8 8 8c1.91 0 3.68-.46 5.28-1.3l5.01 5.01c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41z"/></svg>`;
 
-  let html = `
+  drawer.innerHTML = `
     <div class="ag-drawer-cover"></div>
-    <img src="https://i.postimg.cc/W49RX3dK/anime-boy-render-04-by-luxio56lavi-d5xed2a.png  " class="ag-char-fixed" alt="Anime Character">
+    <img src="https://i.postimg.cc/W49RX3dK/anime-boy-render-04-by-luxio56lavi-d5xed2a.png" class="ag-char-fixed" alt="Anime Character">
     <div class="ag-drawer-scroll">
       <div class="ag-drawer-header">
         <div class="ag-search-wrapper">
           ${searchIcon}
           <input type="text" class="ag-search-input" id="ag-search-input" placeholder="Pesquisar..." value="${filterText}">
         </div>
-
         <div class="ag-mode-group">
           <button id="btn-fixo" class="ag-mode-btn ${currentMode==='fixed'?'active':''}">Fixo</button>
           <button id="btn-dinamico" class="ag-mode-btn ${currentMode==='dynamic'?'active':''}">Automático</button>
         </div>
       </div>
-
       <div id="ag-catalog-container"></div>
-
       <div style="text-align:center; padding-top:20px; font-size:12px; color:#888;">
         ${order.length} de ${CONFIG.MAX_TABS} abas ativas
       </div>
     </div>
   `;
 
-  drawer.innerHTML = html;
-
   const container = document.getElementById('ag-catalog-container');
   const term = filterText.toLowerCase();
 
   CATALOGO.forEach(sec => {
-    const itensFiltrados = sec.itens.filter(i => i.label.toLowerCase().includes(term));
+    const itensFiltrados = sec.itens ? sec.itens.filter(i => i.label.toLowerCase().includes(term)) : [];
     const sessaoMatch = sec.sessao.toLowerCase().includes(term);
 
     if(term !== "" && !sessaoMatch && itensFiltrados.length === 0) return;
-    const itensParaMostrar = sessaoMatch ? sec.itens : itensFiltrados;
 
     const sectionDiv = document.createElement('div');
     sectionDiv.className = 'ag-section-block';
-
     const isCatSelected = order.includes(sec.id);
-    let catIcon = '';
-    if(isCatSelected) {
-       catIcon = currentMode === 'dynamic' ? ' <span style="font-size:10px; opacity:0.6; margin-left:5px">✕</span>' : ' <span style="font-size:10px; opacity:0.6; margin-left:5px">•••</span>';
-    }
+    let catIcon = isCatSelected ? (currentMode === 'dynamic' ? ' <span style="font-size:10px; opacity:0.6; margin-left:5px">✕</span>' : ' <span style="font-size:10px; opacity:0.6; margin-left:5px">•••</span>') : '';
 
     sectionDiv.innerHTML = `
       <button class="ag-section-header-btn ${isCatSelected ? 'is-active' : ''}" data-cat-id="${sec.id}">
@@ -881,33 +863,20 @@ function renderDrawer(filterText = ""){
       <div class="ag-grid-container"></div>
     `;
 
-    sectionDiv.querySelector('.ag-section-header-btn').onclick = (e) => {
-        if(isCatSelected && currentMode === 'fixed') {
-             handleAction(sec.id, sec.sessao);
-        } else {
-             toggleItem(sec.id, sec.sessao);
-        }
+    sectionDiv.querySelector('.ag-section-header-btn').onclick = () => {
+        if(isCatSelected && currentMode === 'fixed') handleAction(sec.id, sec.sessao);
+        else toggleItem(sec.id, sec.sessao);
     };
 
     container.appendChild(sectionDiv);
     const grid = sectionDiv.querySelector('.ag-grid-container');
 
+    const itensParaMostrar = sessaoMatch ? (sec.itens || []) : itensFiltrados;
     itensParaMostrar.forEach(item => {
       const isSelected = order.includes(item.id);
-
       const card = document.createElement('div');
       card.className = `ag-card ${isSelected ? 'is-selected' : ''}`;
-
-      let actionIcon = '';
-      if(isSelected) {
-        actionIcon = currentMode === 'dynamic' ? '✕' : '•••';
-      }
-
-      card.innerHTML = `
-        ${item.label}
-        ${isSelected ? `<div class="ag-card-action" data-id="${item.id}" data-action="true">${actionIcon}</div>` : ''}
-      `;
-
+      card.innerHTML = `${item.label} ${isSelected ? `<div class="ag-card-action" data-id="${item.id}" data-action="true">${currentMode === 'dynamic' ? '✕' : '•••'}</div>` : ''}`;
       card.onclick = (e) => {
         if(e.target.dataset.action || e.target.parentNode.dataset.action) {
           e.stopPropagation();
@@ -916,138 +885,111 @@ function renderDrawer(filterText = ""){
         }
         toggleItem(item.id, item.label);
       };
-
       grid.appendChild(card);
     });
   });
 
-  const searchInput = document.getElementById('ag-search-input');
-  searchInput.oninput = (e) => {
-    filterDrawer(e.target.value);
-  };
-
+  document.getElementById('ag-search-input').oninput = (e) => filterDrawer(e.target.value);
   document.getElementById('btn-fixo').onclick = () => setMode('fixed');
   document.getElementById('btn-dinamico').onclick = () => setMode('dynamic');
 }
 
-// Função para filtrar os elementos existentes, sem recriar o drawer
 function filterDrawer(term) {
   const termLower = term.toLowerCase();
   document.querySelectorAll('.ag-section-block').forEach(block => {
     const catId = block.querySelector('.ag-section-header-btn').dataset.catId;
     const cat = CATALOGO.find(c => c.id === catId);
     if (!cat) return;
-
     const sessaoMatch = cat.sessao.toLowerCase().includes(termLower);
-    const itensFiltrados = cat.itens.filter(i => i.label.toLowerCase().includes(termLower));
-    const grid = block.querySelector('.ag-grid-container');
-    const headerBtn = block.querySelector('.ag-section-header-btn');
-
+    const itensFiltrados = cat.itens ? cat.itens.filter(i => i.label.toLowerCase().includes(termLower)) : [];
     if (termLower !== "" && !sessaoMatch && itensFiltrados.length === 0) {
       block.style.display = 'none';
-      return;
+    } else {
+      block.style.display = '';
+      block.querySelectorAll('.ag-card').forEach(card => {
+        card.style.display = (card.textContent.trim().toLowerCase().includes(termLower) || sessaoMatch) ? '' : 'none';
+      });
     }
-    block.style.display = '';
-
-    grid.querySelectorAll('.ag-card').forEach(card => {
-      const label = card.textContent.trim();
-      if (label.toLowerCase().includes(termLower) || sessaoMatch) {
-        card.style.display = '';
-      } else {
-        card.style.display = 'none';
-      }
-    });
   });
 }
 
 /* ===========================
-   AÇÕES & NOTIFICAÇÕES
+   AÇÕES: ADICIONAR / REMOVER
 =========================== */
 function toggleItem(id, label){
-  // Não permite remover a aba fixa
   if (id === CONFIG.FIXED_TAB) {
     showToast('Esta aba é fixa e não pode ser removida!', 'error');
     return;
   }
-
   let order = ensureFixedTab(getOrder());
-
   if(order.includes(id)){
     order = order.filter(x => x !== id);
-    showToast(`Removido: <b>${label}</b>`, 'normal');
+    showToast(`Removido: <b>${label}</b>`);
   } else {
     if(order.length >= CONFIG.MAX_TABS) {
-      showToast(`Limite de ${CONFIG.MAX_TABS} abas atingido!`, 'error');
+      showToast(`Limite de abas atingido!`, 'error');
       return;
     }
     order.push(id);
     showToast(`Adicionado: <b>${label}</b>`, 'success');
   }
-
   save(CONFIG.KEYS.ORDER, order);
   renderBar();
-
-  // AUTO-CLIQUE MANTIDO - Clica automaticamente na categoria adicionada
   setTimeout(() => {
     const button = document.querySelector(`#filterScroller .filter-tag[data-id="${id}"]`);
-    if (button) {
-      button.click();
-    }
+    if (button) button.click();
   }, 100);
 }
 
 function handleAction(id, label){
-  // Não permite remover a aba fixa
-  if (id === CONFIG.FIXED_TAB) {
-    showToast('Esta aba é fixa e não pode ser removida!', 'error');
-    return;
-  }
-
+  if (id === CONFIG.FIXED_TAB) return;
   const mode = getMode();
   let order = ensureFixedTab(getOrder());
-
   if(mode === 'dynamic') {
     order = order.filter(x => x !== id);
     save(CONFIG.KEYS.ORDER, order);
-    showToast(`Removido: <b>${label}</b>`);
     renderBar();
-    const currentInput = document.getElementById('ag-search-input');
-    const currentValue = currentInput ? currentInput.value : '';
-    renderDrawer(currentValue);
-    if (currentInput) currentInput.value = currentValue;
+    renderDrawer(document.getElementById('ag-search-input')?.value || "");
   } else {
     const currentIndex = order.indexOf(id);
     const newPos = prompt(`Mover "${label}" para qual posição? (1-${order.length})`, currentIndex + 1);
-
-    if(newPos !== null){
+    if(newPos){
       const targetIndex = parseInt(newPos) - 1;
       if(!isNaN(targetIndex) && targetIndex >= 0 && targetIndex < order.length) {
         order.splice(currentIndex, 1);
         order.splice(targetIndex, 0, id);
         save(CONFIG.KEYS.ORDER, order);
         renderBar();
-        const currentInput = document.getElementById('ag-search-input');
-        const currentValue = currentInput ? currentInput.value : '';
-        renderDrawer(currentValue);
-        if (currentInput) currentInput.value = currentValue;
-        showToast(`<b>${label}</b> movido para posição ${newPos}`);
+        renderDrawer();
       }
     }
   }
 }
 
 /* ===========================
-   FUNÇÃO: Garante que a aba exista no order
+   CONEXÃO COM GRID FIREBASE
 =========================== */
-function ensureTabExists(id){
-  const exists = CATALOGO.some(sec => sec.id === id || sec.itens.some(i => i.id === id));
-  if (!exists) return false;
+window.abrirAbaPorId = function(idAlvo) {
+  if(ensureTabExists(idAlvo)) {
+    renderBar();
+    setTimeout(() => {
+      const btn = document.querySelector(`#filterScroller .filter-tag[data-id="${idAlvo}"]`);
+      if(btn) {
+          btn.click();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }, 150);
+  } else {
+    showToast("Esta seção não foi encontrada no catálogo.", "error");
+  }
+};
 
+function ensureTabExists(id){
+  const exists = CATALOGO.some(sec => sec.id === id || (sec.itens && sec.itens.some(i => i.id === id)));
+  if (!exists) return false;
   let order = ensureFixedTab(getOrder());
   if (!order.includes(id)) {
-    if (order.length >= CONFIG.MAX_TABS) {
-      order.pop();
-    }
+    if (order.length >= CONFIG.MAX_TABS) order.pop();
     order.push(id);
     save(CONFIG.KEYS.ORDER, order);
   }
@@ -1055,62 +997,22 @@ function ensureTabExists(id){
 }
 
 /* ===========================
-   CARREGAMENTO DE SEÇÃO POR URL (Deep Linking & Params)
+   INICIALIZAÇÃO & URL
 =========================== */
 window.addEventListener('DOMContentLoaded', () => {
   renderBar();
-
-  // Nova Lógica de Detecção de URL
   const params = new URLSearchParams(window.location.search);
   const newsId = params.get('id');
   const secaoForcada = params.get('secao');
   
-  // 1. Prioridade: ID da Notícia (Link Compartilhado)
   if (newsId) {
-    // IMPORTANTE: Aqui definimos a coleção onde estão as notícias.
-    // Como no seu arquivo HTML você usou 'saihate_no_paladin' como coleção principal,
-    // forçamos a abertura dessa aba.
-    const abaAlvo = 'saihate_no_paladin';
-    
-    // Garante que a aba esteja na lista de abas ativas e renderiza
-    if(ensureTabExists(abaAlvo)) {
-        renderBar(); 
-        // Pequeno delay para garantir que o DOM renderizou o botão antes de clicar
-        setTimeout(() => {
-            const btn = document.querySelector(`#filterScroller .filter-tag[data-id="${abaAlvo}"]`);
-            if(btn) {
-                // Remove seleção visual das outras e ativa esta
-                document.querySelectorAll('#filterScroller .filter-tag').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                
-                // Se o script de notícias expõe a função global, chama direto
-                if (window.carregarSecao) {
-                    window.carregarSecao(abaAlvo);
-                } else {
-                    // Fallback: Clica fisicamente no botão
-                    btn.click();
-                }
-            }
-        }, 200);
-    }
-    return; // Encerra aqui para não conflitar com a lógica de seção normal
+    const abaAlvo = 'saihate_no_paladin'; // Coleção padrão para notícias
+    window.abrirAbaPorId(abaAlvo);
+    return;
   }
 
-  // 2. Prioridade: Seção Específica (Parâmetro antigo ?secao=)
   if (secaoForcada) {
-    if(ensureTabExists(secaoForcada)) {
-        renderBar();
-        setTimeout(() => {
-            const btn = document.querySelector(`#filterScroller .filter-tag[data-id="${secaoForcada}"]`);
-            if (btn) {
-                document.querySelectorAll('#filterScroller .filter-tag').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                btn.click();
-            } else if (window.carregarSecao) {
-                window.carregarSecao(secaoForcada);
-            }
-        }, 150);
-    }
+    window.abrirAbaPorId(secaoForcada);
   }
 });
 
