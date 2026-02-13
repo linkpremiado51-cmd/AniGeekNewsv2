@@ -1,128 +1,7 @@
-<style>
-/* --- ESTILIZAÇÃO PREMIUM DA BARRA DE PESQUISA V7.1 --- */
-:root {
-  --accent-color: #e50914; /* Cor temática AniGeek */
-  --search-bg: rgba(20, 20, 20, 0.8);
-  --glass-border: rgba(255, 255, 255, 0.1);
-}
-
-.ag-search-wrapper-premium {
-  width: 100%;
-  max-width: 650px;
-  margin: 0 auto 30px auto;
-  position: relative;
-  z-index: 2000;
-}
-
-.ag-search-box {
-  display: flex;
-  align-items: center;
-  background: var(--search-bg);
-  border: 1px solid var(--glass-border);
-  border-radius: 50px;
-  padding: 12px 25px;
-  backdrop-filter: blur(15px);
-  -webkit-backdrop-filter: blur(15px);
-  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-}
-
-.ag-search-box:focus-within {
-  border-color: var(--accent-color);
-  box-shadow: 0 0 25px rgba(229, 9, 20, 0.3);
-  transform: translateY(-2px);
-  background: rgba(0, 0, 0, 0.9);
-}
-
-.ag-search-input {
-  background: transparent;
-  border: none;
-  color: #fff;
-  width: 100%;
-  font-size: 16px;
-  font-weight: 500;
-  outline: none;
-  margin-left: 12px;
-}
-
-.ag-search-input::placeholder {
-  color: rgba(255,255,255,0.5);
-}
-
-/* Dropdown de Resultados */
-.ag-search-results {
-  position: absolute;
-  top: calc(100% + 12px);
-  left: 0;
-  right: 0;
-  background: #121212;
-  border-radius: 15px;
-  border: 1px solid var(--glass-border);
-  max-height: 450px;
-  overflow-y: auto;
-  display: none;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.8);
-  scrollbar-width: thin;
-}
-
-.ag-search-item {
-  display: flex;
-  align-items: center;
-  padding: 12px 20px;
-  cursor: pointer;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
-  transition: all 0.2s ease;
-}
-
-.ag-search-item:hover {
-  background: rgba(229, 9, 20, 0.1);
-  padding-left: 28px;
-}
-
-.ag-search-item-color {
-  width: 4px;
-  height: 35px;
-  border-radius: 10px;
-  margin-right: 15px;
-}
-
-.ag-search-item-info {
-  flex: 1;
-}
-
-.ag-search-item-title {
-  color: #fff;
-  font-weight: 700;
-  font-size: 14px;
-  text-transform: uppercase;
-  display: block;
-}
-
-.ag-search-item-sub {
-  color: #888;
-  font-size: 11px;
-}
-
-/* Ícone animado de busca */
-.search-icon-svg {
-  width: 20px;
-  fill: var(--accent-color);
-}
-</style>
-
 <div class="hero-container">
   <div class="hero-background"></div>
   <div class="hero-overlay"></div>
   <div class="hero-content">
-    
-    <div class="ag-search-wrapper-premium">
-      <div class="ag-search-box">
-        <svg class="search-icon-svg" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-        <input type="text" id="ag-premium-input" class="ag-search-input" placeholder="O que vamos assistir hoje?" autocomplete="off">
-      </div>
-      <div id="ag-search-results" class="ag-search-results"></div>
-    </div>
-
     <div class="hero-logo-text">ANIME I GEEK TV</div>
     <div class="hero-subtext">streaming de animes filmes e series</div>
     <div class="meta-tags">
@@ -147,7 +26,6 @@
   import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
   import { getFirestore, collection, getDocs, limit, query } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-  // Configuração e Inicialização Firebase
   const firebaseConfig = {
     apiKey: "AIzaSyBC_ad4X9OwCHKvcG_pNQkKEl76Zw2tu6o",
     authDomain: "anigeeknews.firebaseapp.com",
@@ -160,7 +38,6 @@
   const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
   const db = getFirestore(app);
 
-  // Configuração das vitrines da Home
   const configSessoes = [
     { titulo: "Recomendações AnigeekTv", sub: "recomendacoes", qtd: 24 },
     { titulo: "Lançamentos", sub: "lancamentos", qtd: 24 },
@@ -169,88 +46,64 @@
     { titulo: "Melhores da Temporada", sub: "melhores_da_temporada", qtd: 24 }
   ];
 
-  // LÓGICA DA BUSCA PROFISSIONAL
-  function iniciarMotorBusca() {
-    const input = document.getElementById('ag-premium-input');
-    const results = document.getElementById('ag-search-results');
-
-    input.addEventListener('input', (e) => {
-      const termo = e.target.value.toLowerCase().trim();
-      
-      if (termo.length < 2) {
-        results.style.display = 'none';
-        return;
-      }
-
-      // Procura no CATALOGO (que deve estar carregado globalmente pelo seu script de navegação)
-      // Se o catálogo não estiver pronto, ele tenta buscar na lista local
-      if (typeof CATALOGO !== 'undefined') {
-        const filtrados = CATALOGO.filter(item => 
-          item.sessao.toLowerCase().includes(termo) || 
-          item.id.toLowerCase().includes(termo)
-        ).slice(0, 12);
-
-        renderizarResultados(filtrados);
-      }
-    });
-
-    // Fecha ao clicar fora
-    document.addEventListener('click', (e) => {
-      if (!input.contains(e.target)) results.style.display = 'none';
-    });
-  }
-
-  function renderizarResultados(itens) {
-    const container = document.getElementById('ag-search-results');
-    if (itens.length === 0) {
-      container.innerHTML = '<div style="padding:20px; color:#666; text-align:center">Nenhum título encontrado...</div>';
-    } else {
-      container.innerHTML = itens.map(item => `
-        <div class="ag-search-item" onclick="window.abrirAbaPorId('${item.id}'); document.getElementById('ag-search-results').style.display='none';">
-          <div class="ag-search-item-color" style="background: ${item.cor || '#e50914'}"></div>
-          <div class="ag-search-item-info">
-            <span class="ag-search-item-title">${item.sessao}</span>
-            <span class="ag-search-item-sub">Ver conteúdo completo</span>
-          </div>
-          <i class="fas fa-chevron-right" style="color:#333; font-size:12px"></i>
-        </div>
-      `).join('');
-    }
-    container.style.display = 'block';
-  }
-
-  // CARREGAMENTO DE CONTEÚDO FIREBASE
   async function carregarConteudo() {
     const mainContainer = document.getElementById("dynamic-sections");
+
     if (!mainContainer || mainContainer.dataset.loaded === "true") return;
     mainContainer.dataset.loaded = "true";
 
+    // Criamos um array de promessas para carregar tudo em paralelo
     const promises = configSessoes.map(async (conf) => {
       try {
-        const colRef = collection(db, "anigeeknews.web.app/animes_filmes_series_games_noticias/" + conf.sub);
+        const colRef = collection(
+          db,
+          "anigeeknews.web.app/animes_filmes_series_games_noticias/" + conf.sub
+        );
+
         const q = query(colRef, limit(conf.qtd));
         const snap = await getDocs(q);
+
         if (snap.empty) return null;
 
         let cardsHTML = "";
+
         snap.forEach(doc => {
           const data = doc.data();
+          
+          // Limpeza do Título: Prioriza data.titulo, senão limpa o ID do documento
           const cardTitulo = data.titulo || doc.id.replace(/_/g, " ").toUpperCase();
+          
+          // Meta info: Categoria + Ano (se houver) ou apenas categoria
           const cardCat = data.categoria || "Série";
           const infoMeta = data.ano ? `${cardCat} • ${data.ano}` : cardCat;
+
           const cardImg = (data.fichaCategoria && data.fichaCategoria.perfilImg) || 
                           data.perfilImg || data.capaNoticia || data.capaUrl || 
                           "https://via.placeholder.com/640x360?text=AniGeek+TV";
 
+          // Lógica de Redirecionamento
           const linkArtigo = data.linkArtigo || "";
-          let onclickAction = linkArtigo.includes("secao=") ? 
-              `window.abrirAbaPorId('${linkArtigo.split("secao=")[1].split("&")[0]}')` : 
-              `location.href='${linkArtigo || `index.html?id=${doc.id}`}'`;
+          let acaoClique = "";
 
+          if (linkArtigo.includes("secao=")) {
+            const idExtraido = linkArtigo.split("secao=")[1].split("&")[0];
+            acaoClique = `window.abrirAbaPorId('${idExtraido}')`;
+          } else {
+            const linkDestino = linkArtigo || `index.html?id=${doc.id}`;
+            acaoClique = `location.href='${linkDestino}'`;
+          }
+
+          // Construção da string do card
           cardsHTML += `
-            <div class="anime-card" onclick="${onclickAction}" role="button" tabindex="0">
+            <div class="anime-card" onclick="${acaoClique}" role="button" tabindex="0">
               <div class="poster-wrapper">
-                <img src="${cardImg.trim()}" class="poster-img" loading="lazy" onerror="this.src='https://via.placeholder.com/640x360?text=Imagem+Indisponível'">
+                <img
+                  src="${cardImg.trim()}"
+                  class="poster-img"
+                  loading="lazy"
+                  alt="${cardTitulo}"
+                  onerror="this.src='https://via.placeholder.com/640x360?text=Imagem+Indisponível'"
+                >
               </div>
               <div class="anime-title">${cardTitulo}</div>
               <div class="anime-meta">${infoMeta}</div>
@@ -258,14 +111,20 @@
           `;
         });
 
-        return { titulo: conf.titulo, html: cardsHTML };
+        return {
+          titulo: conf.titulo,
+          html: cardsHTML
+        };
+
       } catch (e) {
         console.error("Erro ao carregar sessão:", conf.sub, e);
         return null;
       }
     });
 
+    // Aguarda todas as sessões carregarem e renderiza de uma vez
     const resultados = await Promise.all(promises);
+    
     mainContainer.innerHTML = resultados
       .filter(res => res !== null)
       .map(res => `
@@ -274,8 +133,6 @@
           <div class="cards-row">${res.html}</div>
         </section>
       `).join('');
-
-    iniciarMotorBusca();
   }
 
   carregarConteudo();
