@@ -52,9 +52,8 @@
     if (!mainContainer || mainContainer.dataset.loaded === "true") return;
     mainContainer.dataset.loaded = "true";
 
-    mainContainer.innerHTML = "";
-
-    for (const conf of configSessoes) {
+    // Criamos um array de promessas para carregar tudo em paralelo
+    const promises = configSessoes.map(async (conf) => {
       try {
         const colRef = collection(
           db,
@@ -64,58 +63,76 @@
         const q = query(colRef, limit(conf.qtd));
         const snap = await getDocs(q);
 
-        if (snap.empty) continue;
+        if (snap.empty) return null;
 
-        const section = document.createElement("section");
-        section.className = "content-section";
-        section.innerHTML = `
-          <h2 class="section-title">${conf.titulo}</h2>
-          <div class="cards-row"></div>
-        `;
-        mainContainer.appendChild(section);
-
-        const row = section.querySelector(".cards-row");
+        let cardsHTML = "";
 
         snap.forEach(doc => {
           const data = doc.data();
-          const cardTitulo = data.titulo || doc.id.replace(/_/g, " ");
+          
+          // Limpeza do Título: Prioriza data.titulo, senão limpa o ID do documento
+          const cardTitulo = data.titulo || doc.id.replace(/_/g, " ").toUpperCase();
+          
+          // Meta info: Categoria + Ano (se houver) ou apenas categoria
           const cardCat = data.categoria || "Série";
-          const cardImg = (data.fichaCategoria && data.fichaCategoria.perfilImg) || data.perfilImg || data.capaNoticia || data.capaUrl || "https://via.placeholder.com/640x360?text=AniGeek+TV";
+          const infoMeta = data.ano ? `${cardCat} • ${data.ano}` : cardCat;
 
-          // --- LÓGICA DE REDIRECIONAMENTO INTELIGENTE ---
+          const cardImg = (data.fichaCategoria && data.fichaCategoria.perfilImg) || 
+                          data.perfilImg || data.capaNoticia || data.capaUrl || 
+                          "https://via.placeholder.com/640x360?text=AniGeek+TV";
+
+          // Lógica de Redirecionamento
           const linkArtigo = data.linkArtigo || "";
           let acaoClique = "";
 
           if (linkArtigo.includes("secao=")) {
-            // Extrai o ID após "secao=" (ex: Jujutsu_kaisen_shimetsu_kaiyu)
             const idExtraido = linkArtigo.split("secao=")[1].split("&")[0];
             acaoClique = `window.abrirAbaPorId('${idExtraido}')`;
           } else {
-            // Se não tiver o parâmetro secao, abre o link normalmente ou usa o index.html?id
             const linkDestino = linkArtigo || `index.html?id=${doc.id}`;
             acaoClique = `location.href='${linkDestino}'`;
           }
 
-          row.innerHTML += `
-            <div class="anime-card" onclick="${acaoClique}">
+          // Construção da string do card
+          cardsHTML += `
+            <div class="anime-card" onclick="${acaoClique}" role="button" tabindex="0">
               <div class="poster-wrapper">
                 <img
                   src="${cardImg.trim()}"
                   class="poster-img"
                   loading="lazy"
                   alt="${cardTitulo}"
+                  onerror="this.src='https://via.placeholder.com/640x360?text=Imagem+Indisponível'"
                 >
               </div>
               <div class="anime-title">${cardTitulo}</div>
-              <div class="anime-meta">${cardCat} • ${doc.id.substring(0, 5)}</div>
+              <div class="anime-meta">${infoMeta}</div>
             </div>
           `;
         });
 
+        return {
+          titulo: conf.titulo,
+          html: cardsHTML
+        };
+
       } catch (e) {
         console.error("Erro ao carregar sessão:", conf.sub, e);
+        return null;
       }
-    }
+    });
+
+    // Aguarda todas as sessões carregarem e renderiza de uma vez
+    const resultados = await Promise.all(promises);
+    
+    mainContainer.innerHTML = resultados
+      .filter(res => res !== null)
+      .map(res => `
+        <section class="content-section">
+          <h2 class="section-title">${res.titulo}</h2>
+          <div class="cards-row">${res.html}</div>
+        </section>
+      `).join('');
   }
 
   carregarConteudo();
