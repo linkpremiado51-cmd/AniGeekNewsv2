@@ -1,7 +1,78 @@
+<style>
+  /* Estilização da Barra de Pesquisa */
+  .search-container {
+    position: relative;
+    max-width: 600px;
+    margin: 0 auto 20px auto;
+    z-index: 100;
+  }
+  .search-input-wrapper {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 0px;
+    padding: 10px 20px;
+    transition: all 0.3s ease;
+  }
+  .search-input-wrapper:focus-within {
+    border-color: #00d4ff;
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
+  }
+  #search-input {
+    background: transparent;
+    border: none;
+    color: white;
+    width: 100%;
+    outline: none;
+    font-size: 16px;
+  }
+  .search-results {
+    position: absolute;
+    top: 110%;
+    left: 0;
+    right: 0;
+    background: #1a1a1a;
+    border-radius: 0px;
+    max-height: 400px;
+    overflow-y: auto;
+    display: none;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  }
+  .search-item {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    cursor: pointer;
+    border-bottom: 1px solid #333;
+    transition: background 0.2s;
+  }
+  .search-item:hover { background: rgba(255,255,255,0.05); }
+  .search-item img {
+    width: 50px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 0px;
+    margin-right: 15px;
+  }
+  .search-item-info { flex: 1; }
+  .search-item-title { color: white; font-weight: bold; font-size: 14px; margin-bottom: 4px; }
+  .search-item-cat { 
+    font-size: 11px; 
+    padding: 2px 8px; 
+    border-radius: 0px; 
+    display: inline-block; 
+    color: white;
+    text-transform: uppercase;
+  }
+</style>
+
 <div class="hero-container">
   <div class="hero-background"></div>
   <div class="hero-overlay"></div>
   <div class="hero-content">
+
     <div class="hero-logo-text">ANIME I GEEK TV</div>
     <div class="hero-subtext">streaming de animes filmes e series</div>
     <div class="meta-tags">
@@ -12,6 +83,13 @@
     </div>
     <button class="btn-primary">ASSISTIR AGORA</button>
   </div>
+   <div class="search-container">
+   <div class="search-input-wrapper">
+     <i class="fas fa-search" style="color: #aaa; margin-right: 10px;"></i>
+     <input type="text" id="search-input" placeholder="Pesquisar animes, filmes ou gêneros...">
+   </div>
+   <div id="search-results" class="search-results"></div>
+ </div>
 </div>
 
 <div id="dynamic-sections"></div>
@@ -46,64 +124,55 @@
     { titulo: "Melhores da Temporada", sub: "melhores_da_temporada", qtd: 24 }
   ];
 
+  // Variável global para armazenar todos os dados para a busca rápida
+  let todosOsDados = [];
+
+  // Função para tratar o clique (usada nos cards e na busca)
+  window.executarAcaoClique = function(data, docId) {
+    const linkArtigo = data.linkArtigo || "";
+    if (linkArtigo.includes("secao=")) {
+      const idExtraido = linkArtigo.split("secao=")[1].split("&")[0];
+      if (typeof window.abrirAbaPorId === 'function') {
+        window.abrirAbaPorId(idExtraido);
+      } else {
+        console.warn("Função abrirAbaPorId não definida.");
+      }
+    } else {
+      const linkDestino = linkArtigo || `index.html?id=${docId}`;
+      location.href = linkDestino;
+    }
+  };
+
   async function carregarConteudo() {
     const mainContainer = document.getElementById("dynamic-sections");
-
     if (!mainContainer || mainContainer.dataset.loaded === "true") return;
     mainContainer.dataset.loaded = "true";
 
-    // Criamos um array de promessas para carregar tudo em paralelo
     const promises = configSessoes.map(async (conf) => {
       try {
-        const colRef = collection(
-          db,
-          "anigeeknews.web.app/animes_filmes_series_games_noticias/" + conf.sub
-        );
-
+        const colRef = collection(db, "anigeeknews.web.app/animes_filmes_series_games_noticias/" + conf.sub);
         const q = query(colRef, limit(conf.qtd));
         const snap = await getDocs(q);
 
         if (snap.empty) return null;
 
         let cardsHTML = "";
-
         snap.forEach(doc => {
           const data = doc.data();
+          const docId = doc.id;
           
-          // Limpeza do Título: Prioriza data.titulo, senão limpa o ID do documento
-          const cardTitulo = data.titulo || doc.id.replace(/_/g, " ").toUpperCase();
-          
-          // Meta info: Categoria + Ano (se houver) ou apenas categoria
+          // Guardar para o motor de busca
+          todosOsDados.push({ ...data, id: docId });
+
+          const cardTitulo = data.titulo || docId.replace(/_/g, " ").toUpperCase();
           const cardCat = data.categoria || "Série";
           const infoMeta = data.ano ? `${cardCat} • ${data.ano}` : cardCat;
+          const cardImg = data.perfilImg || (data.fichaCategoria && data.fichaCategoria.perfilImg) || data.capaNoticia || data.capaUrl || "https://via.placeholder.com/640x360?text=AniGeek+TV";
 
-          const cardImg = (data.fichaCategoria && data.fichaCategoria.perfilImg) || 
-                          data.perfilImg || data.capaNoticia || data.capaUrl || 
-                          "https://via.placeholder.com/640x360?text=AniGeek+TV";
-
-          // Lógica de Redirecionamento
-          const linkArtigo = data.linkArtigo || "";
-          let acaoClique = "";
-
-          if (linkArtigo.includes("secao=")) {
-            const idExtraido = linkArtigo.split("secao=")[1].split("&")[0];
-            acaoClique = `window.abrirAbaPorId('${idExtraido}')`;
-          } else {
-            const linkDestino = linkArtigo || `index.html?id=${doc.id}`;
-            acaoClique = `location.href='${linkDestino}'`;
-          }
-
-          // Construção da string do card
           cardsHTML += `
-            <div class="anime-card" onclick="${acaoClique}" role="button" tabindex="0">
+            <div class="anime-card" onclick="executarAcaoClique(${JSON.stringify(data).replace(/"/g, '&quot;')}, '${docId}')" role="button" tabindex="0">
               <div class="poster-wrapper">
-                <img
-                  src="${cardImg.trim()}"
-                  class="poster-img"
-                  loading="lazy"
-                  alt="${cardTitulo}"
-                  onerror="this.src='https://via.placeholder.com/640x360?text=Imagem+Indisponível'"
-                >
+                <img src="${cardImg.trim()}" class="poster-img" loading="lazy" alt="${cardTitulo}" onerror="this.src='https://via.placeholder.com/640x360?text=Imagem+Indisponível'">
               </div>
               <div class="anime-title">${cardTitulo}</div>
               <div class="anime-meta">${infoMeta}</div>
@@ -111,20 +180,14 @@
           `;
         });
 
-        return {
-          titulo: conf.titulo,
-          html: cardsHTML
-        };
-
+        return { titulo: conf.titulo, html: cardsHTML };
       } catch (e) {
         console.error("Erro ao carregar sessão:", conf.sub, e);
         return null;
       }
     });
 
-    // Aguarda todas as sessões carregarem e renderiza de uma vez
     const resultados = await Promise.all(promises);
-    
     mainContainer.innerHTML = resultados
       .filter(res => res !== null)
       .map(res => `
@@ -133,6 +196,61 @@
           <div class="cards-row">${res.html}</div>
         </section>
       `).join('');
+
+    iniciarBusca();
+  }
+
+  function iniciarBusca() {
+    const input = document.getElementById('search-input');
+    const resultsContainer = document.getElementById('search-results');
+
+    input.addEventListener('input', (e) => {
+      const termo = e.target.value.toLowerCase();
+      if (termo.length < 2) {
+        resultsContainer.style.display = 'none';
+        return;
+      }
+
+      // Filtragem inteligente: busca no título ou na categoria (gênero)
+      const filtrados = todosOsDados.filter(item => {
+        const titulo = (item.titulo || "").toLowerCase();
+        const categoria = (item.categoria || "").toLowerCase();
+        return titulo.includes(termo) || categoria.includes(termo);
+      });
+
+      exibirResultados(filtrados.slice(0, 8)); // Limita a 8 resultados na barra
+    });
+
+    // Fecha a busca ao clicar fora
+    document.addEventListener('click', (e) => {
+      if (!input.contains(e.target) && !resultsContainer.contains(e.target)) {
+        resultsContainer.style.display = 'none';
+      }
+    });
+  }
+
+  function exibirResultados(itens) {
+    const resultsContainer = document.getElementById('search-results');
+    if (itens.length === 0) {
+      resultsContainer.innerHTML = '<div style="padding:15px; color: #888;">Nenhum resultado encontrado...</div>';
+    } else {
+      resultsContainer.innerHTML = itens.map(item => {
+        const titulo = item.titulo || item.id.replace(/_/g, " ").toUpperCase();
+        const img = item.perfilImg || (item.fichaCategoria && item.fichaCategoria.perfilImg) || "https://via.placeholder.com/100";
+        const cor = item.cor || "#00d4ff"; // Usa o campo cor do Firebase ou um padrão
+        
+        return `
+          <div class="search-item" onclick="executarAcaoClique(${JSON.stringify(item).replace(/"/g, '&quot;')}, '${item.id}')">
+            <img src="${img}" alt="${titulo}">
+            <div class="search-item-info">
+              <div class="search-item-title">${titulo}</div>
+              <div class="search-item-cat" style="background: ${cor}">${item.categoria || 'Geral'}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+    resultsContainer.style.display = 'block';
   }
 
   carregarConteudo();
