@@ -1,12 +1,14 @@
 /* ======================================================
-   AniGeekNews – Enterprise Section System v9.0 (Ultimate Edit)
+   AniGeekNews – Enterprise Section System v9.0 (Custom Edit)
    • Títulos de Sessão Clicáveis
    • Notificações Toast
-   • Layout Estático e UX Aprimorada (Sem foco automático invasivo)
-   • Sistema de Watchlist e Concluídos (Filtros Visuais)
-   • Botão "Voltar" para ver todas as abas
-   • Menu Hambúrguer e Menu de Contexto
-   • Status de Visualização (Borda Amarela/Azul)
+   • Layout Estático (Imagem e Container não pulam)
+   • Menu Hambúrguer
+   • Menu Flutuante (Context Menu) nas abas ativas
+   • Status de Visualização (Borda Amarela/Azul persistente)
+   • Substituição automática de abas ao atingir limite
+   • Filtro por Watchlist e Concluídos
+   • Botão de Voltar para visualização normal
 ====================================================== */
 (function(){
 
@@ -14,16 +16,15 @@ const CONFIG = {
   MAX_TABS: 19,
   KEYS: {
     ORDER: 'ag_v9_order',
-    MODE:  'ag_v9_mode',
+    MODE:  'ag_v9_mode', // 'dynamic' ou 'fixed'
     STATS: 'ag_v9_stats',
-    STATUS: 'ag_v9_status',
-    VIEW: 'ag_v9_current_view' // Salva o filtro atual (all, watchlist, watched)
+    STATUS: 'ag_v9_status' // Salva se é 'watched' ou 'later'
   },
-  FIXED_TAB: 'anigeek_tv'
+  FIXED_TAB: 'anigeek_tv' // Aba fixa que não pode ser removida
 };
 
 /* ===========================
-   BANCO DE DADOS COMPLETO
+   BANCO DE DADOS
 =========================== */
 const CATALOGO = [
   { sessao: "Jujutsu Kaisen Shimetsu Kaiyu", id: "Jujutsu_kaisen_shimetsu_kaiyu", cor: "#e63946", itens: [] },
@@ -131,9 +132,10 @@ const CATALOGO = [
 ];
 
 /* ===========================
-   CSS INJETADO (ATUALIZADO)
+   CSS INJETADO
 =========================== */
 const styles = `
+  /* --- LAYOUT DA GAVETA FIXA --- */
   #ag-drawer {
     background: #ffffff;
     border-bottom: 1px solid #e0e0e0;
@@ -145,138 +147,425 @@ const styles = `
     position: absolute;
     left: 0;
     z-index: 1000;
+    box-shadow: 0 10.5px 21px rgba(0,0,0,0.08);
     display: flex;
     flex-direction: column;
   }
-  body.dark-mode #ag-drawer { background: #141414; border-color: #333; }
-  #ag-drawer.open { height: 85vh; opacity: 1; }
-
+  body.dark-mode #ag-drawer {
+    background: #141414;
+    border-color: #333;
+    box-shadow: 0 10.5px 21px rgba(0,0,0,0.5);
+  }
+  #ag-drawer.open {
+    height: 85vh; /* Altura Fixa */
+    opacity: 1;
+  }
+  /* --- CAPA DO MENU --- */
   .ag-drawer-cover {
+    position: relative;
     width: 100%;
+    min-height: 120px; /* Altura fixa mínima */
     height: 120px;
     background-image: url('https://i.postimg.cc/HWM72wfT/the-pensive-journey-by-chcofficial-dhme17e-pre.jpg');
     background-size: cover;
     background-position: center;
+    background-repeat: no-repeat;
+    margin-bottom: 21px;
     flex-shrink: 0;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
   }
-  
+  body.dark-mode .ag-drawer-cover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  }
+  /* IMAGEM DO PERSONAGEM FIXA NO CANTO DO DRAWER */
   .ag-char-fixed {
     position: absolute;
-    bottom: 0; right: 0;
-    height: 90%;
-    opacity: 0;
-    transition: opacity 0.5s;
+    bottom: 0;
+    right: 0;
+    height: 95%;
+    width: auto;
+    max-width: 50vw;
+    object-fit: contain;
+    object-position: bottom right;
     pointer-events: none;
     z-index: 0;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
   }
-  #ag-drawer.open .ag-char-fixed { opacity: 1; }
-
+  #ag-drawer.open .ag-char-fixed {
+    opacity: 1;
+  }
   .ag-drawer-scroll {
-    flex: 1;
-    overflow-y: auto;
-    padding: 15px;
     position: relative;
     z-index: 5;
+    flex: 1; /* Ocupa o espaço restante */
+    overflow-y: auto;
+    padding: 21px 14px;
+    scrollbar-width: thin;
+    height: 100%;
   }
-
-  /* HEADER E BOTÕES NOVOS */
+  /* --- HEADER: PESQUISA E MODOS --- */
   .ag-drawer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    max-width: 840px;
     position: sticky;
-    top: -15px;
-    background: rgba(255,255,255,0.9);
-    backdrop-filter: blur(10px);
+    top: -21px;
     z-index: 100;
-    padding: 10px 0;
-    margin-bottom: 15px;
-    border-bottom: 1px solid rgba(0,0,0,0.05);
+    margin: -21px auto 21px auto;
+    padding: 17.5px 0;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(8.4px);
+    -webkit-backdrop-filter: blur(8.4px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    transition: background 0.3s ease;
   }
-  body.dark-mode .ag-drawer-header { background: rgba(20,20,20,0.9); }
-
-  .ag-search-wrapper { position: relative; margin-bottom: 10px; }
+  body.dark-mode .ag-drawer-header {
+    background: rgba(20, 20, 20, 0.85);
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+  .ag-drawer-header::after {
+    content: '';
+    position: absolute;
+    bottom: -14px;
+    left: 0;
+    width: 100%;
+    height: 14px;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.9), transparent);
+    pointer-events: none;
+  }
+  body.dark-mode .ag-drawer-header::after {
+    background: linear-gradient(to bottom, rgba(20, 20, 20, 0.9), transparent);
+  }
+  .ag-search-wrapper {
+    position: relative;
+    flex: 1;
+    min-width: 196px;
+  }
+  .ag-search-icon-svg {
+    position: absolute;
+    left: 9.8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 12.6px;
+    height: 12.6px;
+    fill: #999;
+    pointer-events: none;
+  }
   .ag-search-input {
     width: 100%;
-    padding: 10px 10px 10px 35px;
-    border-radius: 8px;
+    padding: 7.7px 10.5px 7.7px 31.5px;
+    border-radius: 7px;
     border: 1px solid rgba(0,0,0,0.1);
-    background: rgba(0,0,0,0.05);
-    font-size: 14px;
+    background: rgba(0,0,0,0.04);
+    font-size: 9.8px;
+    font-weight: 500;
     outline: none;
+    transition: all 0.3s ease;
   }
-  body.dark-mode .ag-search-input { background: #222; color: #fff; border-color: #444; }
-
-  /* CONTAINER DE BOTÕES DE NAVEGAÇÃO (WATCHLIST/CONCLUÍDOS) */
-  .ag-nav-filters {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 10px;
+  body.dark-mode .ag-search-input {
+    background: rgba(255,255,255,0.05);
+    border-color: rgba(255,255,255,0.1);
+    color: #fff;
   }
-  .ag-nav-btn {
-    flex: 1;
-    padding: 8px;
-    border: none;
-    border-radius: 6px;
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: 0.3s;
+  .ag-search-input:focus {
+    background: #fff;
+    border-color: var(--primary-color, #e50914);
+    box-shadow: 0 2.8px 10.5px rgba(0,0,0,0.08);
+  }
+  body.dark-mode .ag-search-input:focus { background: #252525; }
+  /* --- BOTÕES DE MODO --- */
+  .ag-mode-group {
     background: rgba(0,0,0,0.05);
-    color: #666;
+    padding: 2.8px;
+    border-radius: 7px;
+    display: flex;
   }
-  body.dark-mode .ag-nav-btn { background: #222; color: #aaa; }
-  
-  .ag-nav-btn.active-later { background: #ffd700; color: #000; }
-  .ag-nav-btn.active-watched { background: #00bfff; color: #fff; }
-  .ag-nav-btn.active-all { background: #e50914; color: #fff; }
-
-  /* GRID E CARDS */
-  .ag-grid-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-    gap: 8px;
-  }
-  .ag-card {
-    background: #f4f4f4;
-    border: 2px solid transparent;
-    border-radius: 6px;
-    padding: 12px 8px;
-    font-size: 11px;
-    text-align: center;
+  body.dark-mode .ag-mode-group { background: rgba(255,255,255,0.08); }
+  .ag-mode-btn {
+    padding: 5.6px 11.2px;
+    border: none;
+    background: transparent;
+    border-radius: 4.9px;
+    font-size: 7.7px; font-weight: 800;
+    color: #888;
     cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.2s;
+  }
+  .ag-mode-btn.active {
+    background: #fff;
+    color: #000;
+    box-shadow: 0 1.4px 5.6px rgba(0,0,0,0.12);
+  }
+  body.dark-mode .ag-mode-btn.active {
+    background: #333;
+    color: #fff;
+  }
+  /* --- BOTÕES DE FILTRO --- */
+  .ag-filter-buttons {
+    display: flex;
+    gap: 7px;
+    margin-top: 14px;
+    justify-content: center;
+  }
+  .ag-filter-btn {
+    padding: 7px 14px;
+    border: none;
+    background: rgba(0,0,0,0.05);
+    border-radius: 7px;
+    font-size: 9.8px;
+    font-weight: 600;
+    color: #555;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  body.dark-mode .ag-filter-btn {
+    background: rgba(255,255,255,0.05);
+    color: #ccc;
+  }
+  .ag-filter-btn.active {
+    background: var(--primary-color, #e50914);
+    color: #fff;
+  }
+  /* --- SESSÕES (CABEÇALHOS CLICÁVEIS) --- */
+  .ag-section-block {
+    margin-bottom: 24.5px;
+    max-width: 840px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .ag-section-header-btn {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-bottom: 8.4px;
+    background: transparent;
+    border: none;
+    padding: 3.5px 0;
+    cursor: pointer;
+    width: fit-content;
     transition: 0.2s;
   }
-  body.dark-mode .ag-card { background: #1e1e1e; color: #ccc; }
-  .ag-card.is-selected { border-color: #e50914; font-weight: bold; }
-  .ag-card.status-later { border-color: #ffd700 !important; }
-  .ag-card.status-watched { border-color: #00bfff !important; }
+  .ag-section-header-btn:hover {
+    opacity: 0.7;
+  }
+  .ag-section-text {
+    font-size: 9.8px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    color: #333;
+  }
+  body.dark-mode .ag-section-text { color: #fff; }
+  .ag-section-header-btn.is-active .ag-section-text {
+    color: var(--primary-color, #e50914);
+    text-decoration: underline;
+    text-decoration-thickness: 1.4px;
+    text-underline-offset: 2.8px;
+  }
+  .ag-section-marker {
+    width: 7px;
+    height: 7px;
+    border-radius: 2.1px;
+    box-shadow: 0 0 3.5px rgba(0,0,0,0.2);
+  }
+  /* --- GRID --- */
+  .ag-grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
+    gap: 7px;
+  }
+  .ag-card {
+    position: relative;
+    background: #f9f9f9;
+    border: 2px solid transparent; /* Aumentado para suportar status */
+    border-radius: 4.2px;
+    padding: 8.4px 7px;
+    font-size: 9.1px;
+    font-weight: 500;
+    color: #444;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  body.dark-mode .ag-card {
+    background: #1e1e1e;
+    color: #ccc;
+  }
+  .ag-card:hover {
+    background: #ececec;
+    transform: translateY(-1.4px);
+  }
+  body.dark-mode .ag-card:hover { background: #2a2a2a; }
+  .ag-card.is-selected {
+    background: #fff;
+    border-color: var(--primary-color, #e50914);
+    color: var(--primary-color, #e50914);
+    box-shadow: inset 0 0 0 0.7px var(--primary-color, #e50914);
+    font-weight: 700;
+  }
+  body.dark-mode .ag-card.is-selected { background: #1a1a1a; }
 
-  /* CONTEXT MENU */
+  /* ESTADOS PERSISTENTES (CORES) */
+  .ag-card.status-later {
+    border-color: #ffd700 !important; /* Amarelo */
+  }
+  .ag-card.status-watched {
+    border-color: #00bfff !important; /* Azul */
+  }
+
+  .ag-card-action {
+    position: absolute;
+    top: 2.1px;
+    right: 2.8px;
+    width: 11.2px;
+    height: 11.2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 7px;
+    border-radius: 50%;
+    color: inherit;
+    opacity: 0.6;
+    transition: 0.2s;
+  }
+  .ag-card-action:hover {
+    background: var(--primary-color, #e50914);
+    color: #fff !important;
+    opacity: 1;
+  }
+  /* --- TOAST NOTIFICATION --- */
+  #ag-toast-container {
+    position: fixed;
+    bottom: 21px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 99999;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+  .ag-toast {
+    background: rgba(30, 30, 30, 0.95);
+    color: #fff;
+    padding: 8.4px 16.8px;
+    border-radius: 35px;
+    font-size: 9.1px;
+    font-weight: 600;
+    box-shadow: 0 3.5px 10.5px rgba(0,0,0,0.3);
+    backdrop-filter: blur(3.5px);
+    opacity: 0;
+    transform: translateY(14px);
+    animation: agSlideUp 0.3s forwards;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .ag-toast.error { border-left: 2.8px solid #ff4444; }
+  .ag-toast.success { border-left: 2.8px solid #00C851; }
+  @keyframes agSlideUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes agFadeOut {
+    to { opacity: 0; transform: translateY(-7px); }
+  }
+  /* --- BARRA DE ABAS --- */
+  #filterScroller {
+    display: flex;
+    align-items: center;
+    position: relative;
+    gap: 5.6px;
+    padding-right: 0 !important;
+    overflow-x: auto;
+    scrollbar-width: none;
+    flex-wrap: nowrap;
+  }
+  #filterScroller::-webkit-scrollbar { display: none; }
+  .filter-tag.cfg-btn {
+    position: sticky;
+    right: 0 !important;
+    z-index: 99;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(5.6px);
+    -webkit-backdrop-filter: blur(5.6px);
+    min-width: 33.6px;
+    height: 23.8px;
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-left: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: -7px 0 14px rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+    font-size: 12.6px;
+    transition: all 0.3s ease;
+  }
+  .filter-tag.cfg-btn::before {
+    content: '';
+    position: absolute;
+    left: -14px;
+    top: 0;
+    width: 14px;
+    height: 100%;
+    background: linear-gradient(to right, transparent, rgba(255,255,255,0.9));
+    pointer-events: none;
+  }
+  body.dark-mode .filter-tag.cfg-btn {
+    background: rgba(20, 20, 20, 0.9);
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: -10.5px 0 17.5px rgba(0, 0, 0, 0.5);
+  }
+  body.dark-mode .filter-tag.cfg-btn::before {
+    background: linear-gradient(to right, transparent, rgba(20, 20, 20, 0.9));
+  }
+  .filter-tag.cfg-btn:active {
+    transform: scale(0.9);
+    opacity: 0.8;
+  }
+  /* --- CONTEXT MENU (MENU FLUTUANTE) --- */
   .ag-context-menu {
     position: fixed;
     background: #fff;
     border-radius: 8px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-    z-index: 999999;
-    min-width: 160px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
     padding: 5px 0;
+    z-index: 999999;
+    min-width: 150px;
+    animation: fadeInMenu 0.2s ease;
   }
-  body.dark-mode .ag-context-menu { background: #222; border: 1px solid #444; }
+  body.dark-mode .ag-context-menu {
+    background: #222;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.6);
+    border: 1px solid #333;
+  }
   .ag-context-menu-item {
-    padding: 10px 15px;
-    font-size: 12px;
+    padding: 8px 15px;
+    font-size: 11px;
+    color: #333;
     cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
+    transition: background 0.2s;
   }
-  .ag-context-menu-item:hover { background: rgba(0,0,0,0.05); }
+  body.dark-mode .ag-context-menu-item { color: #eee; }
+  .ag-context-menu-item:hover { background: #f0f0f0; }
   body.dark-mode .ag-context-menu-item:hover { background: #333; }
   .ag-context-menu-item.danger { color: #ff4444; }
-
-  /* TOAST */
-  #ag-toast-container { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 10000; pointer-events: none; }
-  .ag-toast { background: #333; color: #fff; padding: 10px 20px; border-radius: 50px; font-size: 12px; margin-top: 5px; animation: slideUp 0.3s forwards; }
-  @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeInMenu { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+  .ag-menu-indicator { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
 `;
 
 const styleSheet = document.createElement("style");
@@ -284,17 +573,23 @@ styleSheet.innerText = styles;
 document.head.appendChild(styleSheet);
 
 /* ===========================
-   SISTEMA DE TOAST
+   SISTEMA DE TOAST (NOTIFICAÇÃO)
 =========================== */
-function showToast(msg) {
-  let container = document.getElementById('ag-toast-container') || document.createElement('div');
-  container.id = 'ag-toast-container';
-  document.body.appendChild(container);
+function showToast(message, type = 'normal') {
+  let container = document.getElementById('ag-toast-container');
+  if(!container) {
+    container = document.createElement('div');
+    container.id = 'ag-toast-container';
+    document.body.appendChild(container);
+  }
   const toast = document.createElement('div');
-  toast.className = 'ag-toast';
-  toast.innerHTML = msg;
+  toast.className = `ag-toast ${type}`;
+  toast.innerHTML = message;
   container.appendChild(toast);
-  setTimeout(() => { toast.remove(); }, 3000);
+  setTimeout(() => {
+    toast.style.animation = 'agFadeOut 0.3s forwards';
+    setTimeout(() => toast.remove(), 300);
+  }, 3000);
 }
 
 /* ===========================
@@ -302,186 +597,428 @@ function showToast(msg) {
 =========================== */
 function load(k,d){ try{ return JSON.parse(localStorage.getItem(k)) ?? d }catch(e){ return d } }
 function save(k,v){ localStorage.setItem(k,JSON.stringify(v)); }
-
+function getMode(){ return load(CONFIG.KEYS.MODE, 'dynamic'); }
+function setMode(m){ save(CONFIG.KEYS.MODE, m); renderDrawer(); }
+function getOrder(){
+  const saved = load(CONFIG.KEYS.ORDER, null);
+  if(saved) return saved;
+  return [CONFIG.FIXED_TAB];
+}
 function getStatusMap(){ return load(CONFIG.KEYS.STATUS, {}); }
 function setStatus(id, status) {
   const map = getStatusMap();
-  if (map[id] === status) delete map[id]; // Toggle: se clicar de novo, remove
-  else map[id] = status;
+  if (status === null) {
+    delete map[id];
+  } else {
+    map[id] = status; // 'later', 'watched', ou null
+  }
   save(CONFIG.KEYS.STATUS, map);
-  renderDrawer(document.getElementById('ag-search-input')?.value || "", false);
+  renderDrawer(document.getElementById('ag-search-input')?.value || "");
+}
+function ensureFixedTab(order) {
+  if (!order.includes(CONFIG.FIXED_TAB)) {
+    order.unshift(CONFIG.FIXED_TAB);
+  } else {
+    const idx = order.indexOf(CONFIG.FIXED_TAB);
+    if(idx > 0) {
+       order.splice(idx, 1);
+       order.unshift(CONFIG.FIXED_TAB);
+    }
+  }
+  return order;
+}
+function findItem(id){
+  for(let sec of CATALOGO){
+    if(sec.id === id) return sec;
+    if (sec.itens) {
+      const item = sec.itens.find(i => i.id === id);
+      if(item) return item;
+    }
+  }
+  return null;
+}
+function track(id){
+  if(getMode() !== 'dynamic') return;
+  const stats = load(CONFIG.KEYS.STATS, {});
+  stats[id] = (stats[id] || 0) + 1;
+  save(CONFIG.KEYS.STATS, stats);
+  const order = getOrder();
 }
 
-function getOrder(){ return load(CONFIG.KEYS.ORDER, [CONFIG.FIXED_TAB]); }
+/* ===========================
+   MENU FLUTUANTE (CONTEXT MENU)
+=========================== */
+function closeContextMenu() {
+  const existing = document.querySelector('.ag-context-menu');
+  if(existing) existing.remove();
+}
+
+function openContextMenu(e, id, label) {
+  e.preventDefault();
+  e.stopPropagation();
+  closeContextMenu();
+
+  const menu = document.createElement('div');
+  menu.className = 'ag-context-menu';
+
+  const statusMap = getStatusMap();
+  const currentStatus = statusMap[id];
+
+  // Opções
+  const ops = [
+    {
+      text: currentStatus === 'later' ? 'Remover de "Assistir Depois"' : 'Assistir mais tarde',
+      color: '#ffd700',
+      action: () => {
+        if (currentStatus === 'later') {
+          setStatus(id, null);
+          showToast('Removido de "Assistir Depois"');
+        } else {
+          setStatus(id, 'later');
+          showToast('Marcado para assistir mais tarde');
+        }
+      }
+    },
+    {
+      text: currentStatus === 'watched' ? 'Remover de "Assistidos"' : 'Marcar como assistido',
+      color: '#00bfff',
+      action: () => {
+        if (currentStatus === 'watched') {
+          setStatus(id, null);
+          showToast('Removido de "Assistidos"');
+        } else {
+          setStatus(id, 'watched');
+          showToast('Marcado como assistido');
+        }
+      }
+    },
+    { text: 'Retirar aba', color: null, danger: true, action: () => { toggleItem(id, label); } }
+  ];
+
+  ops.forEach(op => {
+    const item = document.createElement('div');
+    item.className = `ag-context-menu-item ${op.danger ? 'danger' : ''}`;
+    let icon = '';
+    if(op.color) icon = `<span class="ag-menu-indicator" style="background:${op.color}"></span>`;
+    item.innerHTML = `${icon} ${op.text}`;
+    item.onclick = () => {
+      op.action();
+      closeContextMenu();
+    };
+    menu.appendChild(item);
+  });
+
+  document.body.appendChild(menu);
+
+  // Posicionamento simples
+  const rect = e.target.getBoundingClientRect();
+  menu.style.top = `${e.clientY}px`;
+  menu.style.left = `${e.clientX}px`;
+
+  // Fechar ao clicar fora
+  setTimeout(() => {
+    document.addEventListener('click', closeContextMenu, { once: true });
+  }, 0);
+}
 
 /* ===========================
-   RENDERIZAÇÃO DA BARRA (FILTER SCROLLER)
+   RENDERIZAÇÃO BARRA HORIZONTAL
 =========================== */
 function renderBar(){
   const bar = document.getElementById('filterScroller');
   if(!bar) return;
-  
-  const order = getOrder();
-  bar.innerHTML = '';
-  
-  order.forEach(id => {
-    const item = CATALOGO.find(c => c.id === id);
-    if(!item) return;
-    const btn = document.createElement('button');
-    btn.className = 'filter-tag';
-    btn.textContent = item.sessao;
-    btn.dataset.id = id;
-    btn.onclick = () => {
-      document.querySelectorAll('.filter-tag').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      document.getElementById('ag-drawer').classList.remove('open');
-      if(window.carregarSecao) window.carregarSecao(id);
-    };
-    bar.appendChild(btn);
-  });
-
-  const cfg = document.createElement('button');
-  cfg.className = 'filter-tag cfg-btn';
-  cfg.innerHTML = '☰';
-  cfg.onclick = toggleDrawer;
-  bar.appendChild(cfg);
-}
-
-function toggleDrawer(){
-  const drawer = document.getElementById('ag-drawer');
-  if(drawer.classList.contains('open')) drawer.classList.remove('open');
-  else { renderDrawer(); drawer.classList.add('open'); }
-}
-
-/* ===========================
-   RENDERIZAÇÃO DO DRAWER (CATÁLOGO)
-=========================== */
-function renderDrawer(filterText = "", shouldFocus = true) {
-  const drawer = document.getElementById('ag-drawer');
-  const view = load(CONFIG.KEYS.VIEW, 'all');
-  const statusMap = getStatusMap();
-  const order = getOrder();
-
-  drawer.innerHTML = `
-    <div class="ag-drawer-cover"></div>
-    <img src="https://i.postimg.cc/W49RX3dK/anime-boy-render-04-by-luxio56lavi-d5xed2a.png" class="ag-char-fixed">
-    <div class="ag-drawer-scroll">
-      <div class="ag-drawer-header">
-        <div class="ag-search-wrapper">
-          <input type="text" class="ag-search-input" id="ag-search-input" placeholder="Pesquisar anime..." value="${filterText}">
-        </div>
-        <div class="ag-nav-filters">
-          <button class="ag-nav-btn ${view==='watchlist'?'active-later':''}" id="nav-watchlist">Watchlist</button>
-          <button class="ag-nav-btn ${view==='watched'?'active-watched':''}" id="nav-watched">Concluídos</button>
-          <button class="ag-nav-btn ${view==='all'?'active-all':''}" id="nav-all">Ver Tudo</button>
-        </div>
-      </div>
-      <div id="ag-catalog-grid" class="ag-grid-container"></div>
-    </div>
-  `;
-
-  const grid = document.getElementById('ag-catalog-grid');
-  const term = filterText.toLowerCase();
-
-  CATALOGO.forEach(item => {
-    const status = statusMap[item.id];
-    const isSelected = order.includes(item.id);
-    
-    // FILTROS DE VISUALIZAÇÃO
-    if (view === 'watchlist' && status !== 'later') return;
-    if (view === 'watched' && status !== 'watched') return;
-    if (term && !item.sessao.toLowerCase().includes(term)) return;
-
-    const card = document.createElement('div');
-    let statusClass = status === 'later' ? 'status-later' : (status === 'watched' ? 'status-watched' : '');
-    card.className = `ag-card ${isSelected ? 'is-selected' : ''} ${statusClass}`;
-    card.innerHTML = item.sessao;
-    
-    card.onclick = (e) => {
-      if (isSelected) openContextMenu(e, item.id, item.sessao);
-      else toggleItem(item.id, item.sessao);
-    };
-    grid.appendChild(card);
-  });
-
-  // Eventos dos Novos Botões
-  document.getElementById('nav-watchlist').onclick = () => { save(CONFIG.KEYS.VIEW, 'watchlist'); renderDrawer("", false); };
-  document.getElementById('nav-watched').onclick = () => { save(CONFIG.KEYS.VIEW, 'watched'); renderDrawer("", false); };
-  document.getElementById('nav-all').onclick = () => { save(CONFIG.KEYS.VIEW, 'all'); renderDrawer("", false); };
-
-  const searchInput = document.getElementById('ag-search-input');
-  searchInput.oninput = (e) => renderDrawer(e.target.value, true);
-  
-  // CORREÇÃO UX: Só foca se explicitamente solicitado (evita abrir teclado ao marcar assistido)
-  if(shouldFocus) {
-    searchInput.focus();
-    searchInput.setSelectionRange(filterText.length, filterText.length);
-  }
-}
-
-/* ===========================
-   MENU DE CONTEXTO (AÇÕES)
-=========================== */
-function openContextMenu(e, id, label) {
-  e.preventDefault();
-  const existing = document.querySelector('.ag-context-menu');
-  if(existing) existing.remove();
-
-  const menu = document.createElement('div');
-  menu.className = 'ag-context-menu';
-  menu.style.top = `${e.clientY}px`;
-  menu.style.left = `${e.clientX}px`;
-
-  const ops = [
-    { text: '⭐ Assistir mais tarde', action: () => setStatus(id, 'later') },
-    { text: '✅ Marcar como assistido', action: () => setStatus(id, 'watched') },
-    { text: '❌ Retirar aba', danger: true, action: () => toggleItem(id, label) }
-  ];
-
-  ops.forEach(op => {
-    const div = document.createElement('div');
-    div.className = `ag-context-menu-item ${op.danger ? 'danger' : ''}`;
-    div.innerHTML = op.text;
-    div.onclick = () => { op.action(); menu.remove(); };
-    menu.appendChild(div);
-  });
-
-  document.body.appendChild(menu);
-  setTimeout(() => { document.addEventListener('click', () => menu.remove(), {once:true}); }, 10);
-}
-
-/* ===========================
-   ADICIONAR/REMOVER ABAS
-=========================== */
-function toggleItem(id, label) {
-  if (id === CONFIG.FIXED_TAB) { showToast("Aba principal não pode ser removida"); return; }
-  
-  let order = getOrder();
-  if (order.includes(id)) {
-    order = order.filter(x => x !== id);
-    showToast(`Removido: ${label}`);
-  } else {
-    if (order.length >= CONFIG.MAX_TABS) {
-      order.splice(1, 1); // Remove a mais antiga (depois da fixa)
-    }
-    order.push(id);
-    showToast(`Adicionado: ${label}`);
-  }
-  
-  save(CONFIG.KEYS.ORDER, order);
-  renderBar();
-  renderDrawer(document.getElementById('ag-search-input')?.value || "", false);
-}
-
-// Inicialização
-window.addEventListener('DOMContentLoaded', () => {
-  if(!document.getElementById('ag-drawer')) {
-    const bar = document.getElementById('filterScroller');
-    const drawer = document.createElement('div');
+  let drawer = document.getElementById('ag-drawer');
+  if(!drawer) {
+    drawer = document.createElement('div');
     drawer.id = 'ag-drawer';
     bar.parentNode.insertBefore(drawer, bar.nextSibling);
   }
+  const order = ensureFixedTab(getOrder());
+  bar.innerHTML = '';
+  order.forEach(id => {
+    const item = findItem(id);
+    if(!item) return;
+    const btn = document.createElement('button');
+    btn.className = 'filter-tag';
+    btn.textContent = item.label || item.sessao;
+    btn.dataset.id = id;
+    btn.onclick = () => {
+      document.querySelectorAll('#filterScroller .filter-tag').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      track(id);
+      document.getElementById('ag-drawer').classList.remove('open');
+      const url = new URL(window.location);
+      url.searchParams.set('secao', id);
+      window.history.replaceState({}, '', url);
+      if(window.carregarSecao) window.carregarSecao(id);
+      setTimeout(() => { ensureTabVisible(btn); }, 50);
+    };
+    bar.appendChild(btn);
+  });
+  // Botão Menu Hambúrguer
+  const cfg = document.createElement('button');
+  cfg.className = 'filter-tag cfg-btn';
+  // Ícone SVG Menu Hambúrguer
+  cfg.innerHTML = `<svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>`;
+  cfg.onclick = toggleDrawer;
+  bar.appendChild(cfg);
+}
+function ensureTabVisible(tabElement) {
+  const scroller = document.getElementById('filterScroller');
+  if (!scroller || !tabElement) return;
+  const tabRect = tabElement.getBoundingClientRect();
+  const scrollerRect = scroller.getBoundingClientRect();
+  if (tabRect.left < scrollerRect.left || tabRect.right > scrollerRect.right) {
+    const tabCenter = tabElement.offsetLeft + tabElement.offsetWidth / 2;
+    const scrollerCenter = scroller.offsetWidth / 2;
+    scroller.scrollTo({ left: tabCenter - scrollerCenter, behavior: 'smooth' });
+  }
+}
+
+/* ===========================
+   GAVETA (DRAWER)
+=========================== */
+let currentFilter = 'all'; // 'all', 'later', 'watched'
+
+function toggleDrawer(){
+  const drawer = document.getElementById('ag-drawer');
+  if(!drawer) return;
+  if(drawer.classList.contains('open')){
+    drawer.classList.remove('open');
+  } else {
+    renderDrawer();
+    drawer.classList.add('open');
+  }
+}
+
+function setFilter(filter) {
+  currentFilter = filter;
+  const buttons = document.querySelectorAll('.ag-filter-btn');
+  buttons.forEach(btn => btn.classList.remove('active'));
+  const activeBtn = document.querySelector(`.ag-filter-btn[data-filter="${filter}"]`);
+  if (activeBtn) activeBtn.classList.add('active');
+  renderDrawer(document.getElementById('ag-search-input')?.value || "");
+}
+
+function renderDrawer(filterText = ""){
+  const drawer = document.getElementById('ag-drawer');
+  let order = ensureFixedTab(getOrder());
+  const statusMap = getStatusMap();
+  const currentMode = getMode();
+  const searchIcon = `<svg class="ag-search-icon-svg" viewBox="0 0 24 24"><path d="M21.71 20.29l-5.01-5.01C17.54 13.68 18 11.91 18 10c0-4.41-3.59-8-8-8S2 5.59 2 10s3.59 8 8 8c1.91 0 3.68-.46 5.28-1.3l5.01 5.01c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41z"/></svg>`;
+
+  let html = `
+    <div class="ag-drawer-cover"></div>
+    <img src="https://i.postimg.cc/W49RX3dK/anime-boy-render-04-by-luxio56lavi-d5xed2a.png" class="ag-char-fixed" alt="Anime Character">
+    <div class="ag-drawer-scroll">
+      <div class="ag-drawer-header">
+        <div class="ag-search-wrapper">
+          ${searchIcon}
+          <input type="text" class="ag-search-input" id="ag-search-input" placeholder="Pesquisar..." value="${filterText}">
+        </div>
+        <div class="ag-mode-group">
+          <button id="btn-fixo" class="ag-mode-btn ${currentMode==='fixed'?'active':''}">Fixo</button>
+          <button id="btn-dinamico" class="ag-mode-btn ${currentMode==='dynamic'?'active':''}">Automático</button>
+        </div>
+      </div>
+      <div class="ag-filter-buttons">
+        <button class="ag-filter-btn ${currentFilter === 'all' ? 'active' : ''}" data-filter="all">Todas</button>
+        <button class="ag-filter-btn ${currentFilter === 'later' ? 'active' : ''}" data-filter="later">Watchlist</button>
+        <button class="ag-filter-btn ${currentFilter === 'watched' ? 'active' : ''}" data-filter="watched">Concluídos</button>
+      </div>
+      <div id="ag-catalog-container"></div>
+      <div style="text-align:center; padding-top:20px; padding-bottom: 20px; font-size:12px; color:#888;">
+        ${order.length} de ${CONFIG.MAX_TABS} abas ativas
+      </div>
+    </div>
+  `;
+  drawer.innerHTML = html;
+
+  const container = document.getElementById('ag-catalog-container');
+  const term = filterText.toLowerCase();
+
+  // Botões de filtro
+  document.querySelectorAll('.ag-filter-btn').forEach(btn => {
+    btn.onclick = () => setFilter(btn.dataset.filter);
+  });
+
+  CATALOGO.forEach(sec => {
+    const itens = sec.itens || [];
+    const itensFiltrados = itens.filter(i => i.label && i.label.toLowerCase().includes(term));
+    const sessaoMatch = sec.sessao.toLowerCase().includes(term);
+    if(term !== "" && !sessaoMatch && itensFiltrados.length === 0) return;
+
+    const itensParaMostrar = sessaoMatch ? itens : itensFiltrados;
+    const sectionDiv = document.createElement('div');
+    sectionDiv.className = 'ag-section-block';
+
+    const isCatSelected = order.includes(sec.id);
+    const catStatus = statusMap[sec.id];
+
+    // Icone indicador
+    let catIcon = '';
+    if(isCatSelected) {
+       catIcon = ' <span style="font-size:10px; opacity:0.6; margin-left:5px">✓</span>';
+    }
+
+    sectionDiv.innerHTML = `
+      <button class="ag-section-header-btn ${isCatSelected ? 'is-active' : ''}" data-cat-id="${sec.id}">
+        <div class="ag-section-marker" style="background:${sec.cor}"></div>
+        <span class="ag-section-text">${sec.sessao}${catIcon}</span>
+      </button>
+      <div class="ag-grid-container"></div>
+    `;
+
+    // Lógica de clique na Sessão
+    sectionDiv.querySelector('.ag-section-header-btn').onclick = (e) => {
+        if(isCatSelected) {
+            openContextMenu(e, sec.id, sec.sessao);
+        } else {
+            toggleItem(sec.id, sec.sessao);
+        }
+    };
+
+    container.appendChild(sectionDiv);
+    const grid = sectionDiv.querySelector('.ag-grid-container');
+
+    itensParaMostrar.forEach(item => {
+      const isSelected = order.includes(item.id);
+      const itemStatus = statusMap[item.id];
+
+      // Filtro por status
+      if (currentFilter === 'later' && itemStatus !== 'later') return;
+      if (currentFilter === 'watched' && itemStatus !== 'watched') return;
+
+      let statusClass = '';
+      if(itemStatus === 'later') statusClass = 'status-later';
+      if(itemStatus === 'watched') statusClass = 'status-watched';
+
+      const card = document.createElement('div');
+      card.className = `ag-card ${isSelected ? 'is-selected' : ''} ${statusClass}`;
+
+      let actionIcon = '';
+      if(isSelected) {
+        actionIcon = '✓';
+      }
+
+      card.innerHTML = `
+        ${item.label}
+        ${isSelected ? `<div class="ag-card-action" data-id="${item.id}" data-action="true">${actionIcon}</div>` : ''}
+      `;
+
+      card.onclick = (e) => {
+        if(isSelected) {
+            openContextMenu(e, item.id, item.label);
+        } else {
+            toggleItem(item.id, item.label);
+        }
+      };
+
+      grid.appendChild(card);
+    });
+  });
+
+  const searchInput = document.getElementById('ag-search-input');
+  searchInput.oninput = (e) => { filterDrawer(e.target.value); };
+  searchInput.focus();
+
+  document.getElementById('btn-fixo').onclick = () => setMode('fixed');
+  document.getElementById('btn-dinamico').onclick = () => setMode('dynamic');
+}
+
+function filterDrawer(term) {
+  renderDrawer(term);
+  const input = document.getElementById('ag-search-input');
+  if(input) {
+      input.setSelectionRange(term.length, term.length);
+  }
+}
+
+/* ===========================
+   AÇÕES & NOTIFICAÇÕES
+=========================== */
+function toggleItem(id, label){
+  if (id === CONFIG.FIXED_TAB) {
+    showToast('Esta aba é fixa e não pode ser removida!', 'error');
+    return;
+  }
+  let order = ensureFixedTab(getOrder());
+
+  if(order.includes(id)){
+    // REMOVER
+    order = order.filter(x => x !== id);
+    showToast(`Removido: <b>${label}</b>`, 'normal');
+  } else {
+    // ADICIONAR
+    if(order.length >= CONFIG.MAX_TABS) {
+      const removed = order.pop();
+      showToast(`Limite atingido. Substituindo aba antiga.`, 'normal');
+    }
+    order.push(id);
+    showToast(`Adicionado: <b>${label}</b>`, 'success');
+  }
+
+  save(CONFIG.KEYS.ORDER, order);
   renderBar();
+
+  const currentInput = document.getElementById('ag-search-input');
+  const currentValue = currentInput ? currentInput.value : '';
+  renderDrawer(currentValue);
+
+  if(order.includes(id)) {
+      setTimeout(() => {
+        const button = document.querySelector(`#filterScroller .filter-tag[data-id="${id}"]`);
+        if (button) { button.click(); }
+      }, 100);
+  }
+}
+
+function ensureTabExists(id){
+  const exists = CATALOGO.some(sec => sec.id === id || (sec.itens && sec.itens.some(i => i.id === id)));
+  if (!exists) return false;
+  let order = ensureFixedTab(getOrder());
+  if (!order.includes(id)) {
+    if (order.length >= CONFIG.MAX_TABS) { order.pop(); }
+    order.push(id);
+    save(CONFIG.KEYS.ORDER, order);
+  }
+  return true;
+}
+
+/* ===========================
+   API GLOBAL
+=========================== */
+window.abrirAbaPorId = function(idAlvo) {
+  if(ensureTabExists(idAlvo)) {
+    renderBar();
+    setTimeout(() => {
+      const btn = document.querySelector(`#filterScroller .filter-tag[data-id="${idAlvo}"]`);
+      if(btn) {
+          btn.click();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }, 150);
+  } else {
+    showToast("Esta seção não foi encontrada no catálogo.", "error");
+  }
+};
+
+/* ===========================
+   CARREGAMENTO INICIAL
+=========================== */
+window.addEventListener('DOMContentLoaded', () => {
+  renderBar();
+  const params = new URLSearchParams(window.location.search);
+  const newsId = params.get('id');
+  const secaoForcada = params.get('secao');
+  if (newsId) {
+    const abaAlvo = 'anigeek_tv';
+    window.abrirAbaPorId(abaAlvo);
+    return;
+  }
+  if (secaoForcada) {
+    window.abrirAbaPorId(secaoForcada);
+  }
 });
 
 })();
