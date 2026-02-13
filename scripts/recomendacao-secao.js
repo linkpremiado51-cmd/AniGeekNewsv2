@@ -1,13 +1,12 @@
 /* ======================================================
-   AniGeekNews – Enterprise Section System v7.1 (Full)
-   • Títulos de Sessão Clicáveis (Categorias Pai)
-   • Notificações Toast Profissionais (Sem Alert)
-   • Controle de Foco (Teclado não abre sozinho)
-   • Design Harmônico
-   • URLs Compartilháveis por Aba
-   • Deep Linking: Abre aba correta ao receber ID de notícia
-   • Anime I Geek fixada como primeira aba (não removível)
-   • Scroll automático para abas selecionadas
+   AniGeekNews – Enterprise Section System v8.0 (Custom Edit)
+   • Títulos de Sessão Clicáveis
+   • Notificações Toast
+   • Layout Estático (Imagem e Container não pulam)
+   • Menu Hambúrguer
+   • Menu Flutuante (Context Menu) nas abas ativas
+   • Status de Visualização (Borda Amarela/Azul persistente)
+   • Substituição automática de abas ao atingir limite
 ====================================================== */
 (function(){
 
@@ -16,13 +15,14 @@ const CONFIG = {
   KEYS: {
     ORDER: 'ag_v7_order',
     MODE:  'ag_v7_mode', // 'dynamic' ou 'fixed'
-    STATS: 'ag_v7_stats'
+    STATS: 'ag_v7_stats',
+    STATUS: 'ag_v7_status' // Salva se é 'watched' ou 'later'
   },
   FIXED_TAB: 'anigeek_tv' // Aba fixa que não pode ser removida
 };
 
 /* ===========================
-   BANCO DE DADOS (COM IDs NAS SESSÕES)
+   BANCO DE DADOS
 =========================== */
 const CATALOGO = [
   { sessao: "Jujutsu Kaisen Shimetsu Kaiyu", id: "Jujutsu_kaisen_shimetsu_kaiyu", cor: "#e63946", itens: [] },
@@ -133,12 +133,12 @@ const CATALOGO = [
    CSS INJETADO
 =========================== */
 const styles = `
-  /* --- LAYOUT DA GAVETA --- */
+  /* --- LAYOUT DA GAVETA FIXA --- */
   #ag-drawer {
     background: #ffffff;
     border-bottom: 1px solid #e0e0e0;
     overflow: hidden;
-    max-height: 0;
+    height: 0;
     transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
     opacity: 0;
     width: 100%;
@@ -146,6 +146,8 @@ const styles = `
     left: 0;
     z-index: 1000;
     box-shadow: 0 10.5px 21px rgba(0,0,0,0.08);
+    display: flex;
+    flex-direction: column;
   }
   body.dark-mode #ag-drawer {
     background: #141414;
@@ -153,19 +155,21 @@ const styles = `
     box-shadow: 0 10.5px 21px rgba(0,0,0,0.5);
   }
   #ag-drawer.open {
-    max-height: 85vh;
+    height: 85vh; /* Altura Fixa */
     opacity: 1;
   }
   /* --- CAPA DO MENU --- */
   .ag-drawer-cover {
     position: relative;
     width: 100%;
+    min-height: 120px; /* Altura fixa mínima */
     height: 120px;
     background-image: url('https://i.postimg.cc/HWM72wfT/the-pensive-journey-by-chcofficial-dhme17e-pre.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     margin-bottom: 21px;
+    flex-shrink: 0;
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
@@ -173,7 +177,7 @@ const styles = `
   body.dark-mode .ag-drawer-cover {
     box-shadow: 0 4px 12px rgba(0,0,0,0.3);
   }
-  /* IMAGEM DO PERSONAGEM FIXA NO CANTO */
+  /* IMAGEM DO PERSONAGEM FIXA NO CANTO DO DRAWER */
   .ag-char-fixed {
     position: absolute;
     bottom: 0;
@@ -194,12 +198,13 @@ const styles = `
   .ag-drawer-scroll {
     position: relative;
     z-index: 5;
-    max-height: 85vh;
+    flex: 1; /* Ocupa o espaço restante */
     overflow-y: auto;
     padding: 21px 14px;
     scrollbar-width: thin;
+    height: 100%;
   }
-  /* --- HEADER: PESQUISA E MODOS (ESTÉTICA HIGH-END) --- */
+  /* --- HEADER: PESQUISA E MODOS --- */
   .ag-drawer-header {
     display: flex;
     justify-content: space-between;
@@ -351,7 +356,7 @@ const styles = `
   .ag-card {
     position: relative;
     background: #f9f9f9;
-    border: 1px solid transparent;
+    border: 2px solid transparent; /* Aumentado para suportar status */
     border-radius: 4.2px;
     padding: 8.4px 7px;
     font-size: 9.1px;
@@ -382,6 +387,15 @@ const styles = `
     font-weight: 700;
   }
   body.dark-mode .ag-card.is-selected { background: #1a1a1a; }
+  
+  /* ESTADOS PERSISTENTES (CORES) */
+  .ag-card.status-later {
+    border-color: #ffd700 !important; /* Amarelo */
+  }
+  .ag-card.status-watched {
+    border-color: #00bfff !important; /* Azul */
+  }
+
   .ag-card-action {
     position: absolute;
     top: 2.1px;
@@ -492,6 +506,38 @@ const styles = `
     transform: scale(0.9);
     opacity: 0.8;
   }
+  /* --- CONTEXT MENU (MENU FLUTUANTE) --- */
+  .ag-context-menu {
+    position: fixed;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    padding: 5px 0;
+    z-index: 999999;
+    min-width: 150px;
+    animation: fadeInMenu 0.2s ease;
+  }
+  body.dark-mode .ag-context-menu {
+    background: #222;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.6);
+    border: 1px solid #333;
+  }
+  .ag-context-menu-item {
+    padding: 8px 15px;
+    font-size: 11px;
+    color: #333;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.2s;
+  }
+  body.dark-mode .ag-context-menu-item { color: #eee; }
+  .ag-context-menu-item:hover { background: #f0f0f0; }
+  body.dark-mode .ag-context-menu-item:hover { background: #333; }
+  .ag-context-menu-item.danger { color: #ff4444; }
+  @keyframes fadeInMenu { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+  .ag-menu-indicator { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
 `;
 
 const styleSheet = document.createElement("style");
@@ -528,14 +574,25 @@ function setMode(m){ save(CONFIG.KEYS.MODE, m); renderDrawer(); }
 function getOrder(){
   const saved = load(CONFIG.KEYS.ORDER, null);
   if(saved) return saved;
-  return [CONFIG.FIXED_TAB, '', ''];
+  return [CONFIG.FIXED_TAB];
+}
+function getStatusMap(){ return load(CONFIG.KEYS.STATUS, {}); }
+function setStatus(id, status) {
+  const map = getStatusMap();
+  map[id] = status; // 'later', 'watched', ou null
+  save(CONFIG.KEYS.STATUS, map);
+  renderDrawer(document.getElementById('ag-search-input')?.value || "");
 }
 function ensureFixedTab(order) {
   if (!order.includes(CONFIG.FIXED_TAB)) {
     order.unshift(CONFIG.FIXED_TAB);
   } else {
-    order = order.filter(id => id !== CONFIG.FIXED_TAB);
-    order.unshift(CONFIG.FIXED_TAB);
+    // Garante que seja o primeiro se já existe
+    const idx = order.indexOf(CONFIG.FIXED_TAB);
+    if(idx > 0) {
+       order.splice(idx, 1);
+       order.unshift(CONFIG.FIXED_TAB);
+    }
   }
   return order;
 }
@@ -555,8 +612,56 @@ function track(id){
   stats[id] = (stats[id] || 0) + 1;
   save(CONFIG.KEYS.STATS, stats);
   const order = getOrder();
-  order.sort((a,b) => (stats[b]||0) - (stats[a]||0));
-  save(CONFIG.KEYS.ORDER, order);
+  // Não reordena automaticamente no modo FIFO simples, mas mantém tracking
+}
+
+/* ===========================
+   MENU FLUTUANTE (CONTEXT MENU)
+=========================== */
+function closeContextMenu() {
+  const existing = document.querySelector('.ag-context-menu');
+  if(existing) existing.remove();
+}
+
+function openContextMenu(e, id, label) {
+  e.preventDefault();
+  e.stopPropagation();
+  closeContextMenu();
+
+  const menu = document.createElement('div');
+  menu.className = 'ag-context-menu';
+  
+  // Opções
+  const ops = [
+    { text: 'Assistir mais tarde', color: '#ffd700', action: () => { setStatus(id, 'later'); showToast('Marcado para assistir mais tarde'); } },
+    { text: 'Marcar como assistido', color: '#00bfff', action: () => { setStatus(id, 'watched'); showToast('Marcado como assistido'); } },
+    { text: 'Retirar aba', color: null, danger: true, action: () => { toggleItem(id, label); } }
+  ];
+
+  ops.forEach(op => {
+    const item = document.createElement('div');
+    item.className = `ag-context-menu-item ${op.danger ? 'danger' : ''}`;
+    let icon = '';
+    if(op.color) icon = `<span class="ag-menu-indicator" style="background:${op.color}"></span>`;
+    item.innerHTML = `${icon} ${op.text}`;
+    item.onclick = () => {
+      op.action();
+      closeContextMenu();
+    };
+    menu.appendChild(item);
+  });
+
+  document.body.appendChild(menu);
+
+  // Posicionamento simples
+  const rect = e.target.getBoundingClientRect();
+  menu.style.top = `${e.clientY}px`;
+  menu.style.left = `${e.clientX}px`;
+
+  // Fechar ao clicar fora
+  setTimeout(() => {
+    document.addEventListener('click', closeContextMenu, { once: true });
+  }, 0);
 }
 
 /* ===========================
@@ -593,9 +698,11 @@ function renderBar(){
     };
     bar.appendChild(btn);
   });
+  // Botão Menu Hambúrguer
   const cfg = document.createElement('button');
   cfg.className = 'filter-tag cfg-btn';
-  cfg.innerHTML = '⚙';
+  // Ícone SVG Menu Hambúrguer
+  cfg.innerHTML = `<svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>`;
   cfg.onclick = toggleDrawer;
   bar.appendChild(cfg);
 }
@@ -627,8 +734,10 @@ function toggleDrawer(){
 function renderDrawer(filterText = ""){
   const drawer = document.getElementById('ag-drawer');
   let order = ensureFixedTab(getOrder());
+  const statusMap = getStatusMap();
   const currentMode = getMode();
   const searchIcon = `<svg class="ag-search-icon-svg" viewBox="0 0 24 24"><path d="M21.71 20.29l-5.01-5.01C17.54 13.68 18 11.91 18 10c0-4.41-3.59-8-8-8S2 5.59 2 10s3.59 8 8 8c1.91 0 3.68-.46 5.28-1.3l5.01 5.01c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41z"/></svg>`;
+  
   let html = `
     <div class="ag-drawer-cover"></div>
     <img src="https://i.postimg.cc/W49RX3dK/anime-boy-render-04-by-luxio56lavi-d5xed2a.png" class="ag-char-fixed" alt="Anime Character">
@@ -644,27 +753,35 @@ function renderDrawer(filterText = ""){
         </div>
       </div>
       <div id="ag-catalog-container"></div>
-      <div style="text-align:center; padding-top:20px; font-size:12px; color:#888;">
+      <div style="text-align:center; padding-top:20px; padding-bottom: 20px; font-size:12px; color:#888;">
         ${order.length} de ${CONFIG.MAX_TABS} abas ativas
       </div>
     </div>
   `;
   drawer.innerHTML = html;
+  
   const container = document.getElementById('ag-catalog-container');
   const term = filterText.toLowerCase();
+
   CATALOGO.forEach(sec => {
     const itens = sec.itens || [];
     const itensFiltrados = itens.filter(i => i.label && i.label.toLowerCase().includes(term));
     const sessaoMatch = sec.sessao.toLowerCase().includes(term);
     if(term !== "" && !sessaoMatch && itensFiltrados.length === 0) return;
+    
     const itensParaMostrar = sessaoMatch ? itens : itensFiltrados;
     const sectionDiv = document.createElement('div');
     sectionDiv.className = 'ag-section-block';
+    
     const isCatSelected = order.includes(sec.id);
+    const catStatus = statusMap[sec.id];
+    
+    // Icone indicador
     let catIcon = '';
     if(isCatSelected) {
-       catIcon = currentMode === 'dynamic' ? ' <span style="font-size:10px; opacity:0.6; margin-left:5px">✕</span>' : ' <span style="font-size:10px; opacity:0.6; margin-left:5px">•••</span>';
+       catIcon = ' <span style="font-size:10px; opacity:0.6; margin-left:5px">✓</span>';
     }
+
     sectionDiv.innerHTML = `
       <button class="ag-section-header-btn ${isCatSelected ? 'is-active' : ''}" data-cat-id="${sec.id}">
         <div class="ag-section-marker" style="background:${sec.cor}"></div>
@@ -672,67 +789,68 @@ function renderDrawer(filterText = ""){
       </button>
       <div class="ag-grid-container"></div>
     `;
+    
+    // Lógica de clique na Sessão
     sectionDiv.querySelector('.ag-section-header-btn').onclick = (e) => {
-        if(isCatSelected && currentMode === 'fixed') {
-             handleAction(sec.id, sec.sessao);
+        if(isCatSelected) {
+            openContextMenu(e, sec.id, sec.sessao);
         } else {
-             toggleItem(sec.id, sec.sessao);
+            toggleItem(sec.id, sec.sessao);
         }
     };
+
     container.appendChild(sectionDiv);
     const grid = sectionDiv.querySelector('.ag-grid-container');
+
     itensParaMostrar.forEach(item => {
       const isSelected = order.includes(item.id);
+      const itemStatus = statusMap[item.id];
+      
+      let statusClass = '';
+      if(itemStatus === 'later') statusClass = 'status-later';
+      if(itemStatus === 'watched') statusClass = 'status-watched';
+
       const card = document.createElement('div');
-      card.className = `ag-card ${isSelected ? 'is-selected' : ''}`;
+      card.className = `ag-card ${isSelected ? 'is-selected' : ''} ${statusClass}`;
+      
       let actionIcon = '';
       if(isSelected) {
-        actionIcon = currentMode === 'dynamic' ? '✕' : '•••';
+        actionIcon = '✓';
       }
+
       card.innerHTML = `
         ${item.label}
         ${isSelected ? `<div class="ag-card-action" data-id="${item.id}" data-action="true">${actionIcon}</div>` : ''}
       `;
+
       card.onclick = (e) => {
-        if(e.target.dataset.action || e.target.parentNode.dataset.action) {
-          e.stopPropagation();
-          handleAction(item.id, item.label);
-          return;
+        if(isSelected) {
+            openContextMenu(e, item.id, item.label);
+        } else {
+            toggleItem(item.id, item.label);
         }
-        toggleItem(item.id, item.label);
       };
+
       grid.appendChild(card);
     });
   });
+
   const searchInput = document.getElementById('ag-search-input');
   searchInput.oninput = (e) => { filterDrawer(e.target.value); };
+  searchInput.focus(); // Mantém o foco
+  
   document.getElementById('btn-fixo').onclick = () => setMode('fixed');
   document.getElementById('btn-dinamico').onclick = () => setMode('dynamic');
 }
+
 function filterDrawer(term) {
-  const termLower = term.toLowerCase();
-  document.querySelectorAll('.ag-section-block').forEach(block => {
-    const catId = block.querySelector('.ag-section-header-btn').dataset.catId;
-    const cat = CATALOGO.find(c => c.id === catId);
-    if (!cat) return;
-    const sessaoMatch = cat.sessao.toLowerCase().includes(termLower);
-    const itens = cat.itens || [];
-    const itensFiltrados = itens.filter(i => i.label && i.label.toLowerCase().includes(termLower));
-    const grid = block.querySelector('.ag-grid-container');
-    if (termLower !== "" && !sessaoMatch && itensFiltrados.length === 0) {
-      block.style.display = 'none';
-      return;
-    }
-    block.style.display = '';
-    grid.querySelectorAll('.ag-card').forEach(card => {
-      const label = card.textContent.trim();
-      if (label.toLowerCase().includes(termLower) || sessaoMatch) {
-        card.style.display = '';
-      } else {
-        card.style.display = 'none';
-      }
-    });
-  });
+  // Recarrega o drawer completamente para manter a estrutura e não quebrar o layout da imagem
+  renderDrawer(term);
+  // Recoloca o cursor no final do input
+  const input = document.getElementById('ag-search-input');
+  if(input) {
+      input.setSelectionRange(term.length, term.length);
+  }
 }
 
 /* ===========================
@@ -744,59 +862,40 @@ function toggleItem(id, label){
     return;
   }
   let order = ensureFixedTab(getOrder());
+  
   if(order.includes(id)){
+    // REMOVER
     order = order.filter(x => x !== id);
     showToast(`Removido: <b>${label}</b>`, 'normal');
   } else {
+    // ADICIONAR
     if(order.length >= CONFIG.MAX_TABS) {
-      showToast(`Limite de ${CONFIG.MAX_TABS} abas atingido!`, 'error');
-      return;
+      // SUBSTITUIÇÃO: Remove o último elemento do array (o mais recente adicionado em lógica de push, ou o último da fila visual)
+      // Como o usuário pediu: "última aba adicionada seja retirada para que a que foi adicionada seja adicionada"
+      const removed = order.pop(); 
+      showToast(`Limite atingido. Substituindo aba antiga.`, 'normal');
     }
     order.push(id);
     showToast(`Adicionado: <b>${label}</b>`, 'success');
   }
+  
   save(CONFIG.KEYS.ORDER, order);
   renderBar();
-  setTimeout(() => {
-    const button = document.querySelector(`#filterScroller .filter-tag[data-id="${id}"]`);
-    if (button) { button.click(); }
-  }, 100);
-}
-function handleAction(id, label){
-  if (id === CONFIG.FIXED_TAB) {
-    showToast('Esta aba é fixa e não pode ser removida!', 'error');
-    return;
-  }
-  const mode = getMode();
-  let order = ensureFixedTab(getOrder());
-  if(mode === 'dynamic') {
-    order = order.filter(x => x !== id);
-    save(CONFIG.KEYS.ORDER, order);
-    showToast(`Removido: <b>${label}</b>`);
-    renderBar();
-    const currentInput = document.getElementById('ag-search-input');
-    const currentValue = currentInput ? currentInput.value : '';
-    renderDrawer(currentValue);
-    if (currentInput) currentInput.value = currentValue;
-  } else {
-    const currentIndex = order.indexOf(id);
-    const newPos = prompt(`Mover "${label}" para qual posição? (1-${order.length})`, currentIndex + 1);
-    if(newPos !== null){
-      const targetIndex = parseInt(newPos) - 1;
-      if(!isNaN(targetIndex) && targetIndex >= 0 && targetIndex < order.length) {
-        order.splice(currentIndex, 1);
-        order.splice(targetIndex, 0, id);
-        save(CONFIG.KEYS.ORDER, order);
-        renderBar();
-        const currentInput = document.getElementById('ag-search-input');
-        const currentValue = currentInput ? currentInput.value : '';
-        renderDrawer(currentValue);
-        if (currentInput) currentInput.value = currentValue;
-        showToast(`<b>${label}</b> movido para posição ${newPos}`);
-      }
-    }
+  
+  // Atualiza visual do drawer sem perder filtro
+  const currentInput = document.getElementById('ag-search-input');
+  const currentValue = currentInput ? currentInput.value : '';
+  renderDrawer(currentValue);
+  
+  // Se foi adição, tenta rolar para a aba
+  if(order.includes(id)) {
+      setTimeout(() => {
+        const button = document.querySelector(`#filterScroller .filter-tag[data-id="${id}"]`);
+        if (button) { button.click(); }
+      }, 100);
   }
 }
+
 function ensureTabExists(id){
   const exists = CATALOGO.some(sec => sec.id === id || (sec.itens && sec.itens.some(i => i.id === id)));
   if (!exists) return false;
