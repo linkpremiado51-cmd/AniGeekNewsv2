@@ -528,7 +528,7 @@ function setMode(m){ save(CONFIG.KEYS.MODE, m); renderDrawer(); }
 function getOrder(){
   const saved = load(CONFIG.KEYS.ORDER, null);
   if(saved) return saved;
-  return [CONFIG.FIXED_TAB, 'saihate_no_paladin', 'Jujutsu_kaisen_shimetsu_kaiyu'];
+  return [CONFIG.FIXED_TAB, '', ''];
 }
 function ensureFixedTab(order) {
   if (!order.includes(CONFIG.FIXED_TAB)) {
@@ -836,7 +836,7 @@ window.addEventListener('DOMContentLoaded', () => {
   const newsId = params.get('id');
   const secaoForcada = params.get('secao');
   if (newsId) {
-    const abaAlvo = 'saihate_no_paladin';
+    const abaAlvo = 'anigeek_tv';
     window.abrirAbaPorId(abaAlvo);
     return;
   }
