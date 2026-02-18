@@ -49,7 +49,6 @@
   async function carregarConteudo() {
     const mainContainer = document.getElementById("dynamic-sections");
 
-    // 🔒 TRAVA DEFINITIVA CONTRA DUPLICAÇÃO
     if (!mainContainer || mainContainer.dataset.loaded === "true") return;
     mainContainer.dataset.loaded = "true";
 
@@ -65,10 +64,8 @@
         const q = query(colRef, limit(conf.qtd));
         const snap = await getDocs(q);
 
-        // ❌ não cria seção vazia
         if (snap.empty) continue;
 
-        // ✅ cria seção apenas uma vez
         const section = document.createElement("section");
         section.className = "content-section";
         section.innerHTML = `
@@ -81,21 +78,26 @@
 
         snap.forEach(doc => {
           const data = doc.data();
-
           const cardTitulo = data.titulo || doc.id.replace(/_/g, " ");
           const cardCat = data.categoria || "Série";
+          const cardImg = (data.fichaCategoria && data.fichaCategoria.perfilImg) || data.perfilImg || data.capaNoticia || data.capaUrl || "https://via.placeholder.com/640x360?text=AniGeek+TV";
 
-          const cardImg =
-            (data.fichaCategoria && data.fichaCategoria.perfilImg) ||
-            data.perfilImg ||
-            data.capaNoticia ||
-            data.capaUrl ||
-            "https://via.placeholder.com/640x360?text=AniGeek+TV";
+          // --- LÓGICA DE REDIRECIONAMENTO INTELIGENTE ---
+          const linkArtigo = data.linkArtigo || "";
+          let acaoClique = "";
 
-          const linkDestino = data.linkArtigo || `index.html?id=${doc.id}`;
+          if (linkArtigo.includes("secao=")) {
+            // Extrai o ID após "secao=" (ex: Jujutsu_kaisen_shimetsu_kaiyu)
+            const idExtraido = linkArtigo.split("secao=")[1].split("&")[0];
+            acaoClique = `window.abrirAbaPorId('${idExtraido}')`;
+          } else {
+            // Se não tiver o parâmetro secao, abre o link normalmente ou usa o index.html?id
+            const linkDestino = linkArtigo || `index.html?id=${doc.id}`;
+            acaoClique = `location.href='${linkDestino}'`;
+          }
 
           row.innerHTML += `
-            <div class="anime-card" onclick="location.href='${linkDestino}'">
+            <div class="anime-card" onclick="${acaoClique}">
               <div class="poster-wrapper">
                 <img
                   src="${cardImg.trim()}"

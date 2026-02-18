@@ -1,0 +1,13 @@
+{
+  "projects": {},
+  "targets": {
+    "anigeeknews": {
+      "hosting": {
+        "anigeeknews": [
+          "anigeeknews"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}
