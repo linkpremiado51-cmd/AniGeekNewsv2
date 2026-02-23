@@ -1,6 +1,6 @@
 /**
  * MÓDULO DE CONFIGURAÇÃO DO FIREBASE
- * Responsável pela inicialização e exportação dos serviços Cloud.
+ * Responsável pela inicialização e exportAção dos serviços Cloud.
  */
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -40,3 +40,4 @@ export {
     query, 
     where 
 };
+
