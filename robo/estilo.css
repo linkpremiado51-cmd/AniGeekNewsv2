@@ -1,0 +1,52 @@
+:root { 
+    --primary: #6366f1; 
+    --bg: #0b0f1a; 
+    --card: #161b2d; 
+    --text: #f8fafc; 
+    --accent: #22c55e; 
+    --orange: #f59e0b; 
+    --danger: #ef4444; 
+    --border: #2d334a; 
+    --zip: #ec4899; 
+    --db: #3b82f6; 
+    --admin: #a855f7; 
+    --terminal: #10b981; 
+}
+
+body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); padding: 20px; margin: 0; }
+
+.main-layout { display: grid; grid-template-columns: 1fr 380px; gap: 20px; max-width: 1400px; margin: 0 auto; }
+
+.card { background: var(--card); padding: 20px; border-radius: 12px; margin-bottom: 20px; border: 1px solid var(--border); box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+
+h3 { margin-top: 0; color: var(--primary); font-size: 1.1rem; border-bottom: 1px solid var(--border); padding-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+
+textarea { width: 100%; height: 180px; background: #000; color: #a5b4fc; border: 1px solid var(--border); border-radius: 6px; padding: 10px; box-sizing: border-box; font-family: 'Consolas', monospace; font-size: 12px; }
+
+input, select { width: 100%; padding: 12px; border-radius: 6px; border: 1px solid var(--border); background: #0b0f1a; color: white; box-sizing: border-box; margin-bottom: 10px; }
+
+button { padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; border: none; transition: 0.2s; }
+
+.btn-gen { background: var(--primary); color: white; width: 100%; }
+.btn-zip { background: var(--zip); color: white; width: 100%; }
+.btn-db { background: var(--db); color: white; width: 100%; }
+.btn-admin { background: var(--admin); color: white; width: 100%; margin-top: 5px; }
+.btn-term { background: var(--terminal); color: black; width: 100px; }
+.btn-reg { background: var(--accent); color: black; width: 100%; margin-top: 10px; }
+
+.explorer { height: 500px; overflow-y: auto; background: #080c14; border-radius: 8px; padding: 10px; border: 1px solid var(--border); }
+
+.log { background: #000; color: #888; padding: 12px; height: 180px; overflow-y: auto; font-family: 'Consolas', monospace; font-size: 11px; border-radius: 6px; border: 1px solid var(--border); margin-top: 10px; line-height: 1.4; }
+
+.terminal-input { display: flex; gap: 5px; margin-top: 5px; }
+
+.diff-add { color: #22c55e; } 
+.diff-rem { color: #ef4444; } 
+.diff-mod { color: #f59e0b; }
+
+.modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 999; }
+
+#viewerModal { display: none; position: fixed; top: 5%; left: 5%; width: 90%; height: 85%; background: var(--card); border: 2px solid var(--primary); border-radius: 12px; z-index: 1000; padding: 20px; box-sizing: border-box; }
+
+.btnCopiar { background: #1f2937; color: white; border: 1px solid #374151; padding: 6px 12px; margin-bottom: 6px; cursor: pointer; border-radius: 6px; }
+.btnCopiar:hover { background: #374151; }
