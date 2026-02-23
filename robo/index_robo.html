@@ -2,6 +2,7 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AniGeek Robot v15.5 - Professional Edition</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <link rel="stylesheet" href="estilo.css">
@@ -10,8 +11,8 @@
     <div class="modal-overlay" id="overlay"></div>
     
     <div id="viewerModal">
-        <h3>📄 Código <span id="fileNameModal" style="color:var(--orange);"></span> 
-            <button id="btnCopiarCodigo" style="background:var(--orange); color:white; font-size:11px; float:right;">Copiar</button>
+        <h3>📄 Código: <span id="fileNameModal" style="color:var(--orange);"></span> 
+            <button id="btnCopiarCodigo" style="background:var(--orange); color:white; font-size:11px; float:right; border-radius:4px; border:none; padding:4px 8px; cursor:pointer;">Copiar</button>
         </h3>
         <textarea id="modalTextarea" readonly style="height: 75%; width: 100%; margin-top:10px;"></textarea>
         <button id="btnFecharModal" style="background:var(--danger); color:white; width:100%; margin-top:10px">Fechar</button>
@@ -33,7 +34,7 @@
                 <h3>2. Execução em Lote</h3>
                 <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
                     <select id="targetProject"><option value="todos">Todos os Projetos</option></select>
-                    <input type="text" id="fileName" placeholder="IDs (vírgula)">
+                    <input type="text" id="fileName" placeholder="IDs (Ex: horimiya, solo-leveling)">
                     <select id="tipoColecao">
                         <option value="filme">Filme</option>
                         <option value="serie">Série</option>
@@ -65,16 +66,16 @@
                     <input type="text" id="regVersao" placeholder="Nome da Versão (ex: v16)">
                     <input type="text" id="regAutor" placeholder="Autor (Opcional)">
                 </div>
-                <textarea id="regChangelog" style="height: 60px;" placeholder="O que mudou nesta versão?"></textarea>
+                <textarea id="regChangelog" style="height: 60px;" placeholder="Descreva as alterações..."></textarea>
                 <button class="btn-reg" id="btnRegManual">💾 Registrar Versão Atual</button>
             </div>
 
             <div class="card admin-section" style="border-top: 1px solid var(--admin)">
                 <h3>⚙️ Configuração de Editores</h3>
                 <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
-                    <input type="text" id="admId" placeholder="ID">
-                    <input type="text" id="admDom" placeholder="Domínio">
-                    <input type="text" id="admPath" placeholder="Caminho Base">
+                    <input type="text" id="admId" placeholder="ID (ex: geek-news)">
+                    <input type="text" id="admDom" placeholder="Domínio (ex: geek.web.app)">
+                    <input type="text" id="admPath" placeholder="Caminho Base (/)">
                 </div>
                 <button class="btn-admin" id="btnAdicionarEditor">➕ Salvar Editor</button>
                 <div id="listaEditoresAdm" style="margin-top:10px; font-size:11px; color:#94a3b8;"></div>
@@ -83,12 +84,12 @@
 
         <div class="sidebar">
             <div class="card">
-                <h3>📂 Arquivos</h3>
+                <h3>📂 Arquivos Gerados</h3>
                 <div id="fileExplorer" class="explorer"></div>
             </div>
         </div>
     </div>
 
-    <script type="module" src="js/principal.js"></script>
+    <script type="module" src="js/main.js"></script>
 </body>
 </html>
