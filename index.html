@@ -1,3 +1,5 @@
+---
+
 <!doctype html>
 <html lang="pt-BR">
 <head>
@@ -266,6 +268,16 @@ section{padding-top:48px;padding-bottom:24px}
 .v-mail{display:inline-block;font:600 13px var(--mono);background:var(--p2);border:1px solid var(--l);padding:7px 12px;border-radius:8px;overflow-wrap:anywhere}
 .v-wait{display:inline-flex;align-items:center;gap:8px;font-size:12px;color:var(--mu)}
 .v-wait:before{content:"";width:8px;height:8px;border-radius:50%;background:var(--ac);animation:pulse 1.2s ease-in-out infinite}
+/* ---- verificação de e-mail · versão profissional detalhada ---- */
+.v-ico{display:grid;place-items:center;color:var(--acx);position:relative;overflow:hidden}
+.v-ico:after{content:"";position:absolute;inset:0;background:radial-gradient(60% 60% at 50% 0%,var(--as),transparent 70%);pointer-events:none}
+.v-ico svg{position:relative}
+.v-steps{display:grid;gap:6px;width:100%;max-width:420px;margin-top:4px;text-align:left}
+.v-step{display:flex;align-items:flex-start;gap:10px;background:var(--p2);border:1px solid var(--l);border-radius:10px;padding:9px 11px}
+.v-step i{flex:none;width:20px;height:20px;border-radius:50%;background:var(--as);border:1px solid var(--ac);color:var(--acx);display:grid;place-items:center;font:600 11px var(--mono);font-style:normal}
+.v-step small{font-size:12px;color:var(--mu);line-height:1.5}
+.v-step b{color:var(--ink);font-weight:600}
+.v-hero .v-mail{margin-top:6px}
 @keyframes pulse{50%{opacity:.25}}
 input{width:100%;padding:12px 14px;background:var(--p2);border:1px solid var(--l);border-radius:8px;color:var(--ink);font-size:14.5px}
 input:focus{border-color:var(--ac);outline:0;box-shadow:0 0 0 3px var(--as)}
@@ -528,6 +540,159 @@ img,svg,iframe{max-width:100%}
  .top{padding:0 2px}
 }
 @media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+/* ============================================================
+   V4 · ÍCONES PROFISSIONAIS (SVG), DETALHES EM TUDO E PERFORMANCE
+   ============================================================ */
+/* ícones SVG: tamanho e alinhamento consistentes em todo o site */
+.icn{width:18px;height:18px;flex:none;display:inline-block;vertical-align:-4px}
+.icn svg{display:block;width:100%;height:100%}
+.am-item .icn,.mi .icn{width:17px;height:17px;color:var(--acx)}
+.mi .mic{width:38px;height:38px;flex:none;display:grid;place-items:center;border-radius:11px;background:linear-gradient(160deg,var(--p2),var(--p));border:1px solid var(--l)}
+.mi .mic .icn{width:19px;height:19px;color:var(--acx)}
+.pf-row .icn,.pf-sec .icn{color:var(--acx);width:16px;height:16px}
+.btn .icn{vertical-align:-4px}
+/* caixa "Detalhes da prova" nos cards de tarefa */
+.proof-detail{display:flex;gap:10px;align-items:flex-start;border:1px dashed var(--ac);border-radius:10px;background:var(--as);padding:10px 12px;margin-top:2px}
+.proof-detail .pd-ico{flex:none;width:26px;height:26px;border-radius:8px;background:var(--p);border:1px solid var(--ac);color:var(--acx);display:grid;place-items:center}
+.proof-detail .pd-t{display:block;font-size:9.5px;color:var(--acx);text-transform:uppercase;letter-spacing:.6px;font-weight:700;margin-bottom:2px}
+.proof-detail small{font-size:12.5px;color:var(--ink);line-height:1.5;display:block;overflow-wrap:anywhere}
+/* detalhes em tudo: faixa dourada, picote e marca d'água nos painéis */
+.task,.notice,.coupon,.trow,.lrow{position:relative;overflow:hidden}
+.task:before,.notice:before{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:linear-gradient(90deg,#ffe56b,var(--ac),#ffe56b)}
+.task:after{content:"Y";position:absolute;right:-8px;bottom:-28px;font:700 110px/1 var(--mono);color:var(--ink);opacity:.03;pointer-events:none}
+.notice{border-style:dashed}
+.notice:after{content:"";position:absolute;inset:auto 0 0 0;height:2px;background:repeating-linear-gradient(90deg,var(--acx) 0 6px,transparent 6px 12px);opacity:.3}
+.coupon:after{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:repeating-linear-gradient(90deg,#ffe56b 0 8px,transparent 8px 16px);opacity:.5}
+.trow:before,.lrow:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(180deg,#ffe56b,var(--ac));opacity:.75}
+.pf-card{position:relative;overflow:hidden}
+.pf-card:before{content:"";position:absolute;left:0;right:0;top:0;height:4px;background:linear-gradient(90deg,#ffe56b,var(--ac),#ffe56b)}
+.field label.label{display:inline-flex;align-items:center;gap:6px}
+.field label.label:before{content:"";width:5px;height:5px;border-radius:2px;background:var(--ac);opacity:.85}
+/* ---- performance: pinta só o que está na tela ---- */
+section,#premios,.hero{content-visibility:auto;contain-intrinsic-size:auto 640px}
+.ticket,.tkc,.task,.evc,.pzc{contain:layout paint style}
+.pz-track,.cv-track,.tks{will-change:transform}
+.ad-box{content-visibility:auto;contain-intrinsic-size:auto 120px}
+/* bilhete: textura leve trocada por gradiente simples (bem mais barato de pintar) */
+.ticket{background-image:linear-gradient(160deg,rgba(252,213,53,.03),transparent 40%)}
+@media(prefers-reduced-motion:reduce){.v-wait:before,.pz-bar.run{animation:none!important}}
+/* ============================================================
+   V5 · DETALHES EM TODA A PÁGINA (inspirado nos bilhetes do carrossel)
+   Tudo ganha: faixa dourada no topo, marca d'água "Y", picote,
+   micro-texto e selos — a mesma linguagem visual do bilhete oficial.
+   ============================================================ */
+/* faixa dourada em todos os cards (menos os que rolam lateralmente) */
+.card{position:relative}
+.card:not(.how):not(.evs):not(.tks):not(.tbl):not(.cvp){overflow:hidden}
+.card:before{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:linear-gradient(90deg,transparent 1%,#ffe56b 25%,var(--ac) 50%,#ffe56b 75%,transparent 99%);opacity:.45;pointer-events:none;z-index:2}
+.card:not(.how):not(.evs):not(.tks):not(.tbl):not(.cvp):after{content:"Y";position:absolute;right:-8px;bottom:-32px;font:700 120px/1 var(--mono);color:var(--ink);opacity:.022;pointer-events:none}
+.card>*{position:relative}
+/* micro-texto institucional sob os títulos de seção */
+.sec-head{position:relative;padding-left:14px}
+.sec-head:before{content:"";position:absolute;left:0;top:6px;bottom:6px;width:5px;border-radius:3px;background:repeating-linear-gradient(180deg,#ffe56b 0 4px,transparent 4px 8px);opacity:.7}
+/* linhas de resultado com selo lateral e picote */
+.rx,.rr{position:relative}
+.rx:before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--l2)}
+.rx.win:before{background:linear-gradient(180deg,#5ff0b4,var(--g))}
+/* perguntas frequentes: card detalhado */
+details{position:relative;overflow:hidden}
+details:before{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:linear-gradient(90deg,#ffe56b,var(--ac));opacity:.55}
+details:after{content:"Y";position:absolute;right:-6px;bottom:-26px;font:700 90px/1 var(--mono);color:var(--ink);opacity:.03;pointer-events:none}
+details div{position:relative}
+/* notificações do painel: faixa dourada + brilho */
+.pnote{position:relative;overflow:hidden}
+.pnote:before{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:linear-gradient(90deg,#ffe56b,var(--ac),#ffe56b);opacity:.8}
+/* pop-up da carteira flutuante: faixa + marca d'água */
+.wpop{position:relative;overflow:hidden}
+.wpop:before{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:linear-gradient(90deg,#ffe56b,var(--ac),#ffe56b);z-index:1}
+.wpop:after{content:"Y";position:absolute;right:-6px;bottom:-24px;font:700 100px/1 var(--mono);color:var(--ink);opacity:.03;pointer-events:none}
+.wpop>*{position:relative}
+/* barra de consentimento: picote inferior */
+.consent:after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:repeating-linear-gradient(90deg,var(--acx) 0 6px,transparent 6px 12px);opacity:.25}
+/* gráficos de progresso com "trilho" detalhado */
+.track{background:repeating-linear-gradient(90deg,var(--l) 0 8px,transparent 8px 12px);border-radius:20px}
+/* ---- CARTEIRA ESTILO BINANCE ---- */
+.wl-act span{display:grid;place-items:center}
+.wl-act span svg{width:20px;height:20px}
+.wl-hi svg{width:19px;height:19px}
+.wl-eye{display:inline-flex;align-items:center;gap:5px}
+.wl-eye svg{width:14px;height:14px}
+.ava,.pf-ava{overflow:hidden}
+.ava img,.pf-ava img{width:100%;height:100%;border-radius:inherit;object-fit:cover;display:block}
+.pf-ava{cursor:pointer;position:relative}
+.pf-ava:after{content:"EDITAR";position:absolute;bottom:2px;left:50%;transform:translateX(-50%);font:700 6.5px var(--mono);letter-spacing:.6px;color:#181a20;background:rgba(252,213,53,.92);border-radius:3px;padding:1px 4px;pointer-events:none}
+.pf-ava:hover{filter:brightness(1.06)}
+/* opções de foto do perfil */
+.pf-photo{margin-top:12px;border:1px dashed var(--l2);border-radius:12px;padding:10px 12px;display:grid;gap:7px}
+.pf-photo small{font-size:11px;color:var(--mu);line-height:1.5}
+.pf-ph-o{display:flex;gap:6px;flex-wrap:wrap}
+.pf-ph-o button{background:var(--p2);border:1px solid var(--l);border-radius:99px;color:var(--ink);font:600 11.5px var(--sans);padding:6px 12px;cursor:pointer}
+.pf-ph-o button.on{border-color:var(--ac);background:var(--as);color:var(--acx)}
+.ma-card .ava{width:36px;height:36px}
+/* ============================================================
+   V6 · RASPADINHA DE CHECK-IN, NOTIFICAÇÕES-BILHETE, MENOS TRAVAMENTO
+   ============================================================ */
+/* botão da raspadinha no canto superior direito */
+.scratch-btn{position:relative;background:linear-gradient(160deg,var(--p2),var(--p));overflow:visible}
+.scratch-btn svg{color:var(--acx)}
+.scratch-btn .sc-dot{position:absolute;top:-3px;right:-3px;width:12px;height:12px;border-radius:50%;background:var(--ac);box-shadow:0 0 0 3px var(--bg),0 0 12px 2px var(--bsh);animation:scpulse 1.6s ease-in-out infinite}
+@keyframes scpulse{50%{transform:scale(.75);opacity:.6}}
+/* modal da raspadinha: um bilhete de verdade, em cartão */
+.scratch-box{width:min(420px,calc(100vw - 28px));background:var(--p);border:1px solid var(--l);border-radius:18px;overflow:hidden;box-shadow:var(--sh);position:relative}
+.scratch-box:before{content:"";position:absolute;left:0;right:0;top:0;height:4px;background:linear-gradient(90deg,#ffe56b,var(--ac),#ffe56b)}
+.scratch-box:after{content:"Y";position:absolute;right:-10px;bottom:-40px;font:700 170px/1 var(--mono);color:var(--ink);opacity:.03;pointer-events:none}
+.sc-head{display:flex;align-items:center;gap:11px;padding:16px 16px 12px;border-bottom:1px dashed var(--l);position:relative;z-index:1}
+.sc-head b{font-size:15.5px;display:block}
+.sc-head small{display:block;color:var(--mu);font:600 8.5px var(--mono);letter-spacing:1.6px;text-transform:uppercase;margin-top:3px}
+.sc-ico{width:40px;height:40px;border-radius:12px;background:var(--as);border:1px solid var(--ac);color:var(--acx);display:grid;place-items:center;flex:none}
+.sc-head .ib{margin-left:auto}
+.sc-micro{font:600 7.5px/1 var(--mono);letter-spacing:1.8px;color:var(--mu);opacity:.5;white-space:nowrap;overflow:hidden;border-top:1px solid var(--l);border-bottom:1px solid var(--l);padding:5px 14px;position:relative;z-index:1}
+.sc-stage{position:relative;margin:16px 16px 8px;border-radius:14px;overflow:hidden;border:1px solid var(--l2);background:linear-gradient(165deg,var(--p2),var(--p) 75%);min-height:190px;display:grid;place-items:center}
+.sc-prize{position:relative;z-index:1;display:grid;justify-items:center;gap:4px;padding:22px 14px;text-align:center}
+.sc-lab{font-size:9.5px;color:var(--mu);text-transform:uppercase;letter-spacing:.8px;font-weight:700}
+.sc-prize b{font:700 clamp(44px,12vw,64px)/1 var(--mono);background:linear-gradient(180deg,#ffe56b,var(--acx));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.sc-prize b.spark{animation:scspark .5s ease}
+@keyframes scspark{0%{transform:scale(.6);opacity:0}60%{transform:scale(1.12)}}
+.sc-sub{font-size:11.5px;color:var(--mu)}
+#sc-canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:crosshair;z-index:2}
+.sc-hint{position:absolute;bottom:8px;left:0;right:0;text-align:center;font-size:10.5px;color:var(--mu);z-index:0;pointer-events:none}
+.sc-foot{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:12px 16px 16px;border-top:1px dashed var(--l);position:relative;z-index:1}
+.sc-timer{font-size:11.5px;color:var(--mu);margin-right:auto}
+/* notificações com cara de bilhete, MESMAS dimensões */
+.pnote{position:relative;overflow:hidden}
+.pnote:after{content:"Y";position:absolute;right:-4px;top:-18px;font:700 84px/1 var(--mono);color:var(--ink);opacity:.04;pointer-events:none}
+.pnote .nbody{position:relative}
+.pnote .nbody small:after{content:"";display:block;font:600 6.5px/1 var(--mono);letter-spacing:1.6px;color:var(--mu);opacity:.45;margin-top:5px;white-space:nowrap;overflow:hidden;pointer-events:none}
+.pnote .nbody small:after{content:"YSHIPPCOMMERCE · NOTIFICAÇÃO OFICIAL · YSHIPPCOMMERCE · NOTIFICAÇÃO OFICIAL · YSHIPPCOMMERCE"}
+.pnote .nclose{border-radius:50%;background:transparent;box-shadow:none;position:relative}
+.pnote .nclose:before,.pnote .nclose:after{content:"";position:absolute;top:-6px;width:12px;height:12px;border-radius:50%;background:var(--bg);border:1px solid var(--l)}
+.pnote .nclose:before{left:-15px;top:-3px}
+.pnote .nclose:after{right:-15px;top:-3px}
+/* ---- menus e painéis mais fluidos (menos travamento ao abrir) ---- */
+.sheet-p{will-change:transform;backface-visibility:hidden;transform:translateZ(0)}
+.sheet-p{contain:layout}
+.sheet-h{border-bottom:1px dashed var(--l);border-bottom-left-radius:0}
+.sheet-b{contain:layout style}
+.acct-menu{contain:layout}
+.nav{contain:layout style}
+.wpop{will-change:transform}
+/* micro-detalhes por toda a interface */
+.btn{background-image:linear-gradient(180deg,#ffe35c,var(--ac))}
+.btn:after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;box-shadow:inset 0 1px 0 rgba(255,255,255,.5)}
+.btn{position:relative}
+input:focus,select:focus{box-shadow:2px 0 0 var(--ac) inset,0 0 0 3px var(--as)}
+.chip,.chip2{position:relative;overflow:hidden}
+.chip:before,.chip2:before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:currentColor;opacity:.5}
+.tag{position:relative}
+.tag:before{content:"";position:absolute;left:0;top:0;bottom:0;width:100%;height:100%;border-radius:inherit;background:linear-gradient(180deg,rgba(255,255,255,.08),transparent 50%);pointer-events:none}
+.grab:after{content:"";display:block;width:34px;height:4px;border-radius:99px;background:var(--l2);margin:auto}
+.steps li{position:relative;overflow:hidden}
+.steps li:before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:currentColor;opacity:.3}
+summary{border-top:2px dashed transparent}
+details:first-of-type summary{border-top:0}
+.kv{position:relative;padding-left:8px}
+.kv:before{content:"";position:absolute;left:0;top:4px;bottom:4px;width:2px;border-radius:2px;background:repeating-linear-gradient(180deg,var(--l2) 0 3px,transparent 3px 6px)}
+@media(prefers-reduced-motion:reduce){.scratch-btn .sc-dot{animation:none!important}.sc-prize b.spark{animation:none!important}}
 @media(max-width:900px){.hero{grid-template-columns:1fr;gap:28px;padding-top:36px}.how{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:700px){
  #menu{display:flex}.live{margin-left:auto}.hcta{display:none}
@@ -723,7 +888,14 @@ section{padding-top:30px;padding-bottom:10px;scroll-margin-top:70px}
 .wl-bal small{font:500 13px var(--sans);color:var(--mu);letter-spacing:0}
 .wl-sub{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--mu)}
 .up{color:var(--g)!important}.down{color:var(--rd)!important}
-.wl-spark{width:100%;height:60px;display:block;margin:2px 0}
+/* ---- gráfico da carteira: nunca mais sufocado no celular ----
+   Causa: o SVG do sparkline assumia a altura do conteúdo interno e era
+   comprimido para ~0px dentro do grid do .wl-hero em telas estreitas.
+   Correção: altura mínima garantida + flex:none + ratio de segurança. */
+.wl-spark{width:100%;height:88px;min-height:88px;flex:none;display:block;margin:6px 0 2px;overflow:visible}
+.wl-spark svg,.wl-spark>svg{width:100%;height:100%;display:block;overflow:visible}
+.wl-hero{overflow:visible}
+@media(max-width:600px){.wl-spark{height:clamp(96px,30vw,140px);min-height:96px}}
 .wl-acts{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:4px}
 .wl-act{display:grid;justify-items:center;gap:5px;background:none;border:0;color:var(--ink);font:600 11px var(--sans);cursor:pointer;padding:0}
 .wl-act span{width:44px;height:44px;border-radius:14px;background:var(--p2);border:1px solid var(--l);display:grid;place-items:center;font-size:17px;transition:transform .15s}
@@ -843,7 +1015,100 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
  .btn:not(.sm){min-height:44px}
  a,button{-webkit-tap-highlight-color:transparent}
 }
+/* ============================================================
+   V5 · GRÁFICO RICO + DETALHES DE BILHETE AINDA MAIS PROFUNDOS
+   O gráfico da carteira ganha moldura de bilhete (faixa dourada,
+   picote, marca d'água, micro-texto), grade de fundo estilo
+   corretora, área com gradiente e ponto pulsante no valor atual.
+   Todas as regras são aditivas — não quebram marcação existente.
+   ============================================================ */
+
+/* ---- moldura de bilhete para o gráfico ---- */
+.chart-card{position:relative;overflow:hidden;border:1px solid var(--l);border-radius:18px;background:linear-gradient(160deg,var(--p2),var(--p) 78%);padding:16px 16px 14px;display:grid;gap:10px;box-shadow:0 18px 44px -22px rgba(0,0,0,.55)}
+.chart-card:before{content:"";position:absolute;left:0;right:0;top:0;height:4px;background:linear-gradient(90deg,#ffe56b,var(--ac),#ffe56b);z-index:2}
+.chart-card:after{content:"Y";position:absolute;right:-6px;bottom:-30px;font:700 130px/1 var(--mono);color:var(--ink);opacity:.03;pointer-events:none}
+.chart-card>*{position:relative;z-index:1}
+.chart-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.chart-head b{font-size:14.5px}
+.chart-head .label{font-size:11px}
+/* área do gráfico em si: altura garantida em qualquer aperto */
+.chart-area{position:relative;width:100%;height:clamp(150px,26vw,220px);min-height:150px;flex:none;overflow:visible;touch-action:pan-y}
+.chart-area svg{width:100%;height:100%;display:block;overflow:visible}
+/* grade de fundo estilo corretora (aplica em SVG do gráfico) */
+.chart-grid line,.chart-grid .grid{stroke:var(--l);stroke-width:1;stroke-dasharray:3 5;opacity:.6}
+.chart-area .axis{stroke:var(--l2);stroke-width:1;opacity:.5}
+/* linha do gráfico com brilho dourado + área em gradiente */
+.chart-line{fill:none;stroke:var(--ac);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 4px 10px var(--bsh))}
+.chart-line.up{stroke:var(--g);filter:drop-shadow(0 4px 10px rgba(14,203,129,.5))}
+.chart-line.down{stroke:var(--rd);filter:drop-shadow(0 4px 10px rgba(246,70,93,.5))}
+.chart-fill{fill:url(#chartgrad);opacity:.9}
+/* ponto pulsante no último valor — "bilhete ao vivo" */
+.chart-dot{fill:var(--ac);stroke:var(--bg);stroke-width:2}
+.chart-dot.up{fill:var(--g)}.chart-dot.down{fill:var(--rd)}
+.chart-pulse{fill:none;stroke:var(--ac);stroke-width:1.5;opacity:0;transform-origin:center;animation:chartpulse 1.8s ease-out infinite}
+.chart-pulse.up{stroke:var(--g)}.chart-pulse.down{stroke:var(--rd)}
+@keyframes chartpulse{0%{opacity:.7;transform:scale(.4)}70%{opacity:0;transform:scale(1.6)}100%{opacity:0;transform:scale(1.6)}}
+/* rótulos dos eixos em mono miúdo, como o serial do bilhete */
+.chart-axis-x{display:flex;justify-content:space-between;font:600 9px var(--mono);letter-spacing:.8px;text-transform:uppercase;color:var(--mu);margin-top:6px;overflow:hidden}
+.chart-axis-x span{white-space:nowrap;flex:none}
+/* legenda com chips estilo etiqueta */
+.chart-legend{display:flex;gap:6px;flex-wrap:wrap}
+.chart-legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px;background:var(--ac)}
+.chart-legend .up i{background:var(--g)}
+.chart-legend .down i{background:var(--rd)}
+.chart-legend span{font:600 10.5px var(--sans);color:var(--mu);background:var(--p2);border:1px solid var(--l);border-radius:99px;padding:4px 10px}
+/* micro-texto decorativo sob o gráfico (mesma linguagem do .tk-micro) */
+.chart-micro{font:600 7.5px/1 var(--mono);letter-spacing:1.6px;color:var(--mu);opacity:.5;white-space:nowrap;overflow:hidden;border-top:1px solid var(--l);border-bottom:1px solid var(--l);padding:4px 0;text-transform:uppercase}
+/* recorte picotado conectando gráfico aos números abaixo */
+.chart-cut{height:0;border-top:2px dashed var(--l);position:relative;margin:2px -16px 4px}
+.chart-cut:before,.chart-cut:after{content:"";position:absolute;top:-10px;width:18px;height:18px;border-radius:50%;background:var(--bg);border:1px solid var(--l)}
+.chart-cut:before{left:-9px}.chart-cut:after{right:-9px}
+
+/* ---- sparkline da carteira com os mesmos detalhes ---- */
+.wl-spark .chart-line{stroke-width:2}
+.wl-spark .chart-pulse{animation-duration:1.5s}
+.wl-hero .chart-axis-x{margin-top:2px}
+
+/* ---- bilhetes ainda mais detalhados ---- */
+/* selo holográfico girando levemente no canto do bilhete */
+.tkc .tk-holo{position:absolute;top:14px;right:12px;width:34px;height:34px;border-radius:50%;background:conic-gradient(from 0deg,#ffe56b,var(--ac),#0ecb81,var(--ac),#ffe56b);opacity:.22;filter:blur(1px);animation:holo 6s linear infinite;pointer-events:none}
+@keyframes holo{to{transform:rotate(360deg)}}
+/* borda interna dupla, como bilhete impresso */
+.tkc .tk-inner{border:1px solid var(--l);border-radius:9px;padding:10px;display:grid;gap:7px}
+/* brilho varrido ao passar o dedo/mouse (bilhete premium) */
+.tkc:after{content:"";position:absolute;top:0;left:-70%;width:45%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.05),transparent);transform:skewX(-18deg);transition:left .55s ease;pointer-events:none;z-index:0}
+.tkc:hover:after{left:130%}
+/* número do bilhete com relevo: sombra dupla dourada */
+.tkc .num{text-shadow:0 1px 0 rgba(0,0,0,.35);letter-spacing:-.03em}
+/* carimbo "AO VIVO" pulsando em sorteios abertos */
+.tk-live{display:inline-flex;align-items:center;gap:5px;font:700 9px var(--mono);letter-spacing:1.2px;text-transform:uppercase;color:var(--g)}
+.tk-live:before{content:"";width:6px;height:6px;border-radius:50%;background:var(--g);animation:pulse 1.2s ease-in-out infinite}
+
+/* ---- prêmios: contador com dígitos rolantes estilo painel de bolsa ---- */
+.pz-odometer{display:flex;gap:2px;justify-content:flex-start}
+.pz-odometer i{font:600 clamp(20px,4vw,30px)/1 var(--mono);font-style:normal;color:var(--acx);background:var(--p);border:1px solid var(--l);border-radius:7px;padding:6px 7px;box-shadow:inset 0 -3px 0 rgba(0,0,0,.25)}
+.pz-odometer i.sep{color:var(--mu);border:0;background:none;box-shadow:none;padding:6px 1px}
+/* barra de loteria do prêmio: bolinhas preenchendo como bilhetes vendidos */
+.pz-balls{display:flex;gap:4px;flex-wrap:wrap;margin-top:2px}
+.pz-balls i{width:9px;height:9px;border-radius:50%;background:var(--l);border:1px solid transparent}
+.pz-balls i.on{background:var(--ac);box-shadow:0 0 6px var(--bsh)}
+
+/* ---- acesso à participação: cartão número em destaque tipo vale-brinde ---- */
+.num-shell{position:relative;display:grid;place-items:center;padding:14px 10px;border:1px dashed var(--ac);border-radius:14px;background:repeating-radial-gradient(circle at 0 0,transparent 0 12px,rgba(252,213,53,.03) 12px 13px)}
+.num-shell:before,.num-shell:after{content:"";position:absolute;top:50%;width:20px;height:20px;border-radius:50%;background:var(--bg);border:1px solid var(--ac);transform:translateY(-50%)}
+.num-shell:before{left:-10px}.num-shell:after{right:-10px}
+
+/* ---- garantir que nada sufocou nenhum gráfico/svg em telas apertadas ---- */
+@media(max-width:480px){
+ .chart-card{padding:14px 12px 12px}
+ .chart-area{height:clamp(140px,38vw,180px);min-height:140px}
+ .chart-axis-x span:nth-child(n+5){display:none}
+ .wl-acts{grid-template-columns:repeat(2,1fr);gap:8px}
+ .chart-head b{font-size:13.5px}
+}
+@media(hover:none){.tkc:after{display:none}}
 </style>
+
 </head>
 <body>
 
@@ -862,13 +1127,14 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
   <button class="acct-b" id="acct-btn" aria-haspopup="menu" aria-expanded="false"><span class="ava" id="ava">U</span><span class="acct-n" id="acct-n">Conta</span><span class="acct-caret">▾</span></button>
   <div class="acct-menu" id="acct-menu" role="menu" hidden>
    <div class="am-head"><b id="am-email">—</b><span class="hint" id="am-ver">—</span></div>
-   <button class="am-item" id="am-edit" role="menuitem">👤 Meu perfil</button>
-   <button class="am-item" id="am-wallet" role="menuitem">💼 Minha carteira</button>
-   <button class="am-item" id="am-ticket" role="menuitem">🎫 Meus bilhetes</button>
-   <button class="am-item out" id="am-logout" role="menuitem">↩︎ Sair da conta</button>
+   <button class="am-item" id="am-edit" role="menuitem"><span class="icn" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5"/></svg></span>Meu perfil</button>
+   <button class="am-item" id="am-wallet" role="menuitem"><span class="icn" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="6" width="19" height="13" rx="3"/><path d="M2.5 10h19" opacity=".55"/><circle cx="17" cy="13.5" r="1.4" fill="currentColor" stroke="none"/></svg></span>Minha carteira</button>
+   <button class="am-item" id="am-ticket" role="menuitem"><span class="icn" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8a2 2 0 0 0 2-2h12a2 2 0 0 1 2 2v1a2.5 2.5 0 0 0 0 5v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1a2.5 2.5 0 0 0 0-5z"/><path d="M14.5 7v9.5" stroke-dasharray="2.5 3"/></svg></span>Meus bilhetes</button>
+   <button class="am-item out" id="am-logout" role="menuitem"><span class="icn" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h3"/><path d="m15 8 4 4-4 4M19 12H9"/></svg></span>Sair da conta</button>
   </div>
  </div>
  <a class="btn sm hcta" href="#participar">Participar</a>
+ <button class="ib scratch-btn" id="checkin" hidden aria-label="Check-in diário · raspadinha de bilhetes" title="Check-in diário · raspadinha"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5V8a2 2 0 0 0 0 4v2.5a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 14.5V12a2 2 0 0 0 0-4z"/><path d="M12 6.5v2M12 11v2M12 15.5v2" stroke-dasharray="0"/></svg><span class="sc-dot" hidden></span></button>
  <button class="ib" id="theme" aria-label="Alternar entre tema claro e escuro" title="Alternar tema"></button>
  <button class="ib" id="menu" aria-label="Abrir menu" aria-expanded="false" aria-controls="menu-sheet"><i></i><i></i><i></i></button>
 </div></header>
@@ -894,7 +1160,7 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
  <aside class="ticket" id="bilhete">
   <div class="tk-h"><div class="brand"><span class="mark">Y</span><div>Yshippcommerce<small>Bilhete oficial</small></div></div><span class="tag" id="t-badge">Sem número</span></div>
   <div class="tk-micro" aria-hidden="true">YSHIPPCOMMERCE · BILHETE OFICIAL · AUTÊNTICO · YSHIPPCOMMERCE · BILHETE OFICIAL · AUTÊNTICO · YSHIPPCOMMERCE · BILHETE OFICIAL</div>
-  <div class="tabs tk-tabs" id="tktabs"><button data-f="active" class="on">Participando</button><button data-f="won">🏆 Ganharam</button><button data-f="lost">Não ganharam</button><button data-f="expired">Expirados</button></div>
+  <div class="tabs tk-tabs" id="tktabs"><button data-f="active" class="on">Participando</button><button data-f="won"><span class="icn" aria-hidden="true" style="width:13px;height:13px;vertical-align:-2px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4h10v4a5 5 0 0 1-10 0zM9 20h6M12 13v7M17 5h3.5a3.5 3.5 0 0 1-3.5 7M7 5H3.5A3.5 3.5 0 0 0 7 12"/></svg></span> Ganharam</button><button data-f="lost">Não ganharam</button><button data-f="expired">Expirados</button></div>
   <div class="tks" id="tks"></div>
   <div class="tk-ctl"><button class="ib sm" id="tkprev" aria-label="Bilhete anterior">‹</button><span class="mono" id="tk-count" style="font-size:12px;color:var(--mu)">1/1</span><button class="ib sm" id="tknext" aria-label="Próximo bilhete">›</button></div>
   <div class="perf"></div>
@@ -976,14 +1242,19 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
 
     <div class="panel" id="p-verify" hidden>
      <div class="v-hero">
-      <span class="v-ico">✉️</span>
+      <span class="v-ico" aria-hidden="true"><svg viewBox="0 0 48 48" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="10" width="38" height="28" rx="4"/><path d="m6 13 18 13L42 13" opacity=".9"/><path d="M10 38l9-9M38 38l-9-9" opacity=".35" stroke-width="1.6"/></svg></span>
       <h4 style="font-size:17px">Confirme seu e-mail</h4>
-      <p class="hint" style="max-width:44ch">Enviamos um link de verificação. Abra-o no seu e-mail e toque no botão do link — depois volte aqui, a página detecta sozinha.</p>
+      <p class="hint" style="max-width:46ch">Enviamos um link de verificação. Siga os três passos abaixo — esta tela detecta a confirmação sozinha, sem precisar recarregar.</p>
       <span class="v-mail" id="v-mail">—</span>
+      <div class="v-steps" role="list">
+       <span class="v-step" role="listitem"><i aria-hidden="true">1</i><small>Abra o e-mail <b>"Verifique seu e-mail"</b> que enviamos</small></span>
+       <span class="v-step" role="listitem"><i aria-hidden="true">2</i><small>Toque no <b>link de confirmação</b> dentro da mensagem</small></span>
+       <span class="v-step" role="listitem"><i aria-hidden="true">3</i><small>Volte a esta tela — ela libera o acesso automaticamente</small></span>
+      </div>
       <span class="v-wait">Aguardando confirmação…</span>
      </div>
      <div class="actions" style="justify-content:center"><button class="btn" id="check-verification">Já toquei no link</button><button class="btn ghost" id="resend">Reenviar e-mail</button></div>
-     <p class="hint" style="margin-top:10px;text-align:center">Não achou? Procure na caixa de spam ou na pasta de promoções. Confira se digitou o e-mail certo.</p>
+     <p class="hint" style="margin-top:10px;text-align:center">Não achou? Procure na caixa de spam ou na pasta de promoções. Confira se digitou o e-mail certo. O link expira em algumas horas — se vencer, use "Reenviar e-mail".</p>
     </div>
 
     <div class="panel" id="p-profile" hidden>
@@ -1150,7 +1421,7 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
 </div>
 
 <section id="regras">
- <div class="sec-head"><div class="sec-row"><h2>Ajuda e perguntas</h2><button class="btn sm ghost" type="button" id="fq-sup">🎧 Suporte</button></div><p>Busque uma dúvida ou escolha um tema. Toque na pergunta para ver a resposta.</p></div>
+ <div class="sec-head"><div class="sec-row"><h2>Ajuda e perguntas</h2><button class="btn sm ghost" type="button" id="fq-sup"><span class="icn" aria-hidden="true" style="width:14px;height:14px;vertical-align:-2px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13a8 8 0 0 1 16 0"/><rect x="3" y="13" width="4" height="6" rx="2"/><rect x="17" y="13" width="4" height="6" rx="2"/><path d="M19 19a4 4 0 0 1-4 2h-2"/></svg></span> Suporte</button></div><p>Busque uma dúvida ou escolha um tema. Toque na pergunta para ver a resposta.</p></div>
  <div class="fq card" id="faq-slide">
   <div class="fq-tools"><span class="fq-ico" aria-hidden="true">⌕</span><input id="fq-q" type="search" placeholder="Buscar dúvida (ex.: bilhete, leilão, prêmio)" aria-label="Buscar nas perguntas frequentes" autocomplete="off"></div>
   <div class="chips" id="fq-cats" role="tablist" aria-label="Temas"></div>
@@ -1220,7 +1491,7 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
 <div class="consent" id="consent" hidden role="dialog" aria-modal="false" aria-labelledby="cs-title">
  <div class="wrap cs-in">
   <div class="cs-row">
-   <span class="cs-ico" aria-hidden="true">🔒</span>
+   <span class="cs-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/><circle cx="12" cy="15.5" r="1.3" fill="currentColor" stroke="none"/></svg></span>
    <div class="cs-txt">
     <b id="cs-title">Termos de uso, responsabilidades e permissões</b>
     <p>Para usar o Yshippcommerce com segurança, você precisa aceitar os <button class="link" id="cs-terms-open" type="button" aria-expanded="false">termos de uso e responsabilidades</button>. As permissões opcionais você escolhe em <b>Gerenciar permissões</b>.</p>
@@ -1233,14 +1504,22 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
   </div>
   <div class="cs-more" id="cs-terms" hidden>
    <ol>
-    <li><b>Participação gratuita.</b> Não há cobrança para criar conta, fazer tarefas, reservar números ou dar lances.</li>
-    <li><b>Uma conta por pessoa.</b> Contas duplicadas, dados falsos ou provas fraudadas podem ser desconsiderados e suspensos pelo organizador.</li>
-    <li><b>Seus dados.</b> Nome, nascimento, endereço, Pix e WhatsApp são usados apenas para conferir tarefas e entregar prêmios. Publicamente aparece só o nome abreviado (ex.: Maria S.).</li>
-    <li><b>Sua responsabilidade.</b> Você é responsável pela veracidade das provas enviadas e pela guarda da sua senha. Nunca envie senhas ou dados bancários nas tarefas.</li>
-    <li><b>Responsabilidade do organizador.</b> O organizador confere as tarefas, faz a apuração de forma transparente, publica os resultados nesta página e entra em contato com os ganhadores.</li>
-    <li><b>Bilhetes.</b> Bilhetes não têm valor em dinheiro, não podem ser vendidos nem transferidos e só valem dentro da plataforma.</li>
-    <li><b>Links externos.</b> Sites e apps das tarefas são de terceiros, com termos próprios. Esta promoção não é patrocinada nem administrada pelo Facebook.</li>
-    <li><b>Menores de idade</b> só participam com autorização do responsável legal.</li>
+    <li><b>1. O que é a plataforma.</b> O Yshippcommerce é um site de sorteios gratuitos mantido por um organizador independente. Toda a participação — criar conta, fazer tarefas, reservar números, dar lances e raspar o check-in diário — é <b>100% gratuita</b>. Não há cobrança, depósito ou compra de bilhetes em nenhum momento. Bilhetes não são dinheiro, não podem ser comprados, vendidos, trocados nem transferidos entre contas.</li>
+    <li><b>2. Uma conta por pessoa.</b> Cada pessoa pode manter apenas UMA conta, com nome verdadeiro e e-mail próprio. São proibidos contas duplicadas, e-mails descartáveis para multiplicar prêmios, contas em nome de terceiros e o uso de automatizações (bots, scripts) para tarefas ou raspadinhas. A conta é pessoal e intransferível; nunca compartilhe sua senha — a equipe nunca a pedirá.</li>
+    <li><b>3. Tarefas e provas.</b> As tarefas (seguir perfis, instalar apps, assistir vídeos etc.) são realizadas em serviços de terceiros. Ao concluir, você envia um comprovante (texto, link, código, nome ou e-mail), conforme o detalhe indicado no card da tarefa. Envie apenas o que for pedido: <b>jamais envie senhas, documentos completos, dados bancários ou fotos sensíveis</b>. Provas falsas, editadas ou repetidas podem reprovar a solicitação, zerar os bilhetes da tarefa e suspender a conta.</li>
+    <li><b>4. Sorteios, leilões e bilhetes.</b> Cada sorteio tem números, custo em bilhetes e prêmios próprios, exibidos no site antes de você participar. Números reservados ficam visíveis no seu bilhete oficial; ao publicar o resultado, os bilhetes dos números não ganhados são <b>devolvidos automaticamente</b> para a sua carteira. Nos leilões, os lances são em bilhetes; se a meta não for atingida até o fim do prazo, <b>todos os lances são devolvidos</b>. A apuração usa sorteio automático entre os números reservados, com resultado publicado na página.</li>
+    <li><b>5. Check-in diário (raspadinha).</b> A cada 8 horas você pode raspar um cartão de check-in e receber de <b>1 a 10 bilhetes</b> (raramente até 20), creditados direto na carteira. O direito ao cartão é pessoal, vale uma vez por janela de 8 horas e não acumula: se você não raspar, o cartão anterior não soma com o próximo. Fraudes na raspadinha (multiplicar contas, manipular o relógio) anulam os bilhetes e suspendem a conta.</li>
+    <li><b>6. Prêmios e entrega.</b> Os prêmios anunciados nos sorteios e leilões são entregues pelo organizador ao ganhador confirmado. Para receber, o perfil deve estar completo: <b>nome completo, data de nascimento, endereço e chave Pix</b> (para prêmios em dinheiro) ou endereço de entrega (para prêmios físicos). A entrega é combinada por e-mail ou WhatsApp cadastrados. O organizador pode solicitar confirmação de identidade antes de entregar prêmios de alto valor — os dados são usados só para isso e depois mantidos em sigilo.</li>
+    <li><b>7. Seus dados — o que coletamos e por quê.</b> Coletamos: e-mail e senha (acesso), nome, nascimento, gênero, WhatsApp, chave Pix e endereço (conferir tarefas e entregar prêmios), histórico de tarefas, reservas, lances, raspadinhas e carteira (operar a plataforma e evitar fraudes). Sua foto de perfil pode vir do serviço público Gravatar associado ao seu e-mail — e só se você aceitar essa opção no perfil.</li>
+    <li><b>8. Seus dados — quem pode ver o quê.</b> Publicamente, aparece apenas o <b>nome abreviado</b> (ex.: Maria S.) e os números reservados. E-mail, endereço, Pix, nascimento e comprovantes <b>nunca são exibidos publicamente</b>. Internamente, o organizador acessa esses dados apenas para aprovar provas, apurar resultados e entregar prêmios. Prestadores técnicos (hospedagem/Firebase, e-mails, publicidade e o Gravatar, se ativado) processam dados apenas para fazer o site funcionar.</li>
+    <li><b>9. Seus dados — guarda, segurança e exclusão.</b> Os dados ficam guardados enquanto sua conta existir e são usados também para registrar resultados (transparência dos sorteios). Não vendemos seus dados. Você pode pedir a exclusão da conta e dos dados pelo suporte; após a exclusão, mantemos apenas o mínimo necessário para registrar prêmios já entregues e evitar fraudes. Você tem os direitos de acesso, correção e portabilidade dos seus dados, garantidos pela LGPD (Lei 13.709/2018) — basta pedir ao suporte.</li>
+    <li><b>10. Sua responsabilidade.</b> Você responde pela veracidade das informações e provas enviadas, pelo uso da própria conta e pela guarda da sua senha. Você declara que as tarefas foram feitas por você, de verdade, no serviço indicado. Responda pelos seus atos na plataforma conforme a lei.</li>
+    <li><b>11. Responsabilidade do organizador.</b> O organizador se compromete a: manter a participação gratuita, apurar os sorteios de forma automática e transparente, publicar resultados nesta página, devolver bilhetes conforme as regras (itens 4 e 5), guardar seus dados em sigilo e entrar em contato com os ganhadores para a entrega.</li>
+    <li><b>12. Suspensão.</b> Contas que burlam as regras (itens 2, 3, 5 e 10) podem ser suspensas ou excluídas, com perda de bilhetes obtidos irregularmente; prêmios já entregues de forma legítima não são confiscados.</li>
+    <li><b>13. Links e serviços de terceiros.</b> Tarefas, capas e anúncios apontam para serviços de terceiros, com termos próprios. Esta promoção <b>não é patrocinada, associada nem administrada pelo Facebook, Google, Meta ou qualquer outro serviço</b> citado em tarefas e anúncios.</li>
+    <li><b>14. Menores de idade.</b> A plataforma é destinada a maiores de 18 anos. Menores só participam com conhecimento e autorização expressa do responsável legal, que responde pela participação.</li>
+    <li><b>15. Mudanças nos termos.</b> Estes termos podem ser atualizados para refletir melhorias ou exigências legais; a versão vigente fica sempre nesta página e mudanças relevantes são avisadas por notificação no site.</li>
+    <li><b>16. Dúvidas e contato.</b> Qualquer dúvida sobre estes termos, sobre seus dados ou sobre um resultado pode ser enviada pela tela de Suporte 🎧. Responderemos pelo e-mail ou WhatsApp cadastrados na sua conta.</li>
    </ol>
   </div>
   <div class="cs-more" id="cs-perms" hidden>
@@ -1257,8 +1536,34 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
 <!-- ═══ SUPORTE AO CLIENTE (aberto pelo menu lateral, código configurado no painel administrativo) ═══ -->
 <div class="sup-modal" id="sup-modal" hidden>
  <div class="sup-box" role="dialog" aria-label="Suporte ao cliente">
-  <div class="sup-head"><b>🎧 Suporte ao cliente</b><button class="ib sm" id="sup-close" aria-label="Fechar suporte">✕</button></div>
+  <div class="sup-head"><b><span class="icn" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13a8 8 0 0 1 16 0"/><rect x="3" y="13" width="4" height="6" rx="2"/><rect x="17" y="13" width="4" height="6" rx="2"/><path d="M19 19a4 4 0 0 1-4 2h-2"/></svg></span> Suporte ao cliente</b><button class="ib sm" id="sup-close" aria-label="Fechar suporte">✕</button></div>
   <iframe id="sup-frame" class="sup-frame" title="Suporte ao cliente" sandbox="allow-scripts allow-forms allow-popups allow-modals"></iframe>
+ </div>
+</div>
+
+<!-- ═══ CHECK-IN DIÁRIO · RASPADINHA DE BILHETES ═══ -->
+<div class="sup-modal" id="scratch-modal" hidden>
+ <div class="scratch-box" role="dialog" aria-modal="true" aria-label="Check-in diário">
+  <div class="sc-head">
+   <span class="sc-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5V8a2 2 0 0 0 0 4v2.5a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 14.5V12a2 2 0 0 0 0-4z"/><path d="M12 6.5v2M12 11v2M12 15.5v2"/></svg></span>
+   <div><b>Check-in diário</b><small>Raspadinha oficial · Yshippcommerce</small></div>
+   <button class="ib sm" id="scratch-close" aria-label="Fechar" type="button">✕</button>
+  </div>
+  <div class="sc-micro" aria-hidden="true">YSHIPPCOMMERCE · RASPADINHA OFICIAL · 8H EM 8H · AUTÊNTICO · YSHIPPCOMMERCE · RASPADINHA OFICIAL</div>
+  <div class="sc-stage">
+   <div class="sc-prize" id="sc-prize" aria-live="polite">
+    <span class="sc-lab">Prêmio desta raspadinha</span>
+    <b class="mono" id="sc-amount">—</b>
+    <span class="sc-sub" id="sc-sub">bilhetes na carteira</span>
+   </div>
+   <canvas id="sc-canvas" width="520" height="300" aria-label="Área para raspar"></canvas>
+   <p class="sc-hint" id="sc-hint">Passe o dedo (ou o mouse) sobre o cartão para raspar e revelar seus bilhetes.</p>
+  </div>
+  <div class="sc-foot">
+   <span class="sc-timer mono" id="sc-timer">—</span>
+    <button class="btn" id="sc-collect" hidden type="button">Coletar bilhetes</button>
+    <button class="btn ghost" id="sc-close2" type="button">Fechar</button>
+   </div>
  </div>
 </div>
 
@@ -1277,25 +1582,25 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
    <div class="m-acct" id="m-acct"></div>
    <div class="mgrid">
     <div class="mgrp"><span class="mgl">Participar</span>
-     <a class="mi" href="#premios"><span class="mic">🎁</span><span><b>Prêmios</b><small>Tudo o que está em jogo</small></span></a>
-     <a class="mi" href="#sorteios"><span class="mic">🎟️</span><span><b>Sorteios</b><small>Escolha seus números</small></span></a>
-     <a class="mi" href="#eventos"><span class="mic">◈</span><span><b>Eventos</b><small>Entradas e tarefas</small></span></a>
-     <a class="mi" href="#ofertas"><span class="mic">⚡</span><span><b>Ofertas</b><small>Ganhe bilhetes extras</small></span></a>
-     <a class="mi" href="#leiloes"><span class="mic">⚖</span><span><b>Leilões</b><small>Dê seus lances</small></span></a>
+     <a class="mi" href="#premios"><span class="mic"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M5 12v7a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-7M3 8l2-3.5h14L21 8"/></svg></span></span><span><b>Prêmios</b><small>Tudo o que está em jogo</small></span></a>
+     <a class="mi" href="#sorteios"><span class="mic"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8a2 2 0 0 0 2-2h12a2 2 0 0 1 2 2v1a2.5 2.5 0 0 0 0 5v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1a2.5 2.5 0 0 0 0-5z"/><path d="M14.5 7v9.5" stroke-dasharray="2.5 3"/></svg></span></span><span><b>Sorteios</b><small>Escolha seus números</small></span></a>
+     <a class="mi" href="#eventos"><span class="mic"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="16" rx="2.5"/><path d="M8 3v4M16 3v4M3.5 10h17M8 14h3"/></svg></span></span><span><b>Eventos</b><small>Entradas e tarefas</small></span></a>
+     <a class="mi" href="#ofertas"><span class="mic"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4.5 13.5H11L9.5 22 18 10.5h-6.5z"/></svg></span></span><span><b>Ofertas</b><small>Ganhe bilhetes extras</small></span></a>
+     <a class="mi" href="#leiloes"><span class="mic"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M8 6h8M7 21h10M9.5 9.5a3.5 3.5 0 0 1 7 0c0 2-1.5 3-3.5 4-2-1-3.5-2-3.5-4zM9.5 13.5 7 17h10l-2.5-3.5"/></svg></span></span><span><b>Leilões</b><small>Dê seus lances</small></span></a>
     </div>
     <div class="mgrp"><span class="mgl">Minha conta</span>
-     <button class="mi" type="button" data-open="profile"><span class="mic">👤</span><span><b>Meu perfil</b><small>Dados pessoais e segurança</small></span></button>
-     <button class="mi" type="button" data-open="wallet"><span class="mic">💼</span><span><b>Carteira</b><small>Saldo, ativos e histórico</small></span></button>
-     <a class="mi" href="#bilhete"><span class="mic">🎫</span><span><b>Meus bilhetes</b><small>Seus números e situação</small></span></a>
-     <a class="mi" href="#participar"><span class="mic">🚀</span><span><b>Participar agora</b><small>Passo a passo guiado</small></span></a>
+     <button class="mi" type="button" data-open="profile"><span class="mic"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5"/></svg></span></span><span><b>Meu perfil</b><small>Dados pessoais e segurança</small></span></button>
+     <button class="mi" type="button" data-open="wallet"><span class="mic"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="6" width="19" height="13" rx="3"/><path d="M2.5 10h19" opacity=".55"/><circle cx="17" cy="13.5" r="1.4" fill="currentColor" stroke="none"/></svg></span></span><span><b>Carteira</b><small>Saldo, ativos e histórico</small></span></button>
+     <a class="mi" href="#bilhete"><span class="mic"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8a2 2 0 0 0 2-2h12a2 2 0 0 1 2 2v1a2.5 2.5 0 0 0 0 5v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1a2.5 2.5 0 0 0 0-5z"/><path d="M14.5 7v9.5" stroke-dasharray="2.5 3"/></svg></span></span><span><b>Meus bilhetes</b><small>Seus números e situação</small></span></a>
+     <a class="mi" href="#participar"><span class="mic"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 15c-1.5-1.5-2-3.5-2-5.5L12 2l9 7.5c0 2-.5 4-2 5.5-2.5 2.5-6.5 3-9 1-2.5 2-6.5 1.5-9-1z"/></svg></span></span><span><b>Participar agora</b><small>Passo a passo guiado</small></span></a>
     </div>
     <div class="mgrp"><span class="mgl">Acompanhar e ajuda</span>
-     <a class="mi" href="#resultado"><span class="mic">🏆</span><span><b>Resultado oficial</b><small>Ganhadores e disputas</small></span></a>
-     <a class="mi" href="#feed-sec"><span class="mic">📈</span><span><b>Ao vivo</b><small>Últimas participações</small></span></a>
-     <a class="mi" href="#como"><span class="mic">🧭</span><span><b>Como funciona</b><small>Quatro etapas gratuitas</small></span></a>
-     <a class="mi" href="#regras"><span class="mic">❓</span><span><b>Perguntas frequentes</b><small>Regras e dúvidas</small></span></a>
-     <a class="mi" href="#suporte" id="nav-sup"><span class="mic">🎧</span><span><b>Suporte</b><small>Fale com a equipe</small></span></a>
-     <button class="mi" type="button" data-terms="1"><span class="mic">🔒</span><span><b>Termos e permissões</b><small>Privacidade e segurança</small></span></button>
+     <a class="mi" href="#resultado"><span class="mic"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4h10v4a5 5 0 0 1-10 0zM9 20h6M12 13v7M17 5h3.5a3.5 3.5 0 0 1-3.5 7M7 5H3.5A3.5 3.5 0 0 0 7 12"/></svg></span></span><span><b>Resultado oficial</b><small>Ganhadores e disputas</small></span></a>
+     <a class="mi" href="#feed-sec"><span class="mic"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l5-6 4 3 5-7 4 4"/><path d="M3 21h18"/></svg></span></span><span><b>Ao vivo</b><small>Últimas participações</small></span></a>
+     <a class="mi" href="#como"><span class="mic"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m16 8-2.5 5.5L8 16l2.5-5.5z"/></svg></span></span><span><b>Como funciona</b><small>Quatro etapas gratuitas</small></span></a>
+     <a class="mi" href="#regras"><span class="mic"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.3a2.6 2.6 0 0 1 5 1c0 1.7-2.5 2.2-2.5 3.7"/><circle cx="12" cy="17" r=".4" fill="currentColor" stroke="none"/></svg></span></span><span><b>Perguntas frequentes</b><small>Regras e dúvidas</small></span></a>
+     <a class="mi" href="#suporte" id="nav-sup"><span class="mic"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13a8 8 0 0 1 16 0"/><rect x="3" y="13" width="4" height="6" rx="2"/><rect x="17" y="13" width="4" height="6" rx="2"/><path d="M19 19a4 4 0 0 1-4 2h-2"/></svg></span></span><span><b>Suporte</b><small>Fale com a equipe</small></span></a>
+     <button class="mi" type="button" data-terms="1"><span class="mic"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/><circle cx="12" cy="15.5" r="1.3" fill="currentColor" stroke="none"/></svg></span></span><span><b>Termos e permissões</b><small>Privacidade e segurança</small></span></button>
     </div>
    </div>
   </div>
@@ -1306,7 +1611,7 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
 <div class="sheet" id="wallet-sheet" hidden>
  <div class="sheet-bg" data-close></div>
  <div class="sheet-p" role="dialog" aria-modal="true" aria-labelledby="wl-title">
-  <div class="sheet-h"><span class="grab" aria-hidden="true"></span><b id="wl-title">💼 Carteira</b><button class="ib sm" type="button" data-close aria-label="Fechar carteira">✕</button></div>
+  <div class="sheet-h"><span class="grab" aria-hidden="true"></span><b id="wl-title"><span class="icn" aria-hidden="true" style="width:15px;height:15px;vertical-align:-2px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="6" width="19" height="13" rx="3"/><path d="M2.5 10h19" opacity=".55"/><circle cx="17" cy="13.5" r="1.4" fill="currentColor" stroke="none"/></svg></span> Carteira</b><button class="ib sm" type="button" data-close aria-label="Fechar carteira">✕</button></div>
   <div class="sheet-b" id="wl-body"></div>
  </div>
 </div>
@@ -1349,11 +1654,11 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
     <p class="hint" style="margin:0;font-size:11.5px">Só o organizador vê esses dados. Na lista pública você aparece abreviado (ex.: Maria S.).</p>
    </form>
    <div class="pf-sec"><span class="pf-st">Conta e preferências</span>
-    <button class="pf-row" type="button" id="pf-theme"><span>🌓 Tema do site</span><span class="hint" id="pf-theme-v"></span></button>
-    <button class="pf-row" type="button" data-open="wallet"><span>💼 Minha carteira</span><span class="hint">›</span></button>
-    <button class="pf-row" type="button" data-terms="1"><span>🔒 Termos e permissões</span><span class="hint">›</span></button>
-    <button class="pf-row" type="button" id="pf-sup"><span>🎧 Suporte</span><span class="hint">›</span></button>
-    <button class="pf-row out" type="button" id="pf-logout"><span>↩︎ Sair da conta</span></button>
+    <button class="pf-row" type="button" id="pf-theme"><span><span class="icn" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.5A8.5 8.5 0 0 1 10.5 4a8.5 8.5 0 1 0 9.5 9.5z"/></svg></span> Tema do site</span><span class="hint" id="pf-theme-v"></span></button>
+    <button class="pf-row" type="button" data-open="wallet"><span><span class="icn" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="6" width="19" height="13" rx="3"/><path d="M2.5 10h19" opacity=".55"/><circle cx="17" cy="13.5" r="1.4" fill="currentColor" stroke="none"/></svg></span> Minha carteira</span><span class="hint">›</span></button>
+    <button class="pf-row" type="button" data-terms="1"><span><span class="icn" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/><circle cx="12" cy="15.5" r="1.3" fill="currentColor" stroke="none"/></svg></span> Termos e permissões</span><span class="hint">›</span></button>
+    <button class="pf-row" type="button" id="pf-sup"><span><span class="icn" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13a8 8 0 0 1 16 0"/><rect x="3" y="13" width="4" height="6" rx="2"/><rect x="17" y="13" width="4" height="6" rx="2"/><path d="M19 19a4 4 0 0 1-4 2h-2"/></svg></span> Suporte</span><span class="hint">›</span></button>
+    <button class="pf-row out" type="button" id="pf-logout"><span><span class="icn" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h3"/><path d="m15 8 4 4-4 4M19 12H9"/></svg></span> Sair da conta</span></button>
    </div>
   </div>
  </div>
@@ -1427,7 +1732,7 @@ let taken=new Set(),feedItems=[],claims={},unC={},unW=null,unU=null,unH=null,unJ
 let sugg=[],armed=0,session=0,stageOpen=false,sheetOpen="";
 let unT=null;
 let authMode="login",anote="";
-let evView="active",heroData=[],heroSig="",hi=0,hlast=Date.now(),hpause=false;
+let evView="active",heroData=[],heroSig="",hi=0,hlast=Date.now(),hpause=false,heroVis=true;
 let cfgReady=false,feedReady=false;
 const ready=()=>cfgReady&&feedReady;
 const reduceMotion=matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -1589,7 +1894,7 @@ function parseMoney(v){
  return parseFloat(m.replace(/\./g,""))||parseFloat(m);
 }
 const fmtBRL=v=>"R$ "+(Math.round(v*100)/100).toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2});
-let pzIdx=0,pzN=0,pzLast=Date.now(),pzPause=false,pzSig="";
+let pzIdx=0,pzN=0,pzLast=Date.now(),pzPause=false,pzSig="",pzVis=true;
 function pzShow(i){
  const tr=$("pz-track");if(!tr||!pzN)return;
  pzIdx=((i%pzN)+pzN)%pzN;pzLast=Date.now();
@@ -1641,7 +1946,7 @@ function renderPrizes(){
  const n=slides.length;
  const html=`<div class="pz-track" id="pz-track">${slides.join("")}</div>`+(n>1?`<button class="cv-b p" data-pzstep="-1" aria-label="Prêmio anterior">‹</button><button class="cv-b n" data-pzstep="1" aria-label="Próximo prêmio">›</button><div class="pz-ctl">${n<=12?`<div class="dots">${slides.map((_,k)=>`<button data-pzi="${k}" aria-label="Prêmio ${k+1}"></button>`).join("")}</div>`:""}<span class="mono" id="pz-count">1/${n}</span></div><div class="pz-bar" id="pz-bar"></div>`:"");
  tb.hidden=false;
- tb.innerHTML=`<div><span class="label">💰 Valor total em prêmios</span><small>${count} prêmio(s) em ${groups.length} sorteio(s)${noVal&&total>0?" · "+noVal+" sem valor informado":""}</small></div><b>${total>0?fmtBRL(total):"A definir"}</b>`;
+ tb.innerHTML=`<div><span class="label"><span class="icn" aria-hidden="true" style="width:13px;height:13px;vertical-align:-2px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5h4a2.5 2.5 0 0 1 0 5H9.5z"/><circle cx="12" cy="17" r=".4" fill="currentColor" stroke="none"/></svg></span> Valor total em prêmios</span><small>${count} prêmio(s) em ${groups.length} sorteio(s)${noVal&&total>0?" · "+noVal+" sem valor informado":""}</small></div><b>${total>0?fmtBRL(total):"A definir"}</b>`;
  $("pz-sub").textContent=n>1?"Um prêmio por vez, trocando sozinho a cada 10 segundos. Use as setas ou deslize para ver os outros.":"Prêmio em disputa.";
  if(html===pzSig)return;
  pzSig=html;pzN=n;
@@ -1888,10 +2193,16 @@ function countdown(){
  $("promo").hidden=!notice||!cfgReady;
  if(notice)$("promo-t").textContent=notice;
  renderHero();
- if(!hpause&&!reduceMotion&&!document.hidden&&heroData.length>1&&now-hlast>=15000){hlast=now;showSlide(hi+1,false)}
- if(pzN>1){if(pzPause||document.hidden)pzLast=now;else if(now-pzLast>=10000)pzShow(pzIdx+1)}
+ if(!hpause&&heroVis&&!reduceMotion&&!document.hidden&&heroData.length>1&&now-hlast>=15000){hlast=now;showSlide(hi+1,false)}
+ if(pzN>1){if(pzPause||!pzVis||document.hidden)pzLast=now;else if(now-pzLast>=10000)pzShow(pzIdx+1)}
 }
-countdown();setInterval(countdown,1000);
+/* performance: carrosséis só giram quando estão visíveis na tela */
+try{
+ const io=new IntersectionObserver(es=>{for(const en of es){if(en.target.id==="slides")heroVis=en.isIntersecting;if(en.target.id==="pzc")pzVis=en.isIntersecting}},{rootMargin:"120px"});
+ if($("slides"))io.observe($("slides"));
+ if($("pzc"))io.observe($("pzc"));
+}catch(e){}
+countdown();setInterval(()=>{if(!document.hidden)countdown()},1000);
 $("promo-c").onclick=()=>copyText(settings.notice||"");
 addEventListener("offline",()=>{toast("Sem conexão. Reconecte para continuar.");countdown()});
 addEventListener("online",()=>{toast("Conexão restabelecida.");countdown()});
@@ -1916,21 +2227,30 @@ $("showpw").onclick=()=>{const p=$("password"),s=p.type==="password";p.type=s?"t
 $("go").onclick=async()=>{
  const email=$("email").value.trim(),pw=$("password").value;
  if(authMode!=="reset"&&!termsOk())return askTerms();
+ const goBtn=$("go");
+ if(goBtn.disabled)return;
  try{
   if(authMode==="reset"){
    if(!email)return toast("Digite seu e-mail para receber o link.");
-   await sendPasswordResetEmail(auth,email);
-   anote="Se existir uma conta para "+email+", enviamos o link de redefinição. Confira também o spam.";
+   if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email))return toast("Informe um e-mail válido, ex.: seuemail@exemplo.com.");
+   goBtn.disabled=true;goBtn.textContent="Enviando…";
+   await sendPasswordResetEmail(auth,email,{url:location.href,handleCodeInApp:false});
+   anote="✓ Se existir uma conta para "+email+", enviamos o link de redefinição. Confira a caixa de entrada e o spam. O link vale por 1 hora.";
+   toast("Link de redefinição enviado para "+email+".");
    render();
   }else if(authMode==="register"){
    if(!email||pw.length<MIN_PW)return toast("Informe e-mail e senha com pelo menos "+MIN_PW+" caracteres.");
+   goBtn.disabled=true;goBtn.textContent="Criando…";
    const c=await createUserWithEmailAndPassword(auth,email,pw);
    await sendEmailVerification(c.user);
    toast("Conta criada. Enviamos o link de verificação.");
   }else{
+   if(!email)return toast("Digite seu e-mail.");
+   goBtn.disabled=true;goBtn.textContent="Entrando…";
    await signInWithEmailAndPassword(auth,email,pw);
   }
  }catch(e){showError(e)}
+ finally{goBtn.disabled=false;renderAuth()}
 };
 ["email","password"].forEach(id=>$(id).addEventListener("keydown",e=>{if(e.key==="Enter")$("go").click()}));
 $("google").onclick=async()=>{if(!termsOk())return askTerms();try{await signInWithPopup(auth,new GoogleAuthProvider())}catch(e){showError(e)}};
@@ -2084,6 +2404,7 @@ async function boot(user){
    /* participante banido no painel: a sessão é encerrada imediatamente */
    if(d.banned&&!window.__bannedOut){window.__bannedOut=true;toast("Sua conta foi suspensa pelo organizador.");signOut(auth).catch(()=>{})}
    else if(!d.banned)window.__bannedOut=false;
+   if(window.__pm!==d.photoMode){window.__pm=d.photoMode;loadAvatar()}
    render()},e=>console.error("Perfil:",e));
   unW=onSnapshot(doc(db,"wallets",user.uid),x=>{if(s!==session)return;wallet=x.exists()?x.data():null;render()},e=>console.error("Carteira:",e));
   unH=onSnapshot(query(collection(db,"wallets",user.uid,"history"),orderBy("createdAt","desc"),limit(60)),x=>{if(s!==session)return;history=x.docs.map(d=>({id:d.id,...d.data()}));render()},e=>console.error("Histórico:",e));
@@ -2212,6 +2533,7 @@ function taskCard(t){
   :pt==="email"
    ?`<div class="field"><label class="label">E-mail usado na tarefa</label><input type="email" data-proof="${esc(t.id)}" placeholder="seuemail@exemplo.com"></div>`
    :`<div class="field"><label class="label">${pt==="code"?"Código do comprovante":"Comprovante (texto ou link)"}</label><input data-proof="${esc(t.id)}" placeholder="${pt==="code"?"Ex.: ABC123":"Descreva ou cole o link"}"></div>`;
+ const proofDetailBox=t.proofDetails?`<div class="proof-detail"><span class="pd-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><path d="M12 3l7 3v6c0 4.4-3 7.6-7 9-4-1.4-7-4.6-7-9V6z"/></svg></span><div><span class="pd-t">Detalhes da prova exigida</span><small>${esc(t.proofDetails)}</small></div></div>`:"";
  return `<div class="task" style="margin-top:10px">
   <div class="task-head"><h4>${esc(t.name)}</h4><span class="tag">${t.difficulty?esc(t.difficulty):""}</span></div>
   <div class="actions" style="margin:0 0 4px;gap:6px">${t.featured===true?'<span class="tag y">★ Destaque</span>':""}${t.category&&TASK_CATS[t.category]?`<span class="tag g">${esc(TASK_CATS[t.category])}</span>`:""}${t.badge?`<span class="tag y">${esc(t.badge)}</span>`:""}</div>
@@ -2222,6 +2544,7 @@ function taskCard(t){
   ${t.endAt?`<div class="kv"><span>Termina em</span><b>${fmt(t.endAt)}</b></div>`:""}
   ${t.coupon?`<div class="coupon"><span class="tag y">Cupom</span><code>${esc(t.coupon)}</code><button class="btn sm ghost" data-copy="${esc(t.coupon)}">Copiar</button></div>`:""}
   ${st==="rejected"&&c.rejectionReason?`<p class="hint">Motivo da rejeição: ${esc(c.rejectionReason)}</p>`:""}
+  ${proofDetailBox}
   ${proofInput}
   <div class="actions" style="margin:0">
    ${safeUrl(t.link)&&!soldOut?`<a class="btn sm" href="${esc(safeUrl(t.link))}" target="_blank" rel="noopener noreferrer">Abrir tarefa</a>`:""}
@@ -2837,13 +3160,13 @@ function render(){
  $("acct").hidden=!logged;
  if(logged){
   const ini=(profile?.name||currentUser.email||"U").trim().charAt(0).toUpperCase();
-  $("ava").textContent=ini;
+  $("ava").innerHTML=avatarOK&&avatarURL?'<img src="'+esc(avatarURL)+'" alt="Foto do perfil" referrerpolicy="no-referrer">':esc(ini);
   $("acct-n").textContent=profile?.name?maskName(profile.name):"Conta";
   $("am-email").textContent=currentUser.email||"";
   $("am-ver").textContent=v?"E-mail verificado ✓":"Verificação pendente";
   $("m-acct").hidden=false;
-  $("m-acct").innerHTML=`<div class="ma-card"><span class="ava">${esc(ini)}</span><div class="ma-meta"><b>${esc(profile?.name?maskName(profile.name):"Minha conta")}</b><small>${esc(currentUser.email||"")}</small><small>${v?"E-mail verificado ✓":"Verificação pendente"}</small></div>${v?`<div class="ma-bal"><small>Saldo</small><b class="mono">${pointsOf(wallet)}</b></div>`:""}</div>
-   <div class="ma-acts"><button type="button" class="btn sm ghost" data-ma="edit">👤 Perfil</button><button type="button" class="btn sm ghost" data-ma="wallet">💼 Carteira</button><button type="button" class="btn sm ghost out" data-ma="logout">↩︎ Sair</button></div>`;
+  $("m-acct").innerHTML=`<div class="ma-card"><span class="ava">${avatarOK&&avatarURL?'<img src="'+esc(avatarURL)+'" alt="Foto do perfil" referrerpolicy="no-referrer">':esc(ini)}</span><div class="ma-meta"><b>${esc(profile?.name?maskName(profile.name):"Minha conta")}</b><small>${esc(currentUser.email||"")}</small><small>${v?"E-mail verificado ✓":"Verificação pendente"}</small></div>${v?`<div class="ma-bal"><small>Saldo</small><b class="mono">${pointsOf(wallet)}</b></div>`:""}</div>
+   <div class="ma-acts"><button type="button" class="btn sm ghost" data-ma="edit"><span class="icn" aria-hidden="true" style="width:13px;height:13px;vertical-align:-2px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5"/></svg></span> Perfil</button><button type="button" class="btn sm ghost" data-ma="wallet"><span class="icn" aria-hidden="true" style="width:13px;height:13px;vertical-align:-2px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="6" width="19" height="13" rx="3"/><path d="M2.5 10h19" opacity=".55"/><circle cx="17" cy="13.5" r="1.4" fill="currentColor" stroke="none"/></svg></span> Carteira</button><button type="button" class="btn sm ghost out" data-ma="logout"><span class="icn" aria-hidden="true" style="width:13px;height:13px;vertical-align:-2px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h3"/><path d="m15 8 4 4-4 4M19 12H9"/></svg></span> Sair</button></div>`;
  }else{
   $("m-acct").hidden=false;
   $("m-acct").innerHTML=`<div class="ma-card"><span class="ava">?</span><div class="ma-meta"><b>Você não está conectado</b><small>Entre para participar dos sorteios e leilões.</small></div></div><a class="btn wide" href="#participar">🔐 Entrar ou criar conta</a>`;
@@ -2911,6 +3234,158 @@ function render(){
 render();
 if(location.hash==="#participar")goStage(true);
 
+/* ============================================================
+   19b2 · CHECK-IN DIÁRIO · RASPADINHA DE BILHETES (8h em 8h)
+   Raspe o cartão e descubra quantos bilhetes caiu na carteira:
+   entre 1 e 10 normalmente, raramente até 20.
+   ============================================================ */
+const SC_COOLDOWN=8*3600e3;
+let scNextAt=0,scAmount=0,scClaimed=false,scDrawing=false,scTimerI=0;
+function scFmt(ms){
+ if(ms<=0)return"disponível agora";
+ ms=Math.max(0,ms);
+ const h=Math.floor(ms/3600e3),m=Math.floor(ms%3600e3/60e3),s=Math.floor(ms%60e3/1e3);
+ return(h?h+"h ":"")+(m<10?"0":"")+m+"m "+(s<10?"0":"")+s+"s";
+}
+function scRoll(){let r=1+Math.floor(Math.random()*10);if(Math.random()<.08)r+=1+Math.floor(Math.random()*10);return Math.min(20,r)}
+async function scRefresh(){
+ const b=$("checkin");if(!b)return;
+ const show=!!currentUser?.emailVerified;
+ b.hidden=!show;
+ if(!show){clearInterval(scTimerI);scTimerI=0;return}
+ if(!scNextAt&&currentUser){
+  try{const d=await getDoc(doc(db,"checkins",currentUser.uid));
+   if(d.exists()){const n=d.data().nextAt||0;if(n>scNextAt)scNextAt=n}
+  }catch(e){}
+ }
+ const ok=Date.now()>=scNextAt;
+ b.querySelector(".sc-dot").hidden=!ok;
+ b.title=ok?"Check-in diário · sua raspadinha está pronta!":"Check-in diário · próxima raspadinha em "+scFmt(scNextAt-Date.now());
+}
+function scTick(){
+ const t=$("sc-timer");if(!t)return;
+ if($("scratch-modal").hidden)return;
+ const left=scNextAt-Date.now();
+ t.textContent=left>0&&!scAmount?"Próxima raspadinha em "+scFmt(left):scAmount?"Volte em "+scFmt(scNextAt-Date.now())+" para raspar de novo.":"Raspadinha disponível agora — raspe e colete!";
+}
+async function scClaim(){
+ if(scClaimed||!currentUser)return true;
+ try{
+  await runTransaction(db,async tx=>{
+   const ref=doc(db,"checkins",currentUser.uid);
+   const cs=await tx.get(ref);
+   const d=cs.exists()?cs.data():{};
+   const last=d.lastAt?stampMs(d.lastAt):0,next=d.nextAt||last+SC_COOLDOWN;
+   if(Date.now()<next)throw{code:"sc/cooldown"};
+   tx.set(ref,{lastAt:serverTimestamp(),nextAt:Date.now()+SC_COOLDOWN,amount:scAmount,updatedAt:serverTimestamp()},{merge:true});
+   tx.set(doc(db,"wallets",currentUser.uid),{common:increment(scAmount),updatedAt:serverTimestamp()},{merge:true});
+   tx.set(doc(collection(db,"wallets",currentUser.uid,"history")),{kind:"scratch",amount:scAmount,ticketType:"common",reason:"Raspadinha do check-in diário",createdAt:serverTimestamp()});
+  });
+  scClaimed=true;
+  scNextAt=Date.now()+SC_COOLDOWN;
+  scRefresh();
+  return true;
+ }catch(e){
+  if(e?.code==="sc/cooldown"){toast("Raspadinha já usada. Volte em "+scFmt(scNextAt-Date.now())+".")}
+  else showError(e);
+  return false;
+ }
+}
+function scPaintCoat(ctx,W,H){
+ ctx.globalCompositeOperation="source-over";
+ ctx.clearRect(0,0,W,H);
+ const g=ctx.createLinearGradient(0,0,W,H);
+ g.addColorStop(0,"#2b3139");g.addColorStop(.5,"#474d57");g.addColorStop(1,"#2b3139");
+ ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+ ctx.fillStyle="rgba(252,213,53,.9)";
+ ctx.font="700 34px 'IBM Plex Mono',monospace";
+ ctx.textAlign="center";ctx.textBaseline="middle";
+ ctx.fillText("RASPE AQUI",W/2,H/2-14);
+ ctx.font="600 12px 'IBM Plex Sans',sans-serif";
+ ctx.fillStyle="rgba(234,236,239,.55)";
+ ctx.fillText("check-in diário · yshippcommerce",W/2,H/2+22);
+ ctx.strokeStyle="rgba(252,213,53,.35)";ctx.setLineDash([8,10]);ctx.lineWidth=3;
+ ctx.strokeRect(10,10,W-20,H-20);ctx.setLineDash([]);
+ ctx.save();ctx.globalAlpha=.18;ctx.font="700 9px 'IBM Plex Mono',monospace";
+ ctx.fillStyle="#eaecef";ctx.textAlign="left";
+ for(let y=20;y<H;y+=26)ctx.fillText("YSHIPPCOMMERCE · RASPADINHA OFICIAL · YSHIPPCOMMERCE · RASPADINHA OFICIAL",14,y);
+ ctx.restore();
+}
+function scProgress(ctx,W,H){
+ try{
+  const d=ctx.getImageData(0,0,W,H).data;
+  let clear=0,total=0;
+  for(let i=3;i<d.length;i+=4*24){total++;if(d[i]===0)clear++}
+  return total?clear/total:0;
+ }catch(e){return 0}
+}
+async function openScratch(){
+ if($("checkin").hidden)return;
+ if(!currentUser?.emailVerified)return toast("Entre com uma conta verificada para raspar.");
+ if(!termsOk())return askTerms();
+ $("scratch-modal").hidden=false;
+ document.body.classList.add("no-scroll");
+ clearInterval(scTimerI);scTimerI=setInterval(scTick,1000);scTick();
+ const cv=$("sc-canvas"),ctx=cv.getContext("2d",{willReadFrequently:true});
+ const W=cv.width,H=cv.height;
+ scAmount=0;scClaimed=false;
+ $("sc-prize").style.visibility="hidden";
+ $("sc-amount").textContent="—";
+ $("sc-collect").hidden=true;
+ $("sc-collect").textContent="Coletar bilhetes";
+ scPaintCoat(ctx,W,H);
+ cv.style.display="";
+ $("sc-hint").textContent="Passe o dedo (ou o mouse) sobre o cartão para raspar e revelar seus bilhetes.";
+ /* elegibilidade (leitura simples) */
+ try{
+  const d=await getDoc(doc(db,"checkins",currentUser.uid));
+  if(d.exists()){const n=d.data().nextAt||0;if(n>scNextAt)scNextAt=n}
+  if(Date.now()<scNextAt){
+   scTick();
+   $("sc-hint").textContent="Raspadinha em espera. Volte quando o tempo zerar — a contagem está no rodapé.";
+   cv.style.pointerEvents="none";
+   cv.style.opacity=".5";
+   return;
+  }
+ }catch(e){showError(e)}
+ cv.style.pointerEvents="";cv.style.opacity="";
+ scAmount=scRoll();
+ $("sc-amount").textContent="+"+scAmount;
+ $("sc-sub").textContent=scAmount>10?"bilhetes · prêmio raro! 🎉":"bilhetes na carteira";
+ $("sc-prize").style.visibility="";
+ let x0=null,claimed=false;
+ const pos=e=>{const r=cv.getBoundingClientRect();const t=e.touches?e.touches[0]:e;return{x:(t.clientX-r.left)*W/r.width,y:(t.clientY-r.top)*H/r.height}};
+ const paint=e=>{if(x0==null)return;const p=pos(e);ctx.globalCompositeOperation="destination-out";ctx.lineWidth=Math.max(22,W/14);ctx.lineCap="round";ctx.lineJoin="round";ctx.beginPath();ctx.moveTo(x0.x,x0.y);ctx.lineTo(p.x,p.y);ctx.stroke();x0=p};
+ const done=async()=>{
+  x0=null;
+  if(!claimed&&scProgress(ctx,W,H)>=.55){
+   claimed=true;
+   const ok=await scClaim();
+   if(ok){
+    $("sc-amount").classList.add("spark");
+    $("sc-hint").textContent="✓ "+scAmount+" bilhete(s) creditados na sua carteira!";
+    $("sc-collect").hidden=false;$("sc-collect").textContent="✓ Bilhetes creditados";
+    $("sc-collect").disabled=true;
+    cv.style.pointerEvents="none";
+    toast("+"+scAmount+" bilhete(s) do check-in diário!","success");
+    scTick();
+   }
+  }
+ };
+ cv.onpointerdown=e=>{if(scClaimed)return;x0=pos(e);paint(e);e.preventDefault()};
+ cv.onpointermove=e=>{if(x0!=null){paint(e);e.preventDefault()}};
+ cv.onpointerup=cv.onpointercancel=cv.onpointerleave=done;
+ $("sc-collect").onclick=()=>{if(!scClaimed)done()};
+}
+function closeScratch(){
+ $("scratch-modal").hidden=true;
+ document.body.classList.remove("no-scroll");
+ clearInterval(scTimerI);scTimerI=0;
+}
+$("checkin").onclick=openScratch;
+$("scratch-close").onclick=closeScratch;
+$("sc-close2").onclick=closeScratch;
+$("scratch-modal").addEventListener("click",e=>{if(e.target===$("scratch-modal"))closeScratch()});
 /* ============================================================
    19c · SUPORTE AO CLIENTE (renderiza o código salvo no painel administrativo)
    ============================================================ */
@@ -3056,7 +3531,7 @@ function renderCovers(){
   el.innerHTML="";
   el.hidden=!imgs.length;
   if(!imgs.length)continue;
-  el.innerHTML=`<div class="cv" data-i="0"><div class="cv-track">${imgs.map(s=>`<div class="cv-slide"><img src="${esc(s)}" alt="Capa do site" loading="lazy"></div>`).join("")}</div>${imgs.length>1?`<button class="cv-b p" data-cvstep="-1" aria-label="Capa anterior">‹</button><button class="cv-b n" data-cvstep="1" aria-label="Próxima capa">›</button><div class="cv-dots">${imgs.map((_,k)=>`<i data-cvi="${k}" class="${k===0?"on":""}"></i>`).join("")}</div>`:""}</div>`;
+  el.innerHTML=`<div class="cv" data-i="0"><div class="cv-track">${imgs.map(s=>`<div class="cv-slide"><img src="${esc(s)}" alt="Capa do site" loading="lazy" decoding="async"></div>`).join("")}</div>${imgs.length>1?`<button class="cv-b p" data-cvstep="-1" aria-label="Capa anterior">‹</button><button class="cv-b n" data-cvstep="1" aria-label="Próxima capa">›</button><div class="cv-dots">${imgs.map((_,k)=>`<i data-cvi="${k}" class="${k===0?"on":""}"></i>`).join("")}</div>`:""}</div>`;
  }
  cvBind();
 }
@@ -3067,6 +3542,7 @@ function renderCovers(){
  const b=$("wfloat");if(!b)return;
  const on=!!currentUser?.emailVerified,pts=pointsOf(wallet);
  b.hidden=!on;
+ scRefresh();
  $("wbadge").textContent=pts;
  const tb=$("tb-wbadge");if(tb){tb.textContent=pts>9999?Math.floor(pts/1000)+"k":pts;tb.hidden=!on}
  if(sheetOpen==="wallet")buildWallet();
@@ -3164,7 +3640,8 @@ addEventListener("resize",updatePagers);
    ============================================================ */
 let wlFilter="all",wlHide=false;
 try{wlHide=localStorage.getItem("wlhide")==="1"}catch(e){}
-const HKIND={reward:["Tarefa aprovada","✓"],welcome:["Bônus de boas-vindas","🎉"],event_join:["Entrada no evento","◈"],reserve:["Reserva de número","🎟"],refund:["Devolução do sorteio","↩"],auction_bid:["Lance no leilão","⚖"],auction_refund:["Devolução de leilão","↩"],admin_credit:["Crédito do organizador","★"]};
+const HICON={check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m4.5 12.5 5 5 10-11"/></svg>',gift:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="8" width="17" height="4" rx="1"/><path d="M5.5 12v7a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-7M3.5 8l2-3.5h13l2 3.5M12 8v12M8.5 4.5c-1.5 0-2.5 1-2.5 2.2 0 1.3 1.3 2 2.8 1.3zM15.5 4.5c1.5 0 2.5 1 2.5 2.2 0 1.3-1.3 2-2.8 1.3z"/></svg>',cal:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="16" rx="2.5"/><path d="M8 3v4M16 3v4M3.5 10h17M8 14h3"/></svg>',ticket:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8a2 2 0 0 0 2-2h12a2 2 0 0 1 2 2v1a2.5 2.5 0 0 0 0 5v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1a2.5 2.5 0 0 0 0-5z"/><path d="M14.5 7v9.5" stroke-dasharray="2.5 3"/></svg>',undo:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h11a5 5 0 0 1 0 10H9"/><path d="m8 5-4 4 4 4"/></svg>',gavel:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 6a3.5 3.5 0 0 1 5 5l-2 2-5-5zM8.5 10.5 3 16v5h5l5.5-5.5zM14 20h7M4 3l3 3"/></svg>',star:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 2.7 5.6 6.1.8-4.5 4.3 1.1 6.1L12 17l-5.4 2.8 1.1-6.1L3.2 9.4l6.1-.8z"/></svg>',bolt:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4.5 13.5H11L9.5 22 18 10.5h-6.5z"/></svg>'};
+const HKIND={reward:["Tarefa aprovada",HICON.check],welcome:["Bônus de boas-vindas",HICON.gift],event_join:["Entrada no evento",HICON.cal],reserve:["Reserva de número",HICON.ticket],refund:["Devolução do sorteio",HICON.undo],auction_bid:["Lance no leilão",HICON.gavel],auction_refund:["Devolução de leilão",HICON.undo],admin_credit:["Crédito do organizador",HICON.star],scratch:["Raspadinha diária",HICON.bolt]};
 const hPlus=k=>/reward|welcome|refund|credit/.test(k||"");
 function sparkSVG(pts){
  if(pts.length<2)return"";
@@ -3195,15 +3672,15 @@ function buildWallet(){
  const canBuy=Math.floor(tot/COST);
  const list=H.filter(h=>wlFilter==="all"||(wlFilter==="in"?h.plus:!h.plus));
  b.innerHTML=`<div class="wl-hero">
-   <div class="wl-top"><span class="label">Saldo estimado</span><button type="button" class="wl-eye" id="wl-eye" aria-pressed="${wlHide}">${wlHide?"◉ Mostrar":"◎ Ocultar"}</button></div>
+   <div class="wl-top"><span class="label">Saldo estimado</span><button type="button" class="wl-eye" id="wl-eye" aria-pressed="${wlHide}"><span class="icn" aria-hidden="true">${wlHide?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-6.5 10-6.5S22 12 22 12s-3.5 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="3"/><path d="m4 4 16 16"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-6.5 10-6.5S22 12 22 12s-3.5 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>'}</span>${wlHide?"Mostrar":"Ocultar"}</button></div>
    <div class="wl-bal">${mask(tot)} <small>bilhetes</small></div>
    <div class="wl-sub"><span class="${net7>=0?"up":"down"} mono">${net7>=0?"▲ +":"▼ "}${wlHide?"••":nf(net7)} · 7 dias</span><span>≈ ${wlHide?"••":nf(canBuy)} número(s) no sorteio atual</span></div>
    ${sparkSVG(pts)}
    <div class="wl-acts">
-    <button type="button" class="wl-act" data-wl="tasks"><span>＋</span>Ganhar</button>
-    <button type="button" class="wl-act" data-wl="pick"><span>🎟</span>Sortear</button>
-    <button type="button" class="wl-act" data-wl="auc"><span>⚖</span>Leilões</button>
-    <button type="button" class="wl-act" data-wl="tickets"><span>🎫</span>Bilhetes</button>
+    <button type="button" class="wl-act" data-wl="tasks"><span>${HICON.bolt}</span>Ganhar</button>
+    <button type="button" class="wl-act" data-wl="pick"><span>${HICON.ticket}</span>Sortear</button>
+    <button type="button" class="wl-act" data-wl="auc"><span>${HICON.gavel}</span>Leilões</button>
+    <button type="button" class="wl-act" data-wl="tickets"><span>${'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8a2 2 0 0 0 2-2h12a2 2 0 0 1 2 2v1a2.5 2.5 0 0 0 0 5v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1a2.5 2.5 0 0 0 0-5z"/><path d="M14.5 7v9.5" stroke-dasharray="2.5 3"/></svg>'}</span>Bilhetes</button>
    </div>
   </div>
   <div class="wl-sec"><div class="wl-sh"><b>Ativos</b><span class="hint" style="font-size:11.5px">distribuição do saldo por tipo</span></div>
@@ -3245,6 +3722,53 @@ function pfFields(){
  const a=profile?.address||{};
  return [["Nome",profile?.name&&profile.name.trim().length>=3],["Nascimento",profile?.birthDate],["Gênero",profile?.gender],["WhatsApp",profile?.whatsapp],["Pix",profile?.pixKey],["Rua",a.street],["Número",a.housenum],["Estado",a.state],["País",a.country]];
 }
+/* ---- FOTO DO PERFIL: inicial dourada (padrão) ou foto pública do e-mail (Gravatar, com aceite) ---- */
+let avatarOK=false,avatarURL=null;
+function avatarInitial(){return (profile?.name||currentUser?.email||"U").trim().charAt(0).toUpperCase()}
+async function gravatarURL(email,size=128){
+ try{
+  const d=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(String(email||"").trim().toLowerCase()));
+  const hex=[...new Uint8Array(d)].map(b=>b.toString(16).padStart(2,"0")).join("");
+  return "https://gravatar.com/avatar/"+hex+"?s="+size+"&d=404";
+ }catch(e){return null}
+}
+function paintAvatars(){
+ const html=avatarOK&&avatarURL?'<img src="'+esc(avatarURL)+'" alt="Foto do perfil" referrerpolicy="no-referrer">':'';
+ const a=$("ava");if(a)a.innerHTML=html||avatarInitial();
+ const p=$("pf-ava");if(p)p.innerHTML=html||avatarInitial();
+ const m=document.querySelector("#m-acct .ava");if(m)m.innerHTML=html||avatarInitial();
+}
+function loadAvatar(){
+ if(profile?.photoMode!=="email"||!currentUser?.email){avatarOK=false;avatarURL=null;return paintAvatars()}
+ avatarOK=false;avatarURL=null;paintAvatars();
+ gravatarURL(currentUser.email,128).then(url=>{
+  if(!url||profile?.photoMode!=="email")return;
+  const img=new Image();
+  img.onload=()=>{if(profile?.photoMode!=="email")return;avatarURL=url;avatarOK=true;paintAvatars();const s=$("pf-ava-msg");if(s)s.textContent="✓ Foto carregada do Gravatar deste e-mail."};
+  img.onerror=()=>{avatarOK=false;avatarURL=null;paintAvatars();const s=$("pf-ava-msg");if(s)s.textContent="Não encontramos foto pública neste e-mail. Se você criar um avatar em gravatar.com com este e-mail, ela aparecerá aqui automaticamente."};
+  img.src=url;
+ });
+}
+async function setPhotoMode(mode){
+ if(!currentUser?.emailVerified)return toast("Verifique seu e-mail primeiro.");
+ if(mode==="email"&&profile?.photoConsent!==true){
+  const ok=confirm('Usar a foto pública associada ao seu e-mail (Gravatar)?\n\n• A imagem é buscada do serviço Gravatar a partir do seu e-mail.\n• Nenhum dado extra seu é enviado — só o e-mail já usado na conta.\n• Você pode voltar para a inicial dourada quando quiser.\n\nAceita usar essa foto na plataforma?');
+  if(!ok)return toast("Sem problema — a inicial dourada continua sendo usada.");
+ }
+ try{
+  await updateDoc(doc(db,"users",currentUser.uid),{photoMode:mode,photoConsent:mode==="email",updatedAt:serverTimestamp()});
+  toast(mode==="email"?"Foto do e-mail ativada.":"Voltamos para a inicial dourada.");
+  loadAvatar();buildProfileHead();
+ }catch(e){showError(e)}
+}
+/* foto do perfil: clique nas opções ou no próprio avatar (com aceite para a foto do e-mail) */
+$("pf-head").addEventListener("click",e=>{
+ const b=e.target.closest("[data-photo]");if(b)return setPhotoMode(b.dataset.photo);
+ if(e.target.closest("#pf-ava"))return setPhotoMode(profile?.photoMode==="email"?"initial":"email");
+});
+$("pf-head").addEventListener("keydown",e=>{
+ if((e.key==="Enter"||e.key===" ")&&e.target.id==="pf-ava"){e.preventDefault();setPhotoMode(profile?.photoMode==="email"?"initial":"email")}
+});
 function buildProfileHead(){
  const el=$("pf-head");if(!el||!currentUser)return;
  const name=profile?.name||"",ini=(name||currentUser.email||"U").trim().charAt(0).toUpperCase();
@@ -3252,7 +3776,15 @@ function buildProfileHead(){
  const since=validDate(profile?.createdAt);
  const tOk=Object.values(claims).filter(c=>c?.status==="approved").length;
  el.innerHTML=`<div class="pf-card">
-  <div class="pf-top"><span class="pf-ava">${esc(ini)}</span><div><b>${esc(name||"Complete seu nome")}</b><small>${esc(currentUser.email||"")}</small><span class="tag ${currentUser.emailVerified?"g":"y"}" style="margin-top:6px">${currentUser.emailVerified?"E-mail verificado ✓":"Verificação pendente"}</span><div class="pf-id">ID ${esc(currentUser.uid.slice(0,8))}${since?" · desde "+since.toLocaleDateString("pt-BR"):""}</div></div></div>
+  <div class="pf-top"><span class="pf-ava" id="pf-ava" role="button" tabindex="0" title="Toque para trocar a foto">${esc(ini)}</span><div><b>${esc(name||"Complete seu nome")}</b><small>${esc(currentUser.email||"")}</small><span class="tag ${currentUser.emailVerified?"g":"y"}" style="margin-top:6px">${currentUser.emailVerified?"E-mail verificado ✓":"Verificação pendente"}</span><div class="pf-id">ID ${esc(currentUser.uid.slice(0,8))}${since?" · desde "+since.toLocaleDateString("pt-BR"):""}</div></div></div>
+  <div class="pf-photo">
+   <span class="pf-st">Foto do perfil</span>
+   <div class="pf-ph-o">
+    <button type="button" data-photo="email" class="${profile?.photoMode==="email"?"on":""}">Foto do meu e-mail (Gravatar)</button>
+    <button type="button" data-photo="initial" class="${profile?.photoMode!=="email"?"on":""}">Inicial dourada</button>
+   </div>
+   <small id="pf-ava-msg">${profile?.photoMode==="email"?(avatarOK?"✓ Foto carregada do Gravatar deste e-mail.":"Procurando foto pública neste e-mail…"):"A inicial dourada é a padrão e não revela nada. Ao escolher a foto do e-mail, você aceita que a imagem pública do seu e-mail (Gravatar) apareça na plataforma."}</small>
+  </div>
   <div class="tk-cut" aria-hidden="true"></div>
   <div class="pf-stats"><div><b class="mono">${pointsOf(wallet).toLocaleString("pt-BR")}</b><small>Bilhetes</small></div><div><b class="mono">${myTickets.length}</b><small>Números</small></div><div><b class="mono">${tOk}</b><small>Tarefas</small></div><div><b class="mono">${myJoins.size}</b><small>Eventos</small></div></div>
   <div class="pf-comp"><div class="ev-row"><span>Perfil completo</span><b class="mono">${pct}%</b></div><div class="track"><div class="fill" style="width:${pct}%;background:${pct===100?"var(--g)":"var(--ac)"}"></div></div>${miss.length?`<span>Falta: ${esc(miss.join(", "))}.</span>`:"<span>Tudo pronto para receber prêmios. ✓</span>"}</div>
