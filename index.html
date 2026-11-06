@@ -1,4 +1,5 @@
----
+
+
 
 <!doctype html>
 <html lang="pt-BR">
@@ -358,6 +359,65 @@ footer p{margin-top:12px;max-width:80ch}
 .sup-head{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid var(--l)}
 .sup-head b{font-size:15px}
 .sup-frame{width:100%;height:min(72vh,620px);border:0;background:#fff}
+/* ---- aviso "anunciar como colaborador" (cara de notificação) ---- */
+.colab-card{width:min(420px,calc(100vw - 32px));background:var(--p);border:1px solid var(--l);border-radius:16px;box-shadow:var(--sh);padding:14px;display:grid;gap:10px;animation:notein .3s ease}
+.colab-card p{font-size:13px;line-height:1.55}
+.colab-card .pnote{cursor:default;padding:6px 4px 8px;border-bottom:1px solid var(--l);border-radius:0}
+/* ---- menu expansível de provas (dentro do card da oferta) ---- */
+.proof-menu{display:grid;border:1px dashed var(--l2);border-radius:10px;padding:9px 11px;background:var(--p2)}
+.pm-head{width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px;background:none;border:0;color:var(--acx);font:600 12.5px var(--sans);cursor:pointer;padding:2px 0;text-align:left}
+.pm-head:hover{text-decoration:underline}
+.pm-head .pm-caret{color:var(--mu);font:600 13px var(--mono)}
+.pm-body{display:grid;gap:2px;padding-top:6px;border-top:1px dashed var(--l);margin-top:6px;animation:stagein .2s ease}
+.pm-body[hidden]{display:none}
+.pm-sub{font-size:10.5px;color:var(--mu);line-height:1.5;margin:0 0 6px}
+textarea{width:100%;min-height:64px;padding:10px 12px;background:var(--p2);border:1px solid var(--l);border-radius:8px;color:var(--ink);font:13px/1.5 var(--sans);resize:vertical}
+textarea:focus{border-color:var(--ac);outline:0;box-shadow:0 0 0 3px var(--as)}
+/* ---- botão "carregar anúncio" no cabeçalho (à esquerda do menu hambúrguer) ---- */
+.adh{position:relative;color:var(--acx)}
+.adh svg{width:18px;height:18px}
+.adh .adh-badge{position:absolute;top:-7px;right:-7px;background:var(--p);color:var(--acx);border:1px solid var(--ac);border-radius:99px;font:600 10px/1 var(--mono);padding:3px 5px;white-space:nowrap;box-shadow:0 4px 10px -4px rgba(0,0,0,.45)}
+.adh:hover{border-color:var(--ac);background:var(--p2)}
+/* destaque quando o painel salva o código com adActive=true */
+.adh.hot{border-color:var(--ac);background:var(--as);box-shadow:0 0 0 3px var(--as)}
+.adh.hot .adh-badge{background:linear-gradient(180deg,#ffe35c,var(--ac));color:var(--on);border-color:transparent}
+.adh.hot:before{content:"";position:absolute;top:3px;right:3px;width:8px;height:8px;border-radius:50%;background:var(--g);box-shadow:0 0 8px 2px rgba(14,203,129,.55);animation:scpulse 1.6s ease-in-out infinite}
+/* ---- grupo do cabeçalho: os 3 botões iguais, encostados na borda direita da tela ---- */
+.bgrp{margin-left:auto;display:flex;margin-right:-20px}
+.bgrp>*{border-radius:0}
+.bgrp>*:first-child{border-radius:10px 0 0 10px}
+.bgrp>*:last-child{border-radius:0 10px 10px 0}
+.bgrp>*+*{margin-left:-1px}
+.hcta{display:inline-flex;align-items:center;justify-content:center;height:38px;padding:0 14px;border:1px solid var(--l);background:var(--p);color:var(--ink);font:600 12.5px var(--sans);text-decoration:none;white-space:nowrap;transition:border-color .2s,background .2s,transform .15s}
+.hcta:hover{border-color:var(--ac);background:var(--p2)}
+.hcta:active{transform:scale(.97)}
+@media(max-width:900px){.bgrp{margin-right:-14px}}
+/* ═══ GAVETA DO ANÚNCIO · recriada do zero ═══ */
+/* container invisível que só mostra quando aberta */
+.gaveta{position:fixed;inset:0;z-index:75;visibility:hidden;pointer-events:none}
+.gaveta.open{visibility:visible;pointer-events:auto}
+/* trava a página por trás enquanto a gaveta está aberta */
+html.gav-lock body{overflow:hidden}
+/* painel em TELA CHEIA: cobre 100% da tela, sem cantos */
+.gav{position:absolute;left:0;right:0;top:0;bottom:0;background:var(--p);border:0;border-radius:0;box-shadow:none;transform:translate3d(0,103%,0);transition:transform .38s cubic-bezier(.2,.75,.25,1);will-change:transform;-webkit-backface-visibility:hidden;backface-visibility:hidden;display:grid;grid-template-rows:auto auto minmax(0,1fr) auto;padding:14px 0 calc(12px + env(safe-area-inset-bottom));overflow:hidden}
+.gav.open{transform:translate3d(0,0,0)}
+.gv-top{display:flex;align-items:center;gap:11px;padding:16px 18px 8px}
+.gv-ico{width:34px;height:34px;border-radius:10px;background:var(--as);border:1px solid var(--ac);color:var(--acx);display:grid;place-items:center;flex:none}
+.gv-top b{font-size:15px;display:block}
+.gv-top small{display:block;color:var(--mu);font:600 9px var(--mono);letter-spacing:1.4px;text-transform:uppercase;margin-top:2px}
+.gv-top .ib{margin-left:auto}
+.gv-timer{display:flex;align-items:center;justify-content:center;gap:8px;padding:2px 18px 10px;font:600 12.5px var(--mono);color:var(--mu);flex-wrap:wrap;text-align:center}
+.gv-timer b{color:var(--acx)}
+.gv-timer b.ok{color:var(--g)}
+/* palco do anúncio: card escuro isolado — qualquer branco do anúncio
+   fica contido dentro do card arredondado, nunca como camada inteira */
+.gv-stage{margin:0 14px;min-height:200px;border:1px solid var(--l);border-radius:14px;background:var(--p2);overflow:hidden;display:grid}
+.gv-stage iframe{width:100%;height:100%;min-height:200px;border:0;background:transparent;display:block}
+.gv-foot{display:flex;align-items:center;gap:8px;padding:12px 18px 0;border-top:1px dashed var(--l);margin-top:12px;flex-wrap:wrap}
+.gv-note{font-size:11px;color:var(--mu);margin-right:auto}
+.gv-bar{position:absolute;top:0;left:0;height:3px;background:var(--ac);width:0;z-index:2}
+.gv-bar.run{animation:gvbar linear forwards}
+@keyframes gvbar{from{width:0}to{width:100%}}
 .wfloat:hover{transform:translateY(-2px);box-shadow:0 16px 32px rgba(0,0,0,.5),0 0 0 6px rgba(252,213,53,.22)}
 .wfloat:active{transform:scale(.95)}
 .wfloat .wbadge{position:absolute;top:-6px;right:-6px;background:var(--p);color:var(--acx);border:1px solid var(--ac);border-radius:99px;font:600 11.5px var(--mono);padding:3px 7px;box-shadow:0 4px 10px rgba(0,0,0,.35)}
@@ -620,7 +680,7 @@ details div{position:relative}
 .ava,.pf-ava{overflow:hidden}
 .ava img,.pf-ava img{width:100%;height:100%;border-radius:inherit;object-fit:cover;display:block}
 .pf-ava{cursor:pointer;position:relative}
-.pf-ava:after{content:"EDITAR";position:absolute;bottom:2px;left:50%;transform:translateX(-50%);font:700 6.5px var(--mono);letter-spacing:.6px;color:#181a20;background:rgba(252,213,53,.92);border-radius:3px;padding:1px 4px;pointer-events:none}
+.pf-ava:after{content:"TROCAR";position:absolute;bottom:2px;left:50%;transform:translateX(-50%);font:700 6.5px var(--mono);letter-spacing:.6px;color:#181a20;background:rgba(252,213,53,.92);border-radius:3px;padding:1px 4px;pointer-events:none}
 .pf-ava:hover{filter:brightness(1.06)}
 /* opções de foto do perfil */
 .pf-photo{margin-top:12px;border:1px dashed var(--l2);border-radius:12px;padding:10px 12px;display:grid;gap:7px}
@@ -628,36 +688,17 @@ details div{position:relative}
 .pf-ph-o{display:flex;gap:6px;flex-wrap:wrap}
 .pf-ph-o button{background:var(--p2);border:1px solid var(--l);border-radius:99px;color:var(--ink);font:600 11.5px var(--sans);padding:6px 12px;cursor:pointer}
 .pf-ph-o button.on{border-color:var(--ac);background:var(--as);color:var(--acx)}
+/* personagem do perfil: círculo com emoji (nada é baixado da internet) */
+.chv{width:100%;height:100%;display:grid;place-items:center;border-radius:inherit;font-size:1.35em;line-height:1;user-select:none;-webkit-user-select:none}
+.pava{width:24px;height:24px;flex:none;display:inline-grid;place-items:center;border-radius:50%;background:var(--as);border:1px solid var(--ac);color:var(--acx);font:700 11px var(--mono);overflow:hidden;vertical-align:-7px;margin-right:2px}
+.pava .chv{font-size:14px}
+.fr2 .fm b{display:flex;align-items:center;gap:6px;min-width:0}
+.trow .pava,.auc-lider .pava,.kv .pava,.rr .pava{vertical-align:-7px;margin-right:4px}
+.rx .pava{vertical-align:-7px;margin-right:4px}
+.pf-char{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap}
+.pf-char-cur{width:52px;height:52px;border-radius:16px;background:var(--p2);border:1px solid var(--ac);display:grid;place-items:center;overflow:hidden;font:700 20px var(--mono);color:var(--acx)}
+.pf-char-cur .chv{font-size:30px}
 .ma-card .ava{width:36px;height:36px}
-/* ============================================================
-   V6 · RASPADINHA DE CHECK-IN, NOTIFICAÇÕES-BILHETE, MENOS TRAVAMENTO
-   ============================================================ */
-/* botão da raspadinha no canto superior direito */
-.scratch-btn{position:relative;background:linear-gradient(160deg,var(--p2),var(--p));overflow:visible}
-.scratch-btn svg{color:var(--acx)}
-.scratch-btn .sc-dot{position:absolute;top:-3px;right:-3px;width:12px;height:12px;border-radius:50%;background:var(--ac);box-shadow:0 0 0 3px var(--bg),0 0 12px 2px var(--bsh);animation:scpulse 1.6s ease-in-out infinite}
-@keyframes scpulse{50%{transform:scale(.75);opacity:.6}}
-/* modal da raspadinha: um bilhete de verdade, em cartão */
-.scratch-box{width:min(420px,calc(100vw - 28px));background:var(--p);border:1px solid var(--l);border-radius:18px;overflow:hidden;box-shadow:var(--sh);position:relative}
-.scratch-box:before{content:"";position:absolute;left:0;right:0;top:0;height:4px;background:linear-gradient(90deg,#ffe56b,var(--ac),#ffe56b)}
-.scratch-box:after{content:"Y";position:absolute;right:-10px;bottom:-40px;font:700 170px/1 var(--mono);color:var(--ink);opacity:.03;pointer-events:none}
-.sc-head{display:flex;align-items:center;gap:11px;padding:16px 16px 12px;border-bottom:1px dashed var(--l);position:relative;z-index:1}
-.sc-head b{font-size:15.5px;display:block}
-.sc-head small{display:block;color:var(--mu);font:600 8.5px var(--mono);letter-spacing:1.6px;text-transform:uppercase;margin-top:3px}
-.sc-ico{width:40px;height:40px;border-radius:12px;background:var(--as);border:1px solid var(--ac);color:var(--acx);display:grid;place-items:center;flex:none}
-.sc-head .ib{margin-left:auto}
-.sc-micro{font:600 7.5px/1 var(--mono);letter-spacing:1.8px;color:var(--mu);opacity:.5;white-space:nowrap;overflow:hidden;border-top:1px solid var(--l);border-bottom:1px solid var(--l);padding:5px 14px;position:relative;z-index:1}
-.sc-stage{position:relative;margin:16px 16px 8px;border-radius:14px;overflow:hidden;border:1px solid var(--l2);background:linear-gradient(165deg,var(--p2),var(--p) 75%);min-height:190px;display:grid;place-items:center}
-.sc-prize{position:relative;z-index:1;display:grid;justify-items:center;gap:4px;padding:22px 14px;text-align:center}
-.sc-lab{font-size:9.5px;color:var(--mu);text-transform:uppercase;letter-spacing:.8px;font-weight:700}
-.sc-prize b{font:700 clamp(44px,12vw,64px)/1 var(--mono);background:linear-gradient(180deg,#ffe56b,var(--acx));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-.sc-prize b.spark{animation:scspark .5s ease}
-@keyframes scspark{0%{transform:scale(.6);opacity:0}60%{transform:scale(1.12)}}
-.sc-sub{font-size:11.5px;color:var(--mu)}
-#sc-canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:crosshair;z-index:2}
-.sc-hint{position:absolute;bottom:8px;left:0;right:0;text-align:center;font-size:10.5px;color:var(--mu);z-index:0;pointer-events:none}
-.sc-foot{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:12px 16px 16px;border-top:1px dashed var(--l);position:relative;z-index:1}
-.sc-timer{font-size:11.5px;color:var(--mu);margin-right:auto}
 /* notificações com cara de bilhete, MESMAS dimensões */
 .pnote{position:relative;overflow:hidden}
 .pnote:after{content:"Y";position:absolute;right:-4px;top:-18px;font:700 84px/1 var(--mono);color:var(--ink);opacity:.04;pointer-events:none}
@@ -692,7 +733,6 @@ summary{border-top:2px dashed transparent}
 details:first-of-type summary{border-top:0}
 .kv{position:relative;padding-left:8px}
 .kv:before{content:"";position:absolute;left:0;top:4px;bottom:4px;width:2px;border-radius:2px;background:repeating-linear-gradient(180deg,var(--l2) 0 3px,transparent 3px 6px)}
-@media(prefers-reduced-motion:reduce){.scratch-btn .sc-dot{animation:none!important}.sc-prize b.spark{animation:none!important}}
 @media(max-width:900px){.hero{grid-template-columns:1fr;gap:28px;padding-top:36px}.how{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:700px){
  #menu{display:flex}.live{margin-left:auto}.hcta{display:none}
@@ -1118,11 +1158,10 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
 </div></div>
 
 <header class="top" id="top"><div class="wrap bar">
- <a class="brand" href="#top" aria-label="Yshippcommerce — início"><span class="mark">Y</span><span class="brand-t">Yshipp<small>commerce</small></span></a>
+ <a class="brand" href="#top" aria-label="Yshippcommerce — início"><span class="mark">Y</span><span class="brand-t">Yshippcommerce<small>um grupo Yellowishipp</small></span></a>
  <nav class="nav" id="nav" aria-label="Seções principais">
   <a href="#premios">Prêmios</a><a href="#sorteios">Sorteios</a><a href="#eventos">Eventos</a><a href="#leiloes">Leilões</a><a href="#resultado">Resultado</a><a href="#regras">Ajuda</a>
  </nav>
- <span class="live off" id="live"><span class="dot"></span><span id="live-t">Carregando</span></span>
  <div class="acct" id="acct" hidden>
   <button class="acct-b" id="acct-btn" aria-haspopup="menu" aria-expanded="false"><span class="ava" id="ava">U</span><span class="acct-n" id="acct-n">Conta</span><span class="acct-caret">▾</span></button>
   <div class="acct-menu" id="acct-menu" role="menu" hidden>
@@ -1133,10 +1172,14 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
    <button class="am-item out" id="am-logout" role="menuitem"><span class="icn" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h3"/><path d="m15 8 4 4-4 4M19 12H9"/></svg></span>Sair da conta</button>
   </div>
  </div>
- <a class="btn sm hcta" href="#participar">Participar</a>
- <button class="ib scratch-btn" id="checkin" hidden aria-label="Check-in diário · raspadinha de bilhetes" title="Check-in diário · raspadinha"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5V8a2 2 0 0 0 0 4v2.5a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 14.5V12a2 2 0 0 0 0-4z"/><path d="M12 6.5v2M12 11v2M12 15.5v2" stroke-dasharray="0"/></svg><span class="sc-dot" hidden></span></button>
- <button class="ib" id="theme" aria-label="Alternar entre tema claro e escuro" title="Alternar tema"></button>
- <button class="ib" id="menu" aria-label="Abrir menu" aria-expanded="false" aria-controls="menu-sheet"><i></i><i></i><i></i></button>
+ <div class="bgrp">
+  <a class="hcta" href="#participar">Participar</a>
+  <button class="ib adh" id="adfloat" hidden aria-label="Carregar anúncio patrocinado" title="Carregar anúncio patrocinado">
+   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>
+   <span class="adh-badge" id="ad-badge" hidden>+0</span>
+  </button>
+  <button class="ib" id="menu" aria-label="Abrir menu" aria-expanded="false" aria-controls="menu-sheet"><i></i><i></i><i></i></button>
+ </div>
 </div></header>
 
 <div class="tick"><div class="wrap" id="ticker"></div></div>
@@ -1369,6 +1412,10 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
  <div class="sec-head"><div class="sec-row"><h2>Ofertas</h2><div class="ev-nav"><button class="ib sm" id="ofprev" aria-label="Oferta anterior">‹</button><button class="ib sm" id="ofnext" aria-label="Próxima oferta">›</button></div></div><p>Ofertas avulsas, sempre disponíveis. Cada aprovação credita bilhetes na sua carteira.</p></div>
  <div class="tabs" id="offtabs" style="max-width:360px;margin-bottom:14px"><button data-v="active" class="on">Ativas</button><button data-v="future">Futuras</button></div>
  <div class="evs" id="offs"></div>
+ <div class="cbox" style="margin-top:22px;display:flex;gap:14px;align-items:center;flex-wrap:wrap">
+  <div style="flex:1 1 300px;min-width:0"><b>🏢 Tem um negócio, produto ou serviço?</b><p class="hint" style="margin-top:4px">Vire colaborador do Yshippcommerce e publique suas próprias ofertas aqui nesta seção — de graça. O organizador aprova e o seu negócio aparece para todos os participantes com o selo 🤝 Parceiro.</p></div>
+  <button class="btn" type="button" data-collab="1">Anunciar como colaborador →</button>
+ </div>
 </section>
 
 <!-- ════════════════════════════════════════════════════════════
@@ -1504,13 +1551,12 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
   </div>
   <div class="cs-more" id="cs-terms" hidden>
    <ol>
-    <li><b>1. O que é a plataforma.</b> O Yshippcommerce é um site de sorteios gratuitos mantido por um organizador independente. Toda a participação — criar conta, fazer tarefas, reservar números, dar lances e raspar o check-in diário — é <b>100% gratuita</b>. Não há cobrança, depósito ou compra de bilhetes em nenhum momento. Bilhetes não são dinheiro, não podem ser comprados, vendidos, trocados nem transferidos entre contas.</li>
-    <li><b>2. Uma conta por pessoa.</b> Cada pessoa pode manter apenas UMA conta, com nome verdadeiro e e-mail próprio. São proibidos contas duplicadas, e-mails descartáveis para multiplicar prêmios, contas em nome de terceiros e o uso de automatizações (bots, scripts) para tarefas ou raspadinhas. A conta é pessoal e intransferível; nunca compartilhe sua senha — a equipe nunca a pedirá.</li>
+    <li><b>1. O que é a plataforma.</b> O Yshippcommerce é um site de sorteios gratuitos mantido por um organizador independente. Toda a participação — criar conta, fazer tarefas, reservar números e dar lances — é <b>100% gratuita</b>. Não há cobrança, depósito ou compra de bilhetes em nenhum momento. Bilhetes não são dinheiro, não podem ser comprados, vendidos, trocados nem transferidos entre contas.</li>
+    <li><b>2. Uma conta por pessoa.</b> Cada pessoa pode manter apenas UMA conta, com nome verdadeiro e e-mail próprio. São proibidos contas duplicadas, e-mails descartáveis para multiplicar prêmios, contas em nome de terceiros e o uso de automatizações (bots, scripts) para tarefas. A conta é pessoal e intransferível; nunca compartilhe sua senha — a equipe nunca a pedirá.</li>
     <li><b>3. Tarefas e provas.</b> As tarefas (seguir perfis, instalar apps, assistir vídeos etc.) são realizadas em serviços de terceiros. Ao concluir, você envia um comprovante (texto, link, código, nome ou e-mail), conforme o detalhe indicado no card da tarefa. Envie apenas o que for pedido: <b>jamais envie senhas, documentos completos, dados bancários ou fotos sensíveis</b>. Provas falsas, editadas ou repetidas podem reprovar a solicitação, zerar os bilhetes da tarefa e suspender a conta.</li>
     <li><b>4. Sorteios, leilões e bilhetes.</b> Cada sorteio tem números, custo em bilhetes e prêmios próprios, exibidos no site antes de você participar. Números reservados ficam visíveis no seu bilhete oficial; ao publicar o resultado, os bilhetes dos números não ganhados são <b>devolvidos automaticamente</b> para a sua carteira. Nos leilões, os lances são em bilhetes; se a meta não for atingida até o fim do prazo, <b>todos os lances são devolvidos</b>. A apuração usa sorteio automático entre os números reservados, com resultado publicado na página.</li>
-    <li><b>5. Check-in diário (raspadinha).</b> A cada 8 horas você pode raspar um cartão de check-in e receber de <b>1 a 10 bilhetes</b> (raramente até 20), creditados direto na carteira. O direito ao cartão é pessoal, vale uma vez por janela de 8 horas e não acumula: se você não raspar, o cartão anterior não soma com o próximo. Fraudes na raspadinha (multiplicar contas, manipular o relógio) anulam os bilhetes e suspendem a conta.</li>
     <li><b>6. Prêmios e entrega.</b> Os prêmios anunciados nos sorteios e leilões são entregues pelo organizador ao ganhador confirmado. Para receber, o perfil deve estar completo: <b>nome completo, data de nascimento, endereço e chave Pix</b> (para prêmios em dinheiro) ou endereço de entrega (para prêmios físicos). A entrega é combinada por e-mail ou WhatsApp cadastrados. O organizador pode solicitar confirmação de identidade antes de entregar prêmios de alto valor — os dados são usados só para isso e depois mantidos em sigilo.</li>
-    <li><b>7. Seus dados — o que coletamos e por quê.</b> Coletamos: e-mail e senha (acesso), nome, nascimento, gênero, WhatsApp, chave Pix e endereço (conferir tarefas e entregar prêmios), histórico de tarefas, reservas, lances, raspadinhas e carteira (operar a plataforma e evitar fraudes). Sua foto de perfil pode vir do serviço público Gravatar associado ao seu e-mail — e só se você aceitar essa opção no perfil.</li>
+    <li><b>7. Seus dados — o que coletamos e por quê.</b> Coletamos: e-mail e senha (acesso), nome, nascimento, gênero, WhatsApp, chave Pix e endereço (conferir tarefas e entregar prêmios), histórico de tarefas, reservas, lances e carteira (operar a plataforma e evitar fraudes). Sua foto de perfil é um personagem do próprio site, escolhido por você na tela do perfil — não usamos nem consultamos serviços externos de foto (Gravatar, DiceBear ou similares), e nenhuma imagem sua é enviada para a internet.</li>
     <li><b>8. Seus dados — quem pode ver o quê.</b> Publicamente, aparece apenas o <b>nome abreviado</b> (ex.: Maria S.) e os números reservados. E-mail, endereço, Pix, nascimento e comprovantes <b>nunca são exibidos publicamente</b>. Internamente, o organizador acessa esses dados apenas para aprovar provas, apurar resultados e entregar prêmios. Prestadores técnicos (hospedagem/Firebase, e-mails, publicidade e o Gravatar, se ativado) processam dados apenas para fazer o site funcionar.</li>
     <li><b>9. Seus dados — guarda, segurança e exclusão.</b> Os dados ficam guardados enquanto sua conta existir e são usados também para registrar resultados (transparência dos sorteios). Não vendemos seus dados. Você pode pedir a exclusão da conta e dos dados pelo suporte; após a exclusão, mantemos apenas o mínimo necessário para registrar prêmios já entregues e evitar fraudes. Você tem os direitos de acesso, correção e portabilidade dos seus dados, garantidos pela LGPD (Lei 13.709/2018) — basta pedir ao suporte.</li>
     <li><b>10. Sua responsabilidade.</b> Você responde pela veracidade das informações e provas enviadas, pelo uso da própria conta e pela guarda da sua senha. Você declara que as tarefas foram feitas por você, de verdade, no serviço indicado. Responda pelos seus atos na plataforma conforme a lei.</li>
@@ -1519,7 +1565,9 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
     <li><b>13. Links e serviços de terceiros.</b> Tarefas, capas e anúncios apontam para serviços de terceiros, com termos próprios. Esta promoção <b>não é patrocinada, associada nem administrada pelo Facebook, Google, Meta ou qualquer outro serviço</b> citado em tarefas e anúncios.</li>
     <li><b>14. Menores de idade.</b> A plataforma é destinada a maiores de 18 anos. Menores só participam com conhecimento e autorização expressa do responsável legal, que responde pela participação.</li>
     <li><b>15. Mudanças nos termos.</b> Estes termos podem ser atualizados para refletir melhorias ou exigências legais; a versão vigente fica sempre nesta página e mudanças relevantes são avisadas por notificação no site.</li>
-    <li><b>16. Dúvidas e contato.</b> Qualquer dúvida sobre estes termos, sobre seus dados ou sobre um resultado pode ser enviada pela tela de Suporte 🎧. Responderemos pelo e-mail ou WhatsApp cadastrados na sua conta.</li>
+    <li><b>16. Colaboradores e ofertas de parceiros.</b> Empresas, lojas e prestadores podem se cadastrar como <b>colaboradores</b> pelo suporte da plataforma e publicar ofertas, identificadas com o selo <b>🤝 Parceiro</b>. Ofertas de colaboradores passam pela aprovação do organizador antes de aparecer no site e seguem as mesmas regras desta plataforma (gratuitas para o participante, recompensa em bilhetes, comprovante obrigatório quando exigido). O colaborador é responsável pela veracidade, legalidade e funcionamento da sua oferta, produto ou serviço; o organizador pode recusar, pausar ou remover qualquer oferta de colaborador.</li>
+    <li><b>17. Anúncios patrocinados e recompensa por espera.</b> O botão "Anúncio" abre uma gaveta com conteúdo publicitário definido pelo organizador. Mantendo o anúncio aberto durante a contagem regressiva, você recebe os bilhetes indicados, creditados direto na carteira. A recompensa é paga <b>uma vez por anúncio</b> (cada anúncio é identificado pela data de atualização definida no painel). Fechar antes do fim da contagem cancela a recompensa. Fraudes (automatizações, manipulação do relógio, contas duplicadas) anulam os bilhetes e suspendem a conta.</li>
+    <li><b>17. Dúvidas e contato.</b> Qualquer dúvida sobre estes termos, sobre seus dados ou sobre um resultado pode ser enviada pela tela de Suporte 🎧. Responderemos pelo e-mail ou WhatsApp cadastrados na sua conta.</li>
    </ol>
   </div>
   <div class="cs-more" id="cs-perms" hidden>
@@ -1541,29 +1589,42 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
  </div>
 </div>
 
-<!-- ═══ CHECK-IN DIÁRIO · RASPADINHA DE BILHETES ═══ -->
-<div class="sup-modal" id="scratch-modal" hidden>
- <div class="scratch-box" role="dialog" aria-modal="true" aria-label="Check-in diário">
-  <div class="sc-head">
-   <span class="sc-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5V8a2 2 0 0 0 0 4v2.5a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 14.5V12a2 2 0 0 0 0-4z"/><path d="M12 6.5v2M12 11v2M12 15.5v2"/></svg></span>
-   <div><b>Check-in diário</b><small>Raspadinha oficial · Yshippcommerce</small></div>
-   <button class="ib sm" id="scratch-close" aria-label="Fechar" type="button">✕</button>
+<!-- ═══ ANUNCIAR COMO COLABORADOR · aviso em forma de notificação ═══ -->
+<div class="sup-modal" id="colab-modal" hidden>
+ <div class="colab-card" role="dialog" aria-modal="true" aria-label="Anunciar como colaborador">
+  <div class="pnote">
+   <span class="nico">🤝</span>
+   <div class="nbody"><b>Anunciar como colaborador</b><small>Yshippcommerce · parceria</small></div>
+   <button class="nclose" type="button" data-colab-close aria-label="Fechar aviso">✕</button>
   </div>
-  <div class="sc-micro" aria-hidden="true">YSHIPPCOMMERCE · RASPADINHA OFICIAL · 8H EM 8H · AUTÊNTICO · YSHIPPCOMMERCE · RASPADINHA OFICIAL</div>
-  <div class="sc-stage">
-   <div class="sc-prize" id="sc-prize" aria-live="polite">
-    <span class="sc-lab">Prêmio desta raspadinha</span>
-    <b class="mono" id="sc-amount">—</b>
-    <span class="sc-sub" id="sc-sub">bilhetes na carteira</span>
-   </div>
-   <canvas id="sc-canvas" width="520" height="300" aria-label="Área para raspar"></canvas>
-   <p class="sc-hint" id="sc-hint">Passe o dedo (ou o mouse) sobre o cartão para raspar e revelar seus bilhetes.</p>
+  <p>Divulgue seu negócio, produto ou serviço para todos os participantes da plataforma — <b>de graça</b> — e conquiste o selo <b>🤝 Parceiro</b>, que identifica ofertas aprovadas e de confiança.</p>
+  <p class="hint">Todo o processo é feito pelo nosso <b>suporte</b>, do início ao fim: cadastro, regras e aprovação. A equipe explica cada passo e acompanha com você até a oferta entrar no ar.</p>
+  <p class="hint"><b>Deseja abrir o suporte agora para começar a trabalhar conosco ou prefere deixar para depois?</b></p>
+  <div class="cs-act" style="margin:0">
+   <button class="btn" type="button" id="colab-go">Falar com o suporte agora</button>
+   <button class="btn ghost" type="button" data-colab-close>Deixar para depois</button>
   </div>
-  <div class="sc-foot">
-   <span class="sc-timer mono" id="sc-timer">—</span>
-    <button class="btn" id="sc-collect" hidden type="button">Coletar bilhetes</button>
-    <button class="btn ghost" id="sc-close2" type="button">Fechar</button>
-   </div>
+ </div>
+</div>
+
+<!-- ═══ ANÚNCIO PATROCINADO · gaveta recriada do zero ═══ -->
+<div class="gaveta" id="gaveta" role="dialog" aria-modal="false" aria-label="Anúncio patrocinado">
+ <div class="gav" id="gav">
+  <span class="gv-bar" id="gv-bar"></span>
+  <div class="gv-top">
+   <span class="gv-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg></span>
+   <div><b>Anúncio patrocinado</b><small id="gv-brand">Yshippcommerce · propaganda</small></div>
+   <button class="ib sm" type="button" id="gv-x" aria-label="Fechar anúncio">✕</button>
+  </div>
+  <div class="gv-timer">Aguarde <b id="gv-secs">—</b> <span id="gv-reward">para receber —</span></div>
+  <div class="gv-stage">
+   <iframe id="gv-frame" title="Conteúdo do anúncio" referrerpolicy="no-referrer" sandbox="allow-scripts allow-forms allow-popups allow-modals"></iframe>
+  </div>
+  <div class="gv-foot">
+   <span class="gv-note" id="gv-note">Mantenha o anúncio aberto até o fim da contagem para receber a recompensa.</span>
+   <button class="btn sm ghost" type="button" id="gv-skip">Fechar sem recompensa</button>
+   <button class="btn sm" type="button" id="gv-collect" hidden>Coletar bilhetes</button>
+  </div>
  </div>
 </div>
 
@@ -1593,6 +1654,7 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
      <button class="mi" type="button" data-open="wallet"><span class="mic"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="6" width="19" height="13" rx="3"/><path d="M2.5 10h19" opacity=".55"/><circle cx="17" cy="13.5" r="1.4" fill="currentColor" stroke="none"/></svg></span></span><span><b>Carteira</b><small>Saldo, ativos e histórico</small></span></button>
      <a class="mi" href="#bilhete"><span class="mic"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8a2 2 0 0 0 2-2h12a2 2 0 0 1 2 2v1a2.5 2.5 0 0 0 0 5v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1a2.5 2.5 0 0 0 0-5z"/><path d="M14.5 7v9.5" stroke-dasharray="2.5 3"/></svg></span></span><span><b>Meus bilhetes</b><small>Seus números e situação</small></span></a>
      <a class="mi" href="#participar"><span class="mic"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 15c-1.5-1.5-2-3.5-2-5.5L12 2l9 7.5c0 2-.5 4-2 5.5-2.5 2.5-6.5 3-9 1-2.5 2-6.5 1.5-9-1z"/></svg></span></span><span><b>Participar agora</b><small>Passo a passo guiado</small></span></a>
+     <button class="mi" type="button" data-collab="1"><span class="mic"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6M9 10h.01M15 10h.01"/></svg></span></span><span><b>Anunciar como colaborador</b><small>Publique ofertas do seu negócio</small></span></button>
     </div>
     <div class="mgrp"><span class="mgl">Acompanhar e ajuda</span>
      <a class="mi" href="#resultado"><span class="mic"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4h10v4a5 5 0 0 1-10 0zM9 20h6M12 13v7M17 5h3.5a3.5 3.5 0 0 1-3.5 7M7 5H3.5A3.5 3.5 0 0 0 7 12"/></svg></span></span><span><b>Resultado oficial</b><small>Ganhadores e disputas</small></span></a>
@@ -1685,7 +1747,7 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
 import { getAuth, GoogleAuthProvider, EmailAuthProvider, reauthenticateWithCredential, signInWithPopup, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, sendPasswordResetEmail, signOut, onAuthStateChanged, reload } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
-import { getFirestore, doc, getDoc, getDocs, setDoc, updateDoc, deleteDoc, collection, query, where, orderBy, limit, onSnapshot, runTransaction, serverTimestamp, writeBatch, increment, arrayRemove } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+import { getFirestore, initializeFirestore, persistentLocalCache, persistentMultipleTabManager, Timestamp, doc, getDoc, getDocs, setDoc, updateDoc, deleteDoc, collection, query, where, orderBy, limit, onSnapshot, runTransaction, serverTimestamp, writeBatch, increment, arrayRemove } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
 const firebaseConfig = {
  apiKey:"AIzaSyCuF38ke5IytK2K6hZO3Xq4HmBeMo9lEEQ",
@@ -1702,7 +1764,47 @@ const CAT_DEFAULT={common:{name:"Comum",color:"#eaecef"},gold:{name:"Dourado",co
 
 const app=initializeApp(firebaseConfig);
 const auth=getAuth(app);
-const db=getFirestore(app);
+/* banco com CACHE PERSISTENTE no navegador: na segunda visita os dados
+   vêm do disco e o Firestore baixa apenas o que mudou — página muito
+   mais rápida e bem menos consumo de dados móveis */
+let db;
+try{
+ db=initializeFirestore(app,{localCache:persistentLocalCache({tabManager:persistentMultipleTabManager()}),ignoreUndefinedProperties:true});
+}catch(e){db=getFirestore(app)}
+
+/* ---- CACHE LOCAL (memória do navegador) ----
+   Guarda os últimos dados recebidos em localStorage: a página já abre
+   pintada na segunda visita, enquanto o Firestore só confirma as
+   novidades. Isso poupa dados móveis e elimina a "tela em branco". */
+const YCK="ycache_v2";
+function ckGet(){try{const s=localStorage.getItem(YCK);if(!s)return null;const c=JSON.parse(s);return(!c.__t||Date.now()-c.__t<12*864e5)?c:null}catch(e){return null}}
+function ckRev(o){
+ if(Array.isArray(o))return o.map(ckRev);
+ if(o&&typeof o==="object"){
+  if(typeof o.seconds==="number"&&typeof o.nanoseconds==="number"){
+   try{return new Timestamp(o.seconds,o.nanoseconds)}catch(e){return new Date(o.seconds*1000+Math.round(o.nanoseconds/1e6))}
+  }
+  const r={};for(const k in o)r[k]=ckRev(o[k]);return r;
+ }
+ return o;
+}
+function ckSave(patch){try{const c=ckGet()||{};Object.assign(c,patch,{__t:Date.now()});localStorage.setItem(YCK,JSON.stringify(c))}catch(e){}}
+function ckHydrate(){
+ const c=ckGet();if(!c)return false;
+ try{
+  let any=false;
+  if(Array.isArray(c.resv)){resvAll=ckRev(c.resv);applyResv();mapPhotos(resvAll);feedReady=true;any=true}
+  if(c.settings){settings=ckRev(c.settings)||{};types=settings.ticketTypes&&Object.keys(settings.ticketTypes).length?settings.ticketTypes:CAT_DEFAULT;cfgReady=true;any=true}
+  if(Array.isArray(c.draws)){draws=ckRev(c.draws);applyDraw();renderPrizes();any=true}
+  if(Array.isArray(c.events)){events=ckRev(c.events);renderEvents();any=true}
+  if(Array.isArray(c.tasks)){tasks=ckRev(c.tasks);watchClaims();any=true}
+  if(Array.isArray(c.links)){links=ckRev(c.links);any=true}
+  if(Array.isArray(c.auctions)){auctions=ckRev(c.auctions);renderAuctions();any=true}
+  if(Array.isArray(c.bids)){bidsArr=ckRev(c.bids);mapPhotos(bidsArr);any=true}
+  if(Array.isArray(c.covers)){covers=ckRev(c.covers);renderCovers();any=true}
+  return any;
+ }catch(e){return false}
+}
 
 /* ============================================================
    ARQUITETURA DO SITE (complemento do painel administrativo)
@@ -1745,10 +1847,9 @@ const root=document.documentElement;
 function setTheme(t){
  root.dataset.theme=t;
  try{localStorage.setItem("th",t)}catch(e){}
- $("theme").textContent=t==="dark"?"☀":"☾";
- document.querySelector('meta[name="theme-color"]').content=t==="dark"?"#0b0e11":"#fafafa";
+ try{document.querySelector('meta[name="theme-color"]').content=t==="dark"?"#0b0e11":"#fafafa"}catch(e){}
 }
-$("theme").onclick=()=>setTheme(root.dataset.theme==="dark"?"light":"dark");
+$("pf-theme").onclick=()=>{setTheme(root.dataset.theme==="dark"?"light":"dark");buildProfileHead()};
 setTheme(root.dataset.theme==="light"?"light":"dark");
 
 /* ============================================================
@@ -1768,12 +1869,17 @@ function toast(m,type){
  m=String(m);type=NT[type]?type:guessType(m);
  const cfg=NT[type],box=$("notes");
  const live=[...box.querySelectorAll(".tnote:not(.gone)")];
+ /* clique repetido no mesmo botão: NÃO empilha avisos iguais —
+    o aviso antigo é substituído por um novo (reinicia a contagem) */
+ const dup=live.find(c=>c.__msg===m&&c.__type===type);
+ if(dup&&dup.__kill)dup.__kill();
  if(live.length>=3&&live[0].__kill)live[0].__kill();
  const dur=Math.min(13000,Math.max(type==="error"?6500:4800,2600+m.length*62))+(type==="win"?3000:0);
  const id="t"+(++toastSeq)+"_"+Date.now();
  const wrap=document.createElement("div");
  wrap.innerHTML=`<div class="pnote tnote nt-${type}" data-note="${id}" role="${type==="error"?"alert":"status"}" style="--d:${dur}ms"><span class="nico">${cfg.i}</span><span class="nbody"><span class="nkind">${cfg.t}</span><b>${esc(m)}</b></span><button class="nclose" data-noteclose="${id}" aria-label="Fechar">✕</button><i class="nprog"></i></div>`;
  const card=wrap.firstElementChild;
+ card.__msg=m;card.__type=type;
  box.appendChild(card);
  const kill=()=>{if(!card.isConnected)return;clearTimeout(tm);card.classList.add("gone");setTimeout(()=>card.remove(),260)};
  card.__kill=kill;
@@ -2012,7 +2118,7 @@ function renderSorteios(){
   <div class="trow"><span class="tn">Números</span><span class="tag">${st==="open"?Math.max(0,(Math.floor(Number(d.totalNumbers))||150)-resvCount(d.id))+" livre(s) de "+(Math.floor(Number(d.totalNumbers))||150):"Total de "+(Math.floor(Number(d.totalNumbers))||150)}</span></div>
   <div class="trow"><span class="tn">Custo por número</span><span class="tag y">${Math.max(1,Math.floor(Number(d.ticketCost))||1)} bilhete(s)</span></div>
   ${pz.length?`<div class="ev-row" style="margin-top:8px"><span class="label">Prêmios deste sorteio</span><span class="tag y">${pz.length}</span></div>`+pz.map(p=>`<div class="lrow"><span class="tn">🎁 ${esc(p.name)}</span><b class="lval">${esc(PRIZE_TYPES[p.type]?.label||"Prêmio")}${p.value?" · "+esc(p.value):""}</b></div>`).join(""):`<p class="hint">Os prêmios deste sorteio serão divulgados pelo organizador.</p>`}
-  ${res.length?`<div class="ev-row"><span class="label">Resultado</span><span class="tag g">Publicado</span></div>`+res.map(w=>`<div class="trow"><span class="tn">🏆 Nº ${w.number}</span><span class="tag g">${esc(w.prize||"")} · ${esc(maskName(w.displayName||"—"))}</span></div>`).join(""):""}
+  ${res.length?`<div class="ev-row"><span class="label">Resultado</span><span class="tag g">Publicado</span></div>`+res.map(w=>`<div class="trow"><span class="tn">🏆 Nº ${w.number}</span><span class="tag g">${esc(w.prize||"")} · ${whoHTML(w,(w.displayName||"—").trim().charAt(0))}${esc(maskName(w.displayName||"—"))}</span></div>`).join(""):""}
   ${st==="open"?'<div class="tk-cut" aria-hidden="true"></div>':""}
   ${ev&&evSt==="active"&&!myJoins.has(ev.id)&&st==="open"?`<button class="btn wide" data-evjoin="${esc(ev.id)}">1º passo · Pagar entrada do evento (${Math.max(0,Math.floor(Number(ev.entryCost)||0))} bilhete(s))</button>`:""}
   ${st==="open"?(canPick?`<button class="btn wide" data-pick="${esc(d.id)}">🎫 Escolher meu número neste sorteio</button>`:cta):""}
@@ -2187,8 +2293,11 @@ $("slides").addEventListener("click",e=>{const a=e.target.closest("[data-ev]");i
 function countdown(){
  const now=Date.now(),rd=ready(),st=drawState();
  const off=!navigator.onLine;
- $("live-t").textContent=off?"Sem conexão":!rd?"Carregando":st==="open"?"Aberto":st==="waiting"?"Em breve":st==="ended"?"Encerrado":"Indisponível";
- $("live").className="live"+(off?" bad":rd&&st==="open"?"":" off");
+ const lv=$("live");
+ if(lv){
+  $("live-t").textContent=off?"Sem conexão":!rd?"Carregando":st==="open"?"Aberto":st==="waiting"?"Em breve":st==="ended"?"Encerrado":"Indisponível";
+  lv.className="live"+(off?" bad":rd&&st==="open"?"":" off");
+ }
  const notice=(settings.notice||"").trim();
  $("promo").hidden=!notice||!cfgReady;
  if(notice)$("promo-t").textContent=notice;
@@ -2384,8 +2493,19 @@ async function boot(user){
  currentUser=user;profile=null;wallet=null;armed=0;editProfile=false;nameDirty=false;
  watchNotes();
  if(!user||!user.emailVerified){render();return}
+ const uRef=doc(db,"users",user.uid);
+ /* ═══ 1º DE TUDO: dados do perfil — o ouvinte em tempo real começa
+    imediatamente, antes de qualquer outra etapa; tudo que vem depois
+    é protegido, então nada quebra a sessão ═══ */
  try{
-  const uRef=doc(db,"users",user.uid);
+  unU=onSnapshot(uRef,x=>{if(s!==session)return;const d=x.exists()?x.data():{};profile={...d,numbers:Array.isArray(d.numbers)?d.numbers:[]};
+   /* participante banido no painel: a sessão é encerrada imediatamente */
+   if(d.banned&&!window.__bannedOut){window.__bannedOut=true;toast("Sua conta foi suspensa pelo organizador.");signOut(auth).catch(()=>{})}
+   else if(!d.banned)window.__bannedOut=false;
+   if(window.__pm!==d.photoMode){window.__pm=d.photoMode;paintAvatars()}
+   render()},e=>console.error("Perfil:",e));
+ }catch(e){console.error("Perfil (início da sessão):",e)}
+ try{
   if(!(await getDoc(uRef)).exists())await setDoc(uRef,{name:"",email:user.email||"",createdAt:serverTimestamp()});
   /* BÔNUS DE BOAS-VINDAS: 10 bilhetes comuns creditados uma única vez, logo após o cadastro */
   try{
@@ -2400,12 +2520,6 @@ async function boot(user){
    if(credited)toast("🎉 Bônus de boas-vindas: 10 bilhetes creditados na sua carteira!");
   }catch(e){console.error("Bônus de boas-vindas:",e)}
   if(s!==session)return;
-  unU=onSnapshot(uRef,x=>{if(s!==session)return;const d=x.exists()?x.data():{};profile={...d,numbers:Array.isArray(d.numbers)?d.numbers:[]};
-   /* participante banido no painel: a sessão é encerrada imediatamente */
-   if(d.banned&&!window.__bannedOut){window.__bannedOut=true;toast("Sua conta foi suspensa pelo organizador.");signOut(auth).catch(()=>{})}
-   else if(!d.banned)window.__bannedOut=false;
-   if(window.__pm!==d.photoMode){window.__pm=d.photoMode;loadAvatar()}
-   render()},e=>console.error("Perfil:",e));
   unW=onSnapshot(doc(db,"wallets",user.uid),x=>{if(s!==session)return;wallet=x.exists()?x.data():null;render()},e=>console.error("Carteira:",e));
   unH=onSnapshot(query(collection(db,"wallets",user.uid,"history"),orderBy("createdAt","desc"),limit(60)),x=>{if(s!==session)return;history=x.docs.map(d=>({id:d.id,...d.data()}));render()},e=>console.error("Histórico:",e));
   unJ=onSnapshot(query(collection(db,"eventJoins"),where("uid","==",user.uid)),x=>{if(s!==session)return;myJoins=new Set(x.docs.map(d=>d.data().eventId).filter(Boolean));render()},e=>console.error("Eventos confirmados:",e));
@@ -2432,6 +2546,8 @@ function watchClaims(){
 onSnapshot(query(collection(db,"reservations"),orderBy("createdAt","desc"),limit(200)),snap=>{
  resvAll=snap.docs.map(d=>({id:d.id,...d.data()}));
  applyResv();
+ mapPhotos(resvAll);
+ ckSave({resv:resvAll});
  feedReady=true;render();
 },e=>{console.error("Feed:",e);$("feed").innerHTML='<p class="foot">Não foi possível carregar as participações.</p>'});
 
@@ -2447,18 +2563,18 @@ function renderFeed(){
   const d=draws.find(y=>y.id===x.drawId);
   const tot=Math.floor(Number(d?.totalNumbers))||150;
   const st=d?drawStateOf(d):"";
-  rows.push({at:stampMs(x.createdAt),who:maskName(x.displayName),k:"draw",title:d?.name||"Sorteio",ev:evName(d?.eventId),extra:!d?"sorteio removido":st==="open"?"sorteio aberto":st==="ended"?"sorteio encerrado":"sorteio em espera",val:"Nº "+pad(n,String(tot).length)});
+  rows.push({at:stampMs(x.createdAt),who:maskName(x.displayName),ph:whoHTML(x,(x.displayName||"P").trim().charAt(0)),k:"draw",title:d?.name||"Sorteio",ev:evName(d?.eventId),extra:!d?"sorteio removido":st==="open"?"sorteio aberto":st==="ended"?"sorteio encerrado":"sorteio em espera",val:"Nº "+pad(n,String(tot).length)});
  });
  if(feedView!=="draw")bidsArr.forEach(b=>{
   const amt=Math.max(0,Math.floor(Number(b.amount)||0));if(!amt)return;
   const a=auctions.find(y=>y.id===b.auctionId);
   const tot=Math.max(1,Math.floor(Number(a?.totalTickets)||100));
-  rows.push({at:stampMs(b.updatedAt||b.createdAt),who:maskName(b.displayName||"Participante"),k:"auc",title:a?.name||"Leilão",ev:evName(a?.eventId),extra:(a?.prize?"prêmio: "+a.prize+" · ":"")+"lance acumulado · "+Math.min(100,Math.round(amt/tot*100))+"% da meta",val:amt+" bilhete"+(amt>1?"s":"")});
+  rows.push({at:stampMs(b.updatedAt||b.createdAt),who:maskName(b.displayName||"Participante"),ph:whoHTML(b,(b.displayName||"P").trim().charAt(0)),k:"auc",title:a?.name||"Leilão",ev:evName(a?.eventId),extra:(a?.prize?"prêmio: "+a.prize+" · ":"")+"lance acumulado · "+Math.min(100,Math.round(amt/tot*100))+"% da meta",val:amt+" bilhete"+(amt>1?"s":"")});
  });
  rows.sort((x,y)=>y.at-x.at);
  const l=rows.slice(0,10);
  el.innerHTML='<div class="fr2 h"><span>Horário</span><span>Participante e modalidade</span><span>Nº / lance</span></div>'+
-  (l.length?l.map(r=>`<div class="fr2"><span class="t">${r.at?fmtS(new Date(r.at)):"—"}</span><div class="fm"><b>${esc(r.who)}</b><small><span class="tag ${r.k==="draw"?"g":"y"}">${r.k==="draw"?"Sorteio":"Leilão"}</span>${r.k==="draw"?"🎟️":"⚖"} ${esc(r.title)}${r.ev?" · ◈ "+esc(r.ev):""} · ${esc(r.extra)}</small></div><b class="fv ${r.k==="auc"?"a":""}">${esc(r.val)}</b></div>`).join("")
+  (l.length?l.map(r=>`<div class="fr2"><span class="t">${r.at?fmtS(new Date(r.at)):"—"}</span><div class="fm"><b>${r.ph}<span style="overflow:hidden;text-overflow:ellipsis">${esc(r.who)}</span></b><small><span class="tag ${r.k==="draw"?"g":"y"}">${r.k==="draw"?"Sorteio":"Leilão"}</span>${r.k==="draw"?"🎟️":"⚖"} ${esc(r.title)}${r.ev?" · ◈ "+esc(r.ev):""} · ${esc(r.extra)}</small></div><b class="fv ${r.k==="auc"?"a":""}">${esc(r.val)}</b></div>`).join("")
   :`<p class="foot">${feedView==="auc"?"Nenhum lance em leilão ainda.":feedView==="draw"?"Nenhum número reservado ainda.":"Nenhuma participação registrada ainda. Seja o primeiro."}</p>`);
 }
 $("ftabs").onclick=e=>{const v=e.target.dataset.v;if(v){feedView=v;renderFeed()}};
@@ -2483,8 +2599,12 @@ function applyDraw(){
  COST=Math.max(1,Math.floor(Number(draw?.ticketCost))||1);
  applyResv();
 }
+/* pinta a página com o cache salvo no navegador antes de ouvir o Firestore:
+   a 2ª visita abre instantânea, mesmo com internet lenta */
+if(ckHydrate()){try{render()}catch(e){}}
 onSnapshot(doc(db,"settings","platform"),s=>{
  settings=s.exists()?s.data():{};
+ ckSave({settings});
  types=settings.ticketTypes&&Object.keys(settings.ticketTypes).length?settings.ticketTypes:CAT_DEFAULT;
  if(settings.platformName)document.title=settings.platformName;
  if(Array.isArray(settings.faq)&&settings.faq.some(x=>x.q)){
@@ -2495,13 +2615,13 @@ onSnapshot(doc(db,"settings","platform"),s=>{
  if(settings.institutionalText)document.querySelector("footer p").textContent=settings.institutionalText;
  render();
 },e=>{console.error("Configurações:",e)});
-onSnapshot(collection(db,"draws"),s=>{draws=s.docs.map(d=>({id:d.id,...d.data()}));applyDraw();renderPrizes();render()},e=>console.error("Sorteios:",e));
-onSnapshot(collection(db,"events"),s=>{events=s.docs.map(d=>({id:d.id,...d.data()}));renderEvents();renderPrizes();render()},e=>console.error("Eventos:",e));
-onSnapshot(collection(db,"tasks"),s=>{tasks=s.docs.map(d=>({id:d.id,...d.data()}));watchClaims();renderEvents();render()},e=>console.error("Tarefas:",e));
-onSnapshot(collection(db,"eventTasks"),s=>{links=s.docs.map(d=>({id:d.id,...d.data()}));renderEvents()},e=>console.error("Vínculos:",e));
-onSnapshot(collection(db,"auctions"),s=>{auctions=s.docs.map(d=>({id:d.id,...d.data()}));renderAuctions();renderFeed();renderResult()},e=>console.error("Leilões:",e));
-onSnapshot(query(collection(db,"bids"),limit(500)),s=>{bidsArr=s.docs.map(d=>({id:d.id,...d.data()}));renderAuctions();renderFeed();renderResult();renderTicker()},e=>console.error("Lances:",e));
-onSnapshot(collection(db,"covers"),s=>{covers=s.docs.map(d=>({id:d.id,...d.data()})).filter(c=>c&&Array.isArray(c.images)&&c.images.some(Boolean));renderCovers()},e=>console.error("Capas:",e));
+onSnapshot(collection(db,"draws"),s=>{draws=s.docs.map(d=>({id:d.id,...d.data()}));ckSave({draws});applyDraw();renderPrizes();render()},e=>console.error("Sorteios:",e));
+onSnapshot(collection(db,"events"),s=>{events=s.docs.map(d=>({id:d.id,...d.data()}));ckSave({events});renderEvents();renderPrizes();render()},e=>console.error("Eventos:",e));
+onSnapshot(collection(db,"tasks"),s=>{tasks=s.docs.map(d=>({id:d.id,...d.data()}));ckSave({tasks});watchClaims();renderEvents();render()},e=>console.error("Tarefas:",e));
+onSnapshot(collection(db,"eventTasks"),s=>{links=s.docs.map(d=>({id:d.id,...d.data()}));ckSave({links});renderEvents()},e=>console.error("Vínculos:",e));
+onSnapshot(collection(db,"auctions"),s=>{auctions=s.docs.map(d=>({id:d.id,...d.data()}));ckSave({auctions});renderAuctions();renderFeed();renderResult()},e=>console.error("Leilões:",e));
+onSnapshot(query(collection(db,"bids"),limit(500)),s=>{bidsArr=s.docs.map(d=>({id:d.id,...d.data()}));mapPhotos(bidsArr);ckSave({bids:bidsArr});renderAuctions();renderFeed();renderResult();renderTicker()},e=>console.error("Lances:",e));
+onSnapshot(collection(db,"covers"),s=>{covers=s.docs.map(d=>({id:d.id,...d.data()})).filter(c=>c&&Array.isArray(c.images)&&c.images.some(Boolean));ckSave({covers});renderCovers()},e=>console.error("Capas:",e));
 getDoc(doc(db,"settings","platform")).then(()=>{cfgReady=true;render()}).catch(()=>{cfgReady=true;render()});
 
 /* ============================================================
@@ -2528,15 +2648,28 @@ function taskCard(t){
  const c=claims[t.id],st=c?.status,rd=Math.max(1,Math.floor(Number(t.reward))||1),ty=t.ticketType||"common",pt=t.proofType||"text";
  const left=t.stock>0?(Number.isFinite(Number(t.stockLeft))?Math.floor(Number(t.stockLeft)):Number(t.stock)):null;
  const soldOut=left!==null&&left<=0;
- const proofInput=t.requiresProof===false?"":pt==="name"
-  ?`<p class="hint">Comprovante: seu nome completo será enviado automaticamente.</p>`
-  :pt==="email"
-   ?`<div class="field"><label class="label">E-mail usado na tarefa</label><input type="email" data-proof="${esc(t.id)}" placeholder="seuemail@exemplo.com"></div>`
-   :`<div class="field"><label class="label">${pt==="code"?"Código do comprovante":"Comprovante (texto ou link)"}</label><input data-proof="${esc(t.id)}" placeholder="${pt==="code"?"Ex.: ABC123":"Descreva ou cole o link"}"></div>`;
- const proofDetailBox=t.proofDetails?`<div class="proof-detail"><span class="pd-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><path d="M12 3l7 3v6c0 4.4-3 7.6-7 9-4-1.4-7-4.6-7-9V6z"/></svg></span><div><span class="pd-t">Detalhes da prova exigida</span><small>${esc(t.proofDetails)}</small></div></div>`:"";
+ const proofInput=t.requiresProof===false?"":`<div class="proof-menu">
+  <button type="button" class="pm-head" data-proof-toggle="${esc(t.id)}" aria-expanded="false"><span>📎 Prova da oferta — anexar comprovante</span><span class="pm-caret" aria-hidden="true">▾</span></button>
+  <div class="pm-body" hidden>
+   ${pt==="name"
+    ?`<p class="pm-sub">Seu nome completo será enviado automaticamente — não é preciso preencher nada.</p>`
+    :`<p class="pm-sub">Preencha os campos que a prova pedir — pelo menos um é obrigatório. Texto, código, print (link da imagem) ou link da gravação de tela.</p>
+    <div class="field"><label class="label">${pt==="email"?"E-mail usado na oferta":pt==="code"?"Código do comprovante":"Texto da prova"}</label><input data-proof-text="${esc(t.id)}" placeholder="${pt==="email"?"seuemail@exemplo.com":pt==="code"?"Ex.: ABC123":"Descreva o que você fez"}"></div>
+    <div class="field"><label class="label">Código / cupom usado ${pt==="code"?"":"(se houver)"}</label><input data-proof-code="${esc(t.id)}" placeholder="Ex.: ABC123"></div>
+    <div class="field"><label class="label">Print (link da imagem)</label><input data-proof-image="${esc(t.id)}" placeholder="https://… link direto do print"></div>
+    <div class="field"><label class="label">Gravação de tela (link)</label><input data-proof-video="${esc(t.id)}" placeholder="https://… link do vídeo da tela"></div>`}
+  </div>
+ </div>`;
+ const pdDefault=pt==="name"?"Seu nome completo do perfil é enviado automaticamente como comprovante — mantenha-o igual ao nome usado no cadastro da oferta."
+  :pt==="email"?"Use o mesmo e-mail no cadastro da oferta; o organizador confere se ele bate com o comprovante."
+  :pt==="code"?"Conclua a oferta, copie o código/cupom exibido e cole no campo “Código” da prova."
+  :"Descreva o que você fez ou anexe o print (link da imagem) e a gravação da tela com o link direto.";
+ /* "Detalhes da prova exigida": vale para TODAS as tarefas — de parceiros
+    (texto definido no painel) e do próprio Yshippcommerce (texto padrão) */
+ const proofDetailBox=t.requiresProof===false?"":`<div class="proof-detail"><span class="pd-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><path d="M12 3l7 3v6c0 4.4-3 7.6-7 9-4-1.4-7-4.6-7-9V6z"/></svg></span><div><span class="pd-t">Detalhes da prova exigida</span><small>${esc(t.proofDetails||pdDefault)}</small></div></div>`;
  return `<div class="task" style="margin-top:10px">
   <div class="task-head"><h4>${esc(t.name)}</h4><span class="tag">${t.difficulty?esc(t.difficulty):""}</span></div>
-  <div class="actions" style="margin:0 0 4px;gap:6px">${t.featured===true?'<span class="tag y">★ Destaque</span>':""}${t.category&&TASK_CATS[t.category]?`<span class="tag g">${esc(TASK_CATS[t.category])}</span>`:""}${t.badge?`<span class="tag y">${esc(t.badge)}</span>`:""}</div>
+  <div class="actions" style="margin:0 0 4px;gap:6px">${t.source==="collab"?`<span class="tag y">🤝 Parceiro${t.ownerName?" · "+esc(t.ownerName):""}</span>`:""}${t.featured===true?'<span class="tag y">★ Destaque</span>':""}${t.category&&TASK_CATS[t.category]?`<span class="tag g">${esc(TASK_CATS[t.category])}</span>`:""}${t.badge?`<span class="tag y">${esc(t.badge)}</span>`:""}</div>
   ${t.description?`<p>${esc(t.description)}</p>`:""}
   ${t.rules?`<p class="hint">${esc(t.rules)}</p>`:""}
   <div class="kv"><span>Recompensa</span><b>+${rd} ${esc(catLabel(ty))}</b></div>
@@ -2617,6 +2750,16 @@ function renderOffers(){
 }
 $("offtabs").onclick=e=>{const v=e.target.dataset.v;if(v){offView=v;renderOffers()}};
 $("offs").addEventListener("click",e=>{const c=e.target.dataset.copy;if(c)copyText(c)});
+/* menu expansível de provas: abre/fecha dentro do card da oferta (vale
+   para ofertas avulsas, eventos e assistente — delegação global) */
+document.addEventListener("click",e=>{
+ const t=e.target.closest("[data-proof-toggle]");if(!t)return;
+ const body=t.parentElement.querySelector(".pm-body");if(!body)return;
+ const open=body.hidden;
+ body.hidden=!open;
+ t.setAttribute("aria-expanded",String(open));
+ const caret=t.querySelector(".pm-caret");if(caret)caret.textContent=open?"▴":"▾";
+});
 
 /* ============================================================
    16 · CONFIRMAR EVENTO VINCULADO AO SORTEIO
@@ -2664,7 +2807,7 @@ async function joinEvent(id){
     tx.set(wRef,{...applySpend(wd,spend),updatedAt:serverTimestamp()},{merge:true});
     tx.set(doc(collection(db,"wallets",uid,"history")),{kind:"event_join",amount:cost,eventId:id,eventName:ev.name||"",createdAt:serverTimestamp()});
    }
-   tx.set(jRef,{uid,eventId:id,displayName:profile?.name||"",cost,joinedAt:serverTimestamp()});
+   tx.set(jRef,{uid,eventId:id,displayName:profile?.name||"",photo:myPhoto(),cost,joinedAt:serverTimestamp()});
   });
   toast("Entrada do evento confirmada! Sorteios e leilões liberados.");
  }catch(e){toast(e.message||"Erro ao confirmar o evento.")}
@@ -2696,7 +2839,7 @@ function renderAuctions(){
    const my=currentUser?Math.max(0,Math.floor(Number(bids.find(b=>b.uid===currentUser.uid)?.amount)||0)):0;
    const canClaim=currentUser?.emailVerified&&my>=tot;
    return `<div class="card evc">${head}
-   ${lead?`<div class="auc-lider"><span>Líder: ${esc(maskName(lead.displayName||lead.uid||"—"))}</span><b class="mono">${Math.max(0,Math.floor(Number(lead.amount)||0))} bilhetes</b>${currentUser&&lead.uid===currentUser.uid?'<span class="tag g">Você</span>':""}</div>`:`<p class="hint">Nenhum lance ainda. Dê o primeiro lance!</p>`}
+   ${lead?`<div class="auc-lider"><span>Líder: ${whoHTML(lead,(lead.displayName||lead.uid||"—").trim().charAt(0))}${esc(maskName(lead.displayName||lead.uid||"—"))}</span><b class="mono">${Math.max(0,Math.floor(Number(lead.amount)||0))} bilhetes</b>${currentUser&&lead.uid===currentUser.uid?'<span class="tag g">Você</span>':""}</div>`:`<p class="hint">Nenhum lance ainda. Dê o primeiro lance!</p>`}
    <p class="mono">${a.endAt?"Encerra em "+fmt(a.endAt):""} · Lance mínimo: ${min} bilhete(s)</p>
    <p class="hint">Quem acumular mais bilhetes até o fim do prazo leva o prêmio. Atingiu ${tot} bilhetes? Reivindique na hora. Valores: comum 1 · dourado 10 · VIP 20 bilhetes. Se a meta não for atingida, todos os lances voltam para a carteira.</p>
    ${!evOk&&ev?(evState(ev)==="active"?`<p class="hint"><b>Pague a entrada do evento ${esc(ev.name)} para dar lances.</b></p>`:`<p class="hint"><b>O evento ${esc(ev.name)} ${evState(ev)==="future"?"ainda não começou":"já foi encerrado"}.</b> Os lances deste leilão ficam bloqueados.</p>`):""}
@@ -2710,7 +2853,7 @@ function renderAuctions(){
    const iWon=currentUser&&res.winnerUid===currentUser.uid;
    const iBid=currentUser&&bids.find(b=>b.uid===currentUser.uid);
    return `<div class="card evc">${head}
-   <div class="auc-lider"><span>Ganhador: ${esc(maskName(res.winnerName||"—"))}</span><b class="mono">${Math.max(0,Math.floor(Number(res.winnerAmount)||0))} bilhetes</b></div>
+   <div class="auc-lider"><span>Ganhador: ${whoHTML(res,(res.winnerName||"—").trim().charAt(0))}${esc(maskName(res.winnerName||"—"))}</span><b class="mono">${Math.max(0,Math.floor(Number(res.winnerAmount)||0))} bilhetes</b></div>
    <p class="hint">Arrecadação final: <b class="mono">${Math.max(0,Math.floor(Number(res.totalRaised)||0))} bilhetes</b>. Lances que não venceram foram devolvidos.</p>
    ${iWon?`<p class="hint"><b>Você ganhou este leilão! 🏆 O organizador entrará em contato.</b></p>`:(iBid?`<p class="hint">Seu lance foi devolvido para a carteira.</p>`:"")}
    </div>`;
@@ -2778,7 +2921,7 @@ async function placeBid(aid){
    const spend=spendValue(wd,amt);
    if(!spend)throw new Error("Bilhetes insuficientes na carteira. Conclua tarefas para ganhar mais bilhetes.");
    tx.set(wRef,{...applySpend(wd,spend),updatedAt:serverTimestamp()},{merge:true});
-   tx.set(bRef,{auctionId:aid,uid,displayName:profile?.name||"",amount:prev+amt,updatedAt:serverTimestamp()},{merge:true});
+   tx.set(bRef,{auctionId:aid,uid,displayName:profile?.name||"",photo:myPhoto(),amount:prev+amt,updatedAt:serverTimestamp()},{merge:true});
    tx.set(doc(collection(db,"wallets",uid,"history")),{kind:"auction_bid",amount:amt,auctionId:aid,auctionName:a.name||"",createdAt:serverTimestamp()});
   });
   toast("Lance de "+amt+" bilhete(s) registrado no leilão \""+(a.name||"")+"\"! Boa sorte com o prêmio "+(a.prize||"")+".");
@@ -2805,19 +2948,26 @@ document.addEventListener("click",async e=>{
   if(t.stock>0&&Math.floor(Number.isFinite(Number(t.stockLeft))?Number(t.stockLeft):Number(t.stock))<=0)return toast("Esta oferta esgotou as vagas. Fique de olho nas próximas!");
   const ref=doc(db,"taskClaims",currentUser.uid+"_"+id),old=await getDoc(ref);
   if(old.exists()&&["pending","approved"].includes(old.data().status))return toast("Você já solicitou esta tarefa.");
-  /* procura o comprovante DENTRO do cartão da tarefa clicada (evita pegar o campo errado) */
-  const input=e.target.closest(".task")?.querySelector("[data-proof]");
+  /* prova: lê os campos do menu expansível de provas dentro do card da oferta */
+  const box=e.target.closest(".task");
   const pt=t.proofType||"text";
-  let proof="";
+  let proof="",proofText="",proofCode="",proofImage="",proofVideo="";
   if(t.requiresProof!==false){
-   proof=pt==="name"?(profile?.name||""):String(input?.value||"").trim();
-   if(!proof)return toast(pt==="name"?"Salve seu nome no perfil antes.":"Informe o comprovante solicitado.");
-   if(pt==="email"&&!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(proof))return toast("Informe um e-mail válido.");
-   proof=proof.slice(0,500);
+   if(pt==="name"){
+    proof=(profile?.name||"").trim();
+    if(!proof)return toast("Salve seu nome no perfil antes.");
+   }else{
+    const g=k=>String(box?.querySelector("[data-proof-"+k+"]")?.value||"").trim();
+    proofText=g("text").slice(0,1000);proofCode=g("code").slice(0,300);proofImage=g("image").slice(0,600);proofVideo=g("video").slice(0,600);
+    proof=proofText||proofCode||proofImage||proofVideo;
+    if(!proof)return toast("Abra a prova da oferta e preencha pelo menos um campo.");
+    if(pt==="email"&&!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(proof))return toast("Informe um e-mail válido.");
+    if((proofImage&&!/^https?:\/\//i.test(proofImage))||(proofVideo&&!/^https?:\/\//i.test(proofVideo)))return toast("Os links do print e da gravação devem começar com http:// ou https://.");
+   }
   }
-  const data={uid:currentUser.uid,email:currentUser.email||"",taskId:id,eventId:t.eventId||"",participantName:profile.name,proof,status:"pending",submittedAt:serverTimestamp()};
+  const data={uid:currentUser.uid,email:currentUser.email||"",taskId:id,eventId:t.eventId||"",participantName:profile.name,proof,proofText,proofCode,proofImage,proofVideo,status:"pending",submittedAt:serverTimestamp()};
   if(old.exists())await updateDoc(ref,data);else await setDoc(ref,data);
-  if(input)input.value="";
+  box?.querySelectorAll("[data-proof-text],[data-proof-code],[data-proof-image],[data-proof-video]").forEach(i=>i.value="");
   /* aprovação automática (definida no painel): credita a carteira na hora */
   if(t.autoApprove===true){
    const rd=Math.max(1,Math.floor(Number(t.reward))||1),ty=t.ticketType||"common";
@@ -2910,7 +3060,7 @@ $("yes").onclick=async()=>{
    if(have.length>=Math.floor(pointsOf(wd)/COST))throw new Error("Você já usou todo o seu saldo em bilhetes. Conclua mais tarefas para reservar novos números.");
    const spend=spendValue(wd,COST);
    if(!spend)throw new Error("Bilhetes insuficientes. Conclua mais tarefas para ganhar bilhetes.");
-   tx.set(rRef,{drawId,number,uid,displayName:maskName(ud.name),createdAt:serverTimestamp()});
+   tx.set(rRef,{drawId,number,uid,displayName:maskName(ud.name),photo:myPhoto(),createdAt:serverTimestamp()});
    tx.set(wRef,{...applySpend(wd,spend),updatedAt:serverTimestamp()},{merge:true});
    tx.update(uRef,{numbers:[...have,number],numberAssignedAt:serverTimestamp()});
    tx.set(doc(collection(db,"wallets",uid,"history")),{kind:"reserve",amount:COST,drawId,drawName:draw?.name||"",createdAt:serverTimestamp()});
@@ -3085,13 +3235,13 @@ function renderResult(){
    return head+d.result.winners.map((w,i)=>{
     const p=pz.find(x=>x.name===w.prize)||pz[i];
     const mine=!!currentUser&&myTickets.some(tk=>tk.drawId===d.id&&Number(tk.number)===Number(w.number));
-    return row((i+1)+"º",esc(maskName(w.displayName||"—"))+(mine?' <span class="tag g">Você!</span>':""),"🎁 "+esc(w.prize||p?.name||"Prêmio")+(p?" · "+esc(prizeType(p).label)+(p.value?" · "+esc(p.value):""):""),"Nº "+pad(n0(w.number),String(t).length),"número sorteado",mine);
+    return row((i+1)+"º",whoHTML(w,(w.displayName||"—").trim().charAt(0))+esc(maskName(w.displayName||"—"))+(mine?' <span class="tag g">Você!</span>':""),"🎁 "+esc(w.prize||p?.name||"Prêmio")+(p?" · "+esc(prizeType(p).label)+(p.value?" · "+esc(p.value):""):""),"Nº "+pad(n0(w.number),String(t).length),"número sorteado",mine);
    }).join("");
   }).join(""):empty("Nenhum ganhador de sorteio publicado ainda.");
   html+=grp("⚖ Ganhadores dos leilões",winAuc.length);
   html+=winAuc.length?winAuc.map(a=>{
    const r=a.result,ev=evName(a.eventId),tot=Math.max(1,n0(a.totalTickets)||1),mine=!!currentUser&&r.winnerUid===currentUser.uid;
-   return row("🏆",esc(maskName(r.winnerName||"—"))+(mine?' <span class="tag g">Você!</span>':""),["⚖ "+esc(a.name||"Leilão"),a.prize?"🎁 "+esc(a.prize):"",ev?"◈ Evento "+esc(ev):"","arrecadado "+n0(r.totalRaised)+" de "+tot+" bilhetes",n0(r.winnerAmount)>=tot?"meta atingida (arremate imediato)":"maior lance no prazo",r.endedAt?"encerrado "+fmt(r.endedAt):""].filter(Boolean).join(" · "),n0(r.winnerAmount)+" bil.","lance vencedor",mine);
+   return row("🏆",whoHTML({uid:r.winnerUid,photo:r.winnerPhoto},(r.winnerName||"—").trim().charAt(0))+esc(maskName(r.winnerName||"—"))+(mine?' <span class="tag g">Você!</span>':""),["⚖ "+esc(a.name||"Leilão"),a.prize?"🎁 "+esc(a.prize):"",ev?"◈ Evento "+esc(ev):"","arrecadado "+n0(r.totalRaised)+" de "+tot+" bilhetes",n0(r.winnerAmount)>=tot?"meta atingida (arremate imediato)":"maior lance no prazo",r.endedAt?"encerrado "+fmt(r.endedAt):""].filter(Boolean).join(" · "),n0(r.winnerAmount)+" bil.","lance vencedor",mine);
   }).join(""):empty("Nenhum ganhador de leilão publicado ainda.");
  }else{
   html+=grp("🎟️ Sorteios encerrados",endedDraws.length);
@@ -3143,7 +3293,7 @@ function flow(){
  return{p:"p-number",h:"Sorteio: "+(draw?.name||"—"),t:"Você está trocando bilhetes por número no sorteio \""+(draw?.name||"—")+"\""+(pzN?", concorrendo ao prêmio \""+pzN+"\"":"")+". Escolha seu número entre os "+(TOTAL-taken.size)+" disponíveis. Cada número consome "+COST+" bilhete(s)"+(ev2?" do evento "+ev2.name:"")+"."};
 }
 
-function render(){
+function renderNow(){
  const logged=!!currentUser,v=logged&&currentUser.emailVerified,ok=profileOk(),num=mine().length>0;
  const f=flow();
  $("as-h").textContent=f.h;$("as-t").textContent=f.t;
@@ -3160,12 +3310,12 @@ function render(){
  $("acct").hidden=!logged;
  if(logged){
   const ini=(profile?.name||currentUser.email||"U").trim().charAt(0).toUpperCase();
-  $("ava").innerHTML=avatarOK&&avatarURL?'<img src="'+esc(avatarURL)+'" alt="Foto do perfil" referrerpolicy="no-referrer">':esc(ini);
+  $("ava").innerHTML=avatarHTML(profile?.photoMode,ini);
   $("acct-n").textContent=profile?.name?maskName(profile.name):"Conta";
   $("am-email").textContent=currentUser.email||"";
   $("am-ver").textContent=v?"E-mail verificado ✓":"Verificação pendente";
   $("m-acct").hidden=false;
-  $("m-acct").innerHTML=`<div class="ma-card"><span class="ava">${avatarOK&&avatarURL?'<img src="'+esc(avatarURL)+'" alt="Foto do perfil" referrerpolicy="no-referrer">':esc(ini)}</span><div class="ma-meta"><b>${esc(profile?.name?maskName(profile.name):"Minha conta")}</b><small>${esc(currentUser.email||"")}</small><small>${v?"E-mail verificado ✓":"Verificação pendente"}</small></div>${v?`<div class="ma-bal"><small>Saldo</small><b class="mono">${pointsOf(wallet)}</b></div>`:""}</div>
+  $("m-acct").innerHTML=`<div class="ma-card"><span class="ava">${avatarHTML(profile?.photoMode,ini)}</span><div class="ma-meta"><b>${esc(profile?.name?maskName(profile.name):"Minha conta")}</b><small>${esc(currentUser.email||"")}</small><small>${v?"E-mail verificado ✓":"Verificação pendente"}</small></div>${v?`<div class="ma-bal"><small>Saldo</small><b class="mono">${pointsOf(wallet)}</b></div>`:""}</div>
    <div class="ma-acts"><button type="button" class="btn sm ghost" data-ma="edit"><span class="icn" aria-hidden="true" style="width:13px;height:13px;vertical-align:-2px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5"/></svg></span> Perfil</button><button type="button" class="btn sm ghost" data-ma="wallet"><span class="icn" aria-hidden="true" style="width:13px;height:13px;vertical-align:-2px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="6" width="19" height="13" rx="3"/><path d="M2.5 10h19" opacity=".55"/><circle cx="17" cy="13.5" r="1.4" fill="currentColor" stroke="none"/></svg></span> Carteira</button><button type="button" class="btn sm ghost out" data-ma="logout"><span class="icn" aria-hidden="true" style="width:13px;height:13px;vertical-align:-2px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h3"/><path d="m15 8 4 4-4 4M19 12H9"/></svg></span> Sair</button></div>`;
  }else{
   $("m-acct").hidden=false;
@@ -3227,165 +3377,23 @@ function render(){
   set("whatsapp",profile?.whatsapp||"");
  }
 
- renderFeed();renderTicket(done);renderResult();renderEvents();renderHero();renderAuctions();renderSorteios();renderStage();updateWfloat();renderTicker();
+ renderFeed();renderTicket(done);renderResult();renderEvents();renderHero();renderAuctions();renderSorteios();renderStage();updateWfloat();renderTicker();renderAdBtn();
  if(sheetOpen==="profile"){buildProfileHead();fillProfileForm(false)}
  updatePagers();tbSync();
 }
 render();
 if(location.hash==="#participar")goStage(true);
-
 /* ============================================================
-   19b2 · CHECK-IN DIÁRIO · RASPADINHA DE BILHETES (8h em 8h)
-   Raspe o cartão e descubra quantos bilhetes caiu na carteira:
-   entre 1 e 10 normalmente, raramente até 20.
+   RENDER SEM TRAVAMENTO: chamadas repetidas de render() em um
+   mesmo instante (vários snapshots chegando juntos) são unidas em
+   um único quadro de animação — a tela nunca "congela".
    ============================================================ */
-const SC_COOLDOWN=8*3600e3;
-let scNextAt=0,scAmount=0,scClaimed=false,scDrawing=false,scTimerI=0;
-function scFmt(ms){
- if(ms<=0)return"disponível agora";
- ms=Math.max(0,ms);
- const h=Math.floor(ms/3600e3),m=Math.floor(ms%3600e3/60e3),s=Math.floor(ms%60e3/1e3);
- return(h?h+"h ":"")+(m<10?"0":"")+m+"m "+(s<10?"0":"")+s+"s";
+var _rAFq=0;
+function render(){
+ if(_rAFq)return;
+ _rAFq=requestAnimationFrame(()=>{_rAFq=0;renderNow()});
 }
-function scRoll(){let r=1+Math.floor(Math.random()*10);if(Math.random()<.08)r+=1+Math.floor(Math.random()*10);return Math.min(20,r)}
-async function scRefresh(){
- const b=$("checkin");if(!b)return;
- const show=!!currentUser?.emailVerified;
- b.hidden=!show;
- if(!show){clearInterval(scTimerI);scTimerI=0;return}
- if(!scNextAt&&currentUser){
-  try{const d=await getDoc(doc(db,"checkins",currentUser.uid));
-   if(d.exists()){const n=d.data().nextAt||0;if(n>scNextAt)scNextAt=n}
-  }catch(e){}
- }
- const ok=Date.now()>=scNextAt;
- b.querySelector(".sc-dot").hidden=!ok;
- b.title=ok?"Check-in diário · sua raspadinha está pronta!":"Check-in diário · próxima raspadinha em "+scFmt(scNextAt-Date.now());
-}
-function scTick(){
- const t=$("sc-timer");if(!t)return;
- if($("scratch-modal").hidden)return;
- const left=scNextAt-Date.now();
- t.textContent=left>0&&!scAmount?"Próxima raspadinha em "+scFmt(left):scAmount?"Volte em "+scFmt(scNextAt-Date.now())+" para raspar de novo.":"Raspadinha disponível agora — raspe e colete!";
-}
-async function scClaim(){
- if(scClaimed||!currentUser)return true;
- try{
-  await runTransaction(db,async tx=>{
-   const ref=doc(db,"checkins",currentUser.uid);
-   const cs=await tx.get(ref);
-   const d=cs.exists()?cs.data():{};
-   const last=d.lastAt?stampMs(d.lastAt):0,next=d.nextAt||last+SC_COOLDOWN;
-   if(Date.now()<next)throw{code:"sc/cooldown"};
-   tx.set(ref,{lastAt:serverTimestamp(),nextAt:Date.now()+SC_COOLDOWN,amount:scAmount,updatedAt:serverTimestamp()},{merge:true});
-   tx.set(doc(db,"wallets",currentUser.uid),{common:increment(scAmount),updatedAt:serverTimestamp()},{merge:true});
-   tx.set(doc(collection(db,"wallets",currentUser.uid,"history")),{kind:"scratch",amount:scAmount,ticketType:"common",reason:"Raspadinha do check-in diário",createdAt:serverTimestamp()});
-  });
-  scClaimed=true;
-  scNextAt=Date.now()+SC_COOLDOWN;
-  scRefresh();
-  return true;
- }catch(e){
-  if(e?.code==="sc/cooldown"){toast("Raspadinha já usada. Volte em "+scFmt(scNextAt-Date.now())+".")}
-  else showError(e);
-  return false;
- }
-}
-function scPaintCoat(ctx,W,H){
- ctx.globalCompositeOperation="source-over";
- ctx.clearRect(0,0,W,H);
- const g=ctx.createLinearGradient(0,0,W,H);
- g.addColorStop(0,"#2b3139");g.addColorStop(.5,"#474d57");g.addColorStop(1,"#2b3139");
- ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
- ctx.fillStyle="rgba(252,213,53,.9)";
- ctx.font="700 34px 'IBM Plex Mono',monospace";
- ctx.textAlign="center";ctx.textBaseline="middle";
- ctx.fillText("RASPE AQUI",W/2,H/2-14);
- ctx.font="600 12px 'IBM Plex Sans',sans-serif";
- ctx.fillStyle="rgba(234,236,239,.55)";
- ctx.fillText("check-in diário · yshippcommerce",W/2,H/2+22);
- ctx.strokeStyle="rgba(252,213,53,.35)";ctx.setLineDash([8,10]);ctx.lineWidth=3;
- ctx.strokeRect(10,10,W-20,H-20);ctx.setLineDash([]);
- ctx.save();ctx.globalAlpha=.18;ctx.font="700 9px 'IBM Plex Mono',monospace";
- ctx.fillStyle="#eaecef";ctx.textAlign="left";
- for(let y=20;y<H;y+=26)ctx.fillText("YSHIPPCOMMERCE · RASPADINHA OFICIAL · YSHIPPCOMMERCE · RASPADINHA OFICIAL",14,y);
- ctx.restore();
-}
-function scProgress(ctx,W,H){
- try{
-  const d=ctx.getImageData(0,0,W,H).data;
-  let clear=0,total=0;
-  for(let i=3;i<d.length;i+=4*24){total++;if(d[i]===0)clear++}
-  return total?clear/total:0;
- }catch(e){return 0}
-}
-async function openScratch(){
- if($("checkin").hidden)return;
- if(!currentUser?.emailVerified)return toast("Entre com uma conta verificada para raspar.");
- if(!termsOk())return askTerms();
- $("scratch-modal").hidden=false;
- document.body.classList.add("no-scroll");
- clearInterval(scTimerI);scTimerI=setInterval(scTick,1000);scTick();
- const cv=$("sc-canvas"),ctx=cv.getContext("2d",{willReadFrequently:true});
- const W=cv.width,H=cv.height;
- scAmount=0;scClaimed=false;
- $("sc-prize").style.visibility="hidden";
- $("sc-amount").textContent="—";
- $("sc-collect").hidden=true;
- $("sc-collect").textContent="Coletar bilhetes";
- scPaintCoat(ctx,W,H);
- cv.style.display="";
- $("sc-hint").textContent="Passe o dedo (ou o mouse) sobre o cartão para raspar e revelar seus bilhetes.";
- /* elegibilidade (leitura simples) */
- try{
-  const d=await getDoc(doc(db,"checkins",currentUser.uid));
-  if(d.exists()){const n=d.data().nextAt||0;if(n>scNextAt)scNextAt=n}
-  if(Date.now()<scNextAt){
-   scTick();
-   $("sc-hint").textContent="Raspadinha em espera. Volte quando o tempo zerar — a contagem está no rodapé.";
-   cv.style.pointerEvents="none";
-   cv.style.opacity=".5";
-   return;
-  }
- }catch(e){showError(e)}
- cv.style.pointerEvents="";cv.style.opacity="";
- scAmount=scRoll();
- $("sc-amount").textContent="+"+scAmount;
- $("sc-sub").textContent=scAmount>10?"bilhetes · prêmio raro! 🎉":"bilhetes na carteira";
- $("sc-prize").style.visibility="";
- let x0=null,claimed=false;
- const pos=e=>{const r=cv.getBoundingClientRect();const t=e.touches?e.touches[0]:e;return{x:(t.clientX-r.left)*W/r.width,y:(t.clientY-r.top)*H/r.height}};
- const paint=e=>{if(x0==null)return;const p=pos(e);ctx.globalCompositeOperation="destination-out";ctx.lineWidth=Math.max(22,W/14);ctx.lineCap="round";ctx.lineJoin="round";ctx.beginPath();ctx.moveTo(x0.x,x0.y);ctx.lineTo(p.x,p.y);ctx.stroke();x0=p};
- const done=async()=>{
-  x0=null;
-  if(!claimed&&scProgress(ctx,W,H)>=.55){
-   claimed=true;
-   const ok=await scClaim();
-   if(ok){
-    $("sc-amount").classList.add("spark");
-    $("sc-hint").textContent="✓ "+scAmount+" bilhete(s) creditados na sua carteira!";
-    $("sc-collect").hidden=false;$("sc-collect").textContent="✓ Bilhetes creditados";
-    $("sc-collect").disabled=true;
-    cv.style.pointerEvents="none";
-    toast("+"+scAmount+" bilhete(s) do check-in diário!","success");
-    scTick();
-   }
-  }
- };
- cv.onpointerdown=e=>{if(scClaimed)return;x0=pos(e);paint(e);e.preventDefault()};
- cv.onpointermove=e=>{if(x0!=null){paint(e);e.preventDefault()}};
- cv.onpointerup=cv.onpointercancel=cv.onpointerleave=done;
- $("sc-collect").onclick=()=>{if(!scClaimed)done()};
-}
-function closeScratch(){
- $("scratch-modal").hidden=true;
- document.body.classList.remove("no-scroll");
- clearInterval(scTimerI);scTimerI=0;
-}
-$("checkin").onclick=openScratch;
-$("scratch-close").onclick=closeScratch;
-$("sc-close2").onclick=closeScratch;
-$("scratch-modal").addEventListener("click",e=>{if(e.target===$("scratch-modal"))closeScratch()});
+
 /* ============================================================
    19c · SUPORTE AO CLIENTE (renderiza o código salvo no painel administrativo)
    ============================================================ */
@@ -3401,6 +3409,158 @@ $("nav-sup").onclick=e=>{e.preventDefault();openSupport()};
 $("sup-close").onclick=()=>{$("sup-modal").hidden=true};
 $("sup-modal").addEventListener("click",e=>{if(e.target===$("sup-modal"))$("sup-modal").hidden=true});
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("sup-modal").hidden)$("sup-modal").hidden=true});
+
+/* ============================================================
+   19d · ANUNCIAR COMO COLABORADOR (aviso em forma de notificação)
+   O processo é tratado no suporte: o aviso pergunta se o usuário
+   quer abrir o suporte agora para começar a trabalhar conosco
+   ou prefere deixar para depois.
+   ============================================================ */
+function openColabNotice(){$("colab-modal").hidden=false}
+document.addEventListener("click",e=>{
+ if(e.target.closest("[data-collab]")){openColabNotice();return}
+ if(e.target.closest("[data-colab-close]")){$("colab-modal").hidden=true;return}
+ if(e.target.id==="colab-modal")$("colab-modal").hidden=true;
+});
+$("colab-go").onclick=()=>{$("colab-modal").hidden=true;openSupport()};
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("colab-modal").hidden)$("colab-modal").hidden=true});
+
+/* ============================================================
+   19e · ANÚNCIO PATROCINADO (botão flutuante + gaveta + recompensa)
+   Campos do Firestore em settings/platform (editados no painel):
+   · adCode ....... código HTML/CSS/JS do anúncio (gaveta em iframe)
+   · adSeconds .... tempo de espera (contagem regressiva) em segundos
+   · adReward ..... quantidade de bilhetes pagos pela espera
+   · adActive ..... true = botão em destaque (anúncio no ar)
+   · adUpdatedAt .. data de atualização (identifica o anúncio: a
+                    recompensa é paga 1x por anúncio por usuário)
+   Recibo do pagamento: adsClaims/{uid}_{adId}
+   ============================================================ */
+let adI=0,adLeft=0,adAdId="",adClaiming=false,adOpening=false;
+const adLive=()=>settings.adActive===true&&String(settings.adCode||"").trim().length>0;
+const adIdOf=()=>{const t=validDate(settings.adUpdatedAt);return t?t.getTime().toString(36):"0"};
+function adCfg(){return{
+ code:String(settings.adCode||"").trim(),
+ secs:Math.min(600,Math.max(3,Math.floor(Number(settings.adSeconds)||10))),
+ reward:Math.max(0,Math.floor(Number(settings.adReward)||0))
+}}
+function renderAdBtn(){
+ const b=$("adfloat");if(!b)return;
+ const live=adLive(),cfg=adCfg();
+ /* botão fica no cabeçalho, à esquerda do menu hambúrguer; aparece
+    sempre que o usuário está logado; o destaque (badge dourado + ponto
+    verde) liga sozinho quando o painel salva o código com adActive=true */
+ b.hidden=!currentUser;
+ b.classList.toggle("hot",live);
+ const bg=$("ad-badge");
+ if(bg){bg.hidden=!live||cfg.reward<=0;bg.textContent="+"+cfg.reward}
+ if(!live&&typeof closeAdDrawer==="function")closeAdDrawer();
+}
+function adStopTimer(){if(adI){clearInterval(adI);adI=0}}
+function closeAdDrawer(){
+ adStopTimer();
+ document.documentElement.classList.remove("gav-lock");
+ const gt=$("gaveta");if(gt)gt.classList.remove("open");
+ const f=$("gv-frame");if(f)f.srcdoc="";
+}
+function adAfterSlide(gv){
+ return new Promise(res=>{
+  let done=false;
+  const end=()=>{if(done)return;done=true;gv.removeEventListener("transitionend",onEnd);res()};
+  const onEnd=e=>{if(e.target===gv)end()};
+  gv.addEventListener("transitionend",onEnd);
+  setTimeout(end,520);
+ });
+}
+/* monta o documento do anúncio:
+   · se o anúncio pinta o próprio fundo (body/html com background),
+     o tema DELE é respeitado — nada é forçado por cima;
+   · se não pinta, injeta o TEMA DO SITE (fundo escuro + texto claro),
+     para nunca aparecer o branco padrão do navegador */
+function buildAdDoc(code){
+ let html=String(code||"");
+ const selfBg=/(body|html)(\[[^\]]*\])?\s*\{[^{}]*background/i.test(html);
+ const fix='<meta name="viewport" content="width=device-width, initial-scale=1"><style data-gv>html,body{margin:0;padding:0;color-scheme:dark}'+
+  (selfBg?"":'html{background:#0b0e11}body{background:radial-gradient(120% 140% at 100% 0%,#1d2430 0%,#0b0e11 55%),linear-gradient(160deg,#141922,#0b0e11);color:#eaecef;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;min-height:100%}')+
+  '</style>';
+ if(/<\/body>/i.test(html))return html.replace(/<\/body>/i,fix+"</body>");
+ if(/<\/head>/i.test(html))return html.replace(/<\/head>/i,fix+"</head>");
+ if(/<head[^>]*>/i.test(html))return html.replace(/<head[^>]*>/i,m=>m+fix);
+ return '<!doctype html><html><head><meta charset="utf-8">'+fix+"</head><body>"+html+"</body></html>";
+}
+async function openAdDrawer(){
+ const gt=$("gaveta"),gv=$("gav");
+ if(!gt||!gv)return;
+ if(adOpening||gt.classList.contains("open"))return;
+ if(!currentUser?.emailVerified)return toast("Entre com uma conta verificada para ver anúncios.");
+ if(!termsOk())return askTerms();
+ if(!profileOk())return toast("Salve seus dados de perfil primeiro.");
+ if(!adLive())return toast("Nenhum anúncio disponível agora. Volte logo!");
+ const cfg=adCfg();
+ if(cfg.reward<=0)return toast("Este anúncio não oferece recompensa no momento.");
+ adOpening=true;
+ adAdId=adIdOf();
+ $("gv-brand").textContent=(String(settings.adBrand||"").trim()||"Yshippcommerce")+" · propaganda";
+ $("gv-reward").textContent="para receber +"+cfg.reward+" bilhete"+(cfg.reward===1?"":"s");
+ $("gv-note").textContent="Carregando o anúncio…";
+ $("gv-skip").hidden=true;
+ $("gv-collect").hidden=true;
+ $("gv-secs").textContent="…";
+ $("gv-secs").classList.remove("ok");
+ const bar=$("gv-bar");bar.classList.remove("run");
+ document.documentElement.classList.add("gav-lock");
+ gt.classList.add("open");gv.classList.add("open");
+ await adAfterSlide(gv);
+ if(!gt.classList.contains("open")){adOpening=false;return}
+ let claimed=false;
+ try{claimed=(await getDoc(doc(db,"adsClaims",currentUser.uid+"_"+adAdId))).exists()}catch(e){}
+ if(claimed){toast("Você já recebeu a recompensa deste anúncio. Aguarde o próximo!");closeAdDrawer();adOpening=false;return}
+ const f=$("gv-frame");
+ f.style.background="transparent";
+ f.srcdoc=buildAdDoc(cfg.code);
+ $("gv-note").textContent="Mantenha o anúncio aberto até o fim da contagem para receber a recompensa.";
+ $("gv-skip").hidden=false;
+ adLeft=cfg.secs;
+ $("gv-secs").textContent=adLeft+"s";
+ void bar.offsetWidth;bar.style.animationDuration=cfg.secs+"s";bar.classList.add("run");
+ adStopTimer();
+ adI=setInterval(()=>{
+  adLeft--;
+  if(adLeft>0){$("gv-secs").textContent=adLeft+"s";return}
+  adStopTimer();
+  const s=$("gv-secs");s.textContent="pronto ✓";s.classList.add("ok");
+  $("gv-note").textContent="Tempo completo! Toque em coletar para receber seus bilhetes.";
+  $("gv-skip").hidden=true;
+  const c=$("gv-collect");c.hidden=false;c.disabled=false;c.textContent="Coletar +"+cfg.reward+" bilhete"+(cfg.reward===1?"":"s");
+ },1000);
+ adOpening=false;
+}
+async function collectAdReward(){
+ if(adI||adLeft>0)return;
+ if(adClaiming)return;adClaiming=true;
+ const btn=$("gv-collect");btn.disabled=true;btn.textContent="Creditando…";
+ const cfg=adCfg();
+ try{
+  const claimRef=doc(db,"adsClaims",currentUser.uid+"_"+(adAdId||adIdOf()));
+  await runTransaction(db,async tx=>{
+   const c=await tx.get(claimRef);
+   if(c.exists())throw new Error("already");
+   tx.set(claimRef,{uid:currentUser.uid,adId:adAdId||adIdOf(),reward:cfg.reward,watchedAt:serverTimestamp()});
+   tx.set(doc(db,"wallets",currentUser.uid),{common:increment(cfg.reward),updatedAt:serverTimestamp()},{merge:true});
+   tx.set(doc(collection(db,"wallets",currentUser.uid,"history")),{kind:"ad_reward",amount:cfg.reward,ticketType:"common",reason:"Anúncio patrocinado assistido",createdAt:serverTimestamp()});
+  });
+  toast("+"+cfg.reward+" bilhete"+(cfg.reward===1?"":"s")+" do anúncio creditados na carteira!","win");
+  closeAdDrawer();
+  render();
+ }catch(e){
+  if(String(e?.message||e).includes("already")){toast("Você já recebeu a recompensa deste anúncio.");closeAdDrawer()}
+  else showError(e);
+ }finally{adClaiming=false}
+}
+$("adfloat").onclick=openAdDrawer;
+$("gv-x").onclick=closeAdDrawer;
+$("gv-skip").onclick=closeAdDrawer;
+$("gv-collect").onclick=collectAdReward;
 
 /* ============================================================
    19d · NOTIFICAÇÕES DO ORGANIZADOR (estilo celular: desliza p/ sair)
@@ -3425,7 +3585,7 @@ function watchNotes(){
   renderNotes(shown);
  },e=>console.error("Notificações:",e));
 }
-function stampMs(v){if(!v)return 0;if(v.toDate)return v.toDate().getTime();const d=new Date(v);return isNaN(d)?0:d.getTime()}
+function stampMs(v){if(!v)return 0;if(typeof v==="number")return v;if(v.toDate)return v.toDate().getTime();if(typeof v.seconds==="number")return v.seconds*1000+Math.round((v.nanoseconds||0)/1e6);const d=new Date(v);return isNaN(d)?0:d.getTime()}
 function noteCard(n){
  return `<div class="pnote nt-org" data-note="${esc(n.id)}" role="button" tabindex="0" aria-label="Abrir notificação: ${esc(n.title||"")}">
   <span class="nico">📣</span>
@@ -3542,7 +3702,6 @@ function renderCovers(){
  const b=$("wfloat");if(!b)return;
  const on=!!currentUser?.emailVerified,pts=pointsOf(wallet);
  b.hidden=!on;
- scRefresh();
  $("wbadge").textContent=pts;
  const tb=$("tb-wbadge");if(tb){tb.textContent=pts>9999?Math.floor(pts/1000)+"k":pts;tb.hidden=!on}
  if(sheetOpen==="wallet")buildWallet();
@@ -3641,7 +3800,7 @@ addEventListener("resize",updatePagers);
 let wlFilter="all",wlHide=false;
 try{wlHide=localStorage.getItem("wlhide")==="1"}catch(e){}
 const HICON={check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m4.5 12.5 5 5 10-11"/></svg>',gift:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="8" width="17" height="4" rx="1"/><path d="M5.5 12v7a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-7M3.5 8l2-3.5h13l2 3.5M12 8v12M8.5 4.5c-1.5 0-2.5 1-2.5 2.2 0 1.3 1.3 2 2.8 1.3zM15.5 4.5c1.5 0 2.5 1 2.5 2.2 0 1.3-1.3 2-2.8 1.3z"/></svg>',cal:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="16" rx="2.5"/><path d="M8 3v4M16 3v4M3.5 10h17M8 14h3"/></svg>',ticket:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8a2 2 0 0 0 2-2h12a2 2 0 0 1 2 2v1a2.5 2.5 0 0 0 0 5v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1a2.5 2.5 0 0 0 0-5z"/><path d="M14.5 7v9.5" stroke-dasharray="2.5 3"/></svg>',undo:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h11a5 5 0 0 1 0 10H9"/><path d="m8 5-4 4 4 4"/></svg>',gavel:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 6a3.5 3.5 0 0 1 5 5l-2 2-5-5zM8.5 10.5 3 16v5h5l5.5-5.5zM14 20h7M4 3l3 3"/></svg>',star:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 2.7 5.6 6.1.8-4.5 4.3 1.1 6.1L12 17l-5.4 2.8 1.1-6.1L3.2 9.4l6.1-.8z"/></svg>',bolt:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4.5 13.5H11L9.5 22 18 10.5h-6.5z"/></svg>'};
-const HKIND={reward:["Tarefa aprovada",HICON.check],welcome:["Bônus de boas-vindas",HICON.gift],event_join:["Entrada no evento",HICON.cal],reserve:["Reserva de número",HICON.ticket],refund:["Devolução do sorteio",HICON.undo],auction_bid:["Lance no leilão",HICON.gavel],auction_refund:["Devolução de leilão",HICON.undo],admin_credit:["Crédito do organizador",HICON.star],scratch:["Raspadinha diária",HICON.bolt]};
+const HKIND={reward:["Tarefa aprovada",HICON.check],welcome:["Bônus de boas-vindas",HICON.gift],event_join:["Entrada no evento",HICON.cal],reserve:["Reserva de número",HICON.ticket],refund:["Devolução do sorteio",HICON.undo],auction_bid:["Lance no leilão",HICON.gavel],auction_refund:["Devolução de leilão",HICON.undo],admin_credit:["Crédito do organizador",HICON.star],ad_reward:["Recompensa do anúncio",HICON.bolt],scratch:["Raspadinha diária",HICON.bolt]};
 const hPlus=k=>/reward|welcome|refund|credit/.test(k||"");
 function sparkSVG(pts){
  if(pts.length<2)return"";
@@ -3722,52 +3881,68 @@ function pfFields(){
  const a=profile?.address||{};
  return [["Nome",profile?.name&&profile.name.trim().length>=3],["Nascimento",profile?.birthDate],["Gênero",profile?.gender],["WhatsApp",profile?.whatsapp],["Pix",profile?.pixKey],["Rua",a.street],["Número",a.housenum],["Estado",a.state],["País",a.country]];
 }
-/* ---- FOTO DO PERFIL: inicial dourada (padrão) ou foto pública do e-mail (Gravatar, com aceite) ---- */
-let avatarOK=false,avatarURL=null;
+/* ---- FOTO DO PERFIL: personagens do próprio site ----
+     O participante escolhe um personagem navegando com as setas ‹ ›
+     (as opções não ficam expostas em uma lista). A escolha é salva no
+     perfil e aparece em TODOS os círculos de identificação: conta,
+     menu, perfil, bilhetes e no histórico de participações — inclusive
+     para os outros usuários. Os desenhos são emojis do próprio
+     navegador: nada é baixado da internet (economia de dados). */
+const CHARACTERS=[
+ ["raposa","🦊","#f59e0b"],["tigre","🐯","#f97316"],["leao","🦁","#eab308"],
+ ["panda","🐼","#22c55e"],["urso","🐻","#a16207"],["lobo","🐺","#64748b"],
+ ["gato","🐱","#8b5cf6"],["coelho","🐰","#f472b6"],["polvo","🐙","#06b6d4"],
+ ["robo","🤖","#3b82f6"],["fantasma","👻","#71717a"],["unicornio","🦄","#ec4899"],
+ ["dragao","🐲","#10b981"],["alien","👽","#84cc16"],["palhaco","🤡","#ef4444"],
+ ["macaco","🐵","#d97706"]
+];
+function charOf(mode){const k=(mode||"").replace(/^ch:/,"");return CHARACTERS.find(c=>c[0]===k)||null}
 function avatarInitial(){return (profile?.name||currentUser?.email||"U").trim().charAt(0).toUpperCase()}
-async function gravatarURL(email,size=128){
- try{
-  const d=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(String(email||"").trim().toLowerCase()));
-  const hex=[...new Uint8Array(d)].map(b=>b.toString(16).padStart(2,"0")).join("");
-  return "https://gravatar.com/avatar/"+hex+"?s="+size+"&d=404";
- }catch(e){return null}
+/* HTML do círculo de identificação: personagem escolhido ou inicial dourada */
+function avatarHTML(mode,ini){const c=charOf(mode);return c?'<span class="chv" style="background:'+c[2]+'2e">'+c[1]+'</span>':esc((ini||"U").toString().charAt(0).toUpperCase())}
+function myPhoto(){return profile?.photoMode||""}
+/* mapa uid → foto: alimenta a identificação nos históricos públicos
+   (var: precisa existir antes da hidratação do cache, mais acima) */
+var uidPhoto={};
+function mapPhotos(list){(list||[]).forEach(r=>{if(r?.uid&&r.photo)uidPhoto[r.uid]=r.photo})}
+function whoHTML(rec,ini){
+ /* o próprio usuário vê SEMPRE o personagem atual do perfil (foto ao vivo);
+   os outros veem a foto anexada no registro (ou a mais recente do mapa) */
+ const me=rec&&rec.uid&&currentUser&&rec.uid===currentUser.uid;
+ const p=me?myPhoto():((rec&&rec.photo)||(rec&&rec.uid&&uidPhoto[rec.uid])||"");
+ return '<span class="pava" aria-hidden="true">'+avatarHTML(p,ini||"?")+'</span>';
 }
 function paintAvatars(){
- const html=avatarOK&&avatarURL?'<img src="'+esc(avatarURL)+'" alt="Foto do perfil" referrerpolicy="no-referrer">':'';
- const a=$("ava");if(a)a.innerHTML=html||avatarInitial();
- const p=$("pf-ava");if(p)p.innerHTML=html||avatarInitial();
- const m=document.querySelector("#m-acct .ava");if(m)m.innerHTML=html||avatarInitial();
-}
-function loadAvatar(){
- if(profile?.photoMode!=="email"||!currentUser?.email){avatarOK=false;avatarURL=null;return paintAvatars()}
- avatarOK=false;avatarURL=null;paintAvatars();
- gravatarURL(currentUser.email,128).then(url=>{
-  if(!url||profile?.photoMode!=="email")return;
-  const img=new Image();
-  img.onload=()=>{if(profile?.photoMode!=="email")return;avatarURL=url;avatarOK=true;paintAvatars();const s=$("pf-ava-msg");if(s)s.textContent="✓ Foto carregada do Gravatar deste e-mail."};
-  img.onerror=()=>{avatarOK=false;avatarURL=null;paintAvatars();const s=$("pf-ava-msg");if(s)s.textContent="Não encontramos foto pública neste e-mail. Se você criar um avatar em gravatar.com com este e-mail, ela aparecerá aqui automaticamente."};
-  img.src=url;
- });
+ const h=avatarHTML(profile?.photoMode,avatarInitial());
+ const a=$("ava");if(a)a.innerHTML=h;
+ const p=$("pf-ava");if(p)p.innerHTML=h;
+ const m=document.querySelector("#m-acct .ava");if(m)m.innerHTML=h;
 }
 async function setPhotoMode(mode){
  if(!currentUser?.emailVerified)return toast("Verifique seu e-mail primeiro.");
- if(mode==="email"&&profile?.photoConsent!==true){
-  const ok=confirm('Usar a foto pública associada ao seu e-mail (Gravatar)?\n\n• A imagem é buscada do serviço Gravatar a partir do seu e-mail.\n• Nenhum dado extra seu é enviado — só o e-mail já usado na conta.\n• Você pode voltar para a inicial dourada quando quiser.\n\nAceita usar essa foto na plataforma?');
-  if(!ok)return toast("Sem problema — a inicial dourada continua sendo usada.");
- }
  try{
-  await updateDoc(doc(db,"users",currentUser.uid),{photoMode:mode,photoConsent:mode==="email",updatedAt:serverTimestamp()});
-  toast(mode==="email"?"Foto do e-mail ativada.":"Voltamos para a inicial dourada.");
-  loadAvatar();buildProfileHead();
+  await updateDoc(doc(db,"users",currentUser.uid),{photoMode:mode,photoConsent:false,updatedAt:serverTimestamp()});
+  profile={...(profile||{}),photoMode:mode};
+  /* trocou o personagem? o mapa público e todos os círculos atualizam na hora */
+  if(currentUser)uidPhoto[currentUser.uid]=mode;
+  const c=charOf(mode);
+  toast(c?"Personagem "+c[1]+" ativado ✓":"Foto alterada ✓");
+  paintAvatars();buildProfileHead();render();
  }catch(e){showError(e)}
 }
-/* foto do perfil: clique nas opções ou no próprio avatar (com aceite para a foto do e-mail) */
+/* trocar personagem: setas ‹ › (uma opção por vez, sem lista exposta) */
+function cyclePhoto(dir){
+ if(!currentUser?.emailVerified)return toast("Verifique seu e-mail primeiro.");
+ const cur=charOf(profile?.photoMode);const i=cur?CHARACTERS.indexOf(cur):-1;
+ const n=CHARACTERS[((i<0?0:i+dir)+CHARACTERS.length)%CHARACTERS.length];
+ setPhotoMode("ch:"+n[0]);
+}
 $("pf-head").addEventListener("click",e=>{
- const b=e.target.closest("[data-photo]");if(b)return setPhotoMode(b.dataset.photo);
- if(e.target.closest("#pf-ava"))return setPhotoMode(profile?.photoMode==="email"?"initial":"email");
+ const c=e.target.closest("[data-chchar]");if(c)return cyclePhoto(Number(c.dataset.chchar)||1);
+ if(e.target.closest("#pf-ava"))return cyclePhoto(1);
 });
 $("pf-head").addEventListener("keydown",e=>{
- if((e.key==="Enter"||e.key===" ")&&e.target.id==="pf-ava"){e.preventDefault();setPhotoMode(profile?.photoMode==="email"?"initial":"email")}
+ if((e.key==="Enter"||e.key===" ")&&e.target.id==="pf-ava"){e.preventDefault();cyclePhoto(1)}
 });
 function buildProfileHead(){
  const el=$("pf-head");if(!el||!currentUser)return;
@@ -3776,14 +3951,15 @@ function buildProfileHead(){
  const since=validDate(profile?.createdAt);
  const tOk=Object.values(claims).filter(c=>c?.status==="approved").length;
  el.innerHTML=`<div class="pf-card">
-  <div class="pf-top"><span class="pf-ava" id="pf-ava" role="button" tabindex="0" title="Toque para trocar a foto">${esc(ini)}</span><div><b>${esc(name||"Complete seu nome")}</b><small>${esc(currentUser.email||"")}</small><span class="tag ${currentUser.emailVerified?"g":"y"}" style="margin-top:6px">${currentUser.emailVerified?"E-mail verificado ✓":"Verificação pendente"}</span><div class="pf-id">ID ${esc(currentUser.uid.slice(0,8))}${since?" · desde "+since.toLocaleDateString("pt-BR"):""}</div></div></div>
+  <div class="pf-top"><span class="pf-ava" id="pf-ava" role="button" tabindex="0" title="Toque para trocar o personagem">${avatarHTML(profile?.photoMode,ini)}</span><div><b>${esc(name||"Complete seu nome")}</b><small>${esc(currentUser.email||"")}</small><span class="tag ${currentUser.emailVerified?"g":"y"}" style="margin-top:6px">${currentUser.emailVerified?"E-mail verificado ✓":"Verificação pendente"}</span><div class="pf-id">ID ${esc(currentUser.uid.slice(0,8))}${since?" · desde "+since.toLocaleDateString("pt-BR"):""}</div></div></div>
   <div class="pf-photo">
-   <span class="pf-st">Foto do perfil</span>
-   <div class="pf-ph-o">
-    <button type="button" data-photo="email" class="${profile?.photoMode==="email"?"on":""}">Foto do meu e-mail (Gravatar)</button>
-    <button type="button" data-photo="initial" class="${profile?.photoMode!=="email"?"on":""}">Inicial dourada</button>
+   <span class="pf-st">Personagem do perfil</span>
+   <div class="pf-char">
+    <button type="button" class="btn ghost sm" data-chchar="-1" aria-label="Personagem anterior">‹</button>
+    <span class="pf-char-cur">${avatarHTML(profile?.photoMode,ini)}</span>
+    <button type="button" class="btn ghost sm" data-chchar="1" aria-label="Próximo personagem">›</button>
    </div>
-   <small id="pf-ava-msg">${profile?.photoMode==="email"?(avatarOK?"✓ Foto carregada do Gravatar deste e-mail.":"Procurando foto pública neste e-mail…"):"A inicial dourada é a padrão e não revela nada. Ao escolher a foto do e-mail, você aceita que a imagem pública do seu e-mail (Gravatar) apareça na plataforma."}</small>
+   <small id="pf-ava-msg">Use as setas ‹ › para escolher seu personagem. Ele aparece em todos os círculos do seu perfil, nos seus bilhetes e no histórico de participações — para você e para os outros usuários.</small>
   </div>
   <div class="tk-cut" aria-hidden="true"></div>
   <div class="pf-stats"><div><b class="mono">${pointsOf(wallet).toLocaleString("pt-BR")}</b><small>Bilhetes</small></div><div><b class="mono">${myTickets.length}</b><small>Números</small></div><div><b class="mono">${tOk}</b><small>Tarefas</small></div><div><b class="mono">${myJoins.size}</b><small>Eventos</small></div></div>
@@ -3811,7 +3987,7 @@ $("pf-save").onclick=async()=>{
 };
 $("pf-showpw").onclick=()=>{const p=$("pf-reauth"),sh=p.type==="password";p.type=sh?"text":"password";$("pf-showpw").textContent=sh?"Ocultar":"Mostrar"};
 $("pf-forgot").onclick=()=>$("forgot-in-profile").click();
-$("pf-theme").onclick=()=>{$("theme").click();buildProfileHead()};
+/* (o botão de tema do cabeçalho foi removido; a troca fica no perfil) */
 $("pf-sup").onclick=()=>{closeSheet();openSupport()};
 $("pf-logout").onclick=()=>{closeSheet();signOut(auth).catch(showError)};
 
