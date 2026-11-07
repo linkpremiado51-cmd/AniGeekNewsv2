@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="pt-BR">
 <head>
@@ -366,6 +365,56 @@ footer p{margin-top:12px;max-width:80ch}
 .sup-head{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid var(--l)}
 .sup-head b{font-size:15px}
 .sup-frame{width:100%;height:min(72vh,620px);border:0;background:#fff}
+/* ═══ CENTRAL DE AJUDA · tela cheia no botão de suporte ═══ */
+/* trava total: 100% da janela, nada pode transbordar para os lados */
+#sup-modal{position:fixed;left:0;right:0;top:0;bottom:0;width:100%;max-width:100%;height:100%;max-height:100%;overflow:hidden;background:var(--bg);display:none;z-index:78}
+#sup-modal:not([hidden]){display:block}
+#sup-modal .hp-wrap{width:100%;height:100%;max-width:100%;display:grid;grid-template-rows:auto minmax(0,1fr);overflow:hidden}
+#sup-modal .hp-top{display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid var(--l);background:var(--p);min-width:0}
+.hp-ico{width:36px;height:36px;border-radius:10px;background:var(--as);border:1px solid var(--ac);display:grid;place-items:center;font-size:17px;flex:none}
+.hp-tt{flex:1;min-width:0}
+.hp-tt b{display:block;font-size:15px;line-height:1.2;overflow-wrap:anywhere}
+.hp-tt small{display:block;color:var(--mu);font-size:11px;min-width:0;white-space:normal;overflow-wrap:anywhere;line-height:1.4}
+.hp-main{width:100%;min-width:0;min-height:0;overflow-x:hidden;overflow-y:auto;padding:16px;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+.hp-inner{width:100%;min-width:0;max-width:720px;margin:0 auto;display:grid;gap:14px}
+.hp-inner .tabs{grid-template-columns:repeat(3,minmax(0,1fr))}
+.hp-inner .tabs button{padding:9px 4px;font-size:12px;white-space:normal;overflow:hidden;text-overflow:ellipsis}
+#hp-pane{min-width:0}
+#hp-pane .card{min-width:0}
+.hp-chips{display:flex;gap:8px;flex-wrap:wrap;min-width:0}
+.hp-chip{background:var(--p2);border:1px solid var(--l);border-radius:999px;padding:7px 13px;font-size:12px;font-weight:600;color:var(--mu);cursor:pointer;font-family:var(--sans);max-width:100%;overflow-wrap:anywhere}
+.hp-chip.on{background:var(--as);border-color:var(--ac);color:var(--acx)}
+.hp-tk{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--p2);border:1px solid var(--l);border-radius:12px;padding:12px 14px;cursor:pointer;text-align:left;width:100%;min-width:0;color:var(--ink)}
+.hp-tk:hover{border-color:var(--ac)}
+.hp-tk b{flex:1;min-width:120px;font-size:13.5px;overflow-wrap:anywhere}
+.hp-thread{display:grid;gap:10px;align-content:start;max-height:46vh;min-width:0;overflow-y:auto;overflow-x:hidden;border:1px dashed var(--l);border-radius:12px;background:var(--p2);padding:12px;-webkit-overflow-scrolling:touch}
+.hp-msg{max-width:85%;min-width:0;background:var(--p);border:1px solid var(--l);border-radius:12px;padding:10px 13px;font-size:13px;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word}
+.hp-msg small{display:block;color:var(--mu);font-size:10px;margin-top:4px;font-weight:600}
+.hp-msg.me{justify-self:end;background:var(--as);border-color:var(--ac)}
+.hp-msg.sys{justify-self:center;max-width:100%;background:none;border:1px dashed var(--l);color:var(--mu);font-size:11.5px;text-align:center}
+.tag.b{background:rgba(56,97,251,.15);color:#6f9bff}
+/* ---- área de trabalho da tarefa (aberta ao clicar no card modesto) ---- */
+html.ws-lock body{overflow:hidden}
+.ws-modal{position:fixed;inset:0;z-index:72;background:rgba(0,0,0,.72);display:grid;place-items:center;padding:16px}
+.ws-box{width:min(680px,100%);max-height:88vh;overflow-y:auto;background:var(--p);border:1px solid var(--l);border-radius:16px;box-shadow:var(--sh)}
+.ws-head{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--l);position:sticky;top:0;background:var(--p);z-index:2}
+.ws-title{display:flex;align-items:center;gap:10px;min-width:0}
+.ws-title b{font-size:15px;overflow-wrap:anywhere}
+.ws-ico{font-size:20px;line-height:1}
+.ws-body{padding:16px;display:grid;gap:12px}
+.ws-chips{display:flex;gap:7px;flex-wrap:wrap}
+.ws-kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px}
+.ws-kv>div{background:var(--p2);border:1px solid var(--l);border-radius:10px;padding:10px 12px}
+.ws-kv span{display:block;font-size:9.5px;color:var(--mu);text-transform:uppercase;letter-spacing:.6px;font-weight:700;margin-bottom:3px}
+.ws-kv b{font-size:14px;overflow-wrap:anywhere}
+.ws-h{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--mu);display:flex;align-items:center;gap:8px}
+.ws-h:after{content:"";flex:1;height:1px;background:var(--l)}
+.ws-steps{display:grid;gap:8px}
+.ws-step{display:flex;gap:10px;align-items:flex-start;background:var(--p2);border:1px solid var(--l);border-radius:10px;padding:10px 12px;font-size:13.5px;line-height:1.55}
+.ws-step i{flex:none;width:22px;height:22px;border-radius:50%;background:var(--as);border:1px solid var(--ac);color:var(--acx);display:grid;place-items:center;font:600 11px var(--mono);font-style:normal;margin-top:1px}
+/* card modesto de tarefa: clicável, abre a área de trabalho */
+.task.openable{cursor:pointer;transition:border-color .2s,background .2s}
+.task.openable:hover{border-color:var(--ac);background:var(--as)}
 /* ---- aviso "anunciar como colaborador" (cara de notificação) ---- */
 .colab-card{width:min(420px,calc(100vw - 32px));background:var(--p);border:1px solid var(--l);border-radius:16px;box-shadow:var(--sh);padding:14px;display:grid;gap:10px;animation:notein .3s ease}
 .colab-card p{font-size:13px;line-height:1.55}
@@ -425,6 +474,41 @@ html.gav-lock body{overflow:hidden}
 .gv-bar{position:absolute;top:0;left:0;height:3px;background:var(--ac);width:0;z-index:2}
 .gv-bar.run{animation:gvbar linear forwards}
 @keyframes gvbar{from{width:0}to{width:100%}}
+/* ═══ CENTRAL DO COLABORADOR · gaveta em TELA CHEIA p/ avaliar provas ═══ */
+.clg{grid-template-rows:auto auto auto minmax(0,1fr) auto}
+/* cinto + suspensório: abrir o container já sobe o painel (evita overlay invisível) */
+#claveta.open .gav{transform:translate3d(0,0,0)}
+.clv-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:0 18px 10px}
+.clv-stat{background:var(--p2);border:1px solid var(--l);border-radius:12px;padding:10px 12px;min-width:0}
+.clv-stat span{display:block;font-size:9.5px;color:var(--mu);text-transform:uppercase;letter-spacing:.6px;font-weight:700;margin-bottom:2px}
+.clv-stat b{font:600 20px var(--mono);color:var(--ink)}
+.clv-stat b.gold{color:var(--acx)}.clv-stat b.green{color:var(--g)}.clv-stat b.red{color:var(--rd)}
+.clv-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin:0 18px 12px;padding:3px;background:var(--p2);border:1px solid var(--l);border-radius:12px}
+.clv-tabs button{background:none;border:0;border-radius:9px;color:var(--mu);padding:8px 4px;font-weight:600;font-size:11px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.clv-tabs button.on{background:var(--ac);color:var(--on)}
+.clv-body{overflow-y:auto;padding:0 18px 18px;display:grid;gap:10px;align-content:start}
+#clv-tasksel{display:grid;gap:8px}
+#clv-list{display:grid;gap:10px}
+.clv-taskchip{display:flex;justify-content:space-between;align-items:center;gap:8px;background:var(--p2);border:1px solid var(--l);border-radius:10px;padding:9px 12px;font-size:12.5px;cursor:pointer;color:var(--ink);text-align:left;flex-wrap:wrap}
+.clv-taskchip:hover{border-color:var(--l2)}
+.clv-taskchip.on{border-color:var(--ac);background:var(--as)}
+.clv-taskchip b{font:600 12px var(--mono);white-space:nowrap}
+.clv-claim{background:var(--p);border:1px solid var(--l);border-radius:14px;padding:14px;display:grid;gap:10px}
+.clv-claim.wait{border-color:var(--ac)}
+.clv-claim.ok{border-color:color-mix(in srgb,var(--g) 40%,var(--l));background:linear-gradient(160deg,var(--gs),var(--p) 60%)}
+.clv-claim.no{border-color:color-mix(in srgb,var(--rd) 40%,var(--l))}
+.clv-who{display:flex;align-items:center;gap:10px;min-width:0}
+.clv-who .nm{min-width:0}
+.clv-who b{font-size:13.5px;overflow-wrap:anywhere}
+.clv-who small{display:block;color:var(--mu);font-size:10.5px;overflow-wrap:anywhere}
+.clv-proofs{display:grid;gap:6px}
+.clv-proof{background:var(--p2);border:1px dashed var(--l);border-radius:9px;padding:8px 10px;font-size:12.5px;overflow-wrap:anywhere;line-height:1.5}
+.clv-proof span{display:block;font-size:9px;color:var(--mu);text-transform:uppercase;letter-spacing:.5px;font-weight:700;margin-bottom:2px}
+.clv-act{display:flex;gap:8px;flex-wrap:wrap}
+.clv-note{font-size:11px;color:var(--mu);line-height:1.5}
+.clv-badge{background:var(--rd);color:#fff;border-radius:99px;font:600 10px var(--mono);padding:2px 7px;margin-left:6px;vertical-align:2px}
+#clv-teaser{padding:16px}
+#clv-teaser .clv-tbtn{display:flex;align-items:center;gap:12px;justify-content:space-between;flex-wrap:wrap}
 .wfloat:hover{transform:translateY(-2px);box-shadow:0 16px 32px rgba(0,0,0,.5),0 0 0 6px rgba(252,213,53,.22)}
 .wfloat:active{transform:scale(.95)}
 .wfloat .wbadge{position:absolute;top:-6px;right:-6px;background:var(--p);color:var(--acx);border:1px solid var(--ac);border-radius:99px;font:600 11.5px var(--mono);padding:3px 7px;box-shadow:0 4px 10px rgba(0,0,0,.35)}
@@ -1203,6 +1287,36 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
 .pfn-t small{font-size:10.5px;color:var(--mu);font-family:var(--mono)}
 /* ═══ CONFIRMAÇÃO PROFISSIONAL (substitui os confirms nativos do navegador) ═══ */
 #cf-modal .colab-card{width:min(440px,calc(100vw - 32px))}
+/* ---- formulário de tarefa do colaborador ---- */
+.cform-box{width:min(620px,100%);max-height:88vh;overflow-y:auto;background:var(--p);border:1px solid var(--l);border-radius:16px;box-shadow:var(--sh);padding:14px;display:grid;gap:12px}
+.cform-box .pnote{padding:6px 4px 8px;border-bottom:1px solid var(--l);border-radius:0}
+.cform-body{display:grid;gap:12px}
+.cform-mine{display:grid;gap:8px;margin-top:8px}
+.cform-item{border:1px solid var(--l);border-radius:12px;background:var(--p2);padding:12px;display:grid;gap:8px}
+.cform-item .cf-head{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.cform-item .cf-head b{font-size:13.5px;overflow-wrap:anywhere}
+/* wizard de 5 etapas do colaborador (mesmo estilo do painel) */
+.cf-steps{display:flex;gap:6px;flex-wrap:wrap}
+.cf-steps button{flex:1 1 auto;min-width:82px;border:1px solid var(--l);background:var(--p2);color:var(--mu);font:700 11px var(--sans);letter-spacing:.4px;padding:8px 6px;border-radius:9px;cursor:pointer;transition:.15s}
+.cf-steps button.on{background:var(--ink);color:var(--p);border-color:var(--ink)}
+.cf-steps button.done{border-color:var(--g);color:var(--g)}
+.cf-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cf-grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+@media(max-width:640px){.cf-grid3{grid-template-columns:1fr}}
+.cf-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin:4px 0 10px}
+.cf-card{border:1.5px solid var(--l);border-radius:12px;background:var(--p);padding:10px 12px;cursor:pointer;display:grid;gap:4px;text-align:left;transition:.15s;font:inherit;color:inherit}
+.cf-card:hover{border-color:var(--mu)}
+.cf-card.on{border-color:var(--acx);background:var(--p2);box-shadow:0 0 0 1px var(--acx) inset}
+.cf-card b{font-size:13px;line-height:1.3}
+.cf-card small{color:var(--mu);font-size:11px}
+.cf-card .cf-cico{font-size:20px}
+.cf-svcreward{font-weight:700;color:var(--g)}
+.cf-checks{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.cf-check{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--l);border-radius:999px;padding:6px 12px;background:var(--p2);font-size:12.5px;cursor:pointer}
+.cf-check input{margin:0}
+.cf-summary{border:1px solid var(--l);border-radius:12px;background:var(--p2);padding:12px;display:grid;gap:8px;font-size:13px}
+.cf-summary .kv{margin:0}
+.cf-fee{border:1px dashed var(--acx);border-radius:10px;padding:10px;display:grid;gap:4px;background:var(--p)}
 #cf-msg{font-size:13.5px;line-height:1.6;overflow-wrap:anywhere}
 /* ═══ AJUDA · central de dúvidas com visual sóbrio e profissional ═══ */
 .fq-head{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:18px 18px 10px;border-bottom:1px solid var(--l)}
@@ -1238,15 +1352,71 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
 .cta-cd{display:flex;flex-direction:column;background:var(--p2);border:1px solid var(--l);border-radius:12px;padding:10px 16px}
 .cta-cd span{font-size:10px;color:var(--mu);text-transform:uppercase;letter-spacing:.6px;font-weight:700}
 .cta-cd b{font:600 15px var(--mono);color:var(--g);margin-top:3px}
+/* ---- tela de carregamento "skeleton" prateada (shimmer) ---- */
+#bskel{position:fixed;inset:0;z-index:200;background:var(--bg);display:grid;grid-template-rows:auto 1fr;overflow:hidden;transition:opacity .45s ease,visibility 0s .45s}
+#bskel.gone{opacity:0;visibility:hidden}
+.bsk-top{padding:22px 20px 12px;display:grid;gap:10px;border-bottom:1px solid var(--l)}
+.bsk-row{display:flex;align-items:center;gap:10px}
+.bsk-brand{display:flex;align-items:center;gap:10px}
+.bsk-logo{width:32px;height:32px;border-radius:9px}
+.bsk-nav{display:flex;gap:8px;flex:1;justify-content:flex-end;flex-wrap:wrap}
+.bsk-pill{height:30px;border-radius:999px;width:84px}
+.bsk-w{max-width:1200px;width:100%;margin:0 auto;padding:26px 20px;display:grid;gap:18px}
+.bsk-hero{display:grid;grid-template-columns:1.1fr .9fr;gap:34px}
+.bsk-col{display:grid;gap:12px;align-content:start}
+.bsk-tagline{height:20px;border-radius:6px;width:56%}
+.bsk-line{height:16px;border-radius:6px}
+.bsk-line.w90{width:90%}.bsk-line.w75{width:75%}.bsk-line.w60{width:60%}.bsk-line.w45{width:45%}
+.bsk-cta{height:46px;border-radius:10px;width:190px;margin-top:6px}
+.bsk-count{display:flex;gap:26px;margin-top:8px}
+.bsk-num{height:44px;width:88px;border-radius:8px}
+.bsk-ticket{height:280px;border-radius:16px}
+.bsk-sec{height:20px;width:250px;border-radius:6px}
+.bsk-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
+.bsk-card{height:150px;border-radius:12px}
+.bsk{background:linear-gradient(100deg,#b9bdc4 30%,#e8eaee 50%,#b9bdc4 70%);background-size:200% 100%;animation:bskshine 1.3s linear infinite;border-radius:8px}
+[data-theme=dark] .bsk{background:linear-gradient(100deg,#2b3139 30%,#4a525c 50%,#2b3139 70%);background-size:200% 100%}
+@keyframes bskshine{from{background-position:200% 0}to{background-position:-200% 0}}
+.bsk-note{position:absolute;bottom:calc(14px + env(safe-area-inset-bottom));left:0;right:0;text-align:center;font:600 10.5px var(--mono);letter-spacing:1.6px;text-transform:uppercase;color:var(--mu)}
+@media(max-width:900px){.bsk-hero{grid-template-columns:1fr}.bsk-ticket{height:200px}.bsk-nav{display:none}}
 </style>
 
 </head>
 <body>
 
+<!-- TELA DE CARREGAMENTO (skeleton prateado): aparece enquanto o
+     Firebase carrega sorteios, eventos, prêmios e carteira -->
+<div id="bskel" aria-hidden="true">
+ <div class="bsk-top">
+  <div class="bsk-row">
+   <div class="bsk-brand"><div class="bsk bsk-logo"></div><div class="bsk bsk-line w45" style="height:14px"></div></div>
+   <div class="bsk-nav"><div class="bsk bsk-pill"></div><div class="bsk bsk-pill"></div><div class="bsk bsk-pill"></div><div class="bsk bsk-pill"></div></div>
+  </div>
+ </div>
+ <div class="bsk-w">
+  <div class="bsk-hero">
+   <div class="bsk-col">
+    <div class="bsk bsk-tagline"></div>
+    <div class="bsk bsk-line w90"></div>
+    <div class="bsk bsk-line w75"></div>
+    <div class="bsk bsk-line w60"></div>
+    <div class="bsk bsk-cta"></div>
+    <div class="bsk-count"><div class="bsk bsk-num"></div><div class="bsk bsk-num"></div><div class="bsk bsk-num"></div></div>
+   </div>
+   <div class="bsk-col"><div class="bsk bsk-ticket"></div></div>
+  </div>
+  <div class="bsk bsk-sec"></div>
+  <div class="bsk-cards">
+   <div class="bsk bsk-card"></div><div class="bsk bsk-card"></div><div class="bsk bsk-card"></div><div class="bsk bsk-card"></div>
+  </div>
+ </div>
+ <div class="bsk-note">Carregando o Yshippcommerce…</div>
+</div>
+
 <header class="top" id="top"><div class="wrap bar">
  <a class="brand" href="#top" aria-label="Yshippcommerce — início"><span class="mark">Y</span><span class="brand-t">Yshippcommerce<small>um grupo Yellowishipp</small></span></a>
  <nav class="nav" id="nav" aria-label="Seções principais">
-  <a href="#premios">Prêmios</a><a href="#sorteios">Sorteios</a><a href="#eventos">Eventos</a><a href="#leiloes">Leilões</a><a href="#resultado">Resultado</a><a href="#regras">Ajuda</a>
+  <a href="#premios">Prêmios</a><a href="#sorteios">Sorteios</a><a href="#eventos">Eventos</a><a href="#leiloes">Leilões</a><a href="#resultado">Resultado</a><a href="#cofre">Cofre Real</a><a href="#regras">Ajuda</a>
  </nav>
  <div class="acct" id="acct" hidden>
   <button class="acct-b" id="acct-btn" aria-haspopup="menu" aria-expanded="false"><span class="ava" id="ava">U</span><span class="acct-n" id="acct-n">Conta</span><span class="acct-caret">▾</span></button>
@@ -1541,13 +1711,21 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
 </section>
 
 <section id="ofertas">
- <div class="sec-head"><div class="sec-row"><h2>Ofertas</h2><div class="ev-nav"><button class="ib sm" id="ofprev" aria-label="Oferta anterior">‹</button><button class="ib sm" id="ofnext" aria-label="Próxima oferta">›</button></div></div><p>Ofertas avulsas, sempre disponíveis. Cada aprovação credita bilhetes na sua carteira.</p></div>
+ <div class="sec-head"><div class="sec-row"><h2>Ofertas Yshippcommerce</h2><div class="ev-nav"><button class="ib sm" id="ofprev" aria-label="Oferta anterior">‹</button><button class="ib sm" id="ofnext" aria-label="Próxima oferta">›</button></div></div><p>Ofertas oficiais do Yshippcommerce, sempre disponíveis. Cada aprovação credita bilhetes na sua carteira.</p></div>
  <div class="tabs" id="offtabs" style="max-width:360px;margin-bottom:14px"><button data-v="active" class="on">Ativas</button><button data-v="future">Futuras</button></div>
  <div class="evs" id="offs"></div>
+</section>
+
+<!-- OFERTAS DOS COLABORADORES · tarefas enviadas por parceiros, selo 🤝 -->
+<section id="ofertas-colab">
+ <div class="sec-head"><div class="sec-row"><h2>Ofertas dos colaboradores</h2><div class="ev-nav"><button class="ib sm" id="ofcprev" aria-label="Oferta anterior">‹</button><button class="ib sm" id="ofcnext" aria-label="Próxima oferta">›</button></div></div><p>Ofertas de empresas, lojas e prestadores parceiros — identificadas pelo carimbo <b>🤝 Colaborador</b>. Todas passam pela revisão da equipe e pagam bilhetes igual às ofertas oficiais.</p></div>
+ <div class="tabs" id="offtabs2" style="max-width:360px;margin-bottom:14px"><button data-v="active" class="on">Ativas</button><button data-v="future">Futuras</button></div>
+ <div class="evs" id="offs-colab"></div>
  <div class="cbox" style="margin-top:22px;display:flex;gap:14px;align-items:center;flex-wrap:wrap">
-  <div style="flex:1 1 300px;min-width:0"><b>🏢 Tem um negócio, produto ou serviço?</b><p class="hint" style="margin-top:4px">Vire colaborador do Yshippcommerce e publique suas próprias ofertas aqui nesta seção — de graça. O organizador aprova e o seu negócio aparece para todos os participantes com o selo 🤝 Parceiro.</p></div>
+  <div style="flex:1 1 300px;min-width:0"><b>🏢 Tem um negócio, produto ou serviço?</b><p class="hint" style="margin-top:4px">Vire colaborador e publique suas ofertas aqui nesta seção com o carimbo 🤝. O formulário guiado tem 5 etapas e a <b>taxa de 30% é calculada sobre o total pago aos participantes</b> (recompensa × vagas) — você só paga na etapa <b>Pagamento</b>. Se a oferta for negada, a taxa volta para a sua carteira. Todas as taxas alimentam o <b>🏆 Cofre Real</b> (sorteio mensal).</p></div>
   <button class="btn" type="button" data-collab="1">Anunciar como colaborador →</button>
  </div>
+ <div class="card" id="clv-teaser" hidden style="margin-top:14px"></div>
 </section>
 
 <!-- ════════════════════════════════════════════════════════════
@@ -1578,6 +1756,40 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
  <div class="sec-head"><div class="sec-row"><h2>Resultado oficial</h2><span class="tag" id="res-tag">Pendente</span></div><p id="res-sub"></p></div>
  <div class="tabs tabs3" id="rtabs" style="max-width:360px;margin-bottom:14px"><button data-v="running" class="on">Em andamento</button><button data-v="winners">Ganhadores</button><button data-v="ended">Encerrados</button></div>
  <div class="card tbl" id="res"></div>
+</section>
+
+<!-- ═══ COFRE REAL · sorteio mensal das taxas de publicação ═══ -->
+<section id="cofre">
+ <div class="sec-head"><div class="sec-row"><h2>🏆 Cofre Real</h2><span class="tag y" id="cfre-tag">Sorteio mensal</span></div><p>Todas as <b>taxas de publicação (30%)</b> pagas pelos colaboradores do Yshippcommerce entram aqui. Todo fim do mês o cofre é sorteado: <b>escolha um número de 1 a 1000</b> e, se for o sorteado, o valor é seu. Se ninguém acertar, <b>acumula para o mês seguinte</b>.</p></div>
+ <div class="evs" id="cfre-cards">
+  <div class="card evc" style="border-color:var(--ac);background:linear-gradient(150deg,var(--as),var(--p) 75%)">
+   <div class="tk-nlab" style="display:block">💰 Valor acumulado no cofre</div>
+   <b class="mono" style="font-size:clamp(28px,4vw,36px);color:var(--acx)" id="cfre-pot">—</b>
+   <small class="hint">bilhetes somados pelas taxas de publicação</small>
+  </div>
+  <div class="card evc">
+   <div class="tk-nlab" style="display:block">📅 Mês em disputa</div>
+   <b style="font-size:18px" id="cfre-month">—</b>
+   <small class="hint" id="cfre-count">—</small>
+  </div>
+  <div class="card evc">
+   <div class="tk-nlab" style="display:block">🍀 Seu número da sorte</div>
+   <b class="mono" style="font-size:26px;color:var(--acx)" id="cfre-mine">—</b>
+   <small class="hint">1 a 1000 · grátis · troque até o sorteio</small>
+  </div>
+ </div>
+ <div class="card" id="cfre-pick-card" style="margin-top:14px">
+  <div class="ws-h">Escolha seu número da sorte</div>
+  <p class="hint">Um número por participante, grátis. Você pode trocar quantas vezes quiser até o sorteio do mês.</p>
+  <div class="actions" style="margin:0">
+   <input id="cfre-num" type="number" min="1" max="1000" step="1" placeholder="1 a 1000" style="max-width:140px" inputmode="numeric">
+   <button class="btn" type="button" id="cfre-pick">Confirmar número 🍀</button>
+  </div>
+ </div>
+ <div class="card" style="margin-top:14px">
+  <div class="ws-h">Sorteios anteriores</div>
+  <div id="cfre-draws"><p class="hint">O primeiro sorteio acontece no fim deste mês. Boa sorte!</p></div>
+ </div>
 </section>
 
 <!-- ═══ CTA FINAL · efeito de recência: a última coisa antes do FAQ é lembrada
@@ -1700,7 +1912,7 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
    <ol>
     <li><b>1. O que é a plataforma.</b> O Yshippcommerce é um site de sorteios gratuitos mantido por um organizador independente. Toda a participação — criar conta, fazer tarefas, reservar números e dar lances — é <b>100% gratuita</b>. Não há cobrança, depósito ou compra de bilhetes em nenhum momento. Bilhetes não são dinheiro, não podem ser comprados, vendidos, trocados nem transferidos entre contas.</li>
     <li><b>2. Uma conta por pessoa.</b> Cada pessoa pode manter apenas UMA conta, com nome verdadeiro e e-mail próprio. São proibidos contas duplicadas, e-mails descartáveis para multiplicar prêmios, contas em nome de terceiros e o uso de automatizações (bots, scripts) para tarefas. A conta é pessoal e intransferível; nunca compartilhe sua senha — a equipe nunca a pedirá.</li>
-    <li><b>3. Tarefas e provas.</b> As tarefas (seguir perfis, instalar apps, assistir vídeos etc.) são realizadas em serviços de terceiros. Ao concluir, você envia um comprovante (texto, link, código, nome ou e-mail), conforme o detalhe indicado no card da tarefa. Envie apenas o que for pedido: <b>jamais envie senhas, documentos completos, dados bancários ou fotos sensíveis</b>. Provas falsas, editadas ou repetidas podem reprovar a solicitação, zerar os bilhetes da tarefa e suspender a conta.</li>
+    <li><b>3. Tarefas e provas.</b> As tarefas (seguir perfis, instalar apps, assistir vídeos etc.) são realizadas em serviços de terceiros. Ao clicar no card da tarefa você abre a <b>área de trabalho</b>, com a categoria, a dificuldade, as etapas da missão e o valor em bilhetes. Ao concluir, você envia o comprovante pela própria área de trabalho (texto, código, print, gravação de tela ou data e hora, conforme a tarefa exigir — algumas pedem mais de uma prova). Envie apenas o que for pedido: <b>jamais envie senhas, documentos completos, dados bancários ou fotos sensíveis</b>. Provas falsas, editadas ou repetidas podem reprovar a solicitação, zerar os bilhetes da tarefa e suspender a conta.</li>
     <li><b>4. Sorteios, leilões e bilhetes.</b> Cada sorteio tem números, custo em bilhetes e prêmios próprios, exibidos no site antes de você participar. Números reservados ficam visíveis no seu bilhete oficial; ao publicar o resultado, os bilhetes dos números não ganhados são <b>devolvidos automaticamente</b> para a sua carteira. Nos leilões, os lances são em bilhetes; se a meta não for atingida até o fim do prazo, <b>todos os lances são devolvidos</b>. A apuração usa sorteio automático entre os números reservados, com resultado publicado na página.</li>
     <li><b>6. Prêmios e entrega.</b> Os prêmios anunciados nos sorteios e leilões são entregues pelo organizador ao ganhador confirmado. Para receber, o perfil deve estar completo: <b>nome completo, data de nascimento, endereço e chave Pix</b> (para prêmios em dinheiro) ou endereço de entrega (para prêmios físicos). A entrega é combinada por e-mail ou WhatsApp cadastrados. O organizador pode solicitar confirmação de identidade antes de entregar prêmios de alto valor — os dados são usados só para isso e depois mantidos em sigilo.</li>
     <li><b>7. Seus dados — o que coletamos e por quê.</b> Coletamos: e-mail e senha (acesso), nome, nascimento, gênero, WhatsApp, chave Pix e endereço (conferir tarefas e entregar prêmios), histórico de tarefas, reservas, lances e carteira (operar a plataforma e evitar fraudes). Sua foto de perfil é um personagem do próprio site, escolhido por você na tela do perfil — não usamos nem consultamos serviços externos de foto (Gravatar, DiceBear ou similares), e nenhuma imagem sua é enviada para a internet.</li>
@@ -1712,7 +1924,8 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
     <li><b>13. Links e serviços de terceiros.</b> Tarefas, capas e anúncios apontam para serviços de terceiros, com termos próprios. Esta promoção <b>não é patrocinada, associada nem administrada pelo Facebook, Google, Meta ou qualquer outro serviço</b> citado em tarefas e anúncios.</li>
     <li><b>14. Menores de idade.</b> A plataforma é destinada a maiores de 18 anos. Menores só participam com conhecimento e autorização expressa do responsável legal, que responde pela participação.</li>
     <li><b>15. Mudanças nos termos.</b> Estes termos podem ser atualizados para refletir melhorias ou exigências legais; a versão vigente fica sempre nesta página e mudanças relevantes são avisadas por notificação no site.</li>
-    <li><b>16. Colaboradores e ofertas de parceiros.</b> Empresas, lojas e prestadores podem se cadastrar como <b>colaboradores</b> pelo suporte da plataforma e publicar ofertas, identificadas com o selo <b>🤝 Parceiro</b>. Ofertas de colaboradores passam pela aprovação do organizador antes de aparecer no site e seguem as mesmas regras desta plataforma (gratuitas para o participante, recompensa em bilhetes, comprovante obrigatório quando exigido). O colaborador é responsável pela veracidade, legalidade e funcionamento da sua oferta, produto ou serviço; o organizador pode recusar, pausar ou remover qualquer oferta de colaborador.</li>
+    <li><b>16. Colaboradores e ofertas de parceiros.</b> Empresas, lojas e prestadores podem se cadastrar como <b>colaboradores</b> e enviar tarefas direto pelo <b>formulário guiado de 5 etapas</b> (“Anunciar como colaborador”: Serviço → Missão → Prova → Resumo → Pagamento), sem precisar falar com o suporte. <b>O envio não é de graça:</b> ao publicar, o colaborador paga uma <b>taxa de 30% sobre o valor total pago aos participantes</b> (recompensa por participante × número de vagas), cobrada fora desse valor total e descontada da sua carteira na etapa Pagamento; se a oferta for negada, a taxa é devolvida. As ofertas enviadas passam pela revisão da equipe: se algo estiver faltando, o colaborador recebe um comentário para editar; se for negada, recebe o motivo e pode recorrer. Ofertas aprovadas são publicadas na seção <b>Ofertas dos colaboradores</b> com o carimbo <b>🤝 Colaborador</b> (ofertas oficiais do Yshippcommerce ficam na seção <b>Ofertas Yshippcommerce</b> e levam o carimbo verde da plataforma) e o valor em bilhetes definido pela equipe, e seguem as mesmas regras desta plataforma (gratuitas para o participante, recompensa em bilhetes, comprovante obrigatório quando exigido). Cada tarefa tem um <b>ID</b> que aparece no card e pode ser copiado para melhor identificação. O colaborador é responsável pela veracidade, legalidade e funcionamento da sua oferta, produto ou serviço; o organizador pode recusar, pausar ou remover qualquer oferta de colaborador. Depois de publicada, <b>a inspeção das provas é feita pelo próprio colaborador</b> na <b>Central do colaborador</b> (aberta pelo menu “Avaliar provas” ou pelo resumo da seção Ofertas dos colaboradores): ele aprova (os bilhetes caem na carteira do participante na hora), pede correção ou nega cada comprovante com motivo. Se o participante desconfiar de <b>má-fé na avaliação</b>, pode <b>levar o caso ao suporte com o ID da tarefa</b> direto da área de trabalho da tarefa — a equipe audita o caso e pode reverter a decisão e creditar os bilhetes.</li>
+    <li><b>17. Cofre Real — sorteio mensal das taxas.</b> Todas as taxas de publicação pagas pelos colaboradores são somadas no <b>🏆 Cofre Real</b>. Este sorteio está <b>sempre ativo</b>: para participar, cada participante escolhe <b>um número de 1 a 1000</b> (grátis, um número por pessoa por mês, alterável até o sorteio). No fim de cada mês, um número é sorteado: quem tiver o número sorteado leva o valor acumulado do cofre (dividido igualmente, caso mais de uma pessoa tenha o mesmo número) e o cofre reinicia; <b>se ninguém acertar, o valor acumula para o mês seguinte</b>. O prêmio é creditado em bilhetes na carteira dos ganhadores e o resultado fica no histórico da seção Cofre Real. Participar é gratuito e não exige bilhetes.</li>
     <li><b>17. Anúncios patrocinados e recompensa por espera.</b> O botão "Anúncio" abre uma gaveta com conteúdo publicitário definido pelo organizador. Mantendo o anúncio aberto durante a contagem regressiva, você recebe os bilhetes indicados, creditados direto na carteira. A recompensa é paga <b>uma vez por anúncio</b> (cada anúncio é identificado pela data de atualização definida no painel). Fechar antes do fim da contagem cancela a recompensa. Fraudes (automatizações, manipulação do relógio, contas duplicadas) anulam os bilhetes e suspendem a conta.</li>
     <li><b>17. Dúvidas e contato.</b> Qualquer dúvida sobre estes termos, sobre seus dados ou sobre um resultado pode ser enviada pela tela de Suporte 🎧. Responderemos pelo e-mail ou WhatsApp cadastrados na sua conta.</li>
    </ol>
@@ -1728,11 +1941,26 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
  </div>
 </div>
 
-<!-- ═══ SUPORTE AO CLIENTE (aberto pelo menu lateral, código configurado no painel administrativo) ═══ -->
-<div class="sup-modal" id="sup-modal" hidden>
- <div class="sup-box" role="dialog" aria-label="Suporte ao cliente">
-  <div class="sup-head"><b><span class="icn" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13a8 8 0 0 1 16 0"/><rect x="3" y="13" width="4" height="6" rx="2"/><rect x="17" y="13" width="4" height="6" rx="2"/><path d="M19 19a4 4 0 0 1-4 2h-2"/></svg></span> Suporte ao cliente</b><button class="ib sm" id="sup-close" aria-label="Fechar suporte">✕</button></div>
-  <iframe id="sup-frame" class="sup-frame" title="Suporte ao cliente" sandbox="allow-scripts allow-forms allow-popups allow-modals"></iframe>
+<!-- ═══ CENTRAL DE AJUDA · tela cheia, nativa e inteligente (identifica o usuário logado) ═══ -->
+<div id="sup-modal" hidden>
+ <div class="hp-wrap" role="dialog" aria-modal="true" aria-label="Central de Ajuda">
+  <div class="hp-top">
+   <span class="hp-ico" aria-hidden="true">🎧</span>
+   <div class="hp-tt"><b>Central de Ajuda</b><small id="hp-who">Yshippcommerce · atendimento</small></div>
+   <button class="ib" id="sup-close" aria-label="Fechar Central de Ajuda">✕</button>
+  </div>
+  <div class="hp-main" id="hp-main"><div class="hp-inner" id="hp-inner"><p class="hint">Carregando…</p></div></div>
+ </div>
+</div>
+
+<!-- ÁREA DE TRABALHO DA TAREFA (aberta ao clicar no card modesto) -->
+<div class="ws-modal" id="ws" hidden>
+ <div class="ws-box" role="dialog" aria-label="Área de trabalho">
+  <div class="ws-head">
+   <div class="ws-title"><span class="ws-ico" id="ws-ico" aria-hidden="true">🎯</span><b id="ws-title">Área de trabalho</b></div>
+   <button class="ib sm" id="ws-close" aria-label="Fechar área de trabalho">✕</button>
+  </div>
+  <div class="ws-body" id="ws-body"></div>
  </div>
 </div>
 
@@ -1798,12 +2026,134 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
    <div class="nbody"><b>Anunciar como colaborador</b><small>Yshippcommerce · parceria</small></div>
    <button class="nclose" type="button" data-colab-close aria-label="Fechar aviso">✕</button>
   </div>
-  <p>Divulgue seu negócio, produto ou serviço para todos os participantes da plataforma — <b>de graça</b> — e conquiste o selo <b>🤝 Parceiro</b>, que identifica ofertas aprovadas e de confiança.</p>
-  <p class="hint">Todo o processo é feito pelo nosso <b>suporte</b>, do início ao fim: cadastro, regras e aprovação. A equipe explica cada passo e acompanha com você até a oferta entrar no ar.</p>
-  <p class="hint"><b>Deseja abrir o suporte agora para começar a trabalhar conosco ou prefere deixar para depois?</b></p>
+  <p>Divulgue seu negócio, produto ou serviço para todos os participantes da plataforma e conquiste o carimbo <b>🤝 Colaborador</b>, que identifica ofertas aprovadas e de confiança na seção <b>Ofertas dos colaboradores</b>.</p>
+  <p class="hint">O processo é direto: preencha o <b>formulário guiado de 5 etapas</b> (Serviço → Missão → Prova → Resumo → Pagamento), igual ao que a equipe usa. A <b>taxa é de 30% sobre o valor total pago aos participantes</b> (recompensa × vagas) e aparece só na etapa Pagamento — se a tarefa for <b>negada</b>, a taxa é <b>devolvida</b>. A equipe revisa: se estiver tudo certo, ela é publicada; se faltar algo, você recebe um comentário para editar — e, se for negada, sempre pode <b>recorrer</b>.</p>
+  <p class="hint">💡 Todas as taxas somam no <b>🏆 Cofre Real</b>, sorteado todo fim do mês entre os participantes.</p>
+  <p class="hint"><b>Quer abrir o formulário agora ou prefere deixar para depois?</b></p>
   <div class="cs-act" style="margin:0">
-   <button class="btn" type="button" id="colab-go">Falar com o suporte agora</button>
+   <button class="btn" type="button" id="colab-go">Abrir formulário de tarefa</button>
    <button class="btn ghost" type="button" data-colab-close>Deixar para depois</button>
+  </div>
+ </div>
+</div>
+
+<!-- ═══ DISPUTA · levar o caso ao suporte com o ID da tarefa ═══ -->
+<div class="sup-modal" id="disp-modal" hidden>
+ <div class="colab-card" role="dialog" aria-modal="true" aria-label="Levar o caso ao suporte">
+  <div class="pnote">
+   <span class="nico">🛡️</span>
+   <div class="nbody"><b>Levar o caso ao suporte</b><small>Yshippcommerce · auditoria da equipe</small></div>
+   <button class="nclose" type="button" id="disp-close" aria-label="Fechar">✕</button>
+  </div>
+  <p>Descreva a sua suspeita de <b>má-fé na avaliação</b> (prova ignorada, correção impossível de satisfazer, negação injusta…). O caso chega à equipe <b>com o ID da tarefa</b>, o nome do colaborador e as provas que você anexou — a equipe audita e pode <b>reverter a decisão e creditar os bilhetes</b>.</p>
+  <p class="hint" id="disp-info"></p>
+  <div class="field"><label class="label">O que aconteceu? (mínimo 10 caracteres)</label><textarea id="disp-reason" maxlength="800" placeholder="Ex.: Enviei o print correto duas vezes e a prova foi negada sem motivo…"></textarea></div>
+  <div class="cs-act" style="margin:0">
+   <button class="btn" type="button" id="disp-send">Enviar caso ao suporte 🛡️</button>
+   <button class="btn ghost" type="button" id="disp-cancel">Cancelar</button>
+  </div>
+ </div>
+</div>
+
+<!-- FORMULÁRIO GUIADO DE TAREFA DO COLABORADOR (4 etapas, igual ao painel) -->
+<div class="sup-modal" id="cform-modal" hidden>
+ <div class="cform-box" role="dialog" aria-modal="true" aria-label="Publicar tarefa de colaborador">
+  <div class="pnote">
+   <span class="nico">🤝</span>
+   <div class="nbody"><b id="cform-title">Publicar tarefa de colaborador</b><small>Yshippcommerce · revisão da equipe</small></div>
+   <button class="nclose" type="button" id="cform-close" aria-label="Fechar formulário">✕</button>
+  </div>
+  <div class="cform-body">
+   <p class="hint">Formulário guiado em <b>5 etapas</b> — igual ao que a equipe usa: Serviço → Missão → Prova → Resumo → Pagamento. Sua tarefa vai para <b>revisão</b> e, se aprovada, é publicada na seção <b>Ofertas dos colaboradores</b> com o carimbo 🤝. A <b>taxa de publicação (30% do valor total pago aos participantes)</b> aparece só na etapa <b>Pagamento</b> — e é devolvida se a equipe negar.</p>
+   <div class="cf-steps" id="cf-steps">
+    <button type="button" class="on" data-goto="1">1 · Serviço</button>
+    <button type="button" data-goto="2">2 · Missão</button>
+    <button type="button" data-goto="3">3 · Prova</button>
+    <button type="button" data-goto="4">4 · Resumo</button>
+    <button type="button" data-goto="5">5 · Pagamento</button>
+   </div>
+
+   <!-- ETAPA 1 · SERVIÇO -->
+   <div id="cf-p1">
+    <div class="ws-h">Categoria do serviço *</div>
+    <div class="cf-cards" id="cf-cats"></div>
+    <div class="ws-h" id="cf-svcs-h" hidden>Serviço / tarefa *</div>
+    <div class="cf-cards" id="cf-svcs"></div>
+    <div class="field"><label class="label">Nome da tarefa *</label><input id="cf-name" maxlength="90" placeholder="Ex.: Seguir nosso perfil no Instagram e curtir 2 posts"></div>
+    <div class="cf-grid3">
+     <div class="field"><label class="label">Recompensa em bilhetes (por participante) *</label><input id="cf-reward" type="number" min="1" step="1"></div>
+     <div class="field"><label class="label">Tipo de bilhete</label><select id="cf-type"><option value="common">Comum (1)</option><option value="gold">Dourado (10)</option><option value="vip">VIP (20)</option></select></div>
+     <div class="field"><label class="label">Vagas (participantes) *</label><input id="cf-vagas" type="number" min="1" step="1" value="10"></div>
+    </div>
+    <p class="hint" id="cf-diff-line">Dificuldade: <b id="cf-diff">—</b> <small>(vem do serviço escolhido; a equipe confirma na revisão)</small></p>
+   </div>
+
+   <!-- ETAPA 2 · MISSÃO -->
+   <div id="cf-p2" hidden>
+    <div class="field"><label class="label">Missão: o que o participante deve fazer (descrição) *</label><textarea id="cf-desc" placeholder="Ex.: Siga @seunegocio, curta as 2 últimas publicações e comente de verdade na mais recente."></textarea></div>
+    <div class="field"><label class="label">Etapas da missão (uma por linha) *</label><textarea id="cf-steps-in" rows="5" placeholder="Acesse o link&#10;Siga o perfil&#10;Curta as 2 últimas publicações"></textarea></div>
+    <div class="field"><label class="label">Link da tarefa</label><input id="cf-link" placeholder="https://… (perfil, página, loja, vídeo…)"></div>
+   </div>
+
+   <!-- ETAPA 3 · PROVA -->
+   <div id="cf-p3" hidden>
+    <p class="hint">Quais comprovantes o participante deve enviar? Marque o que a sua tarefa exige — dificuldades intermediária/avançada pedem <b>pelo menos 2 tipos</b>.</p>
+    <div class="cf-checks">
+     <label class="cf-check"><input type="checkbox" id="cf-pt" checked><span>📝 Texto</span></label>
+     <label class="cf-check"><input type="checkbox" id="cf-pc"><span>🔑 Código / cupom</span></label>
+     <label class="cf-check"><input type="checkbox" id="cf-pi" checked><span>🖼 Print (link da imagem)</span></label>
+     <label class="cf-check"><input type="checkbox" id="cf-pv"><span>🎬 Gravação de tela (link)</span></label>
+     <label class="cf-check"><input type="checkbox" id="cf-pd"><span>🕒 Data e hora</span></label>
+    </div>
+    <div class="field"><label class="label">Mínimo de provas para aprovar</label><select id="cf-min"><option value="1">1 prova</option><option value="2">2 provas</option><option value="3">3 provas</option><option value="4">4 provas</option></select></div>
+    <div class="field"><label class="label">Detalhes da prova: explique como o participante deve comprovar *</label><textarea id="cf-proof" placeholder="Ex.: print do perfil seguido com o @ aparecendo e link direto da imagem."></textarea></div>
+   </div>
+
+   <!-- ETAPA 4 · RESUMO -->
+   <div id="cf-p4" hidden>
+    <div class="cf-summary" id="cf-summary"></div>
+    <div class="field" id="cf-note-wrap"><label class="label">Mensagem para a equipe (opcional — use ao recorrer ou corrigir)</label><textarea id="cf-note" placeholder="Alguma observação sobre a sua tarefa?"></textarea></div>
+   </div>
+
+   <!-- ETAPA 5 · PAGAMENTO -->
+   <div id="cf-p5" hidden>
+    <div class="cf-fee">
+     <div class="ws-h">💰 Pagamento da publicação</div>
+     <div id="cf-pay"></div>
+    </div>
+    <p class="hint">A taxa vai para o <b>🏆 Cofre Real</b> — todo fim do mês o total acumulado é sorteado entre os participantes (número de 1 a 1000). Se a sua tarefa for negada, a taxa é <b>devolvida</b> para a sua carteira.</p>
+   </div>
+
+   <div class="actions" style="margin:0">
+    <button class="btn ghost" type="button" id="cf-prev" hidden>← Voltar</button>
+    <button class="btn" type="button" id="cf-next">Continuar →</button>
+    <button class="btn" type="button" id="cf-save" hidden>Enviar para revisão 🤝</button>
+    <button class="btn ghost" type="button" id="cform-cancel">Cancelar</button>
+   </div>
+   <div>
+    <div class="ws-h">Minhas tarefas enviadas</div>
+    <div id="cform-mine" class="cform-mine"></div>
+   </div>
+  </div>
+ </div>
+</div>
+
+<!-- ═══ CENTRAL DO COLABORADOR · gaveta em TELA CHEIA p/ avaliar as provas ═══ -->
+<div class="gaveta" id="claveta" role="dialog" aria-modal="true" aria-label="Central do colaborador">
+ <div class="gav clg" id="clav">
+  <div class="gv-top">
+   <span class="gv-ico" aria-hidden="true">🤝</span>
+   <div><b>Central do colaborador</b><small>INSPEÇÃO DAS PROVAS · SUAS TAREFAS PUBLICADAS</small></div>
+   <button class="ib sm" type="button" id="clv-x" aria-label="Fechar central">✕</button>
+  </div>
+  <div class="clv-stats" id="clv-stats"></div>
+  <div class="clv-tabs" id="clv-tabs"></div>
+  <div class="clv-body">
+   <div id="clv-tasksel"></div>
+   <div id="clv-list"></div>
+  </div>
+  <div class="gv-foot">
+   <span class="gv-note">✅ Aprovar credita os bilhetes na carteira do participante na hora · ✏️ Pedir correção devolve a prova para ele reenviar · 🚫 Negar registra o motivo — e o participante pode levar o caso ao suporte com o ID da tarefa (a equipe audita).</span>
   </div>
  </div>
 </div>
@@ -1856,6 +2206,7 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
      <a class="mi" href="#bilhete"><span class="mic"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8a2 2 0 0 0 2-2h12a2 2 0 0 1 2 2v1a2.5 2.5 0 0 0 0 5v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1a2.5 2.5 0 0 0 0-5z"/><path d="M14.5 7v9.5" stroke-dasharray="2.5 3"/></svg></span></span><span><b>Meus bilhetes</b><small>Seus números e situação</small></span></a>
      <a class="mi" href="#participar"><span class="mic"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 15c-1.5-1.5-2-3.5-2-5.5L12 2l9 7.5c0 2-.5 4-2 5.5-2.5 2.5-6.5 3-9 1-2.5 2-6.5 1.5-9-1z"/></svg></span></span><span><b>Participar agora</b><small>Passo a passo guiado</small></span></a>
      <button class="mi" type="button" data-collab="1"><span class="mic"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6M9 10h.01M15 10h.01"/></svg></span></span><span><b>Anunciar como colaborador</b><small>Publique ofertas do seu negócio</small></span></button>
+     <button class="mi" type="button" data-clv="1"><span class="mic"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></span></span><span><b>Central do colaborador<span class="clv-badge" id="clv-menu-badge" hidden>0</span></b><small>· avalie provas inspecione e pague</small></span></button>
     </div>
     <div class="mgrp"><span class="mgl">Acompanhar e ajuda</span>
      <a class="mi" href="#resultado"><span class="mic"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4h10v4a5 5 0 0 1-10 0zM9 20h6M12 13v7M17 5h3.5a3.5 3.5 0 0 1-3.5 7M7 5H3.5A3.5 3.5 0 0 0 7 12"/></svg></span></span><span><b>Resultado oficial</b><small>Ganhadores e disputas</small></span></a>
@@ -1956,7 +2307,7 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
 import { getAuth, GoogleAuthProvider, FacebookAuthProvider, EmailAuthProvider, reauthenticateWithCredential, signInWithPopup, linkWithPopup, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, sendPasswordResetEmail, signOut, onAuthStateChanged, reload, unlink } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
-import { getFirestore, initializeFirestore, persistentLocalCache, persistentMultipleTabManager, Timestamp, doc, getDoc, getDocs, setDoc, updateDoc, deleteDoc, collection, query, where, orderBy, limit, onSnapshot, runTransaction, serverTimestamp, writeBatch, increment, arrayRemove } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+import { getFirestore, initializeFirestore, persistentLocalCache, persistentMultipleTabManager, Timestamp, doc, getDoc, getDocs, setDoc, updateDoc, deleteDoc, addDoc, collection, query, where, orderBy, limit, onSnapshot, runTransaction, serverTimestamp, writeBatch, increment, arrayRemove } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
 const firebaseConfig = {
  apiKey:"AIzaSyCuF38ke5IytK2K6hZO3Xq4HmBeMo9lEEQ",
@@ -2004,6 +2355,7 @@ function ckHydrate(){
   let any=false;
   if(Array.isArray(c.resv)){resvAll=ckRev(c.resv);applyResv();mapPhotos(resvAll);feedReady=true;any=true}
   if(c.settings){settings=ckRev(c.settings)||{};types=settings.ticketTypes&&Object.keys(settings.ticketTypes).length?settings.ticketTypes:CAT_DEFAULT;cfgReady=true;any=true}
+  if(c.catalog&&Array.isArray(c.catalog.categories)&&c.catalog.categories.length){catalog=ckRev(c.catalog)||catalog;any=true}
   if(Array.isArray(c.draws)){draws=ckRev(c.draws);applyDraw();renderPrizes();any=true}
   if(Array.isArray(c.events)){events=ckRev(c.events);renderEvents();any=true}
   if(Array.isArray(c.tasks)){tasks=ckRev(c.tasks);watchClaims();any=true}
@@ -2037,6 +2389,21 @@ const pad=(n,w)=>String(n).padStart(w||3,"0");
 let currentUser=null,profile=null,wallet=null,busy=false,editProfile=false,nameDirty=false;
 let draw=null,drawId="",TOTAL=150,START=new Date(0),END=new Date(864e13),COST=1;
 let draws=[],events=[],tasks=[],links=[],settings={},types=CAT_DEFAULT;
+
+/* TELA DE CARREGAMENTO (skeleton prateado): some apenas quando TODOS os
+   dados essenciais chegaram do Firebase. Com o cache do navegador, as
+   visitas seguintes carregam quase na hora e o skeleton vai embora num
+   piscar de olhos. Prazo de segurança: 15s (mesmo se algo falhar). */
+let bskHid=false;
+const bskFlags={auth:false,catalog:false,platform:false,draws:false,events:false,tasks:false,links:false,auctions:false,bids:false,covers:false,feed:false};
+const bskReady=()=>Object.values(bskFlags).every(Boolean);
+function hideSkeleton(){
+ if(bskHid)return;bskHid=true;
+ const el=document.getElementById("bskel");
+ if(el){el.classList.add("gone");setTimeout(()=>el.remove(),600)}
+}
+function bskMark(k){if(bskHid)return;bskFlags[k]=true;if(bskReady())hideSkeleton()}
+setTimeout(hideSkeleton,15000);
 let auctions=[],bidsArr=[],aucView="active",myJoins=new Set(),history=[],covers=[];
 let myTickets=[],tkFilter="active",selDrawId="";
 let taken=new Set(),feedItems=[],claims={},unC={},unW=null,unU=null,unH=null,unJ=null,unN=null;
@@ -2740,12 +3107,16 @@ const canReserveCount=()=>Math.floor(pointsOf(wallet)/COST);
 /* ============================================================
    11 · SESSÃO DO USUÁRIO (perfil + carteira em tempo real)
    ============================================================ */
-function stop(){if(unU)unU();if(unW)unW();if(unH)unH();if(unJ)unJ();if(unT)unT();if(unN)unN();unU=unW=unH=unJ=unT=unN=null;Object.values(unC).forEach(f=>f());unC={};claims={};history=[];myJoins=new Set();myTickets=[]}
+function stop(){try{clvStop()}catch(e){}if(unU)unU();if(unW)unW();if(unH)unH();if(unJ)unJ();if(unT)unT();if(unN)unN();if(unCof)unCof();unU=unW=unH=unJ=unT=unN=unCof=null;Object.values(unC).forEach(f=>f());unC={};claims={};history=[];myJoins=new Set();myTickets=[]}
 async function boot(user){
+ bskMark("auth");
  const s=++session;
  stop();
  currentUser=user;profile=null;wallet=null;armed=0;editProfile=false;nameDirty=false;
  watchNotes();
+ watchCollab(user?.uid);
+ watchCofreMy(user?.uid);
+ try{watchCollabReview()}catch(e){console.error("Central do colaborador:",e)}
  if(!user||!user.emailVerified){render();return}
  const uRef=doc(db,"users",user.uid);
  /* ═══ 1º DE TUDO: dados do perfil — o ouvinte em tempo real começa
@@ -2778,7 +3149,9 @@ async function boot(user){
   unH=onSnapshot(query(collection(db,"wallets",user.uid,"history"),orderBy("createdAt","desc"),limit(60)),x=>{if(s!==session)return;history=x.docs.map(d=>({id:d.id,...d.data()}));render()},e=>console.error("Histórico:",e));
   unJ=onSnapshot(query(collection(db,"eventJoins"),where("uid","==",user.uid)),x=>{if(s!==session)return;myJoins=new Set(x.docs.map(d=>d.data().eventId).filter(Boolean));render()},e=>console.error("Eventos confirmados:",e));
   /* bilhetes reais do usuário (todas as reservas, de todos os sorteios) */
-  unT=onSnapshot(query(collection(db,"reservations"),where("uid","==",user.uid),orderBy("createdAt","desc"),limit(200)),x=>{if(s!==session)return;myTickets=x.docs.map(d=>({id:d.id,...d.data()}));render()},e=>console.error("Bilhetes:",e));
+  /* sem orderBy: where+orderBy exigiria índice composto no Firestore (gerava
+     failed-precondition) — ordena no cliente, mesmo resultado, sem índice */
+  unT=onSnapshot(query(collection(db,"reservations"),where("uid","==",user.uid),limit(200)),x=>{if(s!==session)return;myTickets=x.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(stampMs(b.createdAt)||0)-(stampMs(a.createdAt)||0));render()},e=>console.error("Bilhetes:",e));
   watchClaims();
  }catch(e){if(s===session)showError(e)}
  render();
@@ -2798,12 +3171,13 @@ function watchClaims(){
    12 · FEED AO VIVO DE RESERVAS
    ============================================================ */
 onSnapshot(query(collection(db,"reservations"),orderBy("createdAt","desc"),limit(200)),snap=>{
+ bskMark("feed");
  resvAll=snap.docs.map(d=>({id:d.id,...d.data()}));
  applyResv();
  mapPhotos(resvAll);
  ckSave({resv:resvAll});
  feedReady=true;render();
-},e=>{console.error("Feed:",e);$("feed").innerHTML='<p class="foot">Não foi possível carregar as participações.</p>'});
+},e=>{console.error("Feed:",e);bskMark("feed");$("feed").innerHTML='<p class="foot">Não foi possível carregar as participações.</p>'});
 
 let feedView="all";
 function renderFeed(){
@@ -2853,10 +3227,76 @@ function applyDraw(){
  COST=Math.max(1,Math.floor(Number(draw?.ticketCost))||1);
  applyResv();
 }
+/* ============================================================
+   CATÁLOGO DE TAREFAS (categorias e serviços definidos no painel
+   administrativo · settings/taskCatalog). O mesmo documento alimenta
+   o formulário guiado do painel e os cards do site.
+   ============================================================ */
+const TASK_CATS_LEGACY={social:"Rede social",signup:"Cadastro",survey:"Pesquisa / enquete",video:"Vídeo",app:"App / jogo",purchase:"Compra / cashback",referral:"Indicação",content:"Criar conteúdo",other:"Oferta"};
+/* catálogo padrão do site = MESMO catálogo do painel (categories + services).
+   Se a equipe editar o catálogo no painel, o site usa a versão salva em
+   settings/taskCatalog automaticamente (ouvido em tempo real abaixo). */
+const SITE_CATALOG_DEFAULT={categories:[
+{id:"signup",label:"Inscrições e cadastros",icon:"📝",services:[
+ {id:"email_only",label:"Somente envio de e-mail",reward:15,difficulty:"simple",ticketType:"common"},
+ {id:"signup_simple",label:"Cadastro simples",reward:15,difficulty:"simple",ticketType:"common"},
+ {id:"signup_complex",label:"Inscrição complexa",reward:30,difficulty:"medium",ticketType:"common"}]},
+{id:"facebook",label:"Facebook",icon:"👍",services:[
+ {id:"fb_like_post",label:"Dar curtida em uma publicação",reward:2,difficulty:"simple",ticketType:"common"},
+ {id:"fb_like_10",label:"Curtir 10 postagens",reward:20,difficulty:"simple",ticketType:"common"},
+ {id:"fb_like_page",label:"Curtir uma página",reward:5,difficulty:"simple",ticketType:"common"},
+ {id:"fb_share_feed",label:"Compartilhar publicação no Feed",reward:20,difficulty:"simple",ticketType:"common"},
+ {id:"fb_share_groups",label:"Compartilhar em grupos relacionados",reward:25,difficulty:"medium",ticketType:"common"},
+ {id:"fb_add_friend",label:"Adicionar como amigo",reward:2,difficulty:"simple",ticketType:"common"},
+ {id:"fb_join_group",label:"Entrar em um grupo",reward:1,difficulty:"simple",ticketType:"common"},
+ {id:"fb_react_emoji",label:"Reagir com emoji específico",reward:1,difficulty:"simple",ticketType:"common"},
+ {id:"fb_wall_post",label:"Publicar no Mural",reward:250,difficulty:"medium",ticketType:"common"},
+ {id:"fb_like_comment_wall",label:"Curtir + comentar + publicar no Mural",reward:30,difficulty:"medium",ticketType:"common"},
+ {id:"fb_invite_friends",label:"Convidar amigos para curtir uma página",reward:50,difficulty:"simple",ticketType:"common"}]},
+{id:"instagram",label:"Instagram",icon:"📸",services:[
+ {id:"ig_follow",label:"Seguir um perfil",reward:1,difficulty:"simple",ticketType:"common"},
+ {id:"ig_like",label:"Curtir publicação",reward:1,difficulty:"simple",ticketType:"common"},
+ {id:"ig_comment",label:"Fazer um comentário",reward:3,difficulty:"simple",ticketType:"common"},
+ {id:"ig_pack",label:"Seguir + curtir + comentar",reward:35,difficulty:"medium",ticketType:"gold"}]},
+{id:"apps",label:"Aplicativos Mobile",icon:"📲",services:[
+ {id:"app_download",label:"Somente download",reward:20,difficulty:"simple",ticketType:"common"},
+ {id:"app_full",label:"Baixar + instalar + testar + avaliação",reward:40,difficulty:"medium",ticketType:"common"}]},
+{id:"telegram",label:"Telegram",icon:"✈️",services:[
+ {id:"tg_bot",label:"Entrar em um bot",reward:4,difficulty:"simple",ticketType:"common"},
+ {id:"tg_airdrop",label:"Airdrop simples",reward:8,difficulty:"medium",ticketType:"common"}]},
+{id:"tiktok",label:"TikTok",icon:"🎵",services:[
+ {id:"tt_pack",label:"Assistir + curtir + comentar + compartilhar",reward:10,difficulty:"medium",ticketType:"common"}]},
+{id:"youtube",label:"YouTube",icon:"▶️",services:[
+ {id:"yt_watch6",label:"Assistir a um vídeo de 6 minutos",reward:5,difficulty:"simple",ticketType:"gold"},
+ {id:"yt_subscribe",label:"Inscrever-se no canal",reward:5,difficulty:"simple",ticketType:"common"}]},
+{id:"seo",label:"SEO e divulgação na internet",icon:"🔍",services:[
+ {id:"seo_once",label:"SEO + promover conteúdo + engajar uma vez",reward:2,difficulty:"simple",ticketType:"common"},
+ {id:"seo_five",label:"SEO + promover conteúdo + 5 tarefas extensas",reward:10,difficulty:"medium",ticketType:"common"}]}
+]};
+let catalog=SITE_CATALOG_DEFAULT;
+const catOfS=id=>(catalog.categories||[]).find(c=>c.id===id);
+const catLabelS=id=>{const c=catOfS(id);return c?c.label:(TASK_CATS_LEGACY[id]||"Oferta")};
+const catIcoS=id=>(catOfS(id)?.icon)||"🎯";
+const DIFFS_SITE={simple:{dot:"🟢",label:"Simples"},medium:{dot:"🟡",label:"Intermediário"},hard:{dot:"🔴",label:"Avançado"}};
+const diffOfS=t=>{const k=String(t?.difficulty||"").toLowerCase();if(DIFFS_SITE[k])return DIFFS_SITE[k];if(k.includes("méd")||k.includes("med")||k.includes("inter"))return DIFFS_SITE.medium;if(k.includes("dif"))return DIFFS_SITE.hard;return null};
+const PROOF_REQ_SITE={text:"📝 Texto",code:"🔑 Código / cupom",image:"🖼 Print (link da imagem)",video:"🎬 Gravação de tela (link)",datetime:"🕒 Data e hora"};
+/* vagas restantes: nunca maior que o total cadastrado (corrige exibições tipo "400 de 200") */
+const stockOf=t=>{
+ if(!(Number(t?.stock)>0))return null;
+ const total=Math.max(0,Math.floor(Number(t.stock)));
+ const left=Number.isFinite(Number(t.stockLeft))?Math.floor(Number(t.stockLeft)):total;
+ return Math.max(0,Math.min(total,left));
+};
+
 /* pinta a página com o cache salvo no navegador antes de ouvir o Firestore:
    a 2ª visita abre instantânea, mesmo com internet lenta */
 if(ckHydrate()){try{render()}catch(e){}}
-onSnapshot(doc(db,"settings","platform"),s=>{
+onSnapshot(doc(db,"settings","taskCatalog"),s=>{bskMark("catalog");
+ const d=s.exists()?s.data():null;
+ if(d&&Array.isArray(d.categories)&&d.categories.length){catalog=d;ckSave({catalog:d})}
+ render();
+},e=>{console.error("Catálogo:",e);bskMark("catalog")});
+onSnapshot(doc(db,"settings","platform"),s=>{bskMark("platform");
  settings=s.exists()?s.data():{};
  ckSave({settings});
  types=settings.ticketTypes&&Object.keys(settings.ticketTypes).length?settings.ticketTypes:CAT_DEFAULT;
@@ -2868,14 +3308,14 @@ onSnapshot(doc(db,"settings","platform"),s=>{
  collectFaq();
  if(settings.institutionalText)document.querySelector("footer p").textContent=settings.institutionalText;
  render();
-},e=>{console.error("Configurações:",e)});
-onSnapshot(collection(db,"draws"),s=>{draws=s.docs.map(d=>({id:d.id,...d.data()}));ckSave({draws});applyDraw();renderPrizes();render();updateTabBadges()},e=>console.error("Sorteios:",e));
-onSnapshot(collection(db,"events"),s=>{events=s.docs.map(d=>({id:d.id,...d.data()}));ckSave({events});renderEvents();renderPrizes();render()},e=>console.error("Eventos:",e));
-onSnapshot(collection(db,"tasks"),s=>{tasks=s.docs.map(d=>({id:d.id,...d.data()}));ckSave({tasks});watchClaims();renderEvents();render()},e=>console.error("Tarefas:",e));
-onSnapshot(collection(db,"eventTasks"),s=>{links=s.docs.map(d=>({id:d.id,...d.data()}));ckSave({links});renderEvents()},e=>console.error("Vínculos:",e));
-onSnapshot(collection(db,"auctions"),s=>{auctions=s.docs.map(d=>({id:d.id,...d.data()}));ckSave({auctions});renderAuctions();renderFeed();renderResult();updateTabBadges()},e=>console.error("Leilões:",e));
-onSnapshot(query(collection(db,"bids"),limit(500)),s=>{bidsArr=s.docs.map(d=>({id:d.id,...d.data()}));mapPhotos(bidsArr);ckSave({bids:bidsArr});renderAuctions();renderFeed();renderResult();renderTicker()},e=>console.error("Lances:",e));
-onSnapshot(collection(db,"covers"),s=>{covers=s.docs.map(d=>({id:d.id,...d.data()})).filter(c=>c&&Array.isArray(c.images)&&c.images.some(Boolean));ckSave({covers});renderCovers()},e=>console.error("Capas:",e));
+},e=>{console.error("Configurações:",e);bskMark("platform")});
+onSnapshot(collection(db,"draws"),s=>{bskMark("draws");draws=s.docs.map(d=>({id:d.id,...d.data()}));ckSave({draws});applyDraw();renderPrizes();render();updateTabBadges()},e=>{console.error("Sorteios:",e);bskMark("draws")});
+onSnapshot(collection(db,"events"),s=>{bskMark("events");events=s.docs.map(d=>({id:d.id,...d.data()}));ckSave({events});renderEvents();renderPrizes();render()},e=>{console.error("Eventos:",e);bskMark("events")});
+onSnapshot(collection(db,"tasks"),s=>{bskMark("tasks");tasks=s.docs.map(d=>({id:d.id,...d.data()}));ckSave({tasks});watchClaims();try{watchCollabReview()}catch(e){}renderEvents();render()},e=>{console.error("Tarefas:",e);bskMark("tasks")});
+onSnapshot(collection(db,"eventTasks"),s=>{bskMark("links");links=s.docs.map(d=>({id:d.id,...d.data()}));ckSave({links});renderEvents()},e=>{console.error("Vínculos:",e);bskMark("links")});
+onSnapshot(collection(db,"auctions"),s=>{bskMark("auctions");auctions=s.docs.map(d=>({id:d.id,...d.data()}));ckSave({auctions});renderAuctions();renderFeed();renderResult();updateTabBadges()},e=>{console.error("Leilões:",e);bskMark("auctions")});
+onSnapshot(query(collection(db,"bids"),limit(500)),s=>{bskMark("bids");bidsArr=s.docs.map(d=>({id:d.id,...d.data()}));mapPhotos(bidsArr);ckSave({bids:bidsArr});renderAuctions();renderFeed();renderResult();renderTicker()},e=>{console.error("Lances:",e);bskMark("bids")});
+onSnapshot(collection(db,"covers"),s=>{bskMark("covers");covers=s.docs.map(d=>({id:d.id,...d.data()})).filter(c=>c&&Array.isArray(c.images)&&c.images.some(Boolean));ckSave({covers});renderCovers()},e=>{console.error("Capas:",e);bskMark("covers")});
 getDoc(doc(db,"settings","platform")).then(()=>{cfgReady=true;render()}).catch(()=>{cfgReady=true;render()});
 
 /* ============================================================
@@ -2885,8 +3325,7 @@ const tasksOfEvent=eid=>{
  const byLink=links.filter(l=>l.eventId===eid).map(l=>l.taskId);
  return tasks.filter(t=>t.eventId===eid||byLink.includes(t.id));
 };
-/* categorias das ofertas (definidas no painel) */
-const TASK_CATS={social:"Rede social",signup:"Cadastro",survey:"Pesquisa / enquete",video:"Vídeo",app:"App / jogo",purchase:"Compra / cashback",referral:"Indicação",content:"Criar conteúdo",other:"Oferta"};
+/* categorias das ofertas: agora vêm do catálogo do painel (settings/taskCatalog) */
 const offerSort=(a,b)=>((b.featured===true)-(a.featured===true))||((Number(b.priority)||0)-(Number(a.priority)||0));
 /* tarefa vira Oferta quando: marcada no painel (showInOffers) OU sem evento e sem vínculo */
 const generalTasks=()=>tasks.filter(t=>t.showInOffers===true||(!t.eventId&&!links.some(l=>l.taskId===t.id)&&t.showInOffers!==false)).sort(offerSort);
@@ -2899,10 +3338,81 @@ $("cnext").onclick=()=>slide($("how"),1);
 $("ofprev").onclick=()=>slide($("offs"),-1);
 $("ofnext").onclick=()=>slide($("offs"),1);
 function taskCard(t){
- const c=claims[t.id],st=c?.status,rd=Math.max(1,Math.floor(Number(t.reward))||1),ty=t.ticketType||"common",pt=t.proofType||"text";
- const left=t.stock>0?(Number.isFinite(Number(t.stockLeft))?Math.floor(Number(t.stockLeft)):Number(t.stock)):null;
+ /* card modesto: categoria + tarefa, dificuldade, prova exigida e valor em
+    bilhetes. Ao clicar, abre a "área de trabalho" com todas as informações */
+ const c=claims[t.id],st=c?.status,rd=Math.max(1,Math.floor(Number(t.reward))||1),ty=t.ticketType||"common";
+ const left=stockOf(t);
  const soldOut=left!==null&&left<=0;
- const proofInput=t.requiresProof===false?"":`<div class="proof-menu">
+ const d=diffOfS(t);
+ const pr=t.proofReq||null;
+ const prN=pr?Object.keys(pr).filter(k=>pr[k]).length:0;
+ const minP=prN?Math.max(1,Math.floor(Number(t.minProofs)||1)):0;
+ return `<div class="task openable" style="margin-top:10px" data-ws-open="${esc(t.id)}" role="button" tabindex="0">
+  <div class="task-head"><h4>${esc(catIcoS(t.category))} ${esc(t.serviceLabel||t.name)}</h4>${d?`<span class="tag">${d.dot}</span>`:""}</div>
+  <div class="actions" style="margin:0 0 4px;gap:6px">
+   <span class="tag g">${esc(catLabelS(t.category))}</span>
+   ${d?`<span class="tag y">${esc(d.label)}</span>`:""}
+   <span class="tk-stamp ${t.source==="collab"?"y":"g"}" style="align-self:center">${t.source==="collab"?"🤝 Colaborador":"Yshippcommerce"}</span>
+   ${t.featured===true?'<span class="tag y">★ Destaque</span>':""}
+   ${t.badge?`<span class="tag y">${esc(t.badge)}</span>`:""}
+  </div>
+  ${t.description?`<p>${esc(t.description)}</p>`:""}
+  <div class="kv"><span>Valor</span><b>+${rd} ${esc(catLabel(ty))}</b></div>
+  <div class="kv"><span>ID da tarefa</span><b class="mono" style="display:inline-flex;gap:6px;align-items:center">${esc(t.id)}<button class="btn sm ghost" type="button" data-copy="${esc(t.id)}">Copiar</button></b></div>
+  ${prN?`<div class="kv"><span>Prova exigida</span><b>📎 ${minP>1?minP+" provas mínimas":"comprovante"}</b></div>`:""}
+  ${left!==null?`<div class="kv"><span>Vagas restantes</span><b>${soldOut?'<span class="tag r">Esgotadas</span>':left+" de "+t.stock}</b></div>`:""}
+  <div class="actions" style="margin:0">
+   ${soldOut?'<span class="tag r">Oferta esgotada</span>':st==="approved"?'<span class="tag g">✓ Aprovada</span>':st==="pending"?'<span class="tag y">⏳ Em análise</span>':st==="changes"?'<span class="tag y">✏️ Correção pedida</span>':st==="rejected"?'<span class="tag r">Rejeitada</span>':""}
+   <button class="btn sm wide" type="button">Abrir área de trabalho →</button>
+  </div>
+ </div>`;
+}
+
+/* ============================================================
+   ÁREA DE TRABALHO DA TAREFA · tela aberta ao clicar no card:
+   todas as informações (categoria, tarefa, etapas, prova, valor)
+   e o envio do comprovante acontecem aqui dentro
+   ============================================================ */
+let wsTaskId=null;
+function closeWorkspace(){
+ $("ws").hidden=true;
+ wsTaskId=null;
+ document.documentElement.classList.remove("ws-lock");
+ $("ws-body").innerHTML="";
+}
+function openWorkspace(id){
+ const t=tasks.find(x=>x.id===id);
+ if(!t)return;
+ wsTaskId=id;
+ const c=claims[t.id],st=c?.status;
+ const rd=Math.max(1,Math.floor(Number(t.reward))||1),ty=t.ticketType||"common",pt=t.proofType||"text";
+ const d=diffOfS(t);
+ const left=stockOf(t);
+ const soldOut=left!==null&&left<=0;
+ const pr=t.proofReq||null;
+ const prOn=pr?Object.keys(pr).filter(k=>pr[k]):[];
+ const minP=prOn.length?Math.max(1,Math.floor(Number(t.minProofs)||1)):0;
+ const steps=Array.isArray(t.steps)?t.steps.map(s=>String(s||"").trim()).filter(Boolean):[];
+ const pdDefault=pt==="name"?"Seu nome completo do perfil é enviado automaticamente como comprovante — mantenha-o igual ao nome usado no cadastro da oferta."
+  :pt==="email"?"Use o mesmo e-mail no cadastro da oferta; o organizador confere se ele bate com o comprovante."
+  :pt==="code"?"Conclua a oferta, copie o código/cupom exibido e cole no campo “Código” da prova."
+  :"Descreva o que você fez ou anexe o print (link da imagem) e a gravação de tela com o link direto.";
+ /* formulário de prova: novo (proofReq do painel) ou legado */
+ let proofForm="";
+ if(prOn.length){
+  proofForm=`<div class="proof-menu">
+  <button type="button" class="pm-head" data-proof-toggle="${esc(t.id)}" aria-expanded="false"><span>📎 Anexar prova — ${minP>1?"envie pelo menos "+minP+" provas":"preencha os campos exigidos"}</span><span class="pm-caret" aria-hidden="true">▾</span></button>
+  <div class="pm-body" hidden>
+   <p class="pm-sub">Tipos exigidos por esta tarefa: ${prOn.map(k=>esc(PROOF_REQ_SITE[k]||k)).join(" · ")}.</p>
+   ${pr.text?`<div class="field"><label class="label">Texto da prova</label><input data-proof-text="${esc(t.id)}" placeholder="Descreva o que você fez"></div>`:""}
+   ${pr.code?`<div class="field"><label class="label">Código / cupom usado</label><input data-proof-code="${esc(t.id)}" placeholder="Ex.: ABC123"></div>`:""}
+   ${pr.image?`<div class="field"><label class="label">Print (link da imagem)</label><input data-proof-image="${esc(t.id)}" placeholder="https://… link direto do print"></div>`:""}
+   ${pr.video?`<div class="field"><label class="label">Gravação de tela (link)</label><input data-proof-video="${esc(t.id)}" placeholder="https://… link do vídeo da tela"></div>`:""}
+   ${pr.datetime?`<div class="field"><label class="label">Data e hora em que executou a tarefa</label><input type="datetime-local" data-proof-when="${esc(t.id)}"></div>`:""}
+  </div>
+ </div>`;
+ }else if(t.requiresProof!==false){
+  proofForm=`<div class="proof-menu">
   <button type="button" class="pm-head" data-proof-toggle="${esc(t.id)}" aria-expanded="false"><span>📎 Prova da oferta — anexar comprovante</span><span class="pm-caret" aria-hidden="true">▾</span></button>
   <div class="pm-body" hidden>
    ${pt==="name"
@@ -2914,32 +3424,69 @@ function taskCard(t){
     <div class="field"><label class="label">Gravação de tela (link)</label><input data-proof-video="${esc(t.id)}" placeholder="https://… link do vídeo da tela"></div>`}
   </div>
  </div>`;
- const pdDefault=pt==="name"?"Seu nome completo do perfil é enviado automaticamente como comprovante — mantenha-o igual ao nome usado no cadastro da oferta."
-  :pt==="email"?"Use o mesmo e-mail no cadastro da oferta; o organizador confere se ele bate com o comprovante."
-  :pt==="code"?"Conclua a oferta, copie o código/cupom exibido e cole no campo “Código” da prova."
-  :"Descreva o que você fez ou anexe o print (link da imagem) e a gravação da tela com o link direto.";
- /* "Detalhes da prova exigida": vale para TODAS as tarefas — de parceiros
-    (texto definido no painel) e do próprio Yshippcommerce (texto padrão) */
- const proofDetailBox=t.requiresProof===false?"":`<div class="proof-detail"><span class="pd-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><path d="M12 3l7 3v6c0 4.4-3 7.6-7 9-4-1.4-7-4.6-7-9V6z"/></svg></span><div><span class="pd-t">Detalhes da prova exigida</span><small>${esc(t.proofDetails||pdDefault)}</small></div></div>`;
- return `<div class="task" style="margin-top:10px">
-  <div class="task-head"><h4>${esc(t.name)}</h4><span class="tag">${t.difficulty?esc(t.difficulty):""}</span></div>
-  <div class="actions" style="margin:0 0 4px;gap:6px">${t.source==="collab"?`<span class="tag y">🤝 Parceiro${t.ownerName?" · "+esc(t.ownerName):""}</span>`:""}${t.featured===true?'<span class="tag y">★ Destaque</span>':""}${t.category&&TASK_CATS[t.category]?`<span class="tag g">${esc(TASK_CATS[t.category])}</span>`:""}${t.badge?`<span class="tag y">${esc(t.badge)}</span>`:""}</div>
-  ${t.description?`<p>${esc(t.description)}</p>`:""}
-  ${t.rules?`<p class="hint">${esc(t.rules)}</p>`:""}
-  <div class="kv"><span>Recompensa</span><b>+${rd} ${esc(catLabel(ty))}</b></div>
-  ${left!==null?`<div class="kv"><span>Vagas restantes</span><b>${soldOut?'<span class="tag r">Esgotadas</span>':left+" de "+t.stock}</b></div>`:""}
-  ${t.endAt?`<div class="kv"><span>Termina em</span><b>${fmt(t.endAt)}</b></div>`:""}
-  ${t.coupon?`<div class="coupon"><span class="tag y">Cupom</span><code>${esc(t.coupon)}</code><button class="btn sm ghost" data-copy="${esc(t.coupon)}">Copiar</button></div>`:""}
-  ${st==="rejected"&&c.rejectionReason?`<p class="hint">Motivo da rejeição: ${esc(c.rejectionReason)}</p>`:""}
-  ${proofDetailBox}
-  ${proofInput}
+ }
+ $("ws-ico").textContent=catIcoS(t.category);
+ $("ws-title").textContent=t.serviceLabel||t.name||"Tarefa";
+ $("ws-body").innerHTML=`
+ <div class="ws-chips">
+  <span class="tag g">${esc(catIcoS(t.category))} ${esc(catLabelS(t.category))}</span>
+  ${d?`<span class="tag y">${d.dot} ${esc(d.label)}</span>`:""}
+  <span class="tag y">+${rd} ${esc(catLabel(ty))}</span>
+  <span class="tk-stamp ${t.source==="collab"?"y":"g"}" style="align-self:center">${t.source==="collab"?"🤝 Colaborador"+(t.ownerName?" · "+esc(t.ownerName):""):"Yshippcommerce"}</span>
+  ${t.featured===true?'<span class="tag y">★ Destaque</span>':""}
+  ${t.badge?`<span class="tag y">${esc(t.badge)}</span>`:""}
+  ${minP?`<span class="tag">📎 ${minP} prova${minP>1?"s":""} mínima${minP>1?"s":""}</span>`:""}
+ </div>
+ <div class="ws-kv">
+  <div><span>Categoria</span><b>${esc(catLabelS(t.category))}</b></div>
+  <div><span>Tarefa</span><b>${esc(t.serviceLabel||t.name)}</b></div>
+  <div><span>Valor em bilhetes</span><b>+${rd} ${esc(catLabel(ty))}</b></div>
+  <div><span>ID da tarefa</span><b class="mono" style="display:inline-flex;gap:6px;align-items:center">${esc(t.id)}<button class="btn sm ghost" type="button" data-copy="${esc(t.id)}">Copiar</button></b></div>
+  <div><span>Dificuldade</span><b>${d?d.dot+" "+esc(d.label):"—"}</b></div>
+  ${t.endAt?`<div><span>Termina em</span><b>${fmt(t.endAt)}</b></div>`:""}
+  ${left!==null?`<div><span>Vagas restantes</span><b>${soldOut?"Esgotadas":left+" de "+t.stock}</b></div>`:""}
+ </div>
+ ${t.description?`<p style="font-size:14px;line-height:1.6">${esc(t.description)}</p>`:""}
+ ${t.rules?`<p class="hint">${esc(t.rules)}</p>`:""}
+ ${steps.length?`<div><div class="ws-h">Etapas da missão</div><div class="ws-steps" style="margin-top:8px">${steps.map((s,i)=>`<div class="ws-step"><i>${i+1}</i><span>${esc(s)}</span></div>`).join("")}</div></div>`:""}
+ ${t.coupon?`<div class="coupon"><span class="tag y">Cupom</span><code>${esc(t.coupon)}</code><button class="btn sm ghost" data-copy="${esc(t.coupon)}">Copiar</button></div>`:""}
+ ${t.requiresProof===false?"":`<div><div class="ws-h">Prova de execução</div><div class="proof-detail" style="margin-top:8px"><span class="pd-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><path d="M12 3l7 3v6c0 4.4-3 7.6-7 9-4-1.4-7-4.6-7-9V6z"/></svg></span><div><span class="pd-t">Detalhes da prova exigida</span><small>${esc(t.proofDetails||pdDefault)}</small></div></div></div>`}
+ ${st==="changes"&&c.reviewNote?`<p class="hint">✏️ Correção pedida pelo colaborador: ${esc(c.reviewNote)}</p>`:""}
+ ${st==="rejected"&&c.rejectionReason?`<p class="hint">Motivo da rejeição: ${esc(c.rejectionReason)}</p>`:""}
+ <div class="task" style="margin:0;background:var(--p2);border:1px dashed var(--l);border-radius:12px;padding:14px">
+  ${proofForm}
   <div class="actions" style="margin:0">
-   ${safeUrl(t.link)&&!soldOut?`<a class="btn sm" href="${esc(safeUrl(t.link))}" target="_blank" rel="noopener noreferrer">Abrir tarefa</a>`:""}
-   ${soldOut?'<span class="tag r">Oferta esgotada</span>':st==="approved"?'<span class="tag g">Aprovada</span>':st==="pending"?'<span class="tag y">Em análise</span>':`<button class="btn sm ghost" data-req="${esc(t.id)}">${t.autoApprove===true?"Concluir e receber bilhetes 🎉":st==="rejected"?"Solicitar de novo":"Solicitar conferência"}</button>`}
+   ${safeUrl(t.link)&&!soldOut?`<a class="btn sm" href="${esc(safeUrl(t.link))}" target="_blank" rel="noopener noreferrer">Abrir tarefa ↗</a>`:""}
+   ${soldOut?'<span class="tag r">Oferta esgotada</span>':st==="approved"?'<span class="tag g">✓ Aprovada — bilhetes na carteira</span>':st==="pending"?'<span class="tag y">⏳ Em análise</span>':st==="changes"?'<span class="tag y">✏️ Correção pedida — reenvie a prova</span>':`<button class="btn sm" data-req="${esc(t.id)}">${t.autoApprove===true?"Concluir e receber bilhetes 🎉":st==="rejected"?"Solicitar de novo":st==="changes"?"Reenviar prova corrigida":"Solicitar conferência"}</button>`}
   </div>
-  <p class="hint">${t.autoApprove===true?"Aprovação automática: ao enviar, os bilhetes caem na sua carteira na hora.":"O organizador analisa o comprovante. Não envie senhas ou dados bancários."}</p>
+  <p class="hint">${t.autoApprove===true?"Aprovação automática: ao enviar, os bilhetes caem na sua carteira na hora.":t.source==="collab"?"A inspeção desta prova é feita pelo colaborador dono da oferta 🤝 — os bilhetes caem na sua carteira assim que ele aprovar. Não envie senhas ou dados bancários.":"O organizador analisa o comprovante. Não envie senhas ou dados bancários."}</p>
+  ${t.source==="collab"&&c&&c.status!=="approved"?`<div style="border-top:1px dashed var(--l);margin-top:10px;padding-top:10px"><p class="hint" style="margin:0 0 8px">Desconfia de <b>má-fé na avaliação</b> (prova ignorada, correção impossível, negação injusta)? Leve o caso ao suporte com o <b>ID da tarefa</b> — a equipe audita e pode reverter a decisão.</p><button class="btn sm ghost" type="button" data-dispute="${esc(t.id)}">🛡️ Levar o caso ao suporte (ID ${esc(t.id)})</button></div>`:""}
  </div>`;
+ $("ws").hidden=false;
+ document.documentElement.classList.add("ws-lock");
 }
+/* clicar no card modesto abre a área de trabalho (mouse, toque ou teclado) */
+document.addEventListener("click",e=>{
+ const card=e.target.closest(".task[data-ws-open]");
+ if(!card)return;
+ if(e.target.closest("a,[data-copy]"))return;
+ openWorkspace(card.dataset.wsOpen);
+});
+document.addEventListener("keydown",e=>{
+ if(e.key!=="Enter"&&e.key!==" ")return;
+ const card=e.target.closest?.(".task[data-ws-open]");
+ if(!card)return;
+ e.preventDefault();
+ openWorkspace(card.dataset.wsOpen);
+});
+/* fechar a área de trabalho: botão ✕, fundo escuro ou tecla Esc */
+document.addEventListener("click",e=>{
+ if(!$("ws")||$("ws").hidden)return;
+ if(e.target===$("ws")||e.target.closest("#ws-close"))closeWorkspace();
+});
+document.addEventListener("keydown",e=>{
+ if(e.key==="Escape"&&$("ws")&&!$("ws").hidden)closeWorkspace();
+});
 function renderEvents(){
  [...$("evtabs").children].forEach(b=>b.classList.toggle("on",b.dataset.v===evView));
  const evs=events.filter(e=>e.active!==false&&evState(e)===evView);
@@ -2947,7 +3494,7 @@ function renderEvents(){
  /* linha compacta de tarefa: nome, recompensa e status; a prova é enviada no assistente */
  const taskRow=t=>{
   const c=claims[t.id],st=c?.status,rd=Math.max(1,Math.floor(Number(t.reward))||1),ty=t.ticketType||"common";
-  return `<div class="trow"><span class="tn">${esc(t.name)}</span>${st==="approved"?'<span class="tag g">Aprovada</span>':st==="pending"?'<span class="tag y">Em análise</span>':st==="rejected"?'<span class="tag r">Rejeitada</span>':`<span class="tag y">+${rd} ${esc(catLabel(ty))}</span>`}</div>`;
+  return `<div class="trow"><span class="tn">${esc(t.name)}</span>${st==="approved"?'<span class="tag g">Aprovada</span>':st==="pending"?'<span class="tag y">Em análise</span>':st==="changes"?'<span class="tag y">✏️ Correção</span>':st==="rejected"?'<span class="tag r">Rejeitada</span>':`<span class="tag y">+${rd} ${esc(catLabel(ty))}</span>`}</div>`;
  };
  html+=evs.length?evs.map(e=>{
   const tk=Number(e.ticketsOffered)||0;
@@ -2971,14 +3518,13 @@ function renderEvents(){
  renderOffers();
 }
 $("evs").addEventListener("click",e=>{
- const c=e.target.dataset.copy;if(c)return copyText(c);
  if(e.target.dataset.goassist)goStage(true);
 });
 
 /* ============================================================
    OFERTAS AVULSAS (tarefas sem evento), com Ativas/Futuras
    ============================================================ */
-let offView="active";
+let offView="active",offViewColab="active";
 /* estado da oferta: aceita tarefas publicadas no painel com ou sem evento,
    respeita datas, ativo e estoque de vagas */
 function offerState(t){
@@ -2986,24 +3532,33 @@ function offerState(t){
  const now=Date.now(),s=tms(t.startAt),e=t.endAt?tme(t.endAt):Infinity;
  if(s>now)return"future";
  if(now>=e)return"off";
- const left=t.stock>0?(Number.isFinite(Number(t.stockLeft))?Math.floor(Number(t.stockLeft)):Number(t.stock)):null;
+ const left=stockOf(t);
  if(left!==null&&left<=0)return"off";
  return"on";
 }
 function renderOffers(){
  [...$("offtabs").children].forEach(b=>b.classList.toggle("on",b.dataset.v===offView));
+ [...$("offtabs2").children].forEach(b=>b.classList.toggle("on",b.dataset.v===offViewColab));
  const now=Date.now();
- const offs=generalTasks().filter(t=>{
-  return offView==="active"?offerState(t)==="on":offerState(t)==="future";
- });
- $("offs").innerHTML=offs.length?offs.map(t=>{
-  const c=claims[t.id],st=c?.status,rd=Math.max(1,Math.floor(Number(t.reward))||1),ty=t.ticketType||"common";
-  if(offView!=="active")return `<div class="task" style="margin-top:10px"><div class="task-head"><h4>${esc(t.name)}</h4><span class="tag">Em breve</span></div>${t.description?`<p>${esc(t.description)}</p>`:""}<div class="kv"><span>Recompensa</span><b>+${rd} ${esc(catLabel(ty))}</b></div><p class="mono">Começa em ${fmt(t.startAt)}</p></div>`;
-  return taskCard(t);
- }).join(""):`<div class="card evc"><p class="hint">${offView==="active"?"Nenhuma oferta ativa agora. Volte mais tarde.":"Nenhuma oferta futura por enquanto."}</p></div>`;
+ const all=generalTasks();
+ const render=(view,listEl,emptyTxt,colab)=>{
+  if(!listEl)return;
+  const offs=all.filter(t=>(t.source==="collab")===colab&&(view==="active"?offerState(t)==="on":offerState(t)==="future"));
+  listEl.innerHTML=offs.length?offs.map(t=>{
+   const c=claims[t.id],st=c?.status,rd=Math.max(1,Math.floor(Number(t.reward))||1),ty=t.ticketType||"common",d=diffOfS(t);
+   if(view!=="active")return `<div class="task openable" style="margin-top:10px" data-ws-open="${esc(t.id)}" role="button" tabindex="0"><div class="task-head"><h4>${esc(catIcoS(t.category))} ${esc(t.serviceLabel||t.name)}</h4><span class="tag">Em breve</span></div><div class="actions" style="margin:0 0 4px;gap:6px"><span class="tag g">${esc(catLabelS(t.category))}</span>${d?`<span class="tag y">${d.dot} ${esc(d.label)}</span>`:""}<span class="tk-stamp ${colab?"y":"g"}" style="align-self:center">${colab?"🤝 Colaborador":"Yshippcommerce"}</span></div><div class="kv"><span>Valor</span><b>+${rd} ${esc(catLabel(ty))}</b></div><p class="mono">Começa em ${fmt(t.startAt)}</p></div>`;
+   return taskCard(t);
+  }).join(""):`<div class="card evc"><p class="hint">${view==="active"?emptyTxt:"Nenhuma oferta futura por enquanto."}</p></div>`;
+ };
+ render(offView,$("offs"),offView==="active"?"Nenhuma oferta Yshippcommerce ativa agora. Volte mais tarde.":"",false);
+ render(offViewColab,$("offs-colab"),offViewColab==="active"?"Nenhuma oferta de colaborador no ar agora. Envie a primeira pelo botão “Anunciar como colaborador”!":"",true);
 }
 $("offtabs").onclick=e=>{const v=e.target.dataset.v;if(v){offView=v;renderOffers()}};
-$("offs").addEventListener("click",e=>{const c=e.target.dataset.copy;if(c)copyText(c)});
+$("offtabs2").onclick=e=>{const v=e.target.dataset.v;if(v){offViewColab=v;renderOffers()}};
+$("ofcprev").onclick=()=>slide($("offs-colab"),-1);
+$("ofcnext").onclick=()=>slide($("offs-colab"),1);
+/* copiar ID (e qualquer [data-copy]) funciona em qualquer seção */
+document.addEventListener("click",e=>{const b=e.target.closest("[data-copy]");if(b)return copyText(b.dataset.copy)});
 /* menu expansível de provas: abre/fecha dentro do card da oferta (vale
    para ofertas avulsas, eventos e assistente — delegação global) */
 document.addEventListener("click",e=>{
@@ -3215,19 +3770,32 @@ document.addEventListener("click",async e=>{
   if(!profileOk())return toast("Salve seus dados de perfil primeiro.");
   const t=tasks.find(x=>x.id===id);
   if(!t||taskState(t)!=="on")return toast("Esta tarefa não está disponível agora.");
-  if(t.stock>0&&Math.floor(Number.isFinite(Number(t.stockLeft))?Number(t.stockLeft):Number(t.stock))<=0)return toast("Esta oferta esgotou as vagas. Fique de olho nas próximas!");
+  const leftVagas=stockOf(t);
+  if(leftVagas!==null&&leftVagas<=0)return toast("Esta oferta esgotou as vagas. Fique de olho nas próximas!");
   const ref=doc(db,"taskClaims",currentUser.uid+"_"+id),old=await getDoc(ref);
   if(old.exists()&&["pending","approved"].includes(old.data().status))return toast("Você já solicitou esta tarefa.");
-  /* prova: lê os campos do menu expansível de provas dentro do card da oferta */
+  /* prova: lê os campos da área de trabalho da tarefa */
   const box=e.target.closest(".task");
   const pt=t.proofType||"text";
-  let proof="",proofText="",proofCode="",proofImage="",proofVideo="";
-  if(t.requiresProof!==false){
+  let proof="",proofText="",proofCode="",proofImage="",proofVideo="",proofWhen="";
+  const g=k=>String(box?.querySelector("[data-proof-"+k+"]")?.value||"").trim();
+  if(t.proofReq){
+   /* novo modelo: tipos exigidos definidos no formulário guiado do painel */
+   const pr=t.proofReq;
+   proofText=g("text").slice(0,1000);proofCode=g("code").slice(0,300);proofImage=g("image").slice(0,600);proofVideo=g("video").slice(0,600);proofWhen=g("when").slice(0,40);
+   proof=proofText||proofCode||proofImage||proofVideo||proofWhen;
+   if(!proof)return toast("Abra a prova da tarefa e preencha os campos exigidos.");
+   const vals={text:proofText,code:proofCode,image:proofImage,video:proofVideo,datetime:proofWhen};
+   const enabled=Object.keys(pr).filter(k=>pr[k]);
+   const provided=enabled.filter(k=>String(vals[k]||"").trim()).length;
+   const min=Math.max(1,Math.floor(Number(t.minProofs)||1));
+   if(provided<min)return toast("Prova incompleta: envie "+min+" prova(s) — você preencheu "+provided+".");
+   if((proofImage&&!/^https?:\/\//i.test(proofImage))||(proofVideo&&!/^https?:\/\//i.test(proofVideo)))return toast("Os links do print e da gravação devem começar com http:// ou https://.");
+  }else if(t.requiresProof!==false){
    if(pt==="name"){
     proof=(profile?.name||"").trim();
     if(!proof)return toast("Salve seu nome no perfil antes.");
    }else{
-    const g=k=>String(box?.querySelector("[data-proof-"+k+"]")?.value||"").trim();
     proofText=g("text").slice(0,1000);proofCode=g("code").slice(0,300);proofImage=g("image").slice(0,600);proofVideo=g("video").slice(0,600);
     proof=proofText||proofCode||proofImage||proofVideo;
     if(!proof)return toast("Abra a prova da oferta e preencha pelo menos um campo.");
@@ -3235,9 +3803,11 @@ document.addEventListener("click",async e=>{
     if((proofImage&&!/^https?:\/\//i.test(proofImage))||(proofVideo&&!/^https?:\/\//i.test(proofVideo)))return toast("Os links do print e da gravação devem começar com http:// ou https://.");
    }
   }
-  const data={uid:currentUser.uid,email:currentUser.email||"",taskId:id,eventId:t.eventId||"",participantName:profile.name,proof,proofText,proofCode,proofImage,proofVideo,status:"pending",submittedAt:serverTimestamp()};
+  const data={uid:currentUser.uid,email:currentUser.email||"",taskId:id,eventId:t.eventId||"",taskName:t.serviceLabel||t.name||"",source:t.source||"",ownerUid:t.ownerUid||"",ownerName:t.ownerName||"",participantName:profile.name,proof,proofText,proofCode,proofImage,proofVideo,proofWhen,status:"pending",submittedAt:serverTimestamp()};
   if(old.exists())await updateDoc(ref,data);else await setDoc(ref,data);
-  box?.querySelectorAll("[data-proof-text],[data-proof-code],[data-proof-image],[data-proof-video]").forEach(i=>i.value="");
+  box?.querySelectorAll("[data-proof-text],[data-proof-code],[data-proof-image],[data-proof-video],[data-proof-when]").forEach(i=>i.value="");
+  /* se o envio veio da área de trabalho, fecha para o participante ver o resultado no card */
+  if(box&&box.closest("#ws"))closeWorkspace();
   /* aprovação automática (definida no painel): credita a carteira na hora */
   if(t.autoApprove===true){
    const rd=Math.max(1,Math.floor(Number(t.reward))||1),ty=t.ticketType||"common";
@@ -3248,7 +3818,7 @@ document.addEventListener("click",async e=>{
      if(!cs.exists()||cs.data().status!=="pending")return;
      tx.set(wRef,{[ty]:increment(rd),updatedAt:serverTimestamp()},{merge:true});
      tx.set(doc(collection(db,"wallets",currentUser.uid,"history")),{kind:"reward",amount:rd,ticketType:ty,taskId:id,taskName:t.name||"",eventName:"",createdAt:serverTimestamp()});
-     if(t.stock>0)tx.set(doc(db,"tasks",id),{stockLeft:Math.max(0,Math.floor(Number.isFinite(Number(t.stockLeft))?Number(t.stockLeft):Number(t.stock))-1),updatedAt:serverTimestamp()},{merge:true});
+     if(t.stock>0)tx.set(doc(db,"tasks",id),{stockLeft:Math.max(0,(stockOf(t)??Math.floor(Number(t.stock)))-1),updatedAt:serverTimestamp()},{merge:true});
      tx.update(ref,{status:"approved",reviewedAt:serverTimestamp(),reward:rd,ticketType:ty,autoApproved:true});
     });
     return toast("Tarefa aprovada automaticamente! Bilhetes creditados na carteira 🎉");
@@ -3564,6 +4134,9 @@ function flow(){
  return{p:"p-number",h:"Sorteio: "+(draw?.name||"—"),t:"Você está trocando bilhetes por número no sorteio \""+(draw?.name||"—")+"\""+(pzN?", concorrendo ao prêmio \""+pzN+"\"":"")+". Escolha seu número entre os "+(TOTAL-taken.size)+" disponíveis. Cada número consome "+COST+" bilhete(s)"+(ev2?" do evento "+ev2.name:"")+"."};
 }
 
+/* TELA DE CARREGAMENTO: o skeleton agora é controlado pelo bskMark()
+   acima — ele só some quando todos os dados já chegaram. */
+
 function renderNow(){
  const logged=!!currentUser,v=logged&&currentUser.emailVerified,ok=profileOk(),num=mine().length>0;
  const f=flow();
@@ -3668,20 +4241,244 @@ function render(){
 }
 
 /* ============================================================
-   19c · SUPORTE AO CLIENTE (renderiza o código salvo no painel administrativo)
+   19c · CENTRAL DE AJUDA · tela cheia, nativa e inteligente
+   - identifica automaticamente o usuário logado (UID + nome)
+   - se não estiver logado, pede o UID (salvo no navegador)
+   - abas: nova solicitação · meus atendimentos · perguntas
+   - conversa em tempo real na MESMA coleção da Central de Suporte
    ============================================================ */
+const HCATS={conta:"Conta e acesso",pagamentos:"Pagamentos e carteira",tarefas:"Tarefas e provas",sorteios:"Sorteios e bilhetes",colaborador:"Colaboradores",outro:"Outro assunto"};
+const HSTAT={novo:["tag r","recebido 📨"],atendimento:["tag y","em atendimento"],aguardando:["tag b","aguardando você"],resolvido:["tag g","resolvido ✅"],fechado:["tag","encerrado"]};
+let HP={tab:"new",uid:"",name:"",logged:false,cat:"conta",chat:null,tickets:[],unTk:null,unMsg:null};
+const hpWhen=v=>{const ms=stampMs(v);return ms?new Date(ms).toLocaleString("pt-BR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}):""};
+
+function hpIdent(){
+ if(currentUser&&currentUser.uid){
+  HP.logged=true;
+  HP.uid=currentUser.uid;
+  HP.name=(profile&&profile.name)||(currentUser.displayName||"")||((currentUser.email||"").split("@")[0])||"Participante";
+ }else{
+  HP.logged=false;
+  HP.uid=localStorage.getItem("yshHelpUid")||"";
+  HP.name=localStorage.getItem("yshHelpName")||"";
+ }
+ $("hp-who").textContent=HP.logged
+  ?("✅ Identificado automaticamente: "+HP.name+" · "+HP.uid.slice(0,10)+"…")
+  :"Visitante — entre na conta ou informe seu UID para abrir uma solicitação";
+}
+
 function openSupport(){
  const m=$("sup-modal");
  m.hidden=!m.hidden;
+ document.documentElement.classList.toggle("gav-lock",!m.hidden);
  if(!m.hidden){
-  const code=(settings.supportCode||"").trim()||'<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>body{font-family:system-ui,sans-serif;display:grid;place-items:center;min-height:100vh;margin:0;background:#f7f8fa;color:#20262e}div{text-align:center;max-width:46ch;padding:32px}h2{margin:0 0 10px}p{margin:0;line-height:1.6}</style></head><body><div><h2>🎧 Suporte em breve</h2><p>A equipe ainda está preparando esta área de atendimento. Volte logo!</p></div></body></html>';
-  $("sup-frame").srcdoc=code;
+  hpIdent();
+  hpWatch();
+  hpRender();
+  $("hp-main").scrollTop=0;
+ }else{
+  hpStopChat();
  }
 }
+function hpStopChat(){HP.unMsg?.();HP.unMsg=null;HP.chat=null}
 $("nav-sup").onclick=e=>{e.preventDefault();openSupport()};
-$("sup-close").onclick=()=>{$("sup-modal").hidden=true};
-$("sup-modal").addEventListener("click",e=>{if(e.target===$("sup-modal"))$("sup-modal").hidden=true});
-document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("sup-modal").hidden)$("sup-modal").hidden=true});
+$("sup-close").onclick=()=>{$("sup-modal").hidden=true;document.documentElement.classList.remove("gav-lock");hpStopChat()};
+$("fq-sup").onclick=()=>openSupport();
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("sup-modal").hidden){$("sup-modal").hidden=true;document.documentElement.classList.remove("gav-lock");hpStopChat()}});
+
+function hpWatch(){
+ HP.unTk?.();HP.unTk=null;
+ const uid=HP.logged?currentUser.uid:(HP.uid||"").trim();
+ if(!uid){HP.tickets=[];return}
+ HP.unTk=onSnapshot(query(collection(db,"supportTickets"),where("uid","==",uid),limit(50)),s=>{
+  HP.tickets=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(stampMs(b.updatedAt||b.createdAt)||0)-(stampMs(a.updatedAt||a.createdAt)||0));
+  if(!$("sup-modal").hidden)hpRender();
+ },e=>console.warn("Ajuda:",e));
+}
+
+function hpRender(){
+ const inr=$("hp-inner");
+ if(!inr)return;
+ if(HP.chat){hpChatPane();return}
+ const open=HP.tickets.filter(t=>t.status!=="fechado"&&t.status!=="resolvido").length;
+ inr.innerHTML=`
+ <div class="tabs" role="tablist">
+  <button class="${HP.tab==="new"?"on":""}" data-hptab="new">✉️ Nova solicitação</button>
+  <button class="${HP.tab==="mine"?"on":""}" data-hptab="mine">💬 Meus atendimentos${open?` <span class="tag r">${open}</span>`:""}</button>
+  <button class="${HP.tab==="faq"?"on":""}" data-hptab="faq">❓ Perguntas</button>
+ </div>
+ <div id="hp-pane"></div>`;
+ inr.querySelectorAll("[data-hptab]").forEach(b=>b.onclick=()=>{HP.tab=b.dataset.hptab;hpRender()});
+ if(HP.tab==="new")hpForm();
+ else if(HP.tab==="mine")hpMine();
+ else hpFaq();
+}
+
+/* ---- nova solicitação ---- */
+function hpForm(){
+ const p=$("hp-pane");
+ const idBox=HP.logged
+  ?`<div class="notice">✅ Sua identificação é automática: <b>${esc(HP.name)}</b> · UID <b class="mono">${esc(HP.uid.slice(0,12))}…</b></div>`
+  :`<div class="notice">Você não está logado. Informe seu UID (no site: menu → Carteira) para a equipe localizar sua conta:</div>
+  <div class="field"><span class="label">Seu UID *</span><input id="hp-uid" placeholder="ex.: aB3xK9q2…" value="${esc(HP.uid)}"></div>
+  <div class="field"><span class="label">Seu nome ou apelido</span><input id="hp-nome" placeholder="Como podemos te chamar?" value="${esc(HP.name)}"></div>`;
+ p.innerHTML=`
+ <div class="card" style="padding:18px;display:grid;gap:4px">
+ <h3 style="font-size:16px">Nova solicitação</h3>
+ <p class="hint" style="margin:4px 0 6px">A resposta da equipe chega em “Meus atendimentos”, aqui mesmo, em tempo real.</p>
+ ${idBox}
+ <div class="field"><span class="label">Assunto rápido (opcional)</span><div class="hp-chips" id="hp-quick"></div></div>
+ <div class="field"><span class="label">Categoria *</span><div class="hp-chips" id="hp-cats"></div></div>
+ <div class="field"><span class="label">Assunto *</span><input id="hp-subj" placeholder="Ex.: bilhetes não caíram na carteira"></div>
+ <div class="field"><span class="label">Descreva o que aconteceu *</span><textarea id="hp-msg" rows="5" placeholder="Conte com detalhes: o que você fez, o que esperava e o que aconteceu. Se for sobre uma tarefa, informe o ID da tarefa."></textarea></div>
+ <div class="field"><span class="label">Link de print ou gravação (opcional)</span><input id="hp-link" placeholder="https://…"></div>
+ <button class="btn wide" id="hp-send" style="margin-top:10px">Enviar para o suporte ➤</button>
+ <p class="hint" style="margin-top:8px;font-size:11.5px">Pagamentos e carteira entram com prioridade <b>alta</b> na fila da equipe.</p>
+ </div>`;
+ const cats=$("hp-cats");
+ cats.innerHTML=Object.entries(HCATS).map(([k,v])=>`<button class="hp-chip${HP.cat===k?" on":""}" data-cat="${k}">${v}</button>`).join("");
+ cats.querySelectorAll("[data-cat]").forEach(b=>b.onclick=()=>{HP.cat=b.dataset.cat;hpForm()});
+ const QUICK={
+  bilhetes:["Bilhetes não caíram","Minha prova foi aprovada, mas os bilhetes não apareceram na carteira.\nID da tarefa: "],
+  prova:["Prova rejeitada injustamente","Acho que minha prova foi avaliada com má-fé.\nID da tarefa: "],
+  numero:["Não consigo reservar número","Não estou conseguindo reservar meu número no sorteio. "],
+  conta:["Problema na minha conta","Estou com um problema na minha conta. "]
+ };
+ $("hp-quick").innerHTML=Object.entries(QUICK).map(([k,v])=>`<button class="hp-chip" data-q="${k}">${v[0]}</button>`).join("");
+ $("hp-quick").querySelectorAll("[data-q]").forEach(b=>b.onclick=()=>{const q=QUICK[b.dataset.q];$("hp-subj").value=q[0];$("hp-msg").value=q[1];$("hp-msg").focus()});
+ $("hp-send").onclick=hpSend;
+}
+
+async function hpSend(){
+ if(!HP.logged){
+  HP.uid=($("hp-uid").value||"").trim();
+  HP.name=($("hp-nome").value||"").trim()||"Participante";
+  if(!HP.uid||HP.uid.length<6)return toast("Informe um UID válido (menu → Carteira).");
+  localStorage.setItem("yshHelpUid",HP.uid);
+  localStorage.setItem("yshHelpName",HP.name);
+ }
+ const subj=($("hp-subj").value||"").trim();
+ const msg=($("hp-msg").value||"").trim();
+ if(!subj||!msg)return toast("Preencha assunto e descrição.");
+ const link=($("hp-link").value||"").trim();
+ const uid=HP.logged?currentUser.uid:HP.uid;
+ $("hp-send").disabled=true;
+ try{
+  const ref=await addDoc(collection(db,"supportTickets"),{
+   uid,userName:HP.name,userEmail:(HP.logged&&currentUser.email)||"",
+   subject:subj,category:HP.cat,
+   priority:HP.cat==="pagamentos"?"alta":"normal",
+   status:"novo",channel:"site",
+   createdAt:serverTimestamp(),updatedAt:serverTimestamp(),lastMessageAt:serverTimestamp(),
+   firstResponseAt:null,unread:1,assignedTo:"—",assignedName:"—"
+  });
+  let text=msg;
+  if(link)text+="\n\n🔗 "+link;
+  await addDoc(collection(db,"supportTickets",ref.id,"messages"),{from:"client",authorName:HP.name,text,createdAt:serverTimestamp()});
+  toast("Solicitação enviada ✔ A resposta chega em Meus atendimentos.");
+  HP.chat=ref.id;
+  HP.tab="mine";
+  hpWatch();
+  hpRender();
+ }catch(e){toast("Não foi possível enviar: "+(e.message||e));$("hp-send").disabled=false}
+}
+
+/* ---- meus atendimentos ---- */
+function hpMine(){
+ const p=$("hp-pane");
+ if(!HP.logged&&!(HP.uid||"").trim()){
+  p.innerHTML=`<div class="card" style="padding:22px;text-align:center;display:grid;gap:10px">
+  <p class="hint">Para ver seus atendimentos automaticamente, entre na sua conta.</p>
+  <div><button class="btn sm" id="hp-gouid">Informar meu UID agora</button></div></div>`;
+  $("hp-gouid").onclick=()=>{HP.tab="new";hpRender()};
+  return;
+ }
+ const list=HP.tickets.map(t=>{
+  const st=HSTAT[t.status]||HSTAT.novo;
+  return `<button class="hp-tk" data-tk="${t.id}">
+  <b>${esc(t.subject||"(sem assunto)")}</b>
+  <span class="${st[0]}">${st[1]}</span>
+  <span class="mono" style="font-size:11px;color:var(--mu)">#${t.id.slice(-6).toUpperCase()}</span>
+  </button>`;
+ }).join("")||`<p class="hint">Nenhuma solicitação ainda. Abra a primeira na aba “Nova solicitação”.</p>`;
+ p.innerHTML=`<div class="card" style="padding:18px;display:grid;gap:12px">
+ <h3 style="font-size:15px">Meus atendimentos</h3>
+ <div style="display:grid;gap:10px">${list}</div></div>`;
+ p.querySelectorAll("[data-tk]").forEach(b=>b.onclick=()=>{HP.chat=b.dataset.tk;hpRender()});
+}
+
+/* ---- perguntas frequentes (reaproveita as do próprio site) ---- */
+function hpFaq(){
+ const p=$("hp-pane");
+ const items=[...document.querySelectorAll("#faq-dyn details, #faq-static details")].map(d=>{
+  const s=d.querySelector("summary")?.textContent||"";
+  const b=d.querySelector("div")?.innerHTML||"";
+  return `<details><summary>${esc(s)}</summary><div>${b}</div></details>`;
+ }).join("");
+ p.innerHTML=`<div class="faq" style="display:grid;gap:8px">${items||"<p class='hint'>Nenhuma pergunta cadastrada.</p>"}</div>`;
+}
+
+/* ---- conversa do ticket (tempo real) ---- */
+function hpChatPane(){
+ const p=$("hp-pane");
+ if(!p)return;
+ const t=HP.tickets.find(x=>x.id===HP.chat)||{id:HP.chat,status:"novo",subject:""};
+ const st=HSTAT[t.status]||HSTAT.novo;
+ p.innerHTML=`
+ <div class="card" style="padding:16px;display:grid;gap:12px">
+  <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+   <button class="btn sm ghost" id="hp-back">‹ Voltar</button>
+   <b style="flex:1;min-width:120px;font-size:14px;overflow-wrap:anywhere">${esc(t.subject||"(sem assunto)")}</b>
+   <span class="${st[0]}">${st[1]}</span>
+  </div>
+  <div class="hp-thread" id="hp-thread"></div>
+  <div style="display:grid;gap:8px">
+   <textarea id="hp-reply" rows="3" placeholder="Escreva sua mensagem… (Enter envia · Shift+Enter quebra linha)"></textarea>
+   <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+    <button class="btn sm ghost" id="hp-cancel" style="color:var(--rd);border-color:var(--rd)">Cancelar solicitação</button>
+    <button class="btn sm" id="hp-sendreply" style="margin-left:auto">Enviar ➤</button>
+   </div>
+  </div>
+ </div>`;
+ $("hp-back").onclick=()=>{hpStopChat();hpRender()};
+ $("hp-sendreply").onclick=hpReply;
+ $("hp-reply").addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();hpReply()}});
+ $("hp-cancel").onclick=async()=>{
+  if(!confirm("Cancelar esta solicitação? A equipe será avisada."))return;
+  try{
+   await addDoc(collection(db,"supportTickets",HP.chat,"messages"),{from:"system",authorName:"Sistema",text:"✋ O participante cancelou esta solicitação.",createdAt:serverTimestamp()});
+   await updateDoc(doc(db,"supportTickets",HP.chat),{status:"fechado",updatedAt:serverTimestamp()});
+   hpStopChat();hpRender();
+  }catch(e){toast("Erro: "+(e.message||e))}
+ };
+ HP.unMsg?.();
+ HP.unMsg=onSnapshot(query(collection(db,"supportTickets",HP.chat,"messages"),orderBy("createdAt","asc"),limit(200)),s=>{
+  const el=$("hp-thread");
+  if(!el)return;
+  el.innerHTML=s.docs.map(d=>{
+   const m=d.data();
+   if(m.from==="system")return `<div class="hp-msg sys">${esc(m.text)}</div>`;
+   const me=m.from==="client";
+   return `<div class="hp-msg${me?" me":""}"><b style="font-size:11px">${me?"Você":esc(m.authorName||"Suporte")}</b><br>${esc(m.text)}<small>${hpWhen(m.createdAt)}</small></div>`;
+  }).join("")||'<p class="hint" style="text-align:center">Aguardando as primeiras mensagens…</p>';
+  el.scrollTop=el.scrollHeight;
+ },e=>console.warn("Ajuda chat:",e));
+}
+
+async function hpReply(){
+ const el=$("hp-reply");
+ const txt=(el.value||"").trim();
+ if(!txt||!HP.chat)return;
+ const t=HP.tickets.find(x=>x.id===HP.chat);
+ if(t&&(t.status==="fechado"||t.status==="resolvido"))return toast("Este atendimento já foi encerrado pela equipe.");
+ el.value="";
+ try{
+  await addDoc(collection(db,"supportTickets",HP.chat,"messages"),{from:"client",authorName:HP.name||"Participante",text:txt,createdAt:serverTimestamp()});
+  const patch={updatedAt:serverTimestamp(),lastMessageAt:serverTimestamp(),unread:1};
+  if(t&&t.status==="aguardando")patch.status="atendimento";
+  await updateDoc(doc(db,"supportTickets",HP.chat),patch);
+ }catch(e){toast("Não foi possível enviar: "+(e.message||e))}
+}
 
 /* ============================================================
    19d · ANUNCIAR COMO COLABORADOR (aviso em forma de notificação)
@@ -3695,8 +4492,556 @@ document.addEventListener("click",e=>{
  if(e.target.closest("[data-colab-close]")){$("colab-modal").hidden=true;return}
  if(e.target.id==="colab-modal")$("colab-modal").hidden=true;
 });
-$("colab-go").onclick=()=>{$("colab-modal").hidden=true;openSupport()};
+$("colab-go").onclick=()=>{$("colab-modal").hidden=true;openCollabForm()};
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("colab-modal").hidden)$("colab-modal").hidden=true});
+
+/* ============================================================
+   19d · FORMULÁRIO DE TAREFA DO COLABORADOR
+   O membro preenche a tarefa direto no site; ela vai para a
+   coleção "collabTasks" e aparece na seção "Tarefas dos
+   colaboradores" do painel para revisão, pedido de edição,
+   negação com motivo ou aprovação — sempre com botão de recorrer.
+   ============================================================ */
+let collabUnsub=null,myCollabs=[],cfEditId=null;
+function watchCollab(uid){
+ if(collabUnsub){try{collabUnsub()}catch(e){}collabUnsub=null}
+ myCollabs=[];
+ if(!uid){renderCollabMine();return}
+ try{
+  collabUnsub=onSnapshot(query(collection(db,"collabTasks"),where("uid","==",uid)),s=>{
+   myCollabs=s.docs.map(d=>({id:d.id,...d.data()}));
+   renderCollabMine();
+  },e=>console.error("Tarefas de colaborador:",e));
+ }catch(e){console.error("Watch colaborador:",e)}
+}
+function collabStatusChip(st){
+ if(st==="approved")return'<span class="tag g">✅ Publicada</span>';
+ if(st==="changes_requested")return'<span class="tag y">✏️ Correção pedida</span>';
+ if(st==="rejected")return'<span class="tag r">🚫 Negada</span>';
+ return'<span class="tag y">⏳ Em análise</span>';
+}
+function renderCollabMine(){
+ const el=$("cform-mine");
+ if(!el)return;
+ if(!currentUser){el.innerHTML='<p class="hint">Entre na sua conta para enviar tarefas de colaborador.</p>';return}
+ if(!myCollabs.length){el.innerHTML='<p class="hint">Você ainda não enviou tarefas. Preencha o formulário guiado de 4 etapas acima e clique em “Pagar taxa e enviar”.</p>';return}
+ el.innerHTML=myCollabs
+  .sort((a,b)=>((stampOfCollab(b))||0)-((stampOfCollab(a))||0))
+  .map(c=>{
+   const st=c.status||"pending";
+   return `<div class="cform-item">
+    <div class="cf-head"><b>${esc(c.name||"Tarefa")}</b>${collabStatusChip(st)}</div>
+    <div class="kv"><span>Valor</span><b>+${Math.max(1,Math.floor(Number(c.reward)||0))} ${esc(catLabel(c.ticketType||"common"))} × ${Math.max(1,Math.floor(Number(c.stock)||1))} vaga(s)</b></div>
+    ${Number(c.feePaid)>0?`<div class="kv"><span>Taxa paga (30%)</span><b>${Math.floor(Number(c.feePaid))} bilhete(s)${c.feeRefunded?' · <span class="tag g">devolvida</span>':""}</b></div>`:""}
+    ${c.comment?`<p class="hint">💬 Equipe: ${esc(c.comment)}</p>`:""}
+    ${c.appealNote?`<p class="hint">🤲 Seu recurso: ${esc(c.appealNote)}</p>`:""}
+    <div class="actions" style="margin:0">
+     ${(st==="changes_requested"||st==="rejected")?`<button class="btn sm" type="button" data-cf-edit="${esc(c.id)}">${st==="rejected"?"Recorrer / reenviar":"Corrigir e reenviar"}</button>`:""}
+     ${st==="approved"?'<span class="hint">Já está no ar na seção <b>Ofertas dos colaboradores</b> com o carimbo 🤝 — e <b>a inspeção das provas é sua</b>: aprovar, pedir correção ou negar é com você na Central do colaborador.</span><button class="btn sm" type="button" data-clv="1" style="margin-top:8px">🤝 Avaliar as provas desta tarefa →</button>':""}
+    </div>
+   </div>`;
+  }).join("");
+}
+const stampOfCollab=c=>{const v=c?.updatedAt||c?.createdAt;if(v?.toDate)return v.toDate().getTime();if(v?.seconds)return v.seconds*1000;const d=new Date(v);return isNaN(d)?0:d.getTime()};
+/* ---- wizard guiado de 5 etapas (igual ao painel) + taxa de 30% ---- */
+const CF_FEE_PCT=0.30;
+let cfStep=1,cfRewManual=false,cfCatSel="",cfSvcSel="";
+const cfCatList=()=>Array.isArray(catalog?.categories)?catalog.categories:[];
+const cfCatOf=id=>cfCatList().find(c=>c.id===id)||null;
+const cfSvcOf=(cid,sid)=>cfCatOf(cid)?.services?.find(s=>s.id===sid)||null;
+const cfDiffKeyOf=v=>{const k=String(v||"").toLowerCase();if(DIFFS_SITE[k])return k;if(k.includes("méd")||k.includes("med")||k.includes("inter"))return"medium";if(k.includes("dif"))return"hard";return"simple"};
+const cfProofCount=()=>["t","c","i","v","d"].map(k=>"cf-p"+k).map(id=>$(id)).filter(x=>x&&x.checked).length;
+const cfVagas=()=>Math.max(1,Math.floor(Number($("cf-vagas").value)||1));
+/* X = total pago aos participantes: recompensa × valor do bilhete × vagas.
+   A taxa é 30% FORA do X: o colaborador paga X aos usuários + 30% de X. */
+const cfRewardPts=()=>Math.max(1,Math.floor(Number($("cf-reward").value)||1))*(VAL[$("cf-type").value]||1)*cfVagas();
+const cfFeePts=()=>Math.max(1,Math.ceil(cfRewardPts()*CF_FEE_PCT));
+function cfFillCats(sel){
+ cfCatSel=sel||"";
+ $("cf-cats").innerHTML=cfCatList().map(c=>`<button type="button" class="cf-card${c.id===cfCatSel?" on":""}" data-cfc="${esc(c.id)}"><span class="cf-cico">${esc(c.icon||"🎯")}</span><b>${esc(c.label)}</b><small>${(c.services||[]).length} serviço(s)</small></button>`).join("")||'<p class="hint">Nenhuma categoria no catálogo ainda. A equipe cadastra em Tarefas → Catálogo.</p>';
+ cfFillSvc();
+}
+function cfFillSvc(sel){
+ cfSvcSel=sel||"";
+ $("cf-svcs-h").hidden=!cfCatSel;
+ const list=cfCatOf(cfCatSel)?.services||[];
+ $("cf-svcs").innerHTML=list.map(s=>{
+  const D=DIFFS_SITE[cfDiffKeyOf(s.difficulty)]||DIFFS_SITE.simple;
+  return `<button type="button" class="cf-card${s.id===cfSvcSel?" on":""}" data-cfs="${esc(s.id)}"><b>${esc(s.label)}</b><small><span class="cf-svcreward">+${Math.max(1,Math.floor(Number(s.reward)||1))} ${esc(catLabel(s.ticketType||"common"))}</span> · ${D.dot} ${esc(D.label)}</small></button>`;
+ }).join("")||'<p class="hint">Nenhum serviço nesta categoria ainda — escolha outra categoria acima.</p>';
+ cfOnPick();
+}
+function cfOnPick(){
+ const s=cfSvcOf(cfCatSel,cfSvcSel);
+ const dk=cfDiffKeyOf(s?.difficulty);
+ const D=DIFFS_SITE[dk]||DIFFS_SITE.simple;
+ $("cf-diff").textContent=cfSvcSel?D.dot+" "+D.label:"— escolha um serviço";
+ if(!cfRewManual&&s)$("cf-reward").value=Math.max(1,Math.floor(Number(s.reward)||1));
+ $("cf-min").value=String(dk==="simple"?1:2);
+ cfUpdateFee();
+}
+function cfUpdateFee(){
+ if(!$("cf-save").hidden)$("cf-save").textContent=(cfEditId?"Salvar e reenviar":"Pagar "+cfFeePts()+" bilhete(s) de taxa e enviar")+" 🤝";
+}
+function cfSummary(){
+ const pr={text:$("cf-pt").checked,code:$("cf-pc").checked,image:$("cf-pi").checked,video:$("cf-pv").checked,datetime:$("cf-pd").checked};
+ const prOn=Object.keys(pr).filter(k=>pr[k]);
+ const r=Math.max(1,Math.floor(Number($("cf-reward").value)||1));
+ const fee=cfFeePts(),bal=pointsOf(wallet);
+ $("cf-summary").innerHTML=`
+ <div class="kv"><span>Categoria</span><b>${esc(catLabelS($("cf-cat").value))}</b></div>
+ <div class="kv"><span>Serviço</span><b>${esc($("cf-svc").selectedOptions?.[0]?.textContent||"—")}</b></div>
+ <div class="kv"><span>Nome da tarefa</span><b>${esc($("cf-name").value.trim()||"—")}</b></div>
+ <div class="kv"><span>Missão</span><b>${esc($("cf-desc").value.trim()||"—")}</b></div>
+ <div class="kv"><span>Etapas</span><b>${esc($("cf-steps-in").value.split("\n").map(s=>s.trim()).filter(Boolean).join(" · ")||"—")}</b></div>
+ ${$("cf-link").value.trim()?`<div class="kv"><span>Link</span><b>${esc($("cf-link").value.trim())}</b></div>`:""}
+ <div class="kv"><span>Provas exigidas</span><b>${prOn.map(k=>PROOF_REQ_SITE[k]).join(" · ")||"sem prova"}</b></div>
+ <div class="kv"><span>Valor por participante</span><b>+${r} ${esc(catLabel($("cf-type").value))}</b></div>
+ <div class="kv"><span>Vagas</span><b>${cfVagas()} participante(s)</b></div>
+ <p class="hint" style="margin:0">O valor da taxa de publicação aparece na etapa <b>5 · Pagamento</b>.</p>`;
+}
+function cfValidate(){
+ if(cfStep===1){
+  if(!cfCatSel)return toast("Escolha a categoria do serviço.");
+  if(!cfSvcSel)return toast("Escolha o serviço da categoria.");
+  if($("cf-name").value.trim().length<5)return toast("Dê um nome claro para a tarefa (mín. 5 caracteres).");
+  const r=Math.floor(Number($("cf-reward").value));
+  if(!Number.isFinite(r)||r<1)return toast("Informe a recompensa em bilhetes (mín. 1).");
+  const v=Math.floor(Number($("cf-vagas").value));
+  if(!Number.isFinite(v)||v<1)return toast("Informe o número de vagas (mín. 1 participante).");
+ }
+ if(cfStep===2){
+  if($("cf-desc").value.trim().length<15)return toast("Descreva melhor a missão (mín. 15 caracteres).");
+  if(!$("cf-steps-in").value.split("\n").map(s=>s.trim()).filter(Boolean).length)return toast("Liste pelo menos 1 etapa da missão.");
+  const link=$("cf-link").value.trim();
+  if(link&&!/^https?:\/\//i.test(link))return toast("O link deve começar com http:// ou https://.");
+ }
+ if(cfStep===3){
+  const n=cfProofCount();
+  const dk=cfDiffKeyOf(cfSvcOf(cfCatSel,cfSvcSel)?.difficulty);
+  const minP=Math.max(Number($("cf-min").value)||1,dk==="simple"?1:2);
+  if(n&&minP>n)return toast("O mínimo de provas ("+minP+") não pode passar dos tipos exigidos ("+n+").");
+  if(n&&$("cf-proof").value.trim().length<10)return toast("Explique como o participante deve comprovar a tarefa (mín. 10 caracteres).");
+ }
+ return true;
+}
+/* etapa 5 · pagamento: X total + 30% de taxa fora do X */
+function cfPay(){
+ const r=Math.max(1,Math.floor(Number($("cf-reward").value)||1));
+ const ty=$("cf-type").value||"common";
+ const X=cfRewardPts(),fee=cfFeePts(),bal=pointsOf(wallet);
+ $("cf-pay").innerHTML=`
+ <div class="kv"><span>Recompensa por participante</span><b>+${r} ${esc(catLabel(ty))}</b></div>
+ <div class="kv"><span>Vagas</span><b>${cfVagas()} participante(s)</b></div>
+ <div class="kv"><span>Total pago aos participantes (X)</span><b>${X} bilhete(s)</b></div>
+ <div class="kv"><span>💰 Taxa de publicação (30% de X, fora do X)</span><b>${cfEditId?"— (edição/recorrência não cobra nova taxa)":fee+" bilhete(s)"}</b></div>
+ <div class="kv"><span>Seu saldo</span><b>${bal} ponto(s)${(!cfEditId&&bal<fee)?' <span class="tag r">insuficiente</span>':""}</b></div>
+ ${cfEditId?"":'<p class="hint" style="margin:0">Ao enviar, <b>'+fee+' bilhete(s)</b> saem da sua carteira e ficam retidos pela equipe: entram no 🏆 Cofre Real quando a tarefa for <b>publicada</b>. Se for negada, a taxa é <b>devolvida</b>. A parte dos participantes ('+X+' bilhetes) é paga pelo Yshippcommerce quando cada um concluir a tarefa aprovada.</p>'}`;
+}
+function cfShow(n){
+ cfStep=Math.min(5,Math.max(1,n));
+ [1,2,3,4,5].forEach(i=>$("cf-p"+i).hidden=i!==cfStep);
+ [...$("cf-steps").children].forEach(b=>{b.classList.toggle("on",Number(b.dataset.goto)===cfStep);b.classList.toggle("done",Number(b.dataset.goto)<cfStep)});
+ $("cf-prev").hidden=cfStep===1;
+ $("cf-next").hidden=cfStep===5;
+ $("cf-save").hidden=cfStep!==5;
+ if(cfStep===4)cfSummary();
+ if(cfStep===5)cfPay();
+ cfUpdateFee();
+}
+$("cf-steps").onclick=e=>{const g=Number(e.target.dataset?.goto);if(g){if(g<cfStep||cfValidate())cfShow(g)}};
+$("cf-prev").onclick=()=>cfShow(cfStep-1);
+$("cf-next").onclick=()=>{if(cfValidate())cfShow(cfStep+1)};
+$("cf-cats").onclick=e=>{const c=e.target.closest("[data-cfc]");if(c)cfFillCats(c.dataset.cfc)};
+$("cf-svcs").onclick=e=>{const s=e.target.closest("[data-cfs]");if(s)cfFillSvc(s.dataset.cfs)};
+$("cf-type").onchange=cfUpdateFee;
+$("cf-vagas").oninput=cfUpdateFee;
+$("cf-reward").oninput=()=>{cfRewManual=true;cfUpdateFee()};
+function openCollabForm(editId){
+ if(!currentUser||!currentUser.emailVerified)return toast("Entre com uma conta verificada para publicar tarefas.");
+ cfEditId=editId||null;
+ const sub=editId?myCollabs.find(x=>x.id===editId):null;
+ if(editId&&!sub)return;
+ cfRewManual=!!sub;
+ $("cform-title").textContent=sub?(sub.status==="rejected"?"Recorrer · reenviar tarefa":"Editar tarefa enviada"):"Publicar tarefa de colaborador";
+ cfFillCats(sub?.category||"");
+ if(sub?.serviceId)cfFillSvc(sub.serviceId);
+ $("cf-name").value=sub?.name||"";
+ $("cf-type").value=sub?.ticketType||"common";
+ if(sub)$("cf-reward").value=Math.max(1,Math.floor(Number(sub.reward||sub.suggestedReward)||1));
+ $("cf-vagas").value=sub?Math.max(1,Math.floor(Number(sub.stock)||1)):10;
+ $("cf-desc").value=sub?.description||"";
+ $("cf-steps-in").value=(sub?.steps||[]).join("\n");
+ $("cf-link").value=sub?.link||"";
+ if(sub){const p=sub.proofReq||{};$("cf-pt").checked=!!p.text;$("cf-pc").checked=!!p.code;$("cf-pi").checked=!!p.image;$("cf-pv").checked=!!p.video;$("cf-pd").checked=!!p.datetime}
+ $("cf-proof").value=sub?.proofDetails||"";
+ $("cf-min").value=String(Math.max(1,Math.floor(Number(sub?.minProofs)||1)));
+ $("cf-note").value="";
+ cfShow(1);
+ renderCollabMine();
+ $("cform-modal").hidden=false;
+ document.documentElement.classList.add("ws-lock");
+}
+function closeCollabForm(){
+ $("cform-modal").hidden=true;
+ document.documentElement.classList.remove("ws-lock");
+ cfEditId=null;
+}
+$("cform-close").onclick=closeCollabForm;
+$("cform-cancel").onclick=closeCollabForm;
+$("cform-modal").addEventListener("click",e=>{if(e.target===$("cform-modal"))closeCollabForm()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("cform-modal").hidden)closeCollabForm()});
+$("cform-mine").addEventListener("click",e=>{
+ const edit=e.target.dataset.cfEdit;
+ if(edit)openCollabForm(edit);
+});
+$("cf-save").onclick=async()=>{
+ if(!currentUser||!currentUser.emailVerified)return toast("Entre com uma conta verificada para publicar tarefas.");
+ if(!cfValidate())return;
+ const name=$("cf-name").value.trim();
+ const description=$("cf-desc").value.trim();
+ const link=$("cf-link").value.trim();
+ const steps=$("cf-steps-in").value.split("\n").map(s=>s.trim()).filter(Boolean);
+ const proofDetails=$("cf-proof").value.trim();
+ const note=$("cf-note").value.trim();
+ const reward=Math.max(1,Math.floor(Number($("cf-reward").value)||1));
+ const ticketType=$("cf-type").value||"common";
+ const vagas=cfVagas();
+ const category=cfCatSel;
+ const serviceId=cfSvcSel;
+ const serviceLabel=cfSvcOf(category,serviceId)?.label||name;
+ const dk=cfDiffKeyOf(cfSvcOf(category,serviceId)?.difficulty);
+ const pr={text:$("cf-pt").checked,code:$("cf-pc").checked,image:$("cf-pi").checked,video:$("cf-pv").checked,datetime:$("cf-pd").checked};
+ const prOn=Object.keys(pr).filter(k=>pr[k]);
+ const minProofs=prOn.length?Math.max(Number($("cf-min").value)||1,dk==="simple"?1:2):0;
+ if(prOn.length&&minProofs>prOn.length)return toast("Mínimo de provas maior que os tipos exigidos.");
+ const wasRejected=cfEditId?(myCollabs.find(x=>x.id===cfEditId)?.status==="rejected"):false;
+ const data={
+  uid:currentUser.uid,
+  email:currentUser.email||"",
+  ownerName:(profile?.name||"").trim()||"Colaborador",
+  name,category,serviceId,serviceLabel,difficulty:dk,reward,ticketType,stock:vagas,
+  description,steps,link,proofReq:pr,minProofs,proofDetails,
+  suggestedReward:reward,note,
+  status:"pending",
+  updatedAt:serverTimestamp()
+ };
+ if(cfEditId){
+  data.editedAt=serverTimestamp();
+  if(wasRejected){data.appealed=true;data.appealNote=note}
+  try{
+   await setDoc(doc(db,"collabTasks",cfEditId),data,{merge:true});
+   closeCollabForm();
+   toast(wasRejected?"Recurso enviado! A equipe vai revisar de novo. 🤲":"Tarefa atualizada e reenviada para revisão. 🤝");
+  }catch(err){showError(err)}
+  return;
+ }
+ /* NOVO ENVIO: taxa de 30% (fora do X) descontada da carteira agora e
+    RETIDA pela equipe — ela entra no 🏆 Cofre Real somente quando a
+    tarefa for PUBLICADA no painel. Se for negada, volta para a carteira. */
+ const fee=cfFeePts();
+ const uid=currentUser.uid,wRef=doc(db,"wallets",uid);
+ try{
+  await runTransaction(db,async tx=>{
+   const wd=await tx.get(wRef);
+   const w=wd.exists()?wd.data():{};
+   const spend=spendValue(w,fee);
+   if(!spend)throw new Error("Bilhetes insuficientes para a taxa de publicação ("+fee+" ponto(s)). Faça tarefas para acumular e tente de novo.");
+   tx.set(wRef,{...applySpend(w,spend),updatedAt:serverTimestamp()},{merge:true});
+   tx.set(doc(collection(db,"wallets",uid,"history")),{kind:"collab_fee",amount:fee,reason:"Taxa de publicação de tarefa de colaborador (30% de "+cfRewardPts()+" pontos)",createdAt:serverTimestamp()});
+  });
+  await setDoc(doc(collection(db,"collabTasks")),{...data,feePaid:fee,createdAt:serverTimestamp(),appeals:0});
+  closeCollabForm();
+  toast("Taxa de "+fee+" bilhete(s) paga e tarefa enviada para revisão! Se for negada, a taxa volta para a sua carteira. 🤝");
+ }catch(err){
+  if(String(err?.message||"").includes("insuficiente"))return toast(err.message);
+  showError(err);
+ }
+};
+
+/* ============================================================
+   19g · CENTRAL DO COLABORADOR · inspeção das provas (tela cheia)
+   Dono de tarefa publicada (tasks com source:"collab" e ownerUid)
+   inspeciona os comprovantes enviados em taskClaims e decide:
+   aprovar (credita na hora na carteira), pedir correção ou negar.
+   Abre pela gaveta #claveta a partir do MENU ("Avaliar provas")
+   e do resumo da seção Ofertas dos colaboradores (#clv-teaser).
+   O participante pode levar o caso ao suporte com o ID da tarefa
+   (coleção "disputes" — auditada pelo painel na aba Disputas).
+   ============================================================ */
+let clvIsOpen=false,clvClaims={},clvUns=[],clvKey=null,clvFilter="pending",clvTask="all",dispTaskId=null;
+const clvMyTasks=()=>tasks.filter(t=>t.source==="collab"&&t.ownerUid&&currentUser&&t.ownerUid===currentUser.uid);
+const clvAllMine=()=>{const ids=new Set(clvMyTasks().map(t=>t.id));return Object.values(clvClaims).filter(c=>ids.has(c.taskId))};
+function clvStop(){clvUns.forEach(f=>{try{f()}catch(e){}});clvUns=[];clvClaims={};clvKey=null;try{clvRenderAll()}catch(e){}}
+function watchCollabReview(){
+ const ids=clvMyTasks().map(t=>t.id).sort();
+ const key=ids.join("|");
+ if(key===clvKey)return;
+ clvKey=key;
+ clvUns.forEach(f=>{try{f()}catch(e){}});clvUns=[];clvClaims={};
+ if(!ids.length){clvRenderAll();return}
+ try{
+  /* Firestore: no máximo 30 valores por consulta "in" — divide em blocos */
+  for(let i=0;i<ids.length;i+=30){
+   clvUns.push(onSnapshot(query(collection(db,"taskClaims"),where("taskId","in",ids.slice(i,i+30))),s=>{
+    s.docChanges().forEach(ch=>{if(ch.type==="removed")delete clvClaims[ch.doc.id];else clvClaims[ch.doc.id]={id:ch.doc.id,...ch.doc.data()}});
+    clvRenderAll();
+   },e=>console.error("Provas das minhas tarefas:",e)));
+  }
+ }catch(e){console.error("Central do colaborador:",e)}
+}
+function clvCounts(){
+ const m=clvAllMine();
+ return{pend:m.filter(c=>(c.status||"pending")==="pending").length,ok:m.filter(c=>c.status==="approved").length,no:m.filter(c=>c.status==="rejected").length,chg:m.filter(c=>c.status==="changes").length,total:m.length};
+}
+function clvRenderAll(){
+ const cnt=clvCounts(),mine=clvMyTasks();
+ /* resumo na seção Ofertas dos colaboradores */
+ const tz=$("clv-teaser");
+ if(tz){
+  if(currentUser&&currentUser.emailVerified&&mine.length){
+   tz.hidden=false;
+   tz.innerHTML=`<div class="clv-tbtn"><div style="min-width:0"><b>🤝 Central do colaborador</b><p class="hint" style="margin:4px 0 0">${mine.length} tarefa(s) sua(s) publicada(s) com o carimbo 🤝 · <b>a inspeção das provas é sua</b><br>${cnt.pend?`<b style="color:var(--acx)">${cnt.pend} prova(s) aguardando a sua avaliação</b>`:"nenhuma prova pendente agora"} · ${cnt.ok} aprovada(s) · ${cnt.chg} em correção · ${cnt.no} negada(s)</p></div><button class="btn" type="button" data-clv="1">${cnt.pend?"Avaliar provas agora →":"Abrir central do colaborador →"}</button></div>`;
+  }else tz.hidden=true;
+ }
+ /* badge vermelho no menu */
+ const mb=$("clv-menu-badge");
+ if(mb){mb.hidden=!(currentUser&&cnt.pend>0);mb.textContent=cnt.pend}
+ /* conteúdo da gaveta (só se estiver aberta) */
+ if(!clvIsOpen)return;
+ const st=$("clv-stats");
+ if(st)st.innerHTML=[["Tarefas publicadas",mine.length,""],["Aguardando você",cnt.pend,"gold"],["Aprovadas",cnt.ok,"green"],["Negadas",cnt.no,"red"]].map(([l,v,c])=>`<div class="clv-stat"><span>${l}</span><b class="${c}">${v}</b></div>`).join("");
+ const tb=$("clv-tabs");
+ if(tb)tb.innerHTML=[["pending","Pendentes ("+cnt.pend+")"],["changes","Correção ("+cnt.chg+")"],["approved","Aprovadas ("+cnt.ok+")"],["rejected","Negadas ("+cnt.no+")"]].map(([k,l])=>`<button type="button" data-clv-tab="${k}" class="${clvFilter===k?"on":""}">${l}</button>`).join("");
+ const sel=$("clv-tasksel");
+ if(sel){
+  sel.innerHTML=`<button type="button" class="clv-taskchip ${clvTask==="all"?"on":""}" data-clv-task="all"><span>Todas as minhas tarefas</span><b>${cnt.total} prova(s)</b></button>`+mine.map(t=>{
+   const n=clvAllMine().filter(c=>c.taskId===t.id).length;
+   const pend=clvAllMine().filter(c=>c.taskId===t.id&&(c.status||"pending")==="pending").length;
+   return `<button type="button" class="clv-taskchip ${clvTask===t.id?"on":""}" data-clv-task="${esc(t.id)}"><span>${esc(t.serviceLabel||t.name||t.id)} <small class="mono" style="color:var(--mu)">(${esc(t.id)})</small>${pend?` · <b style="color:var(--acx)">${pend} pendente(s)</b>`:""}</span><b>${n}</b></button>`;
+  }).join("");
+ }
+ const list=$("clv-list");
+ if(!list)return;
+ let items=clvAllMine().filter(c=>clvFilter==="pending"?(c.status||"pending")==="pending":c.status===clvFilter);
+ if(clvTask!=="all")items=items.filter(c=>c.taskId===clvTask);
+ items.sort((a,b)=>(stampMs(b.submittedAt)||0)-(stampMs(a.submittedAt)||0));
+ if(!mine.length){
+  list.innerHTML=`<div class="clv-claim"><b>Nenhuma tarefa publicada ainda</b><p class="hint" style="margin:0">Quando a equipe aprovar uma das suas tarefas enviadas, ela aparece no ar com o carimbo 🤝 e as provas enviadas pelos participantes chegam aqui para você inspecionar. Envie uma tarefa pelo botão “Anunciar como colaborador”.</p></div>`;
+  return;
+ }
+ list.innerHTML=items.length?items.map(clvClaimCard).join(""):`<div class="clv-claim"><p class="hint" style="margin:0">Nenhuma prova nesta visão.${clvFilter==="pending"?" Quando um participante concluir uma das suas tarefas e anexar o comprovante, ele aparece aqui para você avaliar.":""}</p></div>`;
+}
+function clvClaimCard(c){
+ const t=tasks.find(x=>x.id===c.taskId)||{};
+ const st=c.status||"pending";
+ const rd=Math.max(1,Math.floor(Number(t.reward??c.reward)||1)),ty=t.ticketType||c.ticketType||"common";
+ const ini=String(c.participantName||"?").charAt(0).toUpperCase();
+ const proofs=[
+  c.proofText?["📝 Texto da prova",c.proofText,false]:null,
+  c.proofCode?["🔑 Código / cupom",c.proofCode,false]:null,
+  c.proofImage?["🖼 Print (link da imagem)",c.proofImage,true]:null,
+  c.proofVideo?["🎬 Gravação de tela (link)",c.proofVideo,true]:null,
+  c.proofWhen?["🕒 Data e hora da execução",c.proofWhen,false]:null
+ ].filter(Boolean);
+ const pending=st==="pending"||st==="changes";
+ const cls=st==="approved"?"ok":st==="rejected"?"no":pending?"wait":"";
+ const stampTxt=c.reviewedAt?`Avaliada ${String(c.reviewedBy||"").startsWith("collab:")?"por você":"pela equipe"} em ${fmt(c.reviewedAt)}`:"";
+ return `<div class="clv-claim ${cls}">
+  <div class="clv-who">
+   <span class="ico" aria-hidden="true">${esc(ini)}</span>
+   <div class="nm"><b>${esc(c.participantName||"Participante")}</b><small>${esc(c.email||c.uid||"")} · enviada em ${fmt(c.submittedAt)}</small></div>
+   <span class="tag ${st==="approved"?"g":st==="rejected"?"r":st==="changes"?"y":"y"}" style="align-self:flex-start">${st==="approved"?"✓ Aprovada":st==="rejected"?"🚫 Negada":st==="changes"?"✏️ Correção pedida":"⏳ Aguardando você"}</span>
+  </div>
+  <div class="clv-taskchip" style="cursor:default"><span><b style="font:600 13px var(--sans)">${esc(t.serviceLabel||t.name||c.taskId)}</b> <small class="mono" style="color:var(--mu)">(${esc(c.taskId)})</small></span><b>+${rd} ${esc(catLabel(ty))}</b></div>
+  <div class="clv-proofs">
+   ${proofs.map(([lab,val,url])=>`<div class="clv-proof"><span>${lab}</span>${url&&/^https?:\/\//i.test(String(val))?`<a href="${esc(String(val))}" target="_blank" rel="noopener noreferrer">${esc(val)}</a>`:esc(val)}${url&&!/^https?:\/\//i.test(String(val))?` <small>(link inválido)</small>`:""}</div>`).join("")||'<div class="clv-proof"><span>Comprovante</span>'+esc(c.proof||"(nenhuma prova anexada)")+"</div>"}
+  </div>
+  ${pending?`
+  <div class="field" style="margin:0"><label class="label">Nota para o participante (obrigatória em correção e negação)</label><textarea data-clv-note="${esc(c.id)}" maxlength="500" placeholder="Ex.: O print não mostra o @ do perfil — envie um print completo."></textarea></div>
+  <div class="clv-act">
+   <button class="btn sm" type="button" data-clv-ok="${esc(c.id)}">✅ Aprovar e pagar +${rd} ${esc(catLabel(ty))}</button>
+   <button class="btn sm ghost" type="button" data-clv-chg="${esc(c.id)}">✏️ Pedir correção</button>
+   <button class="btn sm ghost" type="button" data-clv-no="${esc(c.id)}" style="color:var(--rd)">🚫 Negar com motivo</button>
+  </div>`:`
+  <p class="clv-note">${stampTxt}${st==="rejected"&&c.rejectionReason?" · Motivo: "+esc(c.rejectionReason):""}${st==="changes"&&c.reviewNote?" · Correção pedida: "+esc(c.reviewNote):""}</p>`}
+ </div>`;
+}
+async function clvApprove(cid){
+ const c=clvClaims[cid];
+ if(!c)return toast("Prova não encontrada — atualize a página.");
+ if(!(c.status==="pending"||c.status==="changes"))return toast("Esta prova já foi avaliada.");
+ const t=tasks.find(x=>x.id===c.taskId);
+ if(!t)return toast("Tarefa não encontrada — atualize a página.");
+ const left=stockOf(t);
+ if(left!==null&&left<=0)return toast("As vagas desta tarefa esgotaram — aprovação bloqueada.");
+ const rd=Math.max(1,Math.floor(Number(t.reward)||1)),ty=t.ticketType||"common";
+ try{
+  await runTransaction(db,async tx=>{
+   const ref=doc(db,"taskClaims",cid);
+   const cs=await tx.get(ref);
+   if(!cs.exists())throw new Error("Prova não encontrada.");
+   const st=cs.data().status;
+   if(!(st==="pending"||st==="changes"))throw new Error("Esta prova já foi avaliada.");
+   tx.set(doc(db,"wallets",c.uid),{[ty]:increment(rd),updatedAt:serverTimestamp()},{merge:true});
+   tx.set(doc(collection(db,"wallets",c.uid,"history")),{kind:"reward",amount:rd,ticketType:ty,taskId:t.id,taskName:t.serviceLabel||t.name||"",eventName:"",reviewedByOwner:true,createdAt:serverTimestamp()});
+   if(t.stock>0)tx.set(doc(db,"tasks",t.id),{stockLeft:Math.max(0,(stockOf(t)??Math.floor(Number(t.stock)))-1),updatedAt:serverTimestamp()},{merge:true});
+   tx.update(ref,{status:"approved",reviewedAt:serverTimestamp(),reviewedBy:"collab:"+currentUser.uid,reviewerName:(profile?.name||"Colaborador").trim(),reward:rd,ticketType:ty});
+  });
+  toast(`Prova aprovada! +${rd} bilhete(s) ${catLabel(ty)} creditado(s) ao participante 🎉`);
+ }catch(err){showError(err)}
+}
+async function clvSetStatus(cid,status){
+ const c=clvClaims[cid];
+ if(!c)return;
+ if(!(c.status==="pending"||c.status==="changes"))return toast("Esta prova já foi avaliada.");
+ const box=document.querySelector(`[data-clv-note="${cid}"]`);
+ const note=(box?.value||"").trim();
+ if(!note)return toast(status==="changes"?"Escreva o que o participante deve corrigir.":"Explique o motivo da negação — o participante pode recorrer ao suporte.");
+ try{
+  await updateDoc(doc(db,"taskClaims",cid),{
+   status,
+   reviewNote:status==="changes"?note.slice(0,500):"",
+   rejectionReason:status==="rejected"?note.slice(0,500):"",
+   reviewedAt:serverTimestamp(),
+   reviewedBy:"collab:"+currentUser.uid,
+   reviewerName:(profile?.name||"Colaborador").trim()
+  });
+  toast(status==="changes"?"Correção pedida: o participante vai reenviar a prova.":"Prova negada com motivo registrado. Se ele desconfiar de má-fé, pode levar o caso ao suporte.");
+ }catch(err){showError(err)}
+}
+function openClv(){
+ if(!currentUser||!currentUser.emailVerified){toast("Entre com uma conta verificada para usar a Central do colaborador.");return}
+ clvIsOpen=true;
+ $("claveta").classList.add("open");
+ $("clav").classList.add("open");
+ document.documentElement.classList.add("gav-lock");
+ clvRenderAll();
+}
+function closeClv(){
+ clvIsOpen=false;
+ $("claveta").classList.remove("open");
+ $("clav").classList.remove("open");
+ document.documentElement.classList.remove("gav-lock");
+}
+document.addEventListener("click",e=>{
+ const b=e.target.closest("[data-clv]");
+ if(b){openClv();return}
+ const tab=e.target.closest("[data-clv-tab]");
+ if(tab){clvFilter=tab.dataset.clvTab;clvRenderAll();return}
+ const tk=e.target.closest("[data-clv-task]");
+ if(tk){clvTask=tk.dataset.clvTask;clvRenderAll();return}
+ const ok=e.target.closest("[data-clv-ok]");
+ if(ok)return clvApprove(ok.dataset.clvOk);
+ const ch=e.target.closest("[data-clv-chg]");
+ if(ch)return clvSetStatus(ch.dataset.clvChg,"changes");
+ const no=e.target.closest("[data-clv-no]");
+ if(no)return clvSetStatus(no.dataset.clvNo,"rejected");
+ if(e.target.closest("#clv-x"))return closeClv();
+});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&clvIsOpen)closeClv()});
+/* ---- DISPUTA: participante leva o caso ao suporte com o ID da tarefa ---- */
+function openDispute(id){
+ const t=tasks.find(x=>x.id===id);
+ if(!t)return;
+ if(!currentUser||!currentUser.emailVerified){toast("Entre com uma conta verificada para levar o caso ao suporte.");return}
+ dispTaskId=id;
+ $("disp-info").innerHTML=`Tarefa: <b>${esc(t.serviceLabel||t.name||"")}</b> · ID <b class="mono">${esc(t.id)}</b> · Colaborador: <b>${esc(t.ownerName||"—")}</b> · Sua prova: <b>${claims[t.id]?{pending:"aguardando avaliação",changes:"correção pedida",approved:"aprovada",rejected:"negada"}[claims[t.id].status]||claims[t.id].status:"ainda não enviada"}</b>`;
+ $("disp-reason").value="";
+ $("disp-modal").hidden=false;
+}
+function closeDispute(){$("disp-modal").hidden=true;dispTaskId=null}
+$("disp-close").onclick=closeDispute;
+$("disp-cancel").onclick=closeDispute;
+$("disp-modal").addEventListener("click",e=>{if(e.target===$("disp-modal"))closeDispute()});
+$("disp-send").onclick=async()=>{
+ if(!dispTaskId)return;
+ const t=tasks.find(x=>x.id===dispTaskId);
+ if(!t)return closeDispute();
+ const reason=($("disp-reason").value||"").trim();
+ if(reason.length<10)return toast("Descreva a suspeita com pelo menos 10 caracteres.");
+ const c=claims[t.id]||{};
+ try{
+  await addDoc(collection(db,"disputes"),{
+   taskId:t.id,
+   taskName:t.serviceLabel||t.name||"",
+   claimId:currentUser.uid+"_"+t.id,
+   collabId:t.collabId||"",
+   ownerUid:t.ownerUid||"",
+   ownerName:t.ownerName||"",
+   uid:currentUser.uid,
+   participantName:(profile?.name||"Participante").trim(),
+   email:currentUser.email||"",
+   reason:reason.slice(0,800),
+   claimStatus:c.status||"",
+   proofText:c.proofText||"",
+   proofCode:c.proofCode||"",
+   proofImage:c.proofImage||"",
+   proofVideo:c.proofVideo||"",
+   proofWhen:c.proofWhen||"",
+   status:"open",
+   createdAt:serverTimestamp()
+  });
+  closeDispute();
+  toast("Caso enviado ao suporte com o ID da tarefa "+t.id+". A equipe vai auditar a avaliação e pode reverter a decisão. 🛡️");
+ }catch(err){showError(err)}
+};
+document.addEventListener("click",e=>{
+ const dp=e.target.closest("[data-dispute]");
+ if(dp)openDispute(dp.dataset.dispute);
+});
+
+/* ============================================================
+   19d-3 · COFRE REAL · sorteio mensal das taxas de publicação
+   Todas as taxas de 30% pagas pelos colaboradores somam aqui
+   (settings/cofre · pot). Participante escolhe 1 número de 1 a
+   1000 (cofreTickets/{uid}_{mês}). No fim do mês a equipe sorteia:
+   quem tem o número sorteado leva o cofre (dividido entre
+   ganhadores); se ninguém acertar, acumula para o mês seguinte.
+   Histórico dos sorteios em cofireDraws (mesma coleção do painel).
+   ============================================================ */
+const cofreMonthKey=(d=new Date())=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0");
+let cofrePot=0,cofreDraws=[],cofreMy=null,unCof=null;
+const cofreFmt=v=>Number(v||0).toLocaleString("pt-BR");
+onSnapshot(doc(db,"settings","cofre"),s=>{const d=s.exists()?s.data():{};cofrePot=Math.max(0,Math.floor(Number(d.pot)||0));renderCofre()},e=>console.error("Cofre:",e));
+onSnapshot(query(collection(db,"cofireDraws"),orderBy("createdAt","desc"),limit(10)),s=>{cofreDraws=s.docs.map(d=>({id:d.id,...d.data()}));renderCofre()},e=>console.error("Sorteios do cofre:",e));
+function watchCofreMy(uid){
+ if(unCof){try{unCof()}catch(e){}unCof=null}
+ cofreMy=null;
+ if(!uid){renderCofre();return}
+ try{
+  unCof=onSnapshot(doc(db,"cofreTickets",uid+"_"+cofreMonthKey()),x=>{cofreMy=x.exists()?x.data():null;renderCofre()},e=>console.error("Número do cofre:",e));
+ }catch(e){console.error("Cofre (meu número):",e)}
+}
+function cofreCountdown(){
+ const now=new Date();
+ const end=new Date(now.getFullYear(),now.getMonth()+1,0,23,59,59);
+ const days=Math.max(0,Math.ceil((end-now)/864e5));
+ return "sorteio em até "+days+" dia(s) · "+["janeiro","fevereiro","março","abril","maio","junho","julho","agosto","setembro","outubro","novembro","dezembro"][now.getMonth()];
+}
+function renderCofre(){
+ if(!$("cfre-pot"))return;
+ $("cfre-pot").textContent=cofreFmt(cofrePot);
+ $("cfre-month").textContent=cofreMonthKey();
+ $("cfre-count").textContent=cofreCountdown();
+ $("cfre-mine").textContent=cofreMy?"Nº "+Math.floor(Number(cofreMy.number)||0):"—";
+ $("cfre-tag").textContent="Acumulado: "+cofreFmt(cofrePot)+" bilhetes";
+ if(cofreMy&&!$("cfre-num").value)$("cfre-num").value=Math.floor(Number(cofreMy.number)||"")||"";
+ $("cfre-draws").innerHTML=cofreDraws.length?cofreDraws.map(d=>{
+  const w=Array.isArray(d.winners)?d.winners:[];
+  return `<div class="cform-item"><div class="cf-head"><b>${esc(d.monthKey||"—")} · número sorteado: <span class="mono">${Math.floor(Number(d.drawnNumber)||0)}</span></b>${d.rolledOver?'<span class="tag y">Ninguém acertou · acumulou</span>':`<span class="tag g">${w.length} ganhador(es)</span>`}</div>
+  <p class="hint">Cofre do mês: ${cofreFmt(Math.floor(Number(d.pot)||0))} bilhete(s)${w.length?" · "+w.map(x=>esc(x.displayName||"?")+" levou "+cofreFmt(Math.floor(Number(x.payout)||0))).join(" · "):""}</p></div>`;
+ }).join(""):'<p class="hint">O primeiro sorteio acontece no fim deste mês. Boa sorte!</p>';
+}
+$("cfre-pick").onclick=async()=>{
+ if(!currentUser||!currentUser.emailVerified)return toast("Entre com uma conta verificada para escolher seu número do Cofre Real.");
+ const n=Math.floor(Number($("cfre-num").value));
+ if(!Number.isInteger(n)||n<1||n>1000)return toast("Escolha um número entre 1 e 1000.");
+ try{
+  await setDoc(doc(db,"cofreTickets",currentUser.uid+"_"+cofreMonthKey()),{uid:currentUser.uid,displayName:(profile?.name||"").trim()||"Participante",number:n,monthKey:cofreMonthKey(),updatedAt:serverTimestamp()},{merge:true});
+  toast("Número "+n+" confirmado no Cofre Real! Boa sorte! 🍀");
+ }catch(err){showError(err)}
+};
 
 /* ============================================================
    19e · ANÚNCIO PATROCINADO (botão flutuante + gaveta + recompensa)
@@ -4101,7 +5446,7 @@ addEventListener("resize",updatePagers);
 let wlFilter="all",wlHide=false;
 try{wlHide=localStorage.getItem("wlhide")==="1"}catch(e){}
 const HICON={check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m4.5 12.5 5 5 10-11"/></svg>',gift:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="8" width="17" height="4" rx="1"/><path d="M5.5 12v7a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-7M3.5 8l2-3.5h13l2 3.5M12 8v12M8.5 4.5c-1.5 0-2.5 1-2.5 2.2 0 1.3 1.3 2 2.8 1.3zM15.5 4.5c1.5 0 2.5 1 2.5 2.2 0 1.3-1.3 2-2.8 1.3z"/></svg>',cal:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="16" rx="2.5"/><path d="M8 3v4M16 3v4M3.5 10h17M8 14h3"/></svg>',ticket:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8a2 2 0 0 0 2-2h12a2 2 0 0 1 2 2v1a2.5 2.5 0 0 0 0 5v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1a2.5 2.5 0 0 0 0-5z"/><path d="M14.5 7v9.5" stroke-dasharray="2.5 3"/></svg>',undo:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h11a5 5 0 0 1 0 10H9"/><path d="m8 5-4 4 4 4"/></svg>',gavel:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 6a3.5 3.5 0 0 1 5 5l-2 2-5-5zM8.5 10.5 3 16v5h5l5.5-5.5zM14 20h7M4 3l3 3"/></svg>',star:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 2.7 5.6 6.1.8-4.5 4.3 1.1 6.1L12 17l-5.4 2.8 1.1-6.1L3.2 9.4l6.1-.8z"/></svg>',bolt:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4.5 13.5H11L9.5 22 18 10.5h-6.5z"/></svg>'};
-const HKIND={reward:["Tarefa aprovada",HICON.check],welcome:["Bônus de boas-vindas",HICON.gift],event_join:["Entrada no evento",HICON.cal],reserve:["Reserva de número",HICON.ticket],refund:["Devolução do sorteio",HICON.undo],auction_bid:["Lance no leilão",HICON.gavel],auction_refund:["Devolução de leilão",HICON.undo],admin_credit:["Crédito do organizador",HICON.star],ad_reward:["Recompensa do anúncio",HICON.bolt],scratch:["Raspadinha diária",HICON.bolt]};
+const HKIND={reward:["Tarefa aprovada",HICON.check],welcome:["Bônus de boas-vindas",HICON.gift],event_join:["Entrada no evento",HICON.cal],reserve:["Reserva de número",HICON.ticket],refund:["Devolução do sorteio",HICON.undo],auction_bid:["Lance no leilão",HICON.gavel],auction_refund:["Devolução de leilão",HICON.undo],admin_credit:["Crédito do organizador",HICON.star],ad_reward:["Recompensa do anúncio",HICON.bolt],scratch:["Raspadinha diária",HICON.bolt],collab_fee:["Taxa de publicação (colaborador)",HICON.ticket],collab_refund:["Devolução da taxa (colaborador)",HICON.undo],cofre_reward:["Prêmio do Cofre Real 🏆",HICON.star]};
 const hPlus=k=>/reward|welcome|refund|credit/.test(k||"");
 function sparkSVG(pts){
  if(pts.length<2)return"";
