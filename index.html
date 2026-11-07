@@ -1,6 +1,4 @@
 
-
-
 <!doctype html>
 <html lang="pt-BR">
 <head>
@@ -62,7 +60,7 @@
 :root,[data-theme=dark]{color-scheme:dark;--bg:#0b0e11;--p:#181a20;--p2:#1e2329;--l:#2b3139;--l2:#474d57;--ink:#eaecef;--mu:#848e9c;--ac:#fcd535;--acx:#fcd535;--on:#181a20;--g:#0ecb81;--rd:#f6465d;--as:rgba(252,213,53,.1);--gs:rgba(14,203,129,.12);--rs:rgba(246,70,93,.12);--sh:0 24px 60px rgba(0,0,0,.5);--glow:rgba(252,213,53,.08);--bsh:rgba(252,213,53,.5);--sans:"IBM Plex Sans",system-ui,sans-serif;--mono:"IBM Plex Mono",ui-monospace,monospace}
 [data-theme=light]{color-scheme:light;--bg:#fafafa;--p:#fff;--p2:#f5f5f5;--l:#eaecef;--l2:#d0d4db;--ink:#1e2329;--mu:#707a8a;--acx:#946f00;--g:#03a66d;--rd:#cf304a;--as:rgba(252,213,53,.2);--gs:rgba(3,166,109,.1);--rs:rgba(207,48,74,.1);--sh:0 16px 40px rgba(20,21,26,.1);--glow:rgba(252,213,53,.18);--bsh:rgba(200,150,0,.45)}
 *{box-sizing:border-box}
-html{scroll-behavior:smooth;scroll-padding-top:110px}
+html{scroll-behavior:smooth;scroll-padding-top:132px}
 body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.55 var(--sans);-webkit-font-smoothing:antialiased}
 [hidden]{display:none!important}
 button,input{font:inherit}
@@ -249,6 +247,15 @@ section{padding-top:48px;padding-bottom:24px}
 /* leilões */
 .auc-meta{display:flex;justify-content:space-between;font-size:11.5px;color:var(--mu)}
 .auc-lider{display:flex;justify-content:space-between;align-items:center;gap:8px;background:var(--as);border-radius:8px;padding:8px 10px;font-size:12.5px}
+/* ranking de participantes do leilão: top 10 + posição do usuário logado */
+.auc-rk{display:grid;gap:4px;margin-top:2px}
+.auc-rk .rk-head{font:600 9.5px var(--mono);letter-spacing:1px;text-transform:uppercase;color:var(--mu);margin:4px 0 2px}
+.auc-rk .rrow{display:flex;align-items:center;gap:8px;background:var(--p2);border:1px solid var(--l);border-radius:8px;padding:6px 9px;font-size:12.5px;min-width:0}
+.auc-rk .rrow.first{background:var(--as);border-color:var(--ac)}
+.auc-rk .rrow.me{border-color:var(--g);background:var(--gs)}
+.auc-rk .pos{font:600 11px var(--mono);color:var(--acx);width:24px;flex:none}
+.auc-rk .rname{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.auc-rk .amt{font:600 12px var(--mono);white-space:nowrap;flex:none}
 .tipbox{border:1px dashed var(--l);border-radius:12px;padding:12px 14px;margin:10px 0 14px;font-size:13px;line-height:1.55;color:var(--mu2,var(--mu));background:var(--as)}
 .steps{list-style:none;margin:0 0 18px;padding:0;display:flex;gap:8px;flex-wrap:wrap}
 .steps li{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;color:var(--mu);font-weight:500;padding:7px 12px;border:1px solid var(--l);border-radius:999px;background:var(--p)}
@@ -1147,15 +1154,94 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
  .chart-head b{font-size:13.5px}
 }
 @media(hover:none){.tkc:after{display:none}}
+/* ═══ GAVETA DE LOGIN (desce em tela cheia quando não há usuário) ═══ */
+/* barra fixa no topo, sempre visível enquanto não houver login */
+.ldbar{border-top:1px solid var(--l);background:var(--as)}
+.ldbar .wrap{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding-top:10px;padding-bottom:10px}
+.ld-step{flex:none;font:600 9.5px var(--mono);letter-spacing:1.2px;color:var(--acx);text-transform:uppercase;background:var(--p);border:1px solid var(--ac);border-radius:99px;padding:3px 9px}
+.ld-txt{flex:1;min-width:220px}
+.ld-txt b{display:block;font-size:13.5px}
+.ld-txt small{display:block;color:var(--mu);font-size:11.5px;margin-top:2px}
+.ld-act{display:flex;gap:8px;flex-wrap:wrap}
+@media(max-width:640px){.ldbar .wrap{gap:10px}.ld-act{width:100%}.ld-act .btn{flex:1}}
+/* palco da gaveta de login (rolagem dentro da tela cheia) */
+.lg-stage{overflow-y:auto;padding:0 18px;display:grid;gap:4px;align-content:start}
+.lg-soc{display:grid;gap:8px;margin-top:4px}
+.soc{display:flex;align-items:center;justify-content:center;gap:9px;min-height:44px;border-radius:8px;border:1px solid var(--l);cursor:pointer;font:600 13.5px var(--sans);background:var(--p2);color:var(--ink);transition:transform .15s,filter .2s}
+.soc:hover{transform:translateY(-1px);filter:brightness(1.06)}
+.soc:active{transform:scale(.98)}
+.soc i{font-style:normal;font-weight:700;font-size:15px;display:grid;place-items:center;width:22px;height:22px;border-radius:50%;flex:none}
+.soc.s-g{background:#fff;color:#1f2937;border-color:#dadce0}
+.soc.s-f{background:#1877f2;color:#fff;border-color:#1877f2}
+.soc.s-t{background:#010101;color:#fff;border-color:#010101}
+/* card "o que acontece depois" dentro da gaveta */
+.lg-next{margin:10px 0 14px;padding:14px;display:grid;gap:8px}
+.lg-next>b{font-size:13px}
+.lg-next ol{margin:0;padding-left:0;list-style:none;display:grid;gap:6px}
+.lg-next li{display:flex;gap:10px;align-items:flex-start;font-size:12.5px;color:var(--mu);line-height:1.5}
+.lg-next li i{flex:none;width:20px;height:20px;border-radius:50%;background:var(--as);border:1px solid var(--ac);color:var(--acx);display:grid;place-items:center;font:600 11px var(--mono);font-style:normal}
+/* linha de provedor conectado (perfil · mais opções de entrada) */
+.lk-row{display:flex;align-items:center;gap:12px;background:var(--p2);border:1px solid var(--l);border-radius:12px;padding:12px;transition:border-color .2s,background .2s}
+.lk-row:hover{border-color:var(--l2)}
+.lk-row.on{border-color:color-mix(in srgb,var(--g) 45%,var(--l));background:color-mix(in srgb,var(--gs) 45%,var(--p2))}
+.lk-logo{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;flex:none;border:1px solid var(--l);overflow:hidden}
+.lk-logo.lk-g{background:#fff}
+.lk-logo.lk-f{background:#1877f2;border-color:transparent}
+.lk-logo.lk-t{background:#010101;border-color:transparent}
+.lk-logo svg{width:22px;height:22px}
+.lk-info{flex:1;min-width:0;display:grid;gap:2px}
+.lk-info b{font-size:13.5px}
+.lk-info small{display:block;font-size:11.5px;color:var(--mu);line-height:1.45;overflow-wrap:anywhere}
+.lk-row .btn{flex:none}
+/* notificações do organizador dentro do perfil */
+.pfn-row{display:flex;align-items:center;gap:11px;background:var(--p2);border:1px solid var(--l);border-radius:12px;padding:11px 12px;cursor:pointer;transition:border-color .2s}
+.pfn-row:hover{border-color:var(--l2)}
+.pfn-row.un{border-color:var(--ac);background:var(--as)}
+.pfn-ico{width:34px;height:34px;border-radius:10px;background:linear-gradient(145deg,#ffe56b,var(--ac));color:var(--on);display:grid;place-items:center;font-size:15px;flex:none}
+.pfn-t{flex:1;min-width:0;display:grid;gap:2px}
+.pfn-t b{font-size:13px;overflow-wrap:anywhere}
+.pfn-t small{font-size:10.5px;color:var(--mu);font-family:var(--mono)}
+/* ═══ CONFIRMAÇÃO PROFISSIONAL (substitui os confirms nativos do navegador) ═══ */
+#cf-modal .colab-card{width:min(440px,calc(100vw - 32px))}
+#cf-msg{font-size:13.5px;line-height:1.6;overflow-wrap:anywhere}
+/* ═══ AJUDA · central de dúvidas com visual sóbrio e profissional ═══ */
+.fq-head{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:18px 18px 10px;border-bottom:1px solid var(--l)}
+.fq-head .cs-ico{width:44px;height:44px;border-radius:13px}
+.fq-head .cs-txt{flex:1;min-width:240px}
+.fq-head b{font-size:15px;letter-spacing:-.01em}
+.fq-head p{font-size:12.5px;color:var(--mu);margin-top:3px}
+.fq-list{padding:14px 18px 18px}
+.fq-item{border:1px solid var(--l);border-radius:12px;background:var(--p);display:grid}
+.fq-item.open{border-color:var(--l2);background:var(--p)}
+.fq-perm{border:0;background:none;padding:14px 14px;cursor:pointer;gap:12px}
+.fq-perm .cs-sw{display:none}
+.fq-perm:after{content:"+";color:var(--acx);font:600 20px var(--mono);flex:none;transition:transform .2s}
+.fq-item.open .fq-perm:after{content:"−"}
+.fq-perm .cs-pt{flex:1;min-width:0}
+.fq-perm .cs-pt b{font-size:14px;font-weight:600;overflow-wrap:anywhere;color:var(--ink)}
+.fq-perm .cs-pt small{display:block;font-size:11px;color:var(--acx);margin-top:2px;font:600 9px var(--mono);letter-spacing:1px;text-transform:uppercase}
+.fq-ans{display:none;margin:0 14px 0 14px;padding:0 14px 14px;border-left:2px solid var(--l2);font-size:13.5px;line-height:1.7;color:var(--mu);overflow-wrap:anywhere;animation:stagein .2s ease}
+.fq-item.open .fq-ans{display:block}
+.fq-item.open .fq-ans b{color:var(--ink)}
+
+/* ── v2 · ORDEM PSICOLÓGICA: stats no hero + CTA final de recência ── */
+.hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.hero-stats>div{background:var(--p2);border:1px solid var(--l);border-radius:12px;padding:10px 14px}
+.hero-stats span{display:block;font-size:10px;color:var(--mu);text-transform:uppercase;letter-spacing:.6px;font-weight:700}
+.hero-stats b{display:block;font:600 17px var(--mono);color:var(--ink);margin-top:3px}
+.hero-stats>div:first-child b{color:var(--g)}
+@media(max-width:720px){.hero-stats{gap:8px}.hero-stats>div{padding:8px 10px;border-radius:10px}.hero-stats b{font-size:14px}}
+.ctaf{display:flex;gap:18px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:22px 24px;margin:26px 0;border:1px solid var(--l);background:linear-gradient(180deg,var(--p),var(--p2))}
+.ctaf h2{margin:8px 0 6px;font-size:21px}
+.ctaf .lead{margin:0;color:var(--mu);max-width:52ch}
+.cta-side{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.cta-cd{display:flex;flex-direction:column;background:var(--p2);border:1px solid var(--l);border-radius:12px;padding:10px 16px}
+.cta-cd span{font-size:10px;color:var(--mu);text-transform:uppercase;letter-spacing:.6px;font-weight:700}
+.cta-cd b{font:600 15px var(--mono);color:var(--g);margin-top:3px}
 </style>
 
 </head>
 <body>
-
-<div class="promo" id="promo"><div class="wrap">
- <span class="tag y">Cupom</span><span id="promo-t">10% de desconto no seguro.</span>
- <button class="btn sm ghost" id="promo-c">Copiar cupom</button>
-</div></div>
 
 <header class="top" id="top"><div class="wrap bar">
  <a class="brand" href="#top" aria-label="Yshippcommerce — início"><span class="mark">Y</span><span class="brand-t">Yshippcommerce<small>um grupo Yellowishipp</small></span></a>
@@ -1180,9 +1266,19 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
   </button>
   <button class="ib" id="menu" aria-label="Abrir menu" aria-expanded="false" aria-controls="menu-sheet"><i></i><i></i><i></i></button>
  </div>
-</div></header>
-
-<div class="tick"><div class="wrap" id="ticker"></div></div>
+</div>
+<!-- ═══ GAVETA DE LOGIN · barra no topo, sempre visível sem usuário logado ═══ -->
+<div class="ldbar" id="ldbar" hidden>
+ <div class="wrap">
+  <span class="ld-step">Etapa 1 de 2</span>
+  <div class="ld-txt"><b>Sua participação começa aqui.</b><small>Entre ou crie sua conta. Depois, vamos orientar você nas próximas etapas.</small></div>
+  <div class="ld-act">
+   <button class="btn sm" id="ld-login" type="button">Entrar</button>
+   <button class="btn sm ghost" id="ld-register" type="button">Criar conta</button>
+  </div>
+ </div>
+</div>
+</header>
 
 <div class="wrap"><section id="premios" class="sec-top">
  <div class="sec-head"><div class="sec-row"><h2>Prêmios em jogo</h2><span class="tag g">Ao vivo</span></div><p id="pz-sub"></p></div>
@@ -1199,6 +1295,8 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
    <div class="dots" id="dots"></div>
    <button class="ib sm" id="hnext" aria-label="Próximo item">›</button>
   </div>
+  <!-- estatísticas-chave junto da promessa (prova social sustenta o hero) -->
+  <div class="hero-stats" id="hero-stats" aria-live="polite"></div>
  </div>
  <aside class="ticket" id="bilhete">
   <div class="tk-h"><div class="brand"><span class="mark">Y</span><div>Yshippcommerce<small>Bilhete oficial</small></div></div><span class="tag" id="t-badge">Sem número</span></div>
@@ -1215,6 +1313,9 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
   </div>
  </aside>
 </div></div>
+
+<!-- ticker de estatísticas: prova social logo abaixo do hero -->
+<div class="tick"><div class="wrap" id="ticker"></div></div>
 
 <!-- capa em carrossel (posição: topo) — imagem definida no painel administrativo -->
 <div class="wrap"><div class="cvp" id="cvp-hero" hidden></div></div>
@@ -1257,7 +1358,7 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
  <!-- ═══ PARTICIPAÇÃO NO PRÓPRIO SORTEIO: o botão "Escolher meu número" abre esta área aqui mesmo, sem descer a página ═══ -->
  <div class="sd-stage" id="participar" hidden>
   <div class="sd-stage-h">
-   <button class="btn sm ghost" id="sd-back" type="button" aria-label="Voltar para a lista de sorteios">‹ Voltar aos sorteios</button>
+   <button class="btn sm" id="sd-back" type="button" aria-label="Voltar para a lista de sorteios" style="box-shadow:0 0 0 3px var(--as)">‹ Voltar aos sorteios</button>
    <div class="sd-stage-t"><span class="label">Participando de</span><b id="sd-stage-name">Sorteio</b></div>
   </div>
   <ol class="steps" id="prog"></ol>
@@ -1278,9 +1379,20 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
      </div>
      <div class="actions" style="justify-content:space-between"><button class="btn" id="go">Entrar</button><button class="link" id="forgot" type="button">Esqueci minha senha</button></div>
      <div class="or" id="or">ou</div>
-     <button class="btn ghost wide" id="google">Continuar com Google</button>
+     <div class="lg-soc" id="auth-soc">
+     <button class="soc s-g" id="google" type="button"><i aria-hidden="true">G</i>Continuar com Google</button>
+     <button class="soc s-f" id="facebook" type="button"><i aria-hidden="true">f</i>Continuar com Facebook</button>
+     <button class="soc s-t" id="tiktok" type="button"><i aria-hidden="true">♪</i>Continuar com TikTok</button>
+    </div>
      <p class="hint" style="margin-top:12px">Ao continuar, você concorda com os <button class="link" type="button" data-terms="1">termos de uso e responsabilidades</button> e com o uso do seu nome apenas para operar o sorteio.</p>
      <p class="status" id="amsg"></p>
+    </div>
+
+    <!-- o login/cadastro agora SEMPRE abrem a gaveta em tela cheia (#login-gaveta) —
+         este painel (p-auth) fica oculto: nada de formulário solto na interface principal -->
+    <div class="panel" id="p-auth-cta" hidden>
+     <p class="hint">Para participar, entre na sua conta ou crie uma conta gratuita — leva menos de um minuto e abre em tela cheia.</p>
+     <div class="actions" style="justify-content:center;margin-top:10px"><button class="btn" id="cta-login" type="button">Entrar</button><button class="btn ghost" id="cta-register" type="button">Criar conta</button></div>
     </div>
 
     <div class="panel" id="p-verify" hidden>
@@ -1338,6 +1450,12 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
       <div class="actions" style="margin:0"><button class="btn ghost sm" id="forgot-in-profile" type="button">Esqueci minha senha — enviar link por e-mail</button></div>
      </div>
      <div class="actions"><button class="btn wide" id="save-profile">Salvar e continuar</button><span class="status" id="pstat" style="margin:0"></span></div>
+     <!-- ═══ MAIS OPÇÕES DE ENTRADA · conecte Google, Facebook e TikTok na conta ═══ -->
+     <div class="card" style="margin-top:18px;padding:14px;display:grid;gap:8px;border:1px solid var(--ac);background:var(--as)">
+      <b style="font-size:13.5px">Mais opções de entrada</b>
+      <p class="hint">Conecte outras formas de entrar na sua conta. Se um dia você esquecer a senha, entra por qualquer uma das conexões abaixo.</p>
+      <div id="link-accounts" style="display:grid;gap:8px;margin-top:4px"></div>
+     </div>
     </div>
 
     <div class="panel" id="p-event" hidden>
@@ -1383,6 +1501,20 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
    </aside>
   </div>
  </div>
+</section>
+
+<!-- barra de aviso do organizador: movida para depois da ação principal
+     (a primeira dobra agora pertence só à promessa do hero) -->
+<div class="promo" id="promo"><div class="wrap">
+ <span class="tag y">Cupom</span><span id="promo-t">10% de desconto no seguro.</span>
+ <button class="btn sm ghost" id="promo-c">Copiar cupom</button>
+</div></div>
+
+<!-- feed ao vivo subiu: prova social em tempo real colada na decisão de participar -->
+<section id="feed-sec">
+ <div class="sec-head"><div class="sec-row"><h2>Últimas participações</h2><span class="tag g">Ao vivo</span></div><p>Números reservados nos sorteios e lances dados nos leilões, em tempo real.</p></div>
+ <div class="tabs tabs3" id="ftabs" style="max-width:360px;margin-bottom:14px"><button data-v="all" class="on">Todas</button><button data-v="draw">Sorteios</button><button data-v="auc">Leilões</button></div>
+ <div class="card tbl" id="feed"></div>
 </section>
 
 <!-- ════════════════════════════════════════════════════════════
@@ -1442,16 +1574,26 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
 
 
 
-<section id="feed-sec">
- <div class="sec-head"><div class="sec-row"><h2>Últimas participações</h2><span class="tag g">Ao vivo</span></div><p>Números reservados nos sorteios e lances dados nos leilões, em tempo real.</p></div>
- <div class="tabs tabs3" id="ftabs" style="max-width:360px;margin-bottom:14px"><button data-v="all" class="on">Todas</button><button data-v="draw">Sorteios</button><button data-v="auc">Leilões</button></div>
- <div class="card tbl" id="feed"></div>
-</section>
-
 <section id="resultado">
  <div class="sec-head"><div class="sec-row"><h2>Resultado oficial</h2><span class="tag" id="res-tag">Pendente</span></div><p id="res-sub"></p></div>
  <div class="tabs tabs3" id="rtabs" style="max-width:360px;margin-bottom:14px"><button data-v="running" class="on">Em andamento</button><button data-v="winners">Ganhadores</button><button data-v="ended">Encerrados</button></div>
  <div class="card tbl" id="res"></div>
+</section>
+
+<!-- ═══ CTA FINAL · efeito de recência: a última coisa antes do FAQ é lembrada
+     junto com a primeira — urgência REAL (data do sorteio) no ponto de maior memória ═══ -->
+<section id="cta-final" hidden>
+ <div class="ctaf card">
+  <div>
+   <span class="tag g" id="cta-tag">Sorteio aberto</span>
+   <h2>Um número pode ser seu</h2>
+   <p class="lead" id="cta-p">Participação gratuita. Reserve seu número antes do encerramento — cada bilhete vale um número.</p>
+  </div>
+  <div class="cta-side">
+   <div class="cta-cd"><span id="cta-cd-l">O sorteio encerra em</span><b id="cta-end">—</b></div>
+   <a class="btn lg" href="#participar">Reservar meu número</a>
+  </div>
+ </div>
 </section>
 
 <!-- ════════════════════════════════════════════════════════════
@@ -1470,6 +1612,11 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
 <section id="regras">
  <div class="sec-head"><div class="sec-row"><h2>Ajuda e perguntas</h2><button class="btn sm ghost" type="button" id="fq-sup"><span class="icn" aria-hidden="true" style="width:14px;height:14px;vertical-align:-2px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13a8 8 0 0 1 16 0"/><rect x="3" y="13" width="4" height="6" rx="2"/><rect x="17" y="13" width="4" height="6" rx="2"/><path d="M19 19a4 4 0 0 1-4 2h-2"/></svg></span> Suporte</button></div><p>Busque uma dúvida ou escolha um tema. Toque na pergunta para ver a resposta.</p></div>
  <div class="fq card" id="faq-slide">
+  <div class="fq-head">
+   <span class="cs-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 17v.5"/><path d="M12 13.5c0-1.6 2.4-2 2.4-3.8a2.5 2.5 0 0 0-5-.1"/></svg></span>
+   <div class="cs-txt"><b>Ajuda e perguntas — central de dúvidas</b><p>Busque uma dúvida ou escolha um tema. Toque no interruptor de cada pergunta para abrir a resposta, como no gerenciador de permissões.</p></div>
+   <span class="tag y" id="fq-count">0</span>
+  </div>
   <div class="fq-tools"><span class="fq-ico" aria-hidden="true">⌕</span><input id="fq-q" type="search" placeholder="Buscar dúvida (ex.: bilhete, leilão, prêmio)" aria-label="Buscar nas perguntas frequentes" autocomplete="off"></div>
   <div class="chips" id="fq-cats" role="tablist" aria-label="Temas"></div>
   <div class="fq-list" id="fq-list" aria-live="polite"></div>
@@ -1586,6 +1733,60 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
  <div class="sup-box" role="dialog" aria-label="Suporte ao cliente">
   <div class="sup-head"><b><span class="icn" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13a8 8 0 0 1 16 0"/><rect x="3" y="13" width="4" height="6" rx="2"/><rect x="17" y="13" width="4" height="6" rx="2"/><path d="M19 19a4 4 0 0 1-4 2h-2"/></svg></span> Suporte ao cliente</b><button class="ib sm" id="sup-close" aria-label="Fechar suporte">✕</button></div>
   <iframe id="sup-frame" class="sup-frame" title="Suporte ao cliente" sandbox="allow-scripts allow-forms allow-popups allow-modals"></iframe>
+ </div>
+</div>
+
+<!-- ═══ GAVETA DE LOGIN EM TELA CHEIA · desliza de cima ao clicar em Entrar/Criar conta ═══ -->
+<div class="gaveta" id="login-gaveta" role="dialog" aria-modal="true" aria-label="Entrar ou criar conta">
+ <div class="gav" id="login-gav">
+  <div class="gv-top">
+   <span class="gv-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5"/></svg></span>
+   <div><b id="lg-title">Sua participação começa aqui.</b><small>Etapa 1 de 2 · acesso à conta</small></div>
+   <button class="ib sm" type="button" id="lg-x" aria-label="Fechar tela de login">✕</button>
+  </div>
+  <div class="gv-timer">Entre ou crie sua conta. Depois, vamos orientar você nas próximas etapas.</div>
+  <div class="lg-stage">
+   <div class="notice" id="lg-inapp" hidden>Você está no navegador de um aplicativo (Facebook/Instagram). O login com Google pode ser bloqueado aqui. Se isso acontecer, entre com e-mail e senha.</div>
+   <div class="tabs" id="lg-tabs"><button data-m="login" class="on">Entrar</button><button data-m="register">Criar conta</button></div>
+   <div class="field" style="margin-top:14px"><label class="label" for="lg-email">E-mail</label><input id="lg-email" type="email" autocomplete="email" placeholder="seuemail@exemplo.com"></div>
+   <div class="field" id="lg-pw-f"><label class="label" for="lg-pw">Senha</label>
+    <div class="pw"><input id="lg-pw" type="password" autocomplete="current-password" placeholder="Sua senha"><button class="btn sm ghost" id="lg-showpw" type="button">Mostrar</button></div>
+   </div>
+   <div class="actions" style="justify-content:space-between"><button class="btn" id="lg-go">Entrar</button><button class="link" id="lg-forgot" type="button">Esqueci minha senha</button></div>
+   <div class="or" id="lg-or">ou</div>
+   <div class="lg-soc">
+    <button class="soc s-g" id="lg-google" type="button"><i aria-hidden="true">G</i>Continuar com Google</button>
+    <button class="soc s-f" id="lg-facebook" type="button"><i aria-hidden="true">f</i>Continuar com Facebook</button>
+    <button class="soc s-t" id="lg-tiktok" type="button"><i aria-hidden="true">♪</i>Continuar com TikTok</button>
+   </div>
+   <p class="hint" style="margin-top:12px">Ao continuar, você concorda com os <button class="link" type="button" data-terms="1">termos de uso e responsabilidades</button> e com o uso do seu nome apenas para operar o sorteio.</p>
+   <p class="status" id="lg-msg" style="text-align:center"></p>
+   <div class="card lg-next">
+    <b>Depois desta etapa, o que acontece:</b>
+    <ol>
+     <li><i aria-hidden="true">2</i><span><b>Confirmação do e-mail</b> — enviamos um link e a tela libera o acesso sozinha.</span></li>
+     <li><i aria-hidden="true">3</i><span><b>Perfil completo</b> — nome, endereço e contato para receber prêmios.</span></li>
+     <li><i aria-hidden="true">4</i><span><b>Participe</b> — faça tarefas, ganhe bilhetes e escolha seus números.</span></li>
+    </ol>
+   </div>
+  </div>
+  <div class="gv-foot"><span class="gv-note">Uma conta por pessoa. O Yshippcommerce nunca pede sua senha — e a participação é 100% gratuita.</span></div>
+ </div>
+</div>
+
+<!-- ═══ CONFIRMAÇÃO PROFISSIONAL (no lugar dos alertas nativos do navegador) ═══ -->
+<div class="sup-modal" id="cf-modal" hidden>
+ <div class="colab-card" role="dialog" aria-modal="true" aria-labelledby="cf-title">
+  <div class="pnote">
+   <span class="nico" id="cf-ico">!</span>
+   <div class="nbody"><b id="cf-title">Confirmar ação</b><small>Yshippcommerce · confirmação</small></div>
+   <button class="nclose" type="button" id="cf-x" aria-label="Fechar">✕</button>
+  </div>
+  <p id="cf-msg"></p>
+  <div class="cs-act" style="margin:0">
+   <button class="btn ghost" type="button" id="cf-cancel">Cancelar</button>
+   <button class="btn" type="button" id="cf-ok">Confirmar</button>
+  </div>
  </div>
 </div>
 
@@ -1715,6 +1916,14 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
     <button class="btn wide" id="pf-save" type="button">Salvar alterações</button>
     <p class="hint" style="margin:0;font-size:11.5px">Só o organizador vê esses dados. Na lista pública você aparece abreviado (ex.: Maria S.).</p>
    </form>
+   <div class="pf-sec"><span class="pf-st">Mais opções de entrada</span>
+    <p class="hint" style="margin:0 0 8px">Conecte outras formas de entrar na sua conta — Google, Facebook e TikTok. Se um dia você esquecer a senha, entra por qualquer uma das conexões abaixo.</p>
+    <div id="link-accounts-2" style="display:grid;gap:8px"></div>
+   </div>
+   <div class="pf-sec"><span class="pf-st">Notificações do organizador</span>
+    <div id="pf-notes" style="display:grid;gap:8px"></div>
+    <button class="btn sm ghost" type="button" id="pf-notes-read" style="justify-self:start;margin-top:4px">Marcar todas como lidas</button>
+   </div>
    <div class="pf-sec"><span class="pf-st">Conta e preferências</span>
     <button class="pf-row" type="button" id="pf-theme"><span><span class="icn" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.5A8.5 8.5 0 0 1 10.5 4a8.5 8.5 0 1 0 9.5 9.5z"/></svg></span> Tema do site</span><span class="hint" id="pf-theme-v"></span></button>
     <button class="pf-row" type="button" data-open="wallet"><span><span class="icn" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="6" width="19" height="13" rx="3"/><path d="M2.5 10h19" opacity=".55"/><circle cx="17" cy="13.5" r="1.4" fill="currentColor" stroke="none"/></svg></span> Minha carteira</span><span class="hint">›</span></button>
@@ -1729,10 +1938,10 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
 <!-- ═══ BARRA DE NAVEGAÇÃO INFERIOR (celular) ═══ -->
 <nav class="tabbar" id="tabbar" aria-label="Navegação rápida">
  <button type="button" data-tb="top" data-tbtop="1"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-7 9 7M5 10v10h5v-6h4v6h5V10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Início</span></button>
- <a href="#sorteios" data-tb="sorteios"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8a2 2 0 002-2h14a2 2 0 002 2v2a2 2 0 000 4v2a2 2 0 00-2 2H5a2 2 0 00-2-2v-2a2 2 0 000-4zM14 6v12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Sorteios</span></a>
+ <a href="#sorteios" data-tb="sorteios"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8a2 2 0 002-2h14a2 2 0 002 2v2a2 2 0 000 4v2a2 2 0 00-2 2H5a2 2 0 00-2-2v-2a2 2 0 000-4zM14 6v12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Sorteios</span><span class="tb-badge mono" id="tb-draws" hidden>0</span></a>
  <button type="button" class="tb-main" data-tb="wallet" data-open="wallet"><span class="tbm"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h15a3 3 0 013 3v7a3 3 0 01-3 3H6a3 3 0 01-3-3zM3 7l12-3v3M17 13.5h.01" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>Carteira</span><span class="tb-badge mono" id="tb-wbadge" hidden>0</span></button>
- <a href="#leiloes" data-tb="leiloes"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4l6 6M11 7l6 6M4 20l7-7M9 9l6 6M13 5l-4 4 6 6 4-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Leilões</span></a>
- <button type="button" data-tb="profile" data-open="profile"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a4 4 0 100-8 4 4 0 000 8zM4 21a8 8 0 0116 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Perfil</span></button>
+ <a href="#leiloes" data-tb="leiloes"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4l6 6M11 7l6 6M4 20l7-7M9 9l6 6M13 5l-4 4 6 6 4-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Leilões</span><span class="tb-badge mono" id="tb-aucs" hidden>0</span></a>
+ <button type="button" data-tb="profile" data-open="profile"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a4 4 0 100-8 4 4 0 000 8zM4 21a8 8 0 0116 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Perfil</span><span class="tb-badge mono" id="tb-notes" hidden>0</span></button>
 </nav>
 
 <!-- ═══ NOTIFICAÇÕES (estilo celular: avisos do site + mensagens do painel, desliza para sair) ═══ -->
@@ -1746,7 +1955,7 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
-import { getAuth, GoogleAuthProvider, EmailAuthProvider, reauthenticateWithCredential, signInWithPopup, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, sendPasswordResetEmail, signOut, onAuthStateChanged, reload } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+import { getAuth, GoogleAuthProvider, FacebookAuthProvider, EmailAuthProvider, reauthenticateWithCredential, signInWithPopup, linkWithPopup, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, sendPasswordResetEmail, signOut, onAuthStateChanged, reload, unlink } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
 import { getFirestore, initializeFirestore, persistentLocalCache, persistentMultipleTabManager, Timestamp, doc, getDoc, getDocs, setDoc, updateDoc, deleteDoc, collection, query, where, orderBy, limit, onSnapshot, runTransaction, serverTimestamp, writeBatch, increment, arrayRemove } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -2153,11 +2362,17 @@ function renderStage(){
  $("sd-switch").innerHTML=opens.length>1?'<span class="label">Trocar de sorteio</span>'+opens.map(d=>`<button type="button" class="sw-d ${d.id===drawId?"on":""}" data-sw="${esc(d.id)}"><span>${esc(d.name||"Sorteio")}</span><small>${Math.max(1,Math.floor(Number(d.ticketCost))||1)} bilhete(s)/nº</small></button>`).join(""):"";
 }
 function goStage(fromOutside){
+ /* sem usuário logado, TODA entrada de participação abre a gaveta de login em tela cheia */
+ if(!currentUser&&typeof openLoginGaveta==="function")openLoginGaveta("login");
  stageOpen=true;renderStage();
- if(fromOutside){$("sorteios").scrollIntoView({behavior:reduceMotion?"auto":"smooth",block:"start"});return}
- /* no próprio card: só alinha se o topo ficou escondido atrás do cabeçalho */
- const r=$("participar").getBoundingClientRect();
- if(r.top<70)window.scrollTo({top:scrollY+r.top-90,behavior:"auto"});
+ /* alinhamento preciso: depois do deslize, o botão "‹ Voltar aos sorteios"
+    fica a 12px da parte de baixo do cabeçalho fixo (como na referência) */
+ requestAnimationFrame(()=>{
+  const hb=$("top")?.getBoundingClientRect().bottom||0;
+  const r=$("participar")?.getBoundingClientRect();
+  if(!r||!r.height)return;
+  window.scrollTo({top:Math.max(0,Math.round(scrollY+r.top-hb-12)),behavior:reduceMotion?"auto":"smooth"});
+ });
 }
 $("sd-back").onclick=()=>{stageOpen=false;armed=0;render()};
 $("participar").addEventListener("click",e=>{const b=e.target.closest("[data-sw]");if(b){selDrawId=b.dataset.sw;armed=0;$("numin").value="";applyDraw();render()}});
@@ -2186,6 +2401,42 @@ function renderTicker(){
  el.innerHTML=[
   ["Eventos ativos",actEv],["Sorteios abertos",openDraws],["Leilões abertos",openAuc],["Participações ao vivo",live],["Em prêmios",money>0?fmtBRL(money):"—"]
  ].map(([a,b])=>`<div><span>${esc(a)}</span><b>${b}</b></div>`).join("");
+}
+
+/* ============================================================
+   05d · ESTATÍSTICAS-CHAVE NO HERO (prova social junto da promessa)
+   ============================================================ */
+function renderHeroStats(){
+ const el=$("hero-stats");if(!el)return;
+ const openDraws=draws.filter(d=>d.status==="open").length;
+ const live=resvAll.length+bidsArr.length;
+ const money=draws.filter(d=>d.status!=="draft").flatMap(d=>Array.isArray(d.prizes)?d.prizes:[]).filter(p=>p&&p.name).reduce((s,p)=>s+parseMoney(p.value),0);
+ el.innerHTML=[
+  ["Sorteios abertos",openDraws],
+  ["Participações ao vivo",live],
+  ["Em prêmios",money>0?fmtBRL(money):"—"]
+ ].map(([a,b])=>`<div><span>${esc(a)}</span><b>${b}</b></div>`).join("");
+}
+
+/* ============================================================
+   05e · CTA FINAL (efeito de recência) — urgência real antes do FAQ
+   ============================================================ */
+function updateCtaFinal(){
+ const el=$("cta-final");if(!el)return;
+ const rd=ready(),st=drawState();
+ if(!rd||st==="ended"){el.hidden=true;return}
+ el.hidden=false;
+ const t=$("cta-tag");
+ if(st==="open"){t.textContent="Sorteio aberto";t.className="tag g";
+  $("cta-cd-l").textContent="O sorteio encerra em";$("cta-end").textContent=END?fmt(END):"—";
+  $("cta-p").textContent="Participação gratuita. Reserve seu número antes do encerramento — cada bilhete vale um número.";
+ }else if(st==="waiting"){t.textContent="Em breve";t.className="tag y";
+  $("cta-cd-l").textContent="O sorteio abre em";$("cta-end").textContent=START&&START.getTime()>0?fmt(START):"—";
+  $("cta-p").textContent="Crie sua conta e acumule bilhetes agora para não perder o próximo sorteio.";
+ }else{t.textContent="Aguardando";t.className="tag y";
+  $("cta-cd-l").textContent="Situação";$("cta-end").textContent=st==="paused"?"Sorteio pausado":"Aguardando o organizador";
+  $("cta-p").textContent="Enquanto o organizador libera o sorteio, acumule bilhetes fazendo tarefas e ofertas.";
+ }
 }
 
 /* ============================================================
@@ -2321,7 +2572,7 @@ addEventListener("online",()=>{toast("Conexão restabelecida.");countdown()});
    ============================================================ */
 function renderAuth(){
  const r=authMode==="reset",reg=authMode==="register";
- $("tabs").hidden=r;$("pw-f").hidden=r;$("or").hidden=r;$("google").hidden=r;
+ $("tabs").hidden=r;$("pw-f").hidden=r;$("or").hidden=r;$("auth-soc").hidden=r;
  $("inapp").hidden=!inApp;
  [...$("tabs").children].forEach(b=>b.classList.toggle("on",b.dataset.m===authMode));
  $("go").textContent=r?"Enviar link de redefinição":reg?"Criar conta":"Entrar";
@@ -2441,12 +2692,15 @@ async function saveProfileFrom(pre,isEdit){
 }
 $("save-profile").onclick=async()=>{if(await saveProfileFrom("",editProfile)){editProfile=false;nameDirty=false;$("pstat").textContent="";toast("Dados salvos.")}};
 $("showreauth").onclick=()=>{const p=$("reauth"),s=p.type==="password";p.type=s?"text":"password";$("showreauth").textContent=s?"Ocultar":"Mostrar"};
-$("forgot-in-profile").onclick=async()=>{
+$("forgot-in-profile").onclick=()=>{
  try{
   if(!currentUser?.email)return toast("Entre na sua conta primeiro.");
-  if(!confirm("Enviar link de redefinição de senha para "+currentUser.email+"?"))return;
-  await sendPasswordResetEmail(auth,currentUser.email);
-  toast("Link enviado para "+currentUser.email+". Confira também o spam.");
+  askConfirm("Enviar link de redefinição de senha para "+currentUser.email+"?","Redefinir senha",async()=>{
+   try{
+    await sendPasswordResetEmail(auth,currentUser.email);
+    toast("Link enviado para "+currentUser.email+". Confira também o spam.");
+   }catch(e){showError(e)}
+  },"Enviar link");
  }catch(e){showError(e)}
 };
 
@@ -2615,11 +2869,11 @@ onSnapshot(doc(db,"settings","platform"),s=>{
  if(settings.institutionalText)document.querySelector("footer p").textContent=settings.institutionalText;
  render();
 },e=>{console.error("Configurações:",e)});
-onSnapshot(collection(db,"draws"),s=>{draws=s.docs.map(d=>({id:d.id,...d.data()}));ckSave({draws});applyDraw();renderPrizes();render()},e=>console.error("Sorteios:",e));
+onSnapshot(collection(db,"draws"),s=>{draws=s.docs.map(d=>({id:d.id,...d.data()}));ckSave({draws});applyDraw();renderPrizes();render();updateTabBadges()},e=>console.error("Sorteios:",e));
 onSnapshot(collection(db,"events"),s=>{events=s.docs.map(d=>({id:d.id,...d.data()}));ckSave({events});renderEvents();renderPrizes();render()},e=>console.error("Eventos:",e));
 onSnapshot(collection(db,"tasks"),s=>{tasks=s.docs.map(d=>({id:d.id,...d.data()}));ckSave({tasks});watchClaims();renderEvents();render()},e=>console.error("Tarefas:",e));
 onSnapshot(collection(db,"eventTasks"),s=>{links=s.docs.map(d=>({id:d.id,...d.data()}));ckSave({links});renderEvents()},e=>console.error("Vínculos:",e));
-onSnapshot(collection(db,"auctions"),s=>{auctions=s.docs.map(d=>({id:d.id,...d.data()}));ckSave({auctions});renderAuctions();renderFeed();renderResult()},e=>console.error("Leilões:",e));
+onSnapshot(collection(db,"auctions"),s=>{auctions=s.docs.map(d=>({id:d.id,...d.data()}));ckSave({auctions});renderAuctions();renderFeed();renderResult();updateTabBadges()},e=>console.error("Leilões:",e));
 onSnapshot(query(collection(db,"bids"),limit(500)),s=>{bidsArr=s.docs.map(d=>({id:d.id,...d.data()}));mapPhotos(bidsArr);ckSave({bids:bidsArr});renderAuctions();renderFeed();renderResult();renderTicker()},e=>console.error("Lances:",e));
 onSnapshot(collection(db,"covers"),s=>{covers=s.docs.map(d=>({id:d.id,...d.data()})).filter(c=>c&&Array.isArray(c.images)&&c.images.some(Boolean));ckSave({covers});renderCovers()},e=>console.error("Capas:",e));
 getDoc(doc(db,"settings","platform")).then(()=>{cfgReady=true;render()}).catch(()=>{cfgReady=true;render()});
@@ -2835,11 +3089,26 @@ function renderAuctions(){
   <div class="auc-meta"><span>Arrecadado · meta ${tot} bilhete(s)</span><b class="mono">${total} / ${tot}</b></div>
   <div class="track"><div class="fill" style="width:${pct}%"></div></div>`;
   if(act){
-   const lead=[...bids].sort((x,y)=>(Number(y.amount)||0)-(Number(x.amount)||0))[0];
+   const ranked=bids.filter(b=>b.uid&&Math.max(0,Math.floor(Number(b.amount)||0))>0).sort((x,y)=>(Number(y.amount)||0)-(Number(x.amount)||0));
+   const top=ranked.slice(0,10);
+   const myIdx=currentUser?ranked.findIndex(b=>b.uid===currentUser.uid):-1;
    const my=currentUser?Math.max(0,Math.floor(Number(bids.find(b=>b.uid===currentUser.uid)?.amount)||0)):0;
    const canClaim=currentUser?.emailVerified&&my>=tot;
+   const rkRow=(b,pos)=>{
+    const me=currentUser&&b.uid===currentUser.uid;
+    return `<div class="rrow ${pos===1?"first":""} ${me?"me":""}">
+     <span class="pos">${pos}º</span>
+     ${whoHTML(b,(b.displayName||b.uid||"—").trim().charAt(0))}
+     <span class="rname">${esc(maskName(b.displayName||b.uid||"—"))}${me?' <span class="tag g">Você</span>':""}</span>
+     <b class="amt">${Math.max(0,Math.floor(Number(b.amount)||0))} bl</b>
+    </div>`;
+   };
    return `<div class="card evc">${head}
-   ${lead?`<div class="auc-lider"><span>Líder: ${whoHTML(lead,(lead.displayName||lead.uid||"—").trim().charAt(0))}${esc(maskName(lead.displayName||lead.uid||"—"))}</span><b class="mono">${Math.max(0,Math.floor(Number(lead.amount)||0))} bilhetes</b>${currentUser&&lead.uid===currentUser.uid?'<span class="tag g">Você</span>':""}</div>`:`<p class="hint">Nenhum lance ainda. Dê o primeiro lance!</p>`}
+   ${top.length?`<div class="auc-rk">
+    <span class="rk-head">Participantes · top 10</span>
+    ${top.map((b,i)=>rkRow(b,i+1)).join("")}
+    ${myIdx>=10?`<span class="rk-head" style="margin-top:8px">Sua posição</span>${rkRow(ranked[myIdx],myIdx+1)}`:""}
+   </div>`:`<p class="hint">Nenhum lance ainda. Dê o primeiro lance!</p>`}
    <p class="mono">${a.endAt?"Encerra em "+fmt(a.endAt):""} · Lance mínimo: ${min} bilhete(s)</p>
    <p class="hint">Quem acumular mais bilhetes até o fim do prazo leva o prêmio. Atingiu ${tot} bilhetes? Reivindique na hora. Valores: comum 1 · dourado 10 · VIP 20 bilhetes. Se a meta não for atingida, todos os lances voltam para a carteira.</p>
    ${!evOk&&ev?(evState(ev)==="active"?`<p class="hint"><b>Pague a entrada do evento ${esc(ev.name)} para dar lances.</b></p>`:`<p class="hint"><b>O evento ${esc(ev.name)} ${evState(ev)==="future"?"ainda não começou":"já foi encerrado"}.</b> Os lances deste leilão ficam bloqueados.</p>`):""}
@@ -2877,7 +3146,7 @@ async function claimAuction(aid){
  const mine=all.find(b=>b.uid===currentUser.uid);
  const my=Math.max(0,Math.floor(Number(mine?.amount)||0));
  if(!mine||my<tot)return toast("Você ainda não atingiu a meta de "+tot+" bilhete(s) neste leilão.");
- if(!confirm("Reivindicar o prêmio agora? O leilão encerra imediatamente e você é o ganhador."))return;
+ return askConfirm("Reivindicar o prêmio agora? O leilão encerra imediatamente e você é o ganhador.","Reivindicar prêmio",async()=>{
  try{
   const total=all.reduce((s,b)=>s+Math.max(0,Math.floor(Number(b.amount)||0)),0);
   let batch=writeBatch(db),ops=0;
@@ -2894,6 +3163,7 @@ async function claimAuction(aid){
   await setDoc(aRef,{status:"ended",result:{winnerUid:currentUser.uid,winnerName:profile?.name||"",winnerAmount:my,totalRaised:total,endedAt:serverTimestamp()},updatedAt:serverTimestamp()},{merge:true});
   toast("Prêmio reivindicado! 🏆 O organizador entrará em contato.");
  }catch(e){toast(e.message||"Erro ao reivindicar o prêmio.")}
+ },"Reivindicar agora");
 }
 async function placeBid(aid){
  if(!termsOk())return askTerms();
@@ -3177,13 +3447,14 @@ $("tks").addEventListener("click",async e=>{
  if(!id)return;
  const t=myTickets.find(x=>x.id===id);
  if(!t)return;
- if(!confirm("Excluir este bilhete? Ele não serve mais para nada e a ação não pode ser desfeita."))return;
+ askConfirm("Excluir este bilhete? Ele não serve mais para nada e a ação não pode ser desfeita.","Excluir bilhete",async()=>{
  try{
   await deleteDoc(doc(db,"reservations",id));
   if(Array.isArray(profile?.numbers)&&profile.numbers.includes(Number(t.number)))
    await updateDoc(doc(db,"users",currentUser.uid),{numbers:arrayRemove(Number(t.number))}).catch(()=>{});
   toast("Bilhete excluído.");
  }catch(err){showError(err)}
+ },"Excluir agora");
 });
 
 /* ============================================================
@@ -3297,7 +3568,9 @@ function renderNow(){
  const logged=!!currentUser,v=logged&&currentUser.emailVerified,ok=profileOk(),num=mine().length>0;
  const f=flow();
  $("as-h").textContent=f.h;$("as-t").textContent=f.t;
- ["p-auth","p-verify","p-profile","p-event","p-task","p-number","p-done"].forEach(id=>$(id).hidden=id!==f.p);
+ /* o painel de cadastro nunca aparece na interface: a etapa de login mostra só o cartão de botões */
+ const showP=f.p==="p-auth"?"p-auth-cta":f.p;
+ ["p-auth","p-auth-cta","p-verify","p-profile","p-event","p-task","p-number","p-done"].forEach(id=>$(id).hidden=id!==showP);
  renderAuth();
 
  const done=[v,ok,pointsOf(wallet)>=COST,num];
@@ -3377,7 +3650,7 @@ function renderNow(){
   set("whatsapp",profile?.whatsapp||"");
  }
 
- renderFeed();renderTicket(done);renderResult();renderEvents();renderHero();renderAuctions();renderSorteios();renderStage();updateWfloat();renderTicker();renderAdBtn();
+ renderFeed();renderTicket(done);renderResult();renderEvents();renderHero();renderAuctions();renderSorteios();renderStage();updateWfloat();renderTicker();renderAdBtn();renderHeroStats();updateCtaFinal();
  if(sheetOpen==="profile"){buildProfileHead();fillProfileForm(false)}
  updatePagers();tbSync();
 }
@@ -3583,9 +3856,37 @@ function watchNotes(){
   freshNotes=all;
   const shown=all.filter(n=>!seen[n.id]).slice(0,3);
   renderNotes(shown);
+  updateTabBadges();renderProfileNotes();
  },e=>console.error("Notificações:",e));
 }
 function stampMs(v){if(!v)return 0;if(typeof v==="number")return v;if(v.toDate)return v.toDate().getTime();if(typeof v.seconds==="number")return v.seconds*1000+Math.round((v.nanoseconds||0)/1e6);const d=new Date(v);return isNaN(d)?0:d.getTime()}
+/* contadores do menu inferior: sorteios abertos, leilões abertos e notificações não lidas */
+function updateTabBadges(){
+ const bD=$("tb-draws"),bA=$("tb-aucs"),bN=$("tb-notes");
+ if(bD){const n=draws.filter(d=>drawStateOf(d)==="open").length;bD.textContent=n;bD.hidden=!n}
+ if(bA){const n=auctions.filter(a=>a.status==="open").length;bA.textContent=n;bA.hidden=!n}
+ if(bN){const n=freshNotes.filter(x=>!noteSeen()[x.id]).length;bN.textContent=n;bN.hidden=!n}
+}
+/* notificações do organizador dentro do perfil (só as do painel aparecem aqui) */
+function renderProfileNotes(){
+ const box=$("pf-notes");if(!box)return;
+ const seen=noteSeen();
+ const list=[...freshNotes].sort((a,b)=>(stampMs(b.createdAt)||0)-(stampMs(a.createdAt)||0));
+ box.innerHTML=list.length?list.map(n=>{
+  const un=!seen[n.id];
+  return `<div class="pfn-row ${un?"un":""}" role="button" tabindex="0" data-pfn="${esc(n.id)}">
+   <span class="pfn-ico" aria-hidden="true">📣</span>
+   <div class="pfn-t"><b>${esc(n.title||"Notificação do organizador")}</b><small>${stampMs(n.createdAt)?fmt(n.createdAt):""}</small></div>
+   ${un?'<span class="tag y">Nova</span>':'<span class="tag">Lida</span>'}
+  </div>`;
+ }).join(""):'<p class="hint" style="margin:0">Nenhuma notificação do organizador por enquanto.</p>';
+}
+document.addEventListener("click",e=>{
+ const r=e.target.closest("[data-pfn]");
+ if(r){openNote(r.dataset.pfn);renderProfileNotes();updateTabBadges()}
+ const all=e.target.closest("#pf-notes-read");
+ if(all){freshNotes.forEach(n=>noteMarkSeen(n.id));renderNotes([]);renderProfileNotes();updateTabBadges();toast("Todas as notificações marcadas como lidas.")}
+});
 function noteCard(n){
  return `<div class="pnote nt-org" data-note="${esc(n.id)}" role="button" tabindex="0" aria-label="Abrir notificação: ${esc(n.title||"")}">
   <span class="nico">📣</span>
@@ -3730,7 +4031,7 @@ function openSheet(name){
  sheetOpen=name;document.body.classList.add("no-scroll");
  $("menu").setAttribute("aria-expanded",String(name==="menu"));
  if(name==="wallet")buildWallet();
- if(name==="profile"){pfDirty=false;buildProfileHead();fillProfileForm(true)}
+ if(name==="profile"){pfDirty=false;buildProfileHead();fillProfileForm(true);renderLinks();renderProfileNotes()}
  const panel=$(SHEETS[name]).querySelector(".sheet-b");if(panel)panel.scrollTop=0;
  setTimeout(()=>$(SHEETS[name]).querySelector("[data-close].ib")?.focus({preventScroll:true}),60);
  tbSync();
@@ -4079,14 +4380,188 @@ function renderFaq(){
  const q=fqNorm(fqQ.trim());
  cats.innerHTML=fqGroups.map((g,i)=>`<button type="button" role="tab" aria-selected="${i===fqCat&&!q}" class="chip2 ${i===fqCat&&!q?"on":""}" data-fqc="${i}">${esc(g.cat||"Geral")}<span>${g.items.length}</span></button>`).join("");
  const items=q?fqGroups.flatMap(g=>g.items.map(it=>({...it,cat:g.cat}))).filter(it=>fqNorm(it.q+" "+it.a.replace(/<[^>]+>/g," ")).includes(q)):fqGroups[fqCat].items.map(it=>({...it,cat:fqGroups[fqCat].cat}));
- list.innerHTML=items.length?items.map((it,i)=>`<details class="fq-i"><summary><span class="fq-n mono">${String(i+1).padStart(2,"0")}</span><span class="fq-qt">${esc(it.q)}</span></summary><div class="fq-a">${q&&it.cat?`<span class="tag" style="margin-bottom:6px">${esc(it.cat)}</span><br>`:""}${it.a}</div></details>`).join(""):`<p class="hint" style="padding:6px 2px">Nada encontrado para "${esc(fqQ)}". Tente outra palavra ou fale com o suporte.</p>`;
+ const total=fqGroups.reduce((s,g)=>s+g.items.length,0);
+ const cnt=$("fq-count");if(cnt)cnt.textContent=total+" respostas";
+ list.innerHTML=items.length?items.map((it,i)=>`<div class="fq-item"><label class="cs-perm fq-perm"><span class="cs-pt"><b>${esc(it.q)}</b>${q&&it.cat?`<small>Tema: ${esc(it.cat)}</small>`:""}</span><input type="checkbox" class="cs-sw" data-fqo aria-label="Abrir resposta"></label><div class="fq-ans">${it.a}</div></div>`).join(""):`<p class="hint" style="padding:6px 2px">Nada encontrado para "${esc(fqQ)}". Tente outra palavra ou fale com o suporte.</p>`;
 }
 $("fq-cats").addEventListener("click",e=>{const b=e.target.closest("[data-fqc]");if(b){fqCat=Number(b.dataset.fqc);fqQ="";$("fq-q").value="";renderFaq()}});
 $("fq-q").addEventListener("input",e=>{fqQ=e.target.value;renderFaq()});
-/* sanfona: abrir uma pergunta fecha as outras */
-$("fq-list").addEventListener("toggle",e=>{if(e.target.open)$("fq-list").querySelectorAll("details[open]").forEach(d=>{if(d!==e.target)d.open=false})},true);
+/* sanfona: abrir uma pergunta fecha as outras (interruptor estilo gerenciador de permissões) */
+$("fq-list").addEventListener("change",e=>{
+ const sw=e.target.closest("[data-fqo]");if(!sw)return;
+ const item=sw.closest(".fq-item");
+ if(sw.checked){
+  $("fq-list").querySelectorAll(".fq-item.open").forEach(d=>{if(d!==item){d.classList.remove("open");const o=d.querySelector("[data-fqo]");if(o)o.checked=false}});
+  item.classList.add("open");
+ }else item.classList.remove("open");
+});
 $("fq-sup").onclick=()=>openSupport();
 collectFaq();
+
+/* ============================================================
+   20 · CONFIRMAÇÃO PROFISSIONAL (nada de alertas nativos do navegador)
+   ============================================================ */
+function askConfirm(msg,title,onOk,okLabel){
+ const m=$("cf-modal");if(!m)return;
+ $("cf-title").textContent=title||"Confirmar ação";
+ $("cf-msg").textContent=msg;
+ $("cf-ok").textContent=okLabel||"Confirmar";
+ $("cf-cancel").textContent="Cancelar";
+ m.hidden=false;
+ $("cf-ok").onclick=()=>{m.hidden=true;try{onOk&&onOk()}catch(e){showError(e)}};
+ const close=()=>{m.hidden=true};
+ $("cf-cancel").onclick=close;
+ $("cf-x").onclick=close;
+ m.onclick=e=>{if(e.target===m)close()};
+}
+
+/* ============================================================
+   21 · GAVETA DE LOGIN EM TELA CHEIA (etapa 1 de 2 · deslogado)
+   ============================================================ */
+let lgMode="login",lgNote="";
+function renderLg(){
+ const r=lgMode==="reset",reg=lgMode==="register";
+ [...$("lg-tabs").children].forEach(b=>b.classList.toggle("on",b.dataset.m===lgMode));
+ $("lg-tabs").hidden=r;$("lg-pw-f").hidden=r;$("lg-or").hidden=r;
+ $("lg-go").textContent=r?"Enviar link de redefinição":reg?"Criar conta":"Entrar";
+ $("lg-forgot").textContent=r?"Voltar para o login":"Esqueci minha senha";
+ $("lg-forgot").hidden=reg;
+ $("lg-pw").autocomplete=reg?"new-password":"current-password";
+ $("lg-msg").textContent=lgNote||(reg?"Use pelo menos "+MIN_PW+" caracteres. Enviaremos um link para verificar seu e-mail.":"");
+}
+function openLoginGaveta(mode){
+ lgMode=mode||"login";lgNote="";
+ renderLg();
+ $("login-gaveta").classList.add("open");
+ $("login-gav").classList.add("open");
+ document.documentElement.classList.add("gav-lock");
+ setTimeout(()=>{try{$("lg-email").focus()}catch(e){}},400);
+}
+function closeLoginGaveta(){
+ $("login-gav").classList.remove("open");
+ setTimeout(()=>{
+  if(!$("login-gav").classList.contains("open")){
+   $("login-gaveta").classList.remove("open");
+   document.documentElement.classList.remove("gav-lock");
+  }
+ },400);
+}
+$("ld-login").onclick=()=>openLoginGaveta("login");
+$("ld-register").onclick=()=>openLoginGaveta("register");
+$("cta-login").onclick=()=>openLoginGaveta("login");
+$("cta-register").onclick=()=>openLoginGaveta("register");
+$("lg-x").onclick=closeLoginGaveta;
+$("lg-tabs").onclick=e=>{const m=e.target.dataset.m;if(m){lgMode=m;lgNote="";renderLg()}};
+$("lg-forgot").onclick=()=>{lgMode=lgMode==="reset"?"login":"reset";lgNote="";renderLg()};
+$("lg-showpw").onclick=()=>{const p=$("lg-pw"),s=p.type==="password";p.type=s?"text":"password";$("lg-showpw").textContent=s?"Ocultar":"Mostrar"};
+$("lg-go").onclick=async()=>{
+ const email=$("lg-email").value.trim(),pw=$("lg-pw").value;
+ if(lgMode!=="reset"&&!termsOk())return askTerms();
+ const b=$("lg-go");if(b.disabled)return;
+ try{
+  if(lgMode==="reset"){
+   if(!email)return toast("Digite seu e-mail para receber o link.");
+   if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email))return toast("Informe um e-mail válido, ex.: seuemail@exemplo.com.");
+   b.disabled=true;b.textContent="Enviando…";
+   await sendPasswordResetEmail(auth,email,{url:location.href,handleCodeInApp:false});
+   lgNote="✓ Se existir uma conta para "+email+", enviamos o link de redefinição. Confira a caixa de entrada e o spam. O link vale por 1 hora.";
+   toast("Link de redefinição enviado para "+email+".");
+   renderLg();
+  }else if(lgMode==="register"){
+   if(!email||pw.length<MIN_PW)return toast("Informe e-mail e senha com pelo menos "+MIN_PW+" caracteres.");
+   b.disabled=true;b.textContent="Criando…";
+   const c=await createUserWithEmailAndPassword(auth,email,pw);
+   await sendEmailVerification(c.user);
+   toast("Conta criada. Enviamos o link de verificação.");
+  }else{
+   if(!email)return toast("Digite seu e-mail.");
+   b.disabled=true;b.textContent="Entrando…";
+   await signInWithEmailAndPassword(auth,email,pw);
+  }
+ }catch(e){showError(e)}
+ finally{b.disabled=false;renderLg()}
+};
+["lg-email","lg-pw"].forEach(id=>$(id).addEventListener("keydown",e=>{if(e.key==="Enter")$("lg-go").click()}));
+
+/* ============================================================
+   22 · LOGIN SOCIAL (Google, Facebook, TikTok) e conexões da conta
+   ============================================================ */
+function tikTokNotice(){
+ toast("A entrada com TikTok está sendo liberada pelo organizador. Use Google, Facebook ou e-mail e senha por enquanto.","info");
+}
+const fbProvider=()=>new FacebookAuthProvider();
+async function socialSignIn(make){
+ if(!termsOk())return askTerms();
+ try{await signInWithPopup(auth,make())}catch(e){showError(e)}
+}
+$("facebook").onclick=()=>socialSignIn(fbProvider);
+$("tiktok").onclick=tikTokNotice;
+$("lg-google").onclick=()=>socialSignIn(()=>new GoogleAuthProvider());
+$("lg-facebook").onclick=()=>socialSignIn(fbProvider);
+$("lg-tiktok").onclick=tikTokNotice;
+$("lg-inapp").hidden=!inApp;
+
+/* conectar outras formas de entrar (usuário já logado por e-mail/senha) */
+const LOGO_G='<svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3c-1.6 4.7-6.1 8-11.3 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.3 6.1 29.4 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.6-.4-3.9z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.3 6.1 29.4 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 10-2 13.5-5.2l-6.2-5.3C29.4 35.1 26.8 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.6 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.2-2.2 4.1-4 5.5l6.2 5.3C36.9 39.2 44 34 44 24c0-1.3-.1-2.6-.4-3.9z"/></svg>';
+const LOGO_F='<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="24" fill="#1877f2"/><path fill="#fff" d="M34.1 24.1h-6.2V38h-6.4V24.1H17v-5.5h4.5v-3.3c0-4.3 2.6-7.3 7.3-7.3h5.3v5.6h-3.2c-1.6 0-2.5.9-2.5 2.4v2.6h6.2z"/></svg>';
+const LOGO_T='<svg viewBox="0 0 48 48" aria-hidden="true"><rect width="48" height="48" rx="12" fill="#010101"/><text x="21" y="32" text-anchor="middle" font-size="26" fill="#25F4EE" font-family="Arial,sans-serif">♪</text><text x="27" y="32" text-anchor="middle" font-size="26" fill="#FE2C55" font-family="Arial,sans-serif">♪</text><text x="24" y="32" text-anchor="middle" font-size="26" fill="#fff" font-family="Arial,sans-serif">♪</text></svg>';
+const PROVIDERS=[
+ {id:"google.com",n:"Google",d:"Entrar com um toque pela sua conta Google — sem digitar senha.",cls:"lk-g",logo:LOGO_G,make:()=>new GoogleAuthProvider()},
+ {id:"facebook.com",n:"Facebook",d:"Use sua conta do Facebook como chave de entrada.",cls:"lk-f",logo:LOGO_F,make:fbProvider},
+ {id:"tiktok.com",n:"TikTok",d:"Conexão em preparação — o organizador está liberando com a TikTok.",cls:"lk-t",logo:LOGO_T,make:null}
+];
+function renderLinks(){
+ if(!currentUser)return;
+ const pd=currentUser.providerData||[];
+ const linked=new Set(pd.map(p=>p.providerId));
+ const html=PROVIDERS.map(p=>{
+  const on=linked.has(p.id);
+  const info=pd.find(x=>x.providerId===p.id);
+  const detail=on
+   ?"Conectado"+(info?.email?" · "+info.email:"")+" — entre com um toque, sem senha."
+   :p.d;
+  return `<div class="lk-row ${on?"on":""}">
+   <span class="lk-logo ${p.cls}" aria-hidden="true">${p.logo}</span>
+   <div class="lk-info"><b>${p.n}</b><small>${detail}</small></div>
+   ${p.make?(on?`<button class="btn sm ghost" type="button" data-unlink="${p.id}">Desconectar</button>`:`<button class="btn sm" type="button" data-link="${p.id}">Conectar</button>`):`<span class="tag">Em breve</span>`}
+  </div>`;
+ }).join("");
+ document.querySelectorAll('[id^="link-accounts"]').forEach(box=>box.innerHTML=html);
+}
+document.addEventListener("click",async e=>{
+ const l=e.target.closest("[data-link]");
+ if(l&&currentUser){
+  const p=PROVIDERS.find(x=>x.id===l.dataset.link);if(!p)return;
+  try{
+   await linkWithPopup(currentUser,p.make());
+   await reload(currentUser);
+   renderLinks();
+   toast(p.n+" conectado à sua conta. Agora você também entra por ele.");
+  }catch(err){
+   if(err?.code==="auth/provider-already-linked")toast(p.n+" já está conectado à sua conta.");
+   else if(err?.code==="auth/credential-already-in-use")toast("Esta conta de "+p.n+" já pertence a outro usuário.");
+   else showError(err);
+  }
+  return;
+ }
+ const u=e.target.closest("[data-unlink]");
+ if(u&&currentUser){
+  const prov=PROVIDERS.find(x=>x.id===u.dataset.unlink);if(!prov)return;
+  askConfirm("Desconectar "+prov.n+" da sua conta? Você continua podendo entrar pelas outras formas.","Desconectar "+prov.n,async()=>{
+   try{
+    await currentUser.unlink(u.dataset.unlink);
+    await reload(currentUser);
+    renderLinks();
+    toast(prov.n+" desconectado.");
+   }catch(err){showError(err)}
+  },"Desconectar");
+ }
+});
+/* barra do topo + gaveta reagem ao estado de login */
+onAuthStateChanged(auth,u=>{
+ $("ldbar").hidden=!!u;
+ if(u){closeLoginGaveta();renderLinks()}
+});
 </script>
 </body>
 </html>
