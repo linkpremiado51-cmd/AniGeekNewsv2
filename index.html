@@ -42,7 +42,6 @@
   var mob=narrow||(isTouch()&&w<1280);
   document.documentElement.classList.toggle("is-mobile",mob);
   document.documentElement.classList.toggle("is-desktop",!mob);
-  try{console.log("[viewport] innerWidth="+w+" · toque="+isTouch()+" · layout="+(mob?"celular":"desktop"))}catch(e){}
  }
  mark();
  var mq=matchMedia("(max-width:1023px)");
@@ -255,7 +254,7 @@ section{padding-top:48px;padding-bottom:24px}
 .auc-rk .pos{font:600 11px var(--mono);color:var(--acx);width:24px;flex:none}
 .auc-rk .rname{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .auc-rk .amt{font:600 12px var(--mono);white-space:nowrap;flex:none}
-.tipbox{border:1px dashed var(--l);border-radius:12px;padding:12px 14px;margin:10px 0 14px;font-size:13px;line-height:1.55;color:var(--mu2,var(--mu));background:var(--as)}
+.tipbox{border:1px dashed var(--l);border-radius:12px;padding:12px 14px;margin:10px 0 14px;font-size:13px;line-height:1.55;color:var(--mu);background:var(--as)}
 .steps{list-style:none;margin:0 0 18px;padding:0;display:flex;gap:8px;flex-wrap:wrap}
 .steps li{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;color:var(--mu);font-weight:500;padding:7px 12px;border:1px solid var(--l);border-radius:999px;background:var(--p)}
 .steps li i{width:17px;height:17px;border-radius:50%;background:var(--l2);color:transparent;display:grid;place-items:center;font:600 10px/1 var(--mono);font-style:normal}
@@ -332,6 +331,28 @@ details[open] summary:after{content:"−"}
 details div{padding:0 18px 16px;color:var(--mu);font-size:14px}
 footer{border-top:1px solid var(--l);background:var(--p);margin-top:32px;padding:30px 0;color:var(--mu);font-size:12px}
 footer p{margin-top:12px;max-width:80ch}
+/* ═══ CENTAL DE ANÚNCIOS · gaveta tela cheia ═══ */
+.adc-plat{display:grid;gap:10px}
+.adc-plat .pcard{background:var(--p2);border:1px solid var(--l);border-radius:12px;padding:13px 14px;display:grid;gap:7px}
+.adc-plat .pcard b{font-size:13.5px}
+.adc-plat .pcard .ptag{font:600 9.5px var(--mono);letter-spacing:.8px;text-transform:uppercase;color:var(--nc,var(--acx))}
+.adc-plat .pcard p{font-size:12.5px;color:var(--mu);line-height:1.55}
+.adc-code{position:relative;background:#101419;border:1px solid var(--l);border-radius:9px;padding:10px 76px 10px 12px;font:12px/1.55 var(--mono);color:#8ecbff;white-space:pre-wrap;overflow-wrap:anywhere}
+.adc-copy{position:absolute;top:6px;right:6px}
+.adc-grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:640px){.adc-grid2{grid-template-columns:1fr}}
+.adc-price{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.prc{background:var(--p2);border:1px solid var(--l);border-radius:10px;padding:9px 6px;text-align:center;cursor:pointer;transition:border-color .2s,background .2s}
+.prc:hover{border-color:var(--l2)}
+.prc.on{border-color:var(--ac);background:var(--as)}
+.prc b{font:600 16px var(--mono);display:block;color:var(--acx)}
+.prc small{font-size:9.5px;color:var(--mu);text-transform:uppercase;letter-spacing:.5px}
+.adc-prev{width:100%;min-height:120px;border:1px dashed var(--l);border-radius:10px;background:#fff}
+.adc-hero{border:1px solid var(--ac);border-radius:14px;padding:16px;display:grid;gap:10px;background:linear-gradient(160deg,var(--as),var(--p) 70%)}
+.adc-hero b{font-size:16px}
+.adc-hero p{font-size:13px;color:var(--mu);line-height:1.6}
+.adc-mrow{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;background:var(--p2);border:1px solid var(--l);border-radius:10px;padding:9px 12px;font-size:12.5px}
+.adc-mrow b{font:600 13px var(--mono)}
 /* ---- notificações estilo celular (enviadas pelo painel) ---- */
 #notes{position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:90;display:grid;gap:8px;width:min(430px,calc(100vw - 20px));pointer-events:none}
 #notes .pnote{pointer-events:auto}
@@ -365,6 +386,8 @@ footer p{margin-top:12px;max-width:80ch}
 .sup-head{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid var(--l)}
 .sup-head b{font-size:15px}
 .sup-frame{width:100%;height:min(72vh,620px);border:0;background:#fff}
+/* dentro da Central de Ajuda em tela cheia: o código do painel ocupa tudo */
+#sup-modal .sup-frame{height:100%;min-height:0;display:block}
 /* ═══ CENTRAL DE AJUDA · tela cheia no botão de suporte ═══ */
 /* trava total: 100% da janela, nada pode transbordar para os lados */
 #sup-modal{position:fixed;left:0;right:0;top:0;bottom:0;width:100%;max-width:100%;height:100%;max-height:100%;overflow:hidden;background:var(--bg);display:none;z-index:78}
@@ -395,13 +418,16 @@ footer p{margin-top:12px;max-width:80ch}
 .tag.b{background:rgba(56,97,251,.15);color:#6f9bff}
 /* ---- área de trabalho da tarefa (aberta ao clicar no card modesto) ---- */
 html.ws-lock body{overflow:hidden}
-.ws-modal{position:fixed;inset:0;z-index:72;background:rgba(0,0,0,.72);display:grid;place-items:center;padding:16px}
-.ws-box{width:min(680px,100%);max-height:88vh;overflow-y:auto;background:var(--p);border:1px solid var(--l);border-radius:16px;box-shadow:var(--sh)}
-.ws-head{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--l);position:sticky;top:0;background:var(--p);z-index:2}
-.ws-title{display:flex;align-items:center;gap:10px;min-width:0}
-.ws-title b{font-size:15px;overflow-wrap:anywhere}
-.ws-ico{font-size:20px;line-height:1}
-.ws-body{padding:16px;display:grid;gap:12px}
+/* ═══ ÁREA DE TRABALHO · TELA CHEIA PROFISSIONAL (100% da tela do aparelho) ═══ */
+/* z-index acima das gavetas (75): abre sempre NA FRENTE da gaveta de tarefas/ofertas */
+.ws-modal{position:fixed;inset:0;z-index:76;background:var(--bg);display:block;padding:0}
+.ws-box{width:100%;height:100vh;height:100dvh;max-height:100%;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;background:var(--bg);border:0;border-radius:0;box-shadow:none;display:block}
+.ws-head{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 16px calc(14px + env(safe-area-inset-top));border-bottom:1px solid var(--l);position:sticky;top:0;background:color-mix(in srgb,var(--p) 92%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);z-index:2}
+.ws-title{display:flex;align-items:center;gap:12px;min-width:0}
+.ws-title b{display:block;font-size:16px;overflow-wrap:anywhere;line-height:1.25}
+.ws-title small{display:block;color:var(--mu);font:600 9px var(--mono);letter-spacing:1.2px;text-transform:uppercase;margin-top:3px;overflow-wrap:anywhere}
+.ws-ico{font-size:22px;line-height:1;flex:none}
+.ws-body{padding:18px 16px calc(26px + env(safe-area-inset-bottom));display:grid;gap:14px;max-width:820px;width:100%;margin:0 auto;align-content:start}
 .ws-chips{display:flex;gap:7px;flex-wrap:wrap}
 .ws-kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px}
 .ws-kv>div{background:var(--p2);border:1px solid var(--l);border-radius:10px;padding:10px 12px}
@@ -430,7 +456,7 @@ html.ws-lock body{overflow:hidden}
 textarea{width:100%;min-height:64px;padding:10px 12px;background:var(--p2);border:1px solid var(--l);border-radius:8px;color:var(--ink);font:13px/1.5 var(--sans);resize:vertical}
 textarea:focus{border-color:var(--ac);outline:0;box-shadow:0 0 0 3px var(--as)}
 /* ---- botão "carregar anúncio" no cabeçalho (à esquerda do menu hambúrguer) ---- */
-.adh{position:relative;color:var(--acx)}
+.adh{position:relative;color:var(--acx);margin-right:5px}
 .adh svg{width:18px;height:18px}
 .adh .adh-badge{position:absolute;top:-7px;right:-7px;background:var(--p);color:var(--acx);border:1px solid var(--ac);border-radius:99px;font:600 10px/1 var(--mono);padding:3px 5px;white-space:nowrap;box-shadow:0 4px 10px -4px rgba(0,0,0,.45)}
 .adh:hover{border-color:var(--ac);background:var(--p2)}
@@ -1249,7 +1275,11 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
 .ld-act{display:flex;gap:8px;flex-wrap:wrap}
 @media(max-width:640px){.ldbar .wrap{gap:10px}.ld-act{width:100%}.ld-act .btn{flex:1}}
 /* palco da gaveta de login (rolagem dentro da tela cheia) */
-.lg-stage{overflow-y:auto;padding:0 18px;display:grid;gap:4px;align-content:start}
+.lg-stage{overflow-y:auto;padding:0 18px calc(26px + env(safe-area-inset-bottom));display:grid;gap:4px;align-content:start}
+/* caixa obrigatória de aceitação dos termos (tela de login) */
+.lg-terms{display:flex;gap:11px;align-items:flex-start;background:var(--p2);border:1px solid var(--l);border-radius:10px;padding:12px 13px;font-size:13px;line-height:1.55;cursor:pointer;margin-top:12px}
+.lg-terms input{width:19px;height:19px;min-width:19px;margin-top:1px;accent-color:var(--ac);cursor:pointer}
+.lg-terms.on{border-color:var(--ac);background:var(--as);box-shadow:0 0 0 3px var(--as)}
 .lg-soc{display:grid;gap:8px;margin-top:4px}
 .soc{display:flex;align-items:center;justify-content:center;gap:9px;min-height:44px;border-radius:8px;border:1px solid var(--l);cursor:pointer;font:600 13.5px var(--sans);background:var(--p2);color:var(--ink);transition:transform .15s,filter .2s}
 .soc:hover{transform:translateY(-1px);filter:brightness(1.06)}
@@ -1352,6 +1382,28 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
 .cta-cd{display:flex;flex-direction:column;background:var(--p2);border:1px solid var(--l);border-radius:12px;padding:10px 16px}
 .cta-cd span{font-size:10px;color:var(--mu);text-transform:uppercase;letter-spacing:.6px;font-weight:700}
 .cta-cd b{font:600 15px var(--mono);color:var(--g);margin-top:3px}
+/* ═══ GAVETAS DE TELA CHEIA · SORTEIOS E LEILÕES (100% da tela, do topo ao fim) ═══ */
+#sgaveta,#lgaveta{top:0;bottom:0;height:100%}
+#sgav,#lgav{grid-template-rows:auto minmax(0,1fr)}
+/* gavetas novas (Ofertas/Tarefas, Resultados, Minha conta): 2 linhas — cabeçalho fixo
+   e corpo rolando, preenchendo 100% da tela do celular */
+#ogav,#cogav,#rgav,#cgav{grid-template-rows:auto minmax(0,1fr)}
+.gv-scroll{overflow-y:auto;min-height:0;padding:0 18px 18px;display:grid;gap:14px;align-content:start}
+.gv-scroll .sec-head{margin-top:4px}
+/* CTA modesto do sorteio (um número pode ser seu) dentro da gaveta */
+.sg-cta{border:1px solid var(--l);border-radius:14px;background:linear-gradient(180deg,var(--p),var(--p2));padding:12px 16px;display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center}
+.sg-cta .tag{align-self:center}
+.sg-cta b{font-size:15px;display:block}
+.sg-cta p{margin:2px 0 0;color:var(--mu);font-size:12.5px;flex:1 1 200px;min-width:0}
+.sg-cta .cta-cd{padding:6px 12px}
+.sg-cta .cta-cd b{font-size:13px}
+/* resumos na tela inicial */
+.res-card{cursor:pointer;display:grid;gap:6px;align-content:start;padding:16px;text-align:left}
+.res-card:hover{border-color:var(--ac)}
+.res-num{font:600 34px var(--mono);color:var(--acx)}
+.res-card .btn{justify-self:start}
+/* aba "Anunciar oferta" dentro da Central do colaborador */
+#clv-anunciar .colab-card,#clv-anunciar .cform-box{max-width:none;margin:0;width:100%}
 /* ---- tela de carregamento "skeleton" prateada (shimmer) ---- */
 #bskel{position:fixed;inset:0;z-index:200;background:var(--bg);display:grid;grid-template-rows:auto 1fr;overflow:hidden;transition:opacity .45s ease,visibility 0s .45s}
 #bskel.gone{opacity:0;visibility:hidden}
@@ -1379,6 +1431,89 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
 @keyframes bskshine{from{background-position:200% 0}to{background-position:-200% 0}}
 .bsk-note{position:absolute;bottom:calc(14px + env(safe-area-inset-bottom));left:0;right:0;text-align:center;font:600 10.5px var(--mono);letter-spacing:1.6px;text-transform:uppercase;color:var(--mu)}
 @media(max-width:900px){.bsk-hero{grid-template-columns:1fr}.bsk-ticket{height:200px}.bsk-nav{display:none}}
+/* ════════════════════════════════════════════════════════════════
+   AJUSTES FINAIS · gavetas 100% tela cheia, cofre real quadrado
+   ════════════════════════════════════════════════════════════════ */
+/* cofre real: nenhum canto arredondado em todo o bloco */
+#cofre *{border-radius:0!important}
+/* todas as gavetas cobrem 100% da tela — nada fora do aparelho */
+.gaveta{height:100vh;height:100dvh}
+.gav{max-width:100%;border-radius:0}
+/* colaborador: botão "Anunciar" abaixo das abas */
+#clv-anunciar-btn{justify-content:center}
+#clv-anunciar-btn.on{border-color:var(--ac);background:var(--as)}
+/* celular: conteúdo quase colado nas laterais (poucos px) */
+@media(max-width:700px){
+ .gv-top{padding:12px 12px 8px}
+ .gv-scroll{padding:0 10px calc(18px + env(safe-area-inset-bottom))}
+ .clv-tabs{margin:0 10px 10px}
+ #clv-anunciar-btn{margin:0 10px 10px}
+ .clv-stats{padding:0 10px 10px}
+ .clv-body{padding:0 10px calc(18px + env(safe-area-inset-bottom))}
+ .ws-body{padding:14px 10px calc(22px + env(safe-area-inset-bottom))}
+ #sup-modal .hp-main{padding:12px 10px}
+ .hp-inner{padding:0 2px}
+}
+/* movimento reduzido */
+@media(prefers-reduced-motion:reduce){.gav,.slide,.cv-track{transition:none!important}}
+/* ═══ NADA ESTOURA A LARGURA DA TELA NO CELULAR ═══
+   corta o arrasto lateral nas áreas roláveis das gavetas e força a
+   quebra de palavras longas (IDs, links, e-mails) em qualquer largura */
+.gv-scroll,.clv-body,.ws-body,.lg-stage{overflow-x:hidden;overflow-wrap:anywhere;word-break:break-word}
+.ws-kv>div,.kv b,.ws-kv b,.lrow .lval{min-width:0;max-width:100%}
+.task,.task p,.task h4,.evc,.evc p{min-width:0;max-width:100%}
+.proof-detail,.proof-menu,.pm-body{min-width:0;max-width:100%}
+#tasks-list .task{max-width:100%;min-width:0}
+
+/* ══════════════════════════════════════════════════════════════
+   GRADE RESPONSIVA PADRÃO · o CSS calcula o espaço disponível
+   Card nunca tem largura fixa: ocupa 100% da coluna que sobrar.
+   Celular: 1 card por linha · Tablet: 2 · Computador: 4
+   (com !important para vencer os antigos controles de carrossel)
+   ══════════════════════════════════════════════════════════════ */
+.card,.evc,.task{box-sizing:border-box;width:100%}
+
+/* listas de cards (sorteios, leilões, ofertas, eventos, tarefas, cofre):
+   grade fluida. "Como funciona" (.how) NÃO entra aqui — é carrossel */
+.evs{
+ display:grid!important;
+ grid-template-columns:1fr!important;
+ gap:10px!important;
+ overflow:visible!important;
+ scroll-snap-type:none!important;
+ padding-bottom:0!important;
+}
+.evc,.evs .task{flex:none!important;width:100%}
+html.is-mobile .evs>*{flex:none!important}
+
+/* CELULAR · 1 card por linha, margens de 12–14px nas laterais */
+@media(max-width:700px){
+ .wrap{padding:0 14px}
+ main.wrap,.gv-scroll{padding-left:12px;padding-right:12px}
+}
+@media(max-width:480px){
+ .wrap{padding:0 12px}
+}
+
+/* TABLET · 2 cards por linha */
+@media(min-width:701px) and (max-width:1023px){
+ .evs{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px!important}
+}
+
+/* COMPUTADOR · 4 cards por linha */
+@media(min-width:1024px){
+ .evs{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:12px!important}
+}
+
+/* resumos da página inicial: 1 · 2 · 4 colunas */
+#resumo .res-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+@media(max-width:480px){#resumo .res-grid{grid-template-columns:1fr;gap:10px}}
+@media(min-width:701px) and (max-width:1023px){#resumo .res-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(min-width:1024px){#resumo .res-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+
+/* carrosséis que CONTINUAM sendo carrosséis (bilhetes, capas, prêmios) */
+.tks,.cvp,.pzc,.cv-track{overflow-x:auto}
+
 </style>
 
 </head>
@@ -1413,10 +1548,15 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
  <div class="bsk-note">Carregando o Yshippcommerce…</div>
 </div>
 
+<div class="promo" id="promo"><div class="wrap">
+ <span class="tag y">Cupom</span><span id="promo-t">10% de desconto no seguro.</span>
+ <button class="btn sm ghost" id="promo-c">Copiar cupom</button>
+</div></div>
+
 <header class="top" id="top"><div class="wrap bar">
  <a class="brand" href="#top" aria-label="Yshippcommerce — início"><span class="mark">Y</span><span class="brand-t">Yshippcommerce<small>um grupo Yellowishipp</small></span></a>
  <nav class="nav" id="nav" aria-label="Seções principais">
-  <a href="#premios">Prêmios</a><a href="#sorteios">Sorteios</a><a href="#eventos">Eventos</a><a href="#leiloes">Leilões</a><a href="#resultado">Resultado</a><a href="#cofre">Cofre Real</a><a href="#regras">Ajuda</a>
+  <a href="#premios">Prêmios</a><a href="#sorteios">Sorteios</a><a href="#eventos">Eventos</a><a href="#leiloes">Leilões</a><a href="#resultado">Resultado</a><a href="#cofre">Cofre Real</a><a href="#suporte" id="nav-sup-top">Ajuda</a>
  </nav>
  <div class="acct" id="acct" hidden>
   <button class="acct-b" id="acct-btn" aria-haspopup="menu" aria-expanded="false"><span class="ava" id="ava">U</span><span class="acct-n" id="acct-n">Conta</span><span class="acct-caret">▾</span></button>
@@ -1450,6 +1590,17 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
 </div>
 </header>
 
+<div class="wrap"><section id="como">
+ <div class="sec-head"><div class="sec-row"><h2>Como funciona</h2><div class="ev-nav"><button class="ib sm" data-info="info-como" aria-label="Como funciona o sistema">ⓘ</button><button class="ib sm" id="cprev" aria-label="Etapa anterior">‹</button><button class="ib sm" id="cnext" aria-label="Próxima etapa">›</button></div></div><p>Tudo começa nos eventos. Quatro etapas, todas gratuitas. Deslize para o lado.</p></div>
+ <p class="tipbox" id="info-como" hidden><b>O sistema em 30 segundos:</b> os <b>Eventos</b> são o centro de tudo — cada evento reúne tarefas, sorteios e leilões próprios. Para participar de um sorteio ou leilão, primeiro você paga a <b>entrada do evento</b> com bilhetes. As <b>tarefas</b> rendem bilhetes, e cada tipo de bilhete tem um valor: <b>comum = 1, dourado = 10, VIP = 20 bilhetes</b>. Nos <b>sorteios</b>, os bilhetes viram números (1 bilhete = 1 número). Nos <b>leilões</b>, os bilhetes viram lances: quem acumular mais até o prazo leva o prêmio — e se alguém atingir o valor total do produto, reivindica na hora. Prêmios são sempre vinculados ao próprio sorteio ou leilão. Antes de participar, leia os <button class="link" type="button" data-terms="1">termos de uso e responsabilidades</button> e <button class="link" type="button" data-consent="1">gerencie suas permissões</button> na Central de Ajuda.</p>
+ <div class="how" id="how">
+  <div class="card"><span class="n">1</span><h3>Identifique-se</h3><p>Crie sua conta gratuita e verifique seu e-mail. Leva menos de um minuto.</p></div>
+  <div class="card"><span class="n">2</span><h3>Ganhe bilhetes</h3><p>Faça tarefas e acumule bilhetes: comum vale 1 bilhete, dourado 10 e VIP 20.</p></div>
+  <div class="card"><span class="n">3</span><h3>Confirme o evento</h3><p>Pague a entrada do evento com bilhetes e libere os sorteios e leilões dele.</p></div>
+  <div class="card"><span class="n">4</span><h3>Sorteie ou arremate</h3><p>Use seus bilhetes para escolher números do sorteio ou dar lances no leilão.</p></div>
+ </div>
+</section></div>
+
 <div class="wrap"><section id="premios" class="sec-top">
  <div class="sec-head"><div class="sec-row"><h2>Prêmios em jogo</h2><span class="tag g">Ao vivo</span></div><p id="pz-sub"></p></div>
  <div class="cvp" id="cvp-premios" hidden></div>
@@ -1465,15 +1616,12 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
    <div class="dots" id="dots"></div>
    <button class="ib sm" id="hnext" aria-label="Próximo item">›</button>
   </div>
-  <!-- estatísticas-chave junto da promessa (prova social sustenta o hero) -->
-  <div class="hero-stats" id="hero-stats" aria-live="polite"></div>
+  <!-- estatísticas removidas do hero: cada assunto vive na sua própria gaveta -->
  </div>
  <aside class="ticket" id="bilhete">
   <div class="tk-h"><div class="brand"><span class="mark">Y</span><div>Yshippcommerce<small>Bilhete oficial</small></div></div><span class="tag" id="t-badge">Sem número</span></div>
   <div class="tk-micro" aria-hidden="true">YSHIPPCOMMERCE · BILHETE OFICIAL · AUTÊNTICO · YSHIPPCOMMERCE · BILHETE OFICIAL · AUTÊNTICO · YSHIPPCOMMERCE · BILHETE OFICIAL</div>
-  <div class="tabs tk-tabs" id="tktabs"><button data-f="active" class="on">Participando</button><button data-f="won"><span class="icn" aria-hidden="true" style="width:13px;height:13px;vertical-align:-2px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4h10v4a5 5 0 0 1-10 0zM9 20h6M12 13v7M17 5h3.5a3.5 3.5 0 0 1-3.5 7M7 5H3.5A3.5 3.5 0 0 0 7 12"/></svg></span> Ganharam</button><button data-f="lost">Não ganharam</button><button data-f="expired">Expirados</button></div>
-  <div class="tks" id="tks"></div>
-  <div class="tk-ctl"><button class="ib sm" id="tkprev" aria-label="Bilhete anterior">‹</button><span class="mono" id="tk-count" style="font-size:12px;color:var(--mu)">1/1</span><button class="ib sm" id="tknext" aria-label="Próximo bilhete">›</button></div>
+  <!-- carrossel de bilhetes movido para a gaveta de Sorteios (botão "Meus bilhetes") -->
   <div class="perf"></div>
   <div class="stub">
    <div class="kv"><span>Progresso</span><b id="lvl-t">0/4 etapas</b></div>
@@ -1507,17 +1655,53 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
 </div></div>
 
 <main class="wrap">
-<section id="como">
- <div class="sec-head"><div class="sec-row"><h2>Como funciona</h2><div class="ev-nav"><button class="ib sm" data-info="info-como" aria-label="Como funciona o sistema">ⓘ</button><button class="ib sm" id="cprev" aria-label="Etapa anterior">‹</button><button class="ib sm" id="cnext" aria-label="Próxima etapa">›</button></div></div><p>Tudo começa nos eventos. Quatro etapas, todas gratuitas. Deslize para o lado.</p></div>
- <p class="tipbox" id="info-como" hidden><b>O sistema em 30 segundos:</b> os <b>Eventos</b> são o centro de tudo — cada evento reúne tarefas, sorteios e leilões próprios. Para participar de um sorteio ou leilão, primeiro você paga a <b>entrada do evento</b> com bilhetes. As <b>tarefas</b> rendem bilhetes, e cada tipo de bilhete tem um valor: <b>comum = 1, dourado = 10, VIP = 20 bilhetes</b>. Nos <b>sorteios</b>, os bilhetes viram números (1 bilhete = 1 número). Nos <b>leilões</b>, os bilhetes viram lances: quem acumular mais até o prazo leva o prêmio — e se alguém atingir o valor total do produto, reivindica na hora. Prêmios são sempre vinculados ao próprio sorteio ou leilão.</p>
- <div class="how" id="how">
-  <div class="card"><span class="n">1</span><h3>Identifique-se</h3><p>Crie sua conta gratuita e verifique seu e-mail. Leva menos de um minuto.</p></div>
-  <div class="card"><span class="n">2</span><h3>Ganhe bilhetes</h3><p>Faça tarefas e acumule bilhetes: comum vale 1 bilhete, dourado 10 e VIP 20.</p></div>
-  <div class="card"><span class="n">3</span><h3>Confirme o evento</h3><p>Pague a entrada do evento com bilhetes e libere os sorteios e leilões dele.</p></div>
-  <div class="card"><span class="n">4</span><h3>Sorteie ou arremate</h3><p>Use seus bilhetes para escolher números do sorteio ou dar lances no leilão.</p></div>
+
+<!-- ═══ RESUMOS · sorteios e leilões, cada um com a sua própria tela completa ═══ -->
+<section id="resumo">
+ <div class="sec-head"><div class="sec-row"><h2>Sorteios, leilões, tarefas e colaborador</h2></div><p>A tela inicial mostra só os resumos. Toque em um deles para abrir a tela completa — cada assunto tem o seu próprio espaço.</p></div>
+ <div class="res-grid">
+  <div class="card evc res-card" data-sg="1" role="button" tabindex="0" aria-label="Abrir a tela de sorteios">
+   <span class="tag g">🎟️ Sorteios</span>
+   <b class="res-num" id="res-sg-open">0</b><small class="hint">abertos agora</small>
+   <p class="hint" style="margin:0" id="res-sg-sub">—</p>
+   <button class="btn sm" type="button" data-sg="1">Abrir sorteios →</button>
+  </div>
+  <div class="card evc res-card" data-lg="1" role="button" tabindex="0" aria-label="Abrir a tela de leilões">
+   <span class="tag g">🔨 Leilões</span>
+   <b class="res-num" id="res-lg-open">0</b><small class="hint">abertos agora</small>
+   <p class="hint" style="margin:0" id="res-lg-sub">—</p>
+   <button class="btn sm" type="button" data-lg="1">Abrir leilões →</button>
+  </div>
+  <div class="card evc res-card" data-of="1" role="button" tabindex="0" aria-label="Abrir a tela de tarefas Yshippcommerce">
+   <span class="tag y">✓ Tarefas Yshippcommerce</span>
+   <b class="res-num" id="res-tk-open">0</b><small class="hint">oficiais ativas agora</small>
+   <p class="hint" style="margin:0" id="res-tk-sub">—</p>
+   <button class="btn sm" type="button" data-of="1">Abrir tarefas →</button>
+  </div>
+  <div class="card evc res-card" data-cof="1" role="button" tabindex="0" aria-label="Abrir a tela de tarefas de colaboradores">
+   <span class="tag b">🤝 Tarefas de colaboradores</span>
+   <b class="res-num" id="res-cof-open">0</b><small class="hint">de parceiros no ar</small>
+   <p class="hint" style="margin:0" id="res-cof-sub">—</p>
+   <button class="btn sm" type="button" data-cof="1">Abrir tarefas →</button>
+  </div>
+  <div class="card evc res-card" data-clv="1" role="button" tabindex="0" aria-label="Abrir a Central do colaborador">
+   <span class="tag b">🤝 Central do colaborador</span>
+   <b class="res-num">🤝</b><small class="hint">sua central de parcerias</small>
+   <p class="hint" style="margin:0">Anuncie ofertas e inspecione as provas dos participantes.</p>
+   <button class="btn sm" type="button" data-clv="1">Abrir central →</button>
+  </div>
  </div>
 </section>
 
+<!-- ═══ GAVETA DE SORTEIOS · tela cheia, desce até logo abaixo do cabeçalho ═══ -->
+<div class="gaveta" id="sgaveta" role="dialog" aria-modal="true" aria-label="Sorteios">
+ <div class="gav" id="sgav">
+  <div class="gv-top">
+   <span class="gv-ico" aria-hidden="true">🎟️</span>
+   <div><b>Sorteios</b><small>TUDO SOBRE SORTEIOS · NÚMEROS, PRÊMIOS E PARTICIPAÇÃO</small></div>
+   <button class="ib sm" type="button" id="sg-x" aria-label="Fechar sorteios">✕</button>
+  </div>
+  <div class="gv-scroll">
 <section id="sorteios">
  <div class="sec-head"><div class="sec-row"><h2>Sorteios</h2><div class="ev-nav"><button class="ib sm" data-info="info-sorteio" aria-label="Como funcionam os sorteios">ⓘ</button><button class="ib sm" id="sdprev" aria-label="Sorteio anterior">‹</button><button class="ib sm" id="sdnext" aria-label="Próximo sorteio">›</button></div></div><p id="sd-intro">Aqui ficam <b>todos os sorteios</b> da aba escolhida, em carrossel. Toque em <b>"Escolher meu número"</b> e toda a participação (conta, tarefas e escolha do número) acontece aqui mesmo, sem sair desta seção.</p></div>
  <p class="tipbox" id="info-sorteio" hidden><b>Como participar de um sorteio:</b> 1) Entre na sua conta e complete o perfil. 2) Faça tarefas para ganhar bilhetes (comum = 1, dourado = 10, VIP = 20 bilhetes). 3) Se o sorteio pertence a um evento, confirme a entrada do evento. 4) Toque em <b>"Escolher meu número"</b> no sorteio desejado e reserve com seus bilhetes. O resultado é publicado na seção "Resultado oficial".</p>
@@ -1673,19 +1857,38 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
  </div>
 </section>
 
-<!-- barra de aviso do organizador: movida para depois da ação principal
-     (a primeira dobra agora pertence só à promessa do hero) -->
-<div class="promo" id="promo"><div class="wrap">
- <span class="tag y">Cupom</span><span id="promo-t">10% de desconto no seguro.</span>
- <button class="btn sm ghost" id="promo-c">Copiar cupom</button>
-</div></div>
+   <!-- 🎫 MEUS BILHETES: botão que revela o carrossel de bilhetes aqui na gaveta -->
+   <div style="display:grid;gap:10px">
+    <button class="btn wide" type="button" id="tks-toggle" aria-expanded="false" aria-controls="tks-box">🎫 Meus bilhetes — abrir carrossel</button>
+    <div id="tks-box" hidden style="display:grid;gap:10px;padding-top:4px">
+     <div class="tabs tk-tabs" id="tktabs"><button data-f="active" class="on">Participando</button><button data-f="won"><span class="icn" aria-hidden="true" style="width:13px;height:13px;vertical-align:-2px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4h10v4a5 5 0 0 1-10 0zM9 20h6M12 13v7M17 5h3.5a3.5 3.5 0 0 1-3.5 7M7 5H3.5A3.5 3.5 0 0 0 7 12"/></svg></span> Ganharam</button><button data-f="lost">Não ganharam</button><button data-f="expired">Expirados</button></div>
+     <div class="tks" id="tks"></div>
+     <div class="tk-ctl"><button class="ib sm" id="tkprev" aria-label="Bilhete anterior">‹</button><span class="mono" id="tk-count" style="font-size:12px;color:var(--mu)">1/1</span><button class="ib sm" id="tknext" aria-label="Próximo bilhete">›</button></div>
+    </div>
+   </div>
+   <!-- Últimas participações · sorteios: fica ABAIXO do bloco de sorteios -->
+   <!-- CTA modesto "Um número pode ser seu" — agora junto do bloco de sorteios -->
+   <div class="sg-cta" id="cta-final" hidden>
+    <span class="tag g" id="cta-tag">Sorteio aberto</span>
+    <div style="min-width:0;flex:1 1 220px"><b>Um número pode ser seu</b><p id="cta-p">Enquanto o organizador libera o sorteio, acumule bilhetes fazendo tarefas e ofertas.</p></div>
+    <div class="cta-cd"><span id="cta-cd-l">O sorteio encerra em</span><b id="cta-end">—</b></div>
+    <a class="btn sm" href="#participar">Reservar meu número</a>
+   </div>
 
-<!-- feed ao vivo subiu: prova social em tempo real colada na decisão de participar -->
-<section id="feed-sec">
- <div class="sec-head"><div class="sec-row"><h2>Últimas participações</h2><span class="tag g">Ao vivo</span></div><p>Números reservados nos sorteios e lances dados nos leilões, em tempo real.</p></div>
- <div class="tabs tabs3" id="ftabs" style="max-width:360px;margin-bottom:14px"><button data-v="all" class="on">Todas</button><button data-v="draw">Sorteios</button><button data-v="auc">Leilões</button></div>
- <div class="card tbl" id="feed"></div>
-</section>
+   <!-- Últimas participações · sorteios (exclusivo desta gaveta, abaixo do bloco de sorteios) -->
+   <div>
+    <div class="sec-head" style="margin-top:4px"><div class="sec-row"><h2 style="font-size:19px">Últimas participações em sorteios</h2><span class="tag g">Ao vivo</span></div><p>Números reservados agora, em tempo real.</p></div>
+    <div class="card tbl" id="feed-draw"></div>
+   </div>
+
+ </div><!-- /gv-scroll -->
+ </div><!-- /gav -->
+</div><!-- /#sgaveta -->
+
+<!-- barra de aviso do organizador: agora no TOPO, acima do cabeçalho, 100% da largura -->
+
+<!-- feed ao vivo REMOVIDO da interface principal: as "Últimas participações"
+     agora vivem dentro da gaveta de Sorteios (números) e da gaveta de Leilões (lances) -->
 
 <!-- ════════════════════════════════════════════════════════════
      ANÚNCIO 2 · ADSTERRA / MONETAG — meio da página
@@ -1710,15 +1913,36 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
  <div class="evs" id="evs"></div>
 </section>
 
+<!-- ═══ GAVETA DE TAREFAS YSHIPPCOMMERCE · tela cheia, só ofertas oficiais ═══ -->
+<div class="gaveta" id="ogaveta" role="dialog" aria-modal="true" aria-label="Tarefas Yshippcommerce">
+ <div class="gav" id="ogav">
+  <div class="gv-top">
+   <span class="gv-ico" aria-hidden="true">⚡</span>
+   <div><b>Tarefas Yshippcommerce</b><small>OFERTAS OFICIAIS DA PLATAFORMA</small></div>
+   <button class="ib sm" type="button" id="og-x" aria-label="Fechar tarefas Yshippcommerce">✕</button>
+  </div>
+  <div class="gv-scroll">
 <section id="ofertas">
- <div class="sec-head"><div class="sec-row"><h2>Ofertas Yshippcommerce</h2><div class="ev-nav"><button class="ib sm" id="ofprev" aria-label="Oferta anterior">‹</button><button class="ib sm" id="ofnext" aria-label="Próxima oferta">›</button></div></div><p>Ofertas oficiais do Yshippcommerce, sempre disponíveis. Cada aprovação credita bilhetes na sua carteira.</p></div>
+ <div class="sec-head"><div class="sec-row"><h2>Tarefas Yshippcommerce</h2><div class="ev-nav"><button class="ib sm" id="ofprev" aria-label="Oferta anterior">‹</button><button class="ib sm" id="ofnext" aria-label="Próxima oferta">›</button></div></div><p>Ofertas oficiais do Yshippcommerce, sempre disponíveis. Cada aprovação credita bilhetes na sua carteira.</p></div>
  <div class="tabs" id="offtabs" style="max-width:360px;margin-bottom:14px"><button data-v="active" class="on">Ativas</button><button data-v="future">Futuras</button></div>
  <div class="evs" id="offs"></div>
 </section>
+ </div><!-- /gv-scroll -->
+ </div><!-- /gav -->
+</div><!-- /#ogaveta -->
 
+<!-- ═══ GAVETA DE TAREFAS DE COLABORADORES · tela cheia, só ofertas 🤝 ═══ -->
+<div class="gaveta" id="cogaveta" role="dialog" aria-modal="true" aria-label="Tarefas de colaboradores">
+ <div class="gav" id="cogav">
+  <div class="gv-top">
+   <span class="gv-ico" aria-hidden="true">🤝</span>
+   <div><b>Tarefas de colaboradores</b><small>OFERTAS DE EMPRESAS E PARCEIROS 🤝</small></div>
+   <button class="ib sm" type="button" id="cog-x" aria-label="Fechar tarefas de colaboradores">✕</button>
+  </div>
+  <div class="gv-scroll">
 <!-- OFERTAS DOS COLABORADORES · tarefas enviadas por parceiros, selo 🤝 -->
 <section id="ofertas-colab">
- <div class="sec-head"><div class="sec-row"><h2>Ofertas dos colaboradores</h2><div class="ev-nav"><button class="ib sm" id="ofcprev" aria-label="Oferta anterior">‹</button><button class="ib sm" id="ofcnext" aria-label="Próxima oferta">›</button></div></div><p>Ofertas de empresas, lojas e prestadores parceiros — identificadas pelo carimbo <b>🤝 Colaborador</b>. Todas passam pela revisão da equipe e pagam bilhetes igual às ofertas oficiais.</p></div>
+ <div class="sec-head"><div class="sec-row"><h2>Tarefas de colaboradores</h2><div class="ev-nav"><button class="ib sm" id="ofcprev" aria-label="Oferta anterior">‹</button><button class="ib sm" id="ofcnext" aria-label="Próxima oferta">›</button></div></div><p>Ofertas de empresas, lojas e prestadores parceiros — identificadas pelo carimbo <b>🤝 Colaborador</b>. Todas passam pela revisão da equipe e pagam bilhetes igual às ofertas oficiais.</p></div>
  <div class="tabs" id="offtabs2" style="max-width:360px;margin-bottom:14px"><button data-v="active" class="on">Ativas</button><button data-v="future">Futuras</button></div>
  <div class="evs" id="offs-colab"></div>
  <div class="cbox" style="margin-top:22px;display:flex;gap:14px;align-items:center;flex-wrap:wrap">
@@ -1727,6 +1951,9 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
  </div>
  <div class="card" id="clv-teaser" hidden style="margin-top:14px"></div>
 </section>
+ </div><!-- /gv-scroll -->
+ </div><!-- /gav -->
+</div><!-- /#cogaveta -->
 
 <!-- ════════════════════════════════════════════════════════════
      ANÚNCIO 3 · ADSTERRA / MONETAG — entre ofertas e leilões
@@ -1741,6 +1968,20 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
  </div>
 </div>
 
+<!-- ═══ GAVETA DE LEILÕES · tela cheia, desce até logo abaixo do cabeçalho ═══ -->
+<div class="gaveta" id="lgaveta" role="dialog" aria-modal="true" aria-label="Leilões">
+ <div class="gav" id="lgav">
+  <div class="gv-top">
+   <span class="gv-ico" aria-hidden="true">🔨</span>
+   <div><b>Leilões</b><small>TUDO SOBRE LEILÕES · LANCES, METAS E PRÊMIOS</small></div>
+   <button class="ib sm" type="button" id="lgx-x" aria-label="Fechar leilões">✕</button>
+  </div>
+  <div class="gv-scroll">
+   <!-- Últimas participações · leilões (exclusivo desta gaveta) -->
+   <div>
+    <div class="sec-head" style="margin-top:4px"><div class="sec-row"><h2 style="font-size:19px">Últimas participações em leilões</h2><span class="tag g">Ao vivo</span></div><p>Lances dados agora, em tempo real.</p></div>
+    <div class="card tbl" id="feed-auc"></div>
+   </div>
 <section id="leiloes">
  <div class="sec-head"><div class="sec-row"><h2>Leilões — dê seu lance aqui</h2><div class="ev-nav"><button class="ib sm" data-info="info-au" aria-label="Como funcionam os leilões">ⓘ</button><button class="ib sm" id="aprev" aria-label="Leilão anterior">‹</button><button class="ib sm" id="anext" aria-label="Próximo leilão">›</button></div></div><p><b>É aqui que você participa dos leilões:</b> digite o valor do seu lance no campo "Lance" do leilão desejado e toque em <b>"Dar lance"</b>. Quem acumular mais bilhetes até o fim do prazo leva o prêmio.</p></div>
  <p class="tipbox"><b>Participar do leilão em 3 passos:</b> 1) Faça tarefas e acumule bilhetes na carteira (comum = 1, dourado = 10, VIP = 20). 2) Se o leilão pertence a um evento, confirme a entrada do evento na seção "Eventos". 3) Volte aqui, digite seu lance no card do leilão e toque em "Dar lance". Atingiu o valor total do prêmio? Use o botão "Reivindicar o prêmio agora".</p>
@@ -1752,10 +1993,42 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
 
 
 
+ </div><!-- /gv-scroll -->
+ </div><!-- /gav -->
+</div><!-- /#lgaveta -->
+
+<!-- ═══ GAVETA DE RESULTADOS · tela cheia, com cabeçalho próprio ═══ -->
+<div class="gaveta" id="rgaveta" role="dialog" aria-modal="true" aria-label="Resultado oficial">
+ <div class="gav" id="rgav">
+  <div class="gv-top">
+   <span class="gv-ico" aria-hidden="true">🏆</span>
+   <div><b>Resultado oficial</b><small>APURAÇÃO · GANHADORES E PRÊMIOS</small></div>
+   <button class="ib sm" type="button" id="rg-x" aria-label="Fechar resultados">✕</button>
+  </div>
+  <div class="gv-scroll">
 <section id="resultado">
  <div class="sec-head"><div class="sec-row"><h2>Resultado oficial</h2><span class="tag" id="res-tag">Pendente</span></div><p id="res-sub"></p></div>
  <div class="tabs tabs3" id="rtabs" style="max-width:360px;margin-bottom:14px"><button data-v="running" class="on">Em andamento</button><button data-v="winners">Ganhadores</button><button data-v="ended">Encerrados</button></div>
  <div class="card tbl" id="res"></div>
+</section>
+ </div><!-- /gv-scroll -->
+ </div><!-- /gav -->
+</div><!-- /#rgaveta -->
+
+<!-- ═══ CENTAL DE ANÚNCIOS · resumo na página principal ═══ -->
+<section id="anuncios">
+ <div class="sec-head"><div class="sec-row"><h2>📢 Central de anúncios</h2><span class="tag y">Novidade</span></div><p>Anuncie para a comunidade, use ferramentas profissionais de monetização e fature com o programa de afiliados Yshippcommerce. Neste momento: <b id="adc-main-n">…</b> anúncios pagos em rotação e <b id="adc-main-pool">…</b> bilhetes no pool do mês.</p></div>
+ <div class="card" style="padding:16px;display:grid;gap:12px">
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px">
+   <div class="trow"><span>📢 <b>Anunciar</b></span><span class="hint" style="font-size:11px">banners · links · vídeos</span></div>
+   <div class="trow"><span>🧰 <b>Ferramentas</b></span><span class="hint" style="font-size:11px">encurtadores · plataformas de ads</span></div>
+   <div class="trow"><span>🤝 <b>Afiliado</b></span><span class="hint" style="font-size:11px">indique e ganhe bilhetes</span></div>
+  </div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+   <button class="btn sm" id="adc-main-open">Abrir Central de Anúncios</button>
+   <span class="hint">Todo bilhete pago em anúncio vira prêmio nos sorteios.</span>
+  </div>
+ </div>
 </section>
 
 <!-- ═══ COFRE REAL · sorteio mensal das taxas de publicação ═══ -->
@@ -1792,22 +2065,6 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
  </div>
 </section>
 
-<!-- ═══ CTA FINAL · efeito de recência: a última coisa antes do FAQ é lembrada
-     junto com a primeira — urgência REAL (data do sorteio) no ponto de maior memória ═══ -->
-<section id="cta-final" hidden>
- <div class="ctaf card">
-  <div>
-   <span class="tag g" id="cta-tag">Sorteio aberto</span>
-   <h2>Um número pode ser seu</h2>
-   <p class="lead" id="cta-p">Participação gratuita. Reserve seu número antes do encerramento — cada bilhete vale um número.</p>
-  </div>
-  <div class="cta-side">
-   <div class="cta-cd"><span id="cta-cd-l">O sorteio encerra em</span><b id="cta-end">—</b></div>
-   <a class="btn lg" href="#participar">Reservar meu número</a>
-  </div>
- </div>
-</section>
-
 <!-- ════════════════════════════════════════════════════════════
      ANÚNCIO 4 · ADSTERRA / MONETAG — antes das regras/FAQ
      Sugestão: banner 728x90 responsivo ou popunder/social bar.
@@ -1821,18 +2078,10 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
  </div>
 </div>
 
-<section id="regras">
- <div class="sec-head"><div class="sec-row"><h2>Ajuda e perguntas</h2><button class="btn sm ghost" type="button" id="fq-sup"><span class="icn" aria-hidden="true" style="width:14px;height:14px;vertical-align:-2px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13a8 8 0 0 1 16 0"/><rect x="3" y="13" width="4" height="6" rx="2"/><rect x="17" y="13" width="4" height="6" rx="2"/><path d="M19 19a4 4 0 0 1-4 2h-2"/></svg></span> Suporte</button></div><p>Busque uma dúvida ou escolha um tema. Toque na pergunta para ver a resposta.</p></div>
- <div class="fq card" id="faq-slide">
-  <div class="fq-head">
-   <span class="cs-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 17v.5"/><path d="M12 13.5c0-1.6 2.4-2 2.4-3.8a2.5 2.5 0 0 0-5-.1"/></svg></span>
-   <div class="cs-txt"><b>Ajuda e perguntas — central de dúvidas</b><p>Busque uma dúvida ou escolha um tema. Toque no interruptor de cada pergunta para abrir a resposta, como no gerenciador de permissões.</p></div>
-   <span class="tag y" id="fq-count">0</span>
-  </div>
-  <div class="fq-tools"><span class="fq-ico" aria-hidden="true">⌕</span><input id="fq-q" type="search" placeholder="Buscar dúvida (ex.: bilhete, leilão, prêmio)" aria-label="Buscar nas perguntas frequentes" autocomplete="off"></div>
-  <div class="chips" id="fq-cats" role="tablist" aria-label="Temas"></div>
-  <div class="fq-list" id="fq-list" aria-live="polite"></div>
- </div>
+<!-- FAQ da home foi REMOVIDO da interface: as perguntas e respostas agora vivem
+     só na Central de Ajuda (botão de suporte). Os dados abaixo ficam ocultos
+     porque a Central de Ajuda os reaproveita em tempo real. -->
+<section id="regras" hidden aria-hidden="true">
  <div class="faq" id="faq-dyn" hidden style="display:none"></div>
  <div class="faq" id="faq-static" style="display:none">
 
@@ -1910,24 +2159,25 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
   </div>
   <div class="cs-more" id="cs-terms" hidden>
    <ol>
-    <li><b>1. O que é a plataforma.</b> O Yshippcommerce é um site de sorteios gratuitos mantido por um organizador independente. Toda a participação — criar conta, fazer tarefas, reservar números e dar lances — é <b>100% gratuita</b>. Não há cobrança, depósito ou compra de bilhetes em nenhum momento. Bilhetes não são dinheiro, não podem ser comprados, vendidos, trocados nem transferidos entre contas.</li>
-    <li><b>2. Uma conta por pessoa.</b> Cada pessoa pode manter apenas UMA conta, com nome verdadeiro e e-mail próprio. São proibidos contas duplicadas, e-mails descartáveis para multiplicar prêmios, contas em nome de terceiros e o uso de automatizações (bots, scripts) para tarefas. A conta é pessoal e intransferível; nunca compartilhe sua senha — a equipe nunca a pedirá.</li>
-    <li><b>3. Tarefas e provas.</b> As tarefas (seguir perfis, instalar apps, assistir vídeos etc.) são realizadas em serviços de terceiros. Ao clicar no card da tarefa você abre a <b>área de trabalho</b>, com a categoria, a dificuldade, as etapas da missão e o valor em bilhetes. Ao concluir, você envia o comprovante pela própria área de trabalho (texto, código, print, gravação de tela ou data e hora, conforme a tarefa exigir — algumas pedem mais de uma prova). Envie apenas o que for pedido: <b>jamais envie senhas, documentos completos, dados bancários ou fotos sensíveis</b>. Provas falsas, editadas ou repetidas podem reprovar a solicitação, zerar os bilhetes da tarefa e suspender a conta.</li>
-    <li><b>4. Sorteios, leilões e bilhetes.</b> Cada sorteio tem números, custo em bilhetes e prêmios próprios, exibidos no site antes de você participar. Números reservados ficam visíveis no seu bilhete oficial; ao publicar o resultado, os bilhetes dos números não ganhados são <b>devolvidos automaticamente</b> para a sua carteira. Nos leilões, os lances são em bilhetes; se a meta não for atingida até o fim do prazo, <b>todos os lances são devolvidos</b>. A apuração usa sorteio automático entre os números reservados, com resultado publicado na página.</li>
-    <li><b>6. Prêmios e entrega.</b> Os prêmios anunciados nos sorteios e leilões são entregues pelo organizador ao ganhador confirmado. Para receber, o perfil deve estar completo: <b>nome completo, data de nascimento, endereço e chave Pix</b> (para prêmios em dinheiro) ou endereço de entrega (para prêmios físicos). A entrega é combinada por e-mail ou WhatsApp cadastrados. O organizador pode solicitar confirmação de identidade antes de entregar prêmios de alto valor — os dados são usados só para isso e depois mantidos em sigilo.</li>
-    <li><b>7. Seus dados — o que coletamos e por quê.</b> Coletamos: e-mail e senha (acesso), nome, nascimento, gênero, WhatsApp, chave Pix e endereço (conferir tarefas e entregar prêmios), histórico de tarefas, reservas, lances e carteira (operar a plataforma e evitar fraudes). Sua foto de perfil é um personagem do próprio site, escolhido por você na tela do perfil — não usamos nem consultamos serviços externos de foto (Gravatar, DiceBear ou similares), e nenhuma imagem sua é enviada para a internet.</li>
-    <li><b>8. Seus dados — quem pode ver o quê.</b> Publicamente, aparece apenas o <b>nome abreviado</b> (ex.: Maria S.) e os números reservados. E-mail, endereço, Pix, nascimento e comprovantes <b>nunca são exibidos publicamente</b>. Internamente, o organizador acessa esses dados apenas para aprovar provas, apurar resultados e entregar prêmios. Prestadores técnicos (hospedagem/Firebase, e-mails, publicidade e o Gravatar, se ativado) processam dados apenas para fazer o site funcionar.</li>
-    <li><b>9. Seus dados — guarda, segurança e exclusão.</b> Os dados ficam guardados enquanto sua conta existir e são usados também para registrar resultados (transparência dos sorteios). Não vendemos seus dados. Você pode pedir a exclusão da conta e dos dados pelo suporte; após a exclusão, mantemos apenas o mínimo necessário para registrar prêmios já entregues e evitar fraudes. Você tem os direitos de acesso, correção e portabilidade dos seus dados, garantidos pela LGPD (Lei 13.709/2018) — basta pedir ao suporte.</li>
-    <li><b>10. Sua responsabilidade.</b> Você responde pela veracidade das informações e provas enviadas, pelo uso da própria conta e pela guarda da sua senha. Você declara que as tarefas foram feitas por você, de verdade, no serviço indicado. Responda pelos seus atos na plataforma conforme a lei.</li>
-    <li><b>11. Responsabilidade do organizador.</b> O organizador se compromete a: manter a participação gratuita, apurar os sorteios de forma automática e transparente, publicar resultados nesta página, devolver bilhetes conforme as regras (itens 4 e 5), guardar seus dados em sigilo e entrar em contato com os ganhadores para a entrega.</li>
-    <li><b>12. Suspensão.</b> Contas que burlam as regras (itens 2, 3, 5 e 10) podem ser suspensas ou excluídas, com perda de bilhetes obtidos irregularmente; prêmios já entregues de forma legítima não são confiscados.</li>
+    <li><b>1. Natureza da plataforma.</b> O Yshippcommerce é uma plataforma de sorteios e leilões gratuitos operada por um organizador independente. Toda a participação — criação de conta, execução de tarefas, reserva de números e registro de lances — é <b>integralmente gratuita</b>. Não há cobrança, depósito ou compra de bilhetes em nenhuma etapa. Os bilhetes são unidades de pontuação internas, sem valor monetário, e não podem ser comprados, vendidos, trocados ou transferidos entre contas.</li>
+    <li><b>2. Uma conta por pessoa.</b> Cada pessoa pode manter apenas <b>uma</b> conta, com nome verdadeiro e e-mail de uso exclusivo. São vedados contas duplicadas, e-mails descartáveis utilizados para multiplicar recompensas, contas em nome de terceiros e o uso de automatizações (bots, scripts ou macros) na execução de tarefas. A conta é pessoal e intransferível, e a senha nunca deve ser compartilhada — a equipe do Yshippcommerce jamais a solicitará.</li>
+    <li><b>3. Tarefas, provas e comprovantes.</b> As tarefas (seguir perfis, instalar aplicativos, assistir a vídeos etc.) são realizadas em serviços de terceiros. Ao abrir o card da tarefa, você acessa a <b>área de trabalho</b>, que reúne categoria, dificuldade, etapas da missão e valor em bilhetes. Concluída a tarefa, o comprovante deve ser enviado pela própria área de trabalho (texto, código, print, gravação de tela ou data e hora, conforme exigido — algumas tarefas solicitam mais de uma prova). Envie somente o que for pedido: <b>nunca envie senhas, documentos completos, dados bancários ou imagens sensíveis</b>. Provas falsas, editadas ou reutilizadas implicam reprovação, cancelamento dos bilhetes da tarefa e, em casos graves, suspensão da conta.</li>
+    <li><b>4. Sorteios, leilões e apuração.</b> Cada sorteio possui números, custo em bilhetes e prêmios próprios, divulgados antes da participação. Os números reservados ficam visíveis no bilhete oficial. Ao publicar o resultado, os bilhetes dos números não premiados são <b>devolvidos automaticamente</b> à carteira. Nos leilões, os lances são dados em bilhetes; caso a meta não seja atingida até o fim do prazo, <b>todos os lances são devolvidos</b>. A apuração utiliza sorteio automático entre os números reservados, com resultado publicado na página oficial.</li>
+    <li><b>5. Bilhetes, troco e devoluções.</b> Os bilhetes têm valores distintos: comum = 1, dourado = 10 e VIP = 20. Ao usar um bilhete de valor superior ao necessário, a diferença é <b>devolvida como troco</b>, diretamente na carteira. Devoluções automáticas ocorrem nos seguintes casos: números não premiados na apuração, lances de participantes que não arrematam o leilão, leilões encerrados sem meta atingida e ofertas de colaboradores negadas (taxa devolvida ao colaborador). Nenhuma operação da plataforma resulta em perda de bilhetes quando conduzida dentro das regras.</li>
+    <li><b>6. Prêmios e entrega.</b> Os prêmios anunciados nos sorteios e leilões são entregues pelo organizador ao ganhador confirmado. Para habilitar a entrega, o perfil deve estar completo: <b>nome completo, data de nascimento, endereço e chave Pix</b> (para prêmios em dinheiro) ou endereço de entrega (para prêmios físicos). O contato é realizado por e-mail ou WhatsApp cadastrados. O organizador pode solicitar confirmação de identidade antes da entrega de prêmios de alto valor; os dados são utilizados exclusivamente para essa finalidade e mantidos em sigilo.</li>
+    <li><b>7. Dados pessoais — coleta e finalidade.</b> Coletamos: e-mail e senha (acesso); nome, data de nascimento, gênero, WhatsApp, chave Pix e endereço (conferência de tarefas e entrega de prêmios); histórico de tarefas, reservas, lances e carteira (operação da plataforma e prevenção a fraudes). A foto de perfil é um personagem do próprio site, escolhido por você na tela do perfil — não utilizamos nem consultamos serviços externos de imagem, e nenhuma foto sua é enviada à internet.</li>
+    <li><b>8. Dados pessoais — visibilidade.</b> Publicamente, exibimos apenas o <b>nome abreviado</b> (ex.: Maria S.) e os números reservados. E-mail, endereço, chave Pix, data de nascimento e comprovantes <b>nunca são exibidos publicamente</b>. Internamente, o organizador acessa esses dados somente para aprovar provas, apurar resultados e entregar prêmios. Prestadores técnicos (hospedagem, e-mails e publicidade) processam dados apenas para o funcionamento do serviço.</li>
+    <li><b>9. Dados pessoais — guarda, segurança e exclusão.</b> Os dados são mantidos enquanto a conta existir e também para registrar resultados (transparência dos sorteios). Não vendemos dados. Você pode solicitar a exclusão da conta e dos dados pelo suporte; após a exclusão, mantemos apenas o mínimo indispensável para registrar prêmios já entregues e prevenir fraudes. Seus direitos de acesso, correção e portabilidade, garantidos pela LGPD (Lei nº 13.709/2018), podem ser exercidos junto ao suporte.</li>
+    <li><b>10. Responsabilidades do participante.</b> Você responde pela veracidade das informações e provas enviadas, pelo uso da própria conta e pela guarda da sua senha. Ao enviar um comprovante, declara que a tarefa foi executada pessoalmente, de forma legítima, no serviço indicado. Responde ainda pelo uso da plataforma em conformidade com a lei.</li>
+    <li><b>11. Responsabilidades do organizador.</b> O organizador se compromete a: manter a participação gratuita; apurar os sorteios de forma automática e transparente; publicar os resultados nesta página; devolver os bilhetes conforme as regras (itens 4 e 5); guardar os dados em sigilo; e contatar os ganhadores para a entrega dos prêmios.</li>
+    <li><b>12. Suspensão e exclusão de contas.</b> Contas que violem estas regras (em especial os itens 2, 3, 5 e 10) podem ser suspensas ou excluídas, com perda dos bilhetes obtidos irregularmente. Prêmios legítimos já entregues não são confiscados.</li>
     <li><b>13. Links e serviços de terceiros.</b> Tarefas, capas e anúncios apontam para serviços de terceiros, com termos próprios. Esta promoção <b>não é patrocinada, associada nem administrada pelo Facebook, Google, Meta ou qualquer outro serviço</b> citado em tarefas e anúncios.</li>
-    <li><b>14. Menores de idade.</b> A plataforma é destinada a maiores de 18 anos. Menores só participam com conhecimento e autorização expressa do responsável legal, que responde pela participação.</li>
-    <li><b>15. Mudanças nos termos.</b> Estes termos podem ser atualizados para refletir melhorias ou exigências legais; a versão vigente fica sempre nesta página e mudanças relevantes são avisadas por notificação no site.</li>
-    <li><b>16. Colaboradores e ofertas de parceiros.</b> Empresas, lojas e prestadores podem se cadastrar como <b>colaboradores</b> e enviar tarefas direto pelo <b>formulário guiado de 5 etapas</b> (“Anunciar como colaborador”: Serviço → Missão → Prova → Resumo → Pagamento), sem precisar falar com o suporte. <b>O envio não é de graça:</b> ao publicar, o colaborador paga uma <b>taxa de 30% sobre o valor total pago aos participantes</b> (recompensa por participante × número de vagas), cobrada fora desse valor total e descontada da sua carteira na etapa Pagamento; se a oferta for negada, a taxa é devolvida. As ofertas enviadas passam pela revisão da equipe: se algo estiver faltando, o colaborador recebe um comentário para editar; se for negada, recebe o motivo e pode recorrer. Ofertas aprovadas são publicadas na seção <b>Ofertas dos colaboradores</b> com o carimbo <b>🤝 Colaborador</b> (ofertas oficiais do Yshippcommerce ficam na seção <b>Ofertas Yshippcommerce</b> e levam o carimbo verde da plataforma) e o valor em bilhetes definido pela equipe, e seguem as mesmas regras desta plataforma (gratuitas para o participante, recompensa em bilhetes, comprovante obrigatório quando exigido). Cada tarefa tem um <b>ID</b> que aparece no card e pode ser copiado para melhor identificação. O colaborador é responsável pela veracidade, legalidade e funcionamento da sua oferta, produto ou serviço; o organizador pode recusar, pausar ou remover qualquer oferta de colaborador. Depois de publicada, <b>a inspeção das provas é feita pelo próprio colaborador</b> na <b>Central do colaborador</b> (aberta pelo menu “Avaliar provas” ou pelo resumo da seção Ofertas dos colaboradores): ele aprova (os bilhetes caem na carteira do participante na hora), pede correção ou nega cada comprovante com motivo. Se o participante desconfiar de <b>má-fé na avaliação</b>, pode <b>levar o caso ao suporte com o ID da tarefa</b> direto da área de trabalho da tarefa — a equipe audita o caso e pode reverter a decisão e creditar os bilhetes.</li>
-    <li><b>17. Cofre Real — sorteio mensal das taxas.</b> Todas as taxas de publicação pagas pelos colaboradores são somadas no <b>🏆 Cofre Real</b>. Este sorteio está <b>sempre ativo</b>: para participar, cada participante escolhe <b>um número de 1 a 1000</b> (grátis, um número por pessoa por mês, alterável até o sorteio). No fim de cada mês, um número é sorteado: quem tiver o número sorteado leva o valor acumulado do cofre (dividido igualmente, caso mais de uma pessoa tenha o mesmo número) e o cofre reinicia; <b>se ninguém acertar, o valor acumula para o mês seguinte</b>. O prêmio é creditado em bilhetes na carteira dos ganhadores e o resultado fica no histórico da seção Cofre Real. Participar é gratuito e não exige bilhetes.</li>
-    <li><b>17. Anúncios patrocinados e recompensa por espera.</b> O botão "Anúncio" abre uma gaveta com conteúdo publicitário definido pelo organizador. Mantendo o anúncio aberto durante a contagem regressiva, você recebe os bilhetes indicados, creditados direto na carteira. A recompensa é paga <b>uma vez por anúncio</b> (cada anúncio é identificado pela data de atualização definida no painel). Fechar antes do fim da contagem cancela a recompensa. Fraudes (automatizações, manipulação do relógio, contas duplicadas) anulam os bilhetes e suspendem a conta.</li>
-    <li><b>17. Dúvidas e contato.</b> Qualquer dúvida sobre estes termos, sobre seus dados ou sobre um resultado pode ser enviada pela tela de Suporte 🎧. Responderemos pelo e-mail ou WhatsApp cadastrados na sua conta.</li>
+    <li><b>14. Menores de idade.</b> A plataforma é destinada a maiores de 18 anos. Menores somente participam com conhecimento e autorização expressa do responsável legal, que assume a responsabilidade pela participação.</li>
+    <li><b>15. Alterações dos termos.</b> Estes termos podem ser atualizados para refletir melhorias ou exigências legais. A versão vigente permanece sempre nesta página, e mudanças relevantes são comunicadas por notificação no site.</li>
+    <li><b>16. Colaboradores e ofertas de parceiros.</b> Empresas, lojas e prestadores podem se cadastrar como <b>colaboradores</b> e enviar tarefas pelo <b>formulário guiado de 5 etapas</b> (“Anunciar como colaborador”: Serviço → Missão → Prova → Resumo → Pagamento). <b>O envio é tarifado:</b> ao publicar, o colaborador paga uma <b>taxa de 30% sobre o valor total pago aos participantes</b> (recompensa por participante × vagas), cobrada fora desse valor e descontada da carteira na etapa Pagamento; se a oferta for negada, a taxa é devolvida. As ofertas passam por revisão da equipe: se algo estiver incompleto, o colaborador recebe um comentário para editar; se negada, recebe o motivo e pode recorrer. Ofertas aprovadas são publicadas na seção <b>Ofertas dos colaboradores</b> com o carimbo <b>🤝 Colaborador</b> (ofertas oficiais ficam na seção <b>Ofertas Yshippcommerce</b>) e seguem as mesmas regras da plataforma: gratuitas para o participante, recompensa em bilhetes e comprovante quando exigido. Cada tarefa possui um <b>ID</b> exibido no card, copiável para identificação. O colaborador responde pela veracidade, legalidade e funcionamento da sua oferta, produto ou serviço; o organizador pode recusar, pausar ou remover qualquer oferta. Após a publicação, <b>a inspeção das provas é responsabilidade do colaborador</b>, na <b>Central do colaborador</b>: aprovar (bilhetes creditados na hora), pedir correção ou negar com motivo. Se o participante suspeitar de <b>má-fé na avaliação</b>, pode <b>levar o caso ao suporte com o ID da tarefa</b>, direto da área de trabalho — a equipe audita o caso e pode reverter a decisão e creditar os bilhetes.</li>
+    <li><b>17. Cofre Real — sorteio mensal das taxas.</b> Todas as taxas de publicação pagas pelos colaboradores são somadas no <b>🏆 Cofre Real</b>. Este sorteio está <b>sempre ativo</b>: cada participante escolhe <b>um número de 1 a 1000</b> (gratuito, um número por pessoa por mês, alterável até o sorteio). No fim de cada mês, um número é sorteado: quem tiver o número sorteado recebe o valor acumulado (dividido igualmente entre acertadores) e o cofre reinicia; <b>se ninguém acertar, o valor acumula para o mês seguinte</b>. O prêmio é creditado em bilhetes e o resultado fica no histórico da seção Cofre Real. A participação é gratuita e não consome bilhetes.</li>
+    <li><b>18. Anúncios patrocinados e recompensa por espera.</b> O botão de anúncio abre uma gaveta com conteúdo publicitário definido pelo organizador. Mantendo o anúncio aberto até o fim da contagem regressiva, você recebe os bilhetes indicados, creditados diretamente na carteira. A recompensa é paga <b>uma vez por anúncio</b> (cada anúncio é identificado pela data de atualização definida no painel). Fechar antes do fim cancela a recompensa. Fraudes (automatizações, manipulação de relógio, contas duplicadas) anulam os bilhetes e suspendem a conta.</li>
+    <li><b>19. Dúvidas e contato.</b> Qualquer dúvida sobre estes termos, sobre seus dados ou sobre um resultado pode ser enviada pela tela de Suporte 🎧. O atendimento responde pelo e-mail ou WhatsApp cadastrados na sua conta.</li>
    </ol>
   </div>
   <div class="cs-more" id="cs-perms" hidden>
@@ -1949,6 +2199,8 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
    <div class="hp-tt"><b>Central de Ajuda</b><small id="hp-who">Yshippcommerce · atendimento</small></div>
    <button class="ib" id="sup-close" aria-label="Fechar Central de Ajuda">✕</button>
   </div>
+  <!-- código de suporte salvo no painel (settings.supportCode): roda isolado aqui -->
+  <iframe class="sup-frame" id="sup-frame" hidden title="Tela de suporte personalizada"></iframe>
   <div class="hp-main" id="hp-main"><div class="hp-inner" id="hp-inner"><p class="hint">Carregando…</p></div></div>
  </div>
 </div>
@@ -1957,7 +2209,7 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
 <div class="ws-modal" id="ws" hidden>
  <div class="ws-box" role="dialog" aria-label="Área de trabalho">
   <div class="ws-head">
-   <div class="ws-title"><span class="ws-ico" id="ws-ico" aria-hidden="true">🎯</span><b id="ws-title">Área de trabalho</b></div>
+   <div class="ws-title"><span class="ws-ico" id="ws-ico" aria-hidden="true">🎯</span><div style="min-width:0"><b id="ws-title">Área de trabalho</b><small id="ws-sub">Tarefa · execução e comprovante</small></div></div>
    <button class="ib sm" id="ws-close" aria-label="Fechar área de trabalho">✕</button>
   </div>
   <div class="ws-body" id="ws-body"></div>
@@ -1980,6 +2232,7 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
    <div class="field" id="lg-pw-f"><label class="label" for="lg-pw">Senha</label>
     <div class="pw"><input id="lg-pw" type="password" autocomplete="current-password" placeholder="Sua senha"><button class="btn sm ghost" id="lg-showpw" type="button">Mostrar</button></div>
    </div>
+   <label class="lg-terms" id="lg-terms-wrap"><input type="checkbox" id="lg-terms-ok"><span>Eu li e aceito os <button class="link" type="button" data-terms="1">termos de uso e responsabilidades</button> e a política de dados do Yshippcommerce.</span></label>
    <div class="actions" style="justify-content:space-between"><button class="btn" id="lg-go">Entrar</button><button class="link" id="lg-forgot" type="button">Esqueci minha senha</button></div>
    <div class="or" id="lg-or">ou</div>
    <div class="lg-soc">
@@ -1987,7 +2240,6 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
     <button class="soc s-f" id="lg-facebook" type="button"><i aria-hidden="true">f</i>Continuar com Facebook</button>
     <button class="soc s-t" id="lg-tiktok" type="button"><i aria-hidden="true">♪</i>Continuar com TikTok</button>
    </div>
-   <p class="hint" style="margin-top:12px">Ao continuar, você concorda com os <button class="link" type="button" data-terms="1">termos de uso e responsabilidades</button> e com o uso do seu nome apenas para operar o sorteio.</p>
    <p class="status" id="lg-msg" style="text-align:center"></p>
    <div class="card lg-next">
     <b>Depois desta etapa, o que acontece:</b>
@@ -2143,14 +2395,17 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
  <div class="gav clg" id="clav">
   <div class="gv-top">
    <span class="gv-ico" aria-hidden="true">🤝</span>
-   <div><b>Central do colaborador</b><small>INSPEÇÃO DAS PROVAS · SUAS TAREFAS PUBLICADAS</small></div>
+   <div><b>Central do colaborador</b><small>TUDO DO COLABORADOR · ANUNCIAR OFERTAS E INSPECIONAR PROVAS</small></div>
    <button class="ib sm" type="button" id="clv-x" aria-label="Fechar central">✕</button>
   </div>
   <div class="clv-stats" id="clv-stats"></div>
+  <button class="btn ghost" type="button" id="clv-anunciar-btn" style="margin:0 18px 12px">🤝 Anunciar oferta como colaborador</button>
   <div class="clv-tabs" id="clv-tabs"></div>
   <div class="clv-body">
    <div id="clv-tasksel"></div>
    <div id="clv-list"></div>
+   <!-- aba "Anunciar oferta": o aviso e o formulário guiado mudaram para DENTRO da central -->
+   <div id="clv-anunciar" hidden></div>
   </div>
   <div class="gv-foot">
    <span class="gv-note">✅ Aprovar credita os bilhetes na carteira do participante na hora · ✏️ Pedir correção devolve a prova para ele reenviar · 🚫 Negar registra o motivo — e o participante pode levar o caso ao suporte com o ID da tarefa (a equipe audita).</span>
@@ -2179,6 +2434,54 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
  </div>
 </div>
 
+<!-- ═══ CENTRAL DE ANÚNCIOS YSHIPPCOMMERCE · gaveta tela cheia ═══ -->
+<div class="gaveta" id="adcveta" role="dialog" aria-modal="true" aria-label="Central de anúncios">
+ <div class="gav clg" id="adcav">
+  <div class="gv-top">
+   <span class="gv-ico" aria-hidden="true">📢</span>
+   <div><b>Central de anúncios</b><small>ANUNCIAR · FERRAMENTAS · MONETIZAÇÃO YSHIPPCOMMERCE</small></div>
+   <button class="ib sm" type="button" id="adc-x" aria-label="Fechar central">✕</button>
+  </div>
+  <div class="clv-stats" id="adc-stats"></div>
+  <div class="clv-tabs" id="adc-tabs"></div>
+  <div class="clv-body" id="adc-body"></div>
+ </div>
+</div>
+
+<!-- ═══ MINI-CURSO DA FERRAMENTA · gaveta tela cheia ═══ -->
+<div class="gaveta" id="adctool" role="dialog" aria-modal="true" aria-label="Mini-curso da ferramenta">
+ <div class="gav" id="adctv">
+  <div class="gv-top">
+   <span class="gv-ico" id="adct-ico" aria-hidden="true">🧰</span>
+   <div><b id="adct-name">Ferramenta</b><small>MINI-CURSO INDICADO PELA ADMINISTRAÇÃO</small></div>
+   <button class="ib sm" type="button" id="adct-x" aria-label="Fechar">✕</button>
+  </div>
+  <div class="gv-stage" style="grid-template-rows:minmax(200px,1fr)"><div id="adct-stage" style="min-height:200px"></div></div>
+  <div class="gv-foot">
+   <span class="gv-note" id="adct-note">Conteúdo escolhido pela equipe Yshippcommerce.</span>
+   <button class="btn sm" type="button" id="adct-open" hidden>Abrir ferramenta ↗</button>
+  </div>
+ </div>
+</div>
+
+<!-- ═══ VISUALIZADOR DE ANÚNCIO PAGO · rotação automática, tela cheia ═══ -->
+<div class="gaveta" id="adcvw" role="dialog" aria-modal="true" aria-label="Anúncio patrocinado pago">
+ <div class="gav" id="adcwv">
+  <div class="gv-bar" id="adcv-bar"></div>
+  <div class="gv-top">
+   <span class="gv-ico" aria-hidden="true">📣</span>
+   <div><b id="adcv-brand">Anúncio patrocinado</b><small>PAGO POR UM ANUNCIANTE · ELE AJUDA A FINANCIAR OS SORTEIOS</small></div>
+   <button class="ib sm" type="button" id="adcv-x" aria-label="Fechar anúncio" disabled>✕</button>
+  </div>
+  <div class="gv-timer">Visualização obrigatória: <b id="adcv-secs">…</b></div>
+  <div class="gv-stage" style="grid-template-rows:minmax(160px,1fr)"><div id="adcv-stage" style="min-height:200px"></div></div>
+  <div class="gv-foot">
+   <span class="gv-note" id="adcv-note">Este anúncio não gera bilhetes — é pago pelo anunciante e fortalece o Cofre dos sorteios.</span>
+   <button class="btn sm ghost" type="button" id="adcv-open" hidden>Abrir anúncio ↗</button>
+  </div>
+ </div>
+</div>
+
 <!-- ═══ CARTEIRA FLUTUANTE (botão no canto inferior direito) ═══ -->
 <button class="wfloat" id="wfloat" hidden aria-label="Abrir carteira de bilhetes" aria-expanded="false" title="Minha carteira de bilhetes">
  <svg viewBox="0 0 24 24" width="27" height="27" aria-hidden="true"><rect x="2.2" y="5.5" width="19.6" height="13.5" rx="3.2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M2.6 9.4h18.8" stroke="currentColor" stroke-width="1.4" opacity=".55"/><circle cx="16.8" cy="13" r="1.7" fill="currentColor"/><path d="M5 5.5V4.2c0-.7.6-1.2 1.3-1.1l11 1.6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
@@ -2191,7 +2494,6 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
  <div class="sheet-p menu-p" role="dialog" aria-modal="true" aria-label="Menu">
   <div class="sheet-h"><span class="grab" aria-hidden="true"></span><b>Menu</b><button class="ib sm" type="button" data-close aria-label="Fechar menu">✕</button></div>
   <div class="sheet-b">
-   <div class="m-acct" id="m-acct"></div>
    <div class="mgrid">
     <div class="mgrp"><span class="mgl">Participar</span>
      <a class="mi" href="#premios"><span class="mic"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M5 12v7a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-7M3 8l2-3.5h14L21 8"/></svg></span></span><span><b>Prêmios</b><small>Tudo o que está em jogo</small></span></a>
@@ -2201,18 +2503,34 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
      <a class="mi" href="#leiloes"><span class="mic"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M8 6h8M7 21h10M9.5 9.5a3.5 3.5 0 0 1 7 0c0 2-1.5 3-3.5 4-2-1-3.5-2-3.5-4zM9.5 13.5 7 17h10l-2.5-3.5"/></svg></span></span><span><b>Leilões</b><small>Dê seus lances</small></span></a>
     </div>
     <div class="mgrp"><span class="mgl">Minha conta</span>
+     <button class="mi" type="button" data-conta="1"><span class="mic"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5"/></svg></span></span><span><b>Minha conta</b><small>Perfil, carteira, bilhetes e segurança</small></span></button>
+    </div>
+<!-- ═══ GAVETA MINHA CONTA · tela cheia, com cabeçalho próprio ═══ -->
+<div class="gaveta" id="cgaveta" role="dialog" aria-modal="true" aria-label="Minha conta">
+ <div class="gav" id="cgav">
+  <div class="gv-top">
+   <span class="gv-ico" aria-hidden="true">👤</span>
+   <div><b>Minha conta</b><small>PERFIL · CARTEIRA · BILHETES E SEGURANÇA</small></div>
+   <button class="ib sm" type="button" id="c-x" aria-label="Fechar minha conta">✕</button>
+  </div>
+  <div class="gv-scroll">
+   <div class="m-acct" id="m-acct"></div>
+   <div class="mgrid">
      <button class="mi" type="button" data-open="profile"><span class="mic"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5"/></svg></span></span><span><b>Meu perfil</b><small>Dados pessoais e segurança</small></span></button>
      <button class="mi" type="button" data-open="wallet"><span class="mic"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="6" width="19" height="13" rx="3"/><path d="M2.5 10h19" opacity=".55"/><circle cx="17" cy="13.5" r="1.4" fill="currentColor" stroke="none"/></svg></span></span><span><b>Carteira</b><small>Saldo, ativos e histórico</small></span></button>
      <a class="mi" href="#bilhete"><span class="mic"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8a2 2 0 0 0 2-2h12a2 2 0 0 1 2 2v1a2.5 2.5 0 0 0 0 5v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1a2.5 2.5 0 0 0 0-5z"/><path d="M14.5 7v9.5" stroke-dasharray="2.5 3"/></svg></span></span><span><b>Meus bilhetes</b><small>Seus números e situação</small></span></a>
      <a class="mi" href="#participar"><span class="mic"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 15c-1.5-1.5-2-3.5-2-5.5L12 2l9 7.5c0 2-.5 4-2 5.5-2.5 2.5-6.5 3-9 1-2.5 2-6.5 1.5-9-1z"/></svg></span></span><span><b>Participar agora</b><small>Passo a passo guiado</small></span></a>
      <button class="mi" type="button" data-collab="1"><span class="mic"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6M9 10h.01M15 10h.01"/></svg></span></span><span><b>Anunciar como colaborador</b><small>Publique ofertas do seu negócio</small></span></button>
      <button class="mi" type="button" data-clv="1"><span class="mic"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></span></span><span><b>Central do colaborador<span class="clv-badge" id="clv-menu-badge" hidden>0</span></b><small>· avalie provas inspecione e pague</small></span></button>
-    </div>
+   </div>
+   </div><!-- /gv-scroll -->
+  </div><!-- /gav -->
+ </div><!-- /#cgaveta -->
     <div class="mgrp"><span class="mgl">Acompanhar e ajuda</span>
      <a class="mi" href="#resultado"><span class="mic"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4h10v4a5 5 0 0 1-10 0zM9 20h6M12 13v7M17 5h3.5a3.5 3.5 0 0 1-3.5 7M7 5H3.5A3.5 3.5 0 0 0 7 12"/></svg></span></span><span><b>Resultado oficial</b><small>Ganhadores e disputas</small></span></a>
-     <a class="mi" href="#feed-sec"><span class="mic"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l5-6 4 3 5-7 4 4"/><path d="M3 21h18"/></svg></span></span><span><b>Ao vivo</b><small>Últimas participações</small></span></a>
+     <a class="mi" href="#sorteios"><span class="mic"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l5-6 4 3 5-7 4 4"/><path d="M3 21h18"/></svg></span></span><span><b>Ao vivo</b><small>Últimas participações</small></span></a>
      <a class="mi" href="#como"><span class="mic"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m16 8-2.5 5.5L8 16l2.5-5.5z"/></svg></span></span><span><b>Como funciona</b><small>Quatro etapas gratuitas</small></span></a>
-     <a class="mi" href="#regras"><span class="mic"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.3a2.6 2.6 0 0 1 5 1c0 1.7-2.5 2.2-2.5 3.7"/><circle cx="12" cy="17" r=".4" fill="currentColor" stroke="none"/></svg></span></span><span><b>Perguntas frequentes</b><small>Regras e dúvidas</small></span></a>
+     <a class="mi" href="#suporte" id="nav-sup-faq"><span class="mic"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.3a2.6 2.6 0 0 1 5 1c0 1.7-2.5 2.2-2.5 3.7"/><circle cx="12" cy="17" r=".4" fill="currentColor" stroke="none"/></svg></span></span><span><b>Ajuda e perguntas</b><small>Central de dúvidas e FAQ</small></span></a>
      <a class="mi" href="#suporte" id="nav-sup"><span class="mic"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13a8 8 0 0 1 16 0"/><rect x="3" y="13" width="4" height="6" rx="2"/><rect x="17" y="13" width="4" height="6" rx="2"/><path d="M19 19a4 4 0 0 1-4 2h-2"/></svg></span></span><span><b>Suporte</b><small>Fale com a equipe</small></span></a>
      <button class="mi" type="button" data-terms="1"><span class="mic"><span class="icn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/><circle cx="12" cy="15.5" r="1.3" fill="currentColor" stroke="none"/></svg></span></span><span><b>Termos e permissões</b><small>Privacidade e segurança</small></span></button>
     </div>
@@ -2307,7 +2625,7 @@ html.is-mobile .evs,html.is-mobile .how{display:flex;overflow-x:auto;scroll-snap
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
 import { getAuth, GoogleAuthProvider, FacebookAuthProvider, EmailAuthProvider, reauthenticateWithCredential, signInWithPopup, linkWithPopup, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, sendPasswordResetEmail, signOut, onAuthStateChanged, reload, unlink } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
-import { getFirestore, initializeFirestore, persistentLocalCache, persistentMultipleTabManager, Timestamp, doc, getDoc, getDocs, setDoc, updateDoc, deleteDoc, addDoc, collection, query, where, orderBy, limit, onSnapshot, runTransaction, serverTimestamp, writeBatch, increment, arrayRemove } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+import { getFirestore, initializeFirestore, persistentLocalCache, persistentMultipleTabManager, Timestamp, doc, getDoc, getDocs, getCountFromServer, setDoc, updateDoc, deleteDoc, addDoc, collection, query, where, orderBy, limit, onSnapshot, runTransaction, serverTimestamp, writeBatch, increment, arrayRemove } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
 const firebaseConfig = {
  apiKey:"AIzaSyCuF38ke5IytK2K6hZO3Xq4HmBeMo9lEEQ",
@@ -2406,7 +2724,7 @@ function bskMark(k){if(bskHid)return;bskFlags[k]=true;if(bskReady())hideSkeleton
 setTimeout(hideSkeleton,15000);
 let auctions=[],bidsArr=[],aucView="active",myJoins=new Set(),history=[],covers=[];
 let myTickets=[],tkFilter="active",selDrawId="";
-let taken=new Set(),feedItems=[],claims={},unC={},unW=null,unU=null,unH=null,unJ=null,unN=null;
+let taken=new Set(),feedItems=[],claims={},unC={},unW=null,unU=null,unH=null,unJ=null,unN=null;let unAuc={},aucBidsMap={};let settleBusy=false,lastSettleCheck=0;
 let sugg=[],armed=0,session=0,stageOpen=false,sheetOpen="";
 let unT=null;
 let authMode="login",anote="";
@@ -2493,6 +2811,7 @@ const esc=v=>String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"
 const fmt=d=>{const x=d?.toDate?d.toDate():new Date(d);return Number.isNaN(x.getTime())?"—":x.toLocaleString("pt-BR",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit",timeZone:"America/Sao_Paulo"})};
 const fmtS=d=>{const x=d?.toDate?d.toDate():new Date(d);return Number.isNaN(x.getTime())?"—":x.toLocaleString("pt-BR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit",timeZone:"America/Sao_Paulo"})};
 const safeUrl=u=>/^https?:\/\//i.test(u||"")?u:"";
+const validUrl=v=>/^https?:\/\/\S+$/i.test(String(v||""));
 const validDate=v=>{if(!v)return null;const d=v.toDate?v.toDate():new Date(v);return Number.isNaN(d.getTime())?null:d};
 function maskName(n){const p=String(n||"Participante").trim().split(/\s+/);return p[0]+(p[1]?" "+p[1][0].toUpperCase()+".":"")}
 function copyText(t){
@@ -2523,9 +2842,11 @@ function evState(o){
  const n=Date.now(),e=o.endAt?tme(o.endAt):Infinity;
  if(n>=e)return"ended";           /* prazo encerrado: sempre "encerrado" */
  if(o.active===false)return"off"; /* desativado pelo organizador: oculto */
- if(o.active===true)return"active";/* marcado como Ativo no painel: aberto agora, mesmo com data futura */
+ /* Início futuro = "Em breve", MESMO com Ativo = true — igual à documentação
+    do painel (antes, Ativo=true com data futura aparecia como ativo agora) */
  const s=tms(o.startAt);
- return n<s?"future":"active";
+ if(n<s)return"future";
+ return"active";
 }
 function taskState(t){
  if(t.active===false)return"off";
@@ -2658,9 +2979,32 @@ function drawStateOf(d){
  const s=tms(d.startAt),e=d.endAt?tme(d.endAt):Infinity,n=Date.now();
  if(n<s)return"waiting";
  if(n>=e)return"ended";
+ /* esgotado = mesmo estado que o sorteio selecionado (drawState), agora com contagem real */
+ if(resvCount(d.id)>=totOfDraw(d))return"ended";
  return"open";
 }
-const resvCount=id=>id===drawId?taken.size:new Set(resvAll.filter(x=>x.drawId===id).map(x=>Number(x.number))).size;
+const totOfDraw=d=>Math.max(1,Math.floor(Number(d?.totalNumbers))||150);
+/* ── CONTAGEM REAL DE RESERVAS POR SORTEIO ──────────────────────────────
+   O feed global só guarda as últimas 200 reservas (é um feed de exibição).
+   Para NÃO mentir na contagem ("livres de N", sorteio esgotado etc.):
+   · sorteio selecionado .... listener completo (where drawId) → taken
+   · demais sorteios ........ contagem no servidor (getCountFromServer),
+                             em cache por 2 minutos */
+let resvCounts={}; /* drawId -> {n: contagem, at: timestamp} */
+const RESV_TTL=120000;
+const resvCount=id=>id===drawId?taken.size:(resvCounts[id]!=null?resvCounts[id].n:new Set(resvAll.filter(x=>x.drawId===id).map(x=>Number(x.number))).size);
+async function refreshResvCount(id){
+ if(id===drawId)return;
+ const c=resvCounts[id];
+ if(c&&Date.now()-c.at<RESV_TTL)return;
+ try{
+  const s=await getCountFromServer(query(collection(db,"reservations"),where("drawId","==",id)));
+  const n=s.data().count;
+  if(c&&c.n===n){c.at=Date.now();return}
+  resvCounts[id]={n,at:Date.now()};
+  render();
+ }catch(e){console.error("Contagem de reservas:",e)}
+}
 function renderSorteios(){
  const el=$("sdraws");if(!el)return;
  [...$("sdtabs").children].forEach(b=>b.classList.toggle("on",b.dataset.v===sdView));
@@ -2700,6 +3044,8 @@ function renderSorteios(){
   ${st==="open"?(canPick?`<button class="btn wide" data-pick="${esc(d.id)}">🎫 Escolher meu número neste sorteio</button>`:cta):""}
  </div>`;
  }).join("");
+ /* contagem real no servidor para os sorteios listados (cache de 2 min) */
+ list.forEach(d=>refreshResvCount(d.id));
 }
 $("sdtabs").onclick=e=>{const v=e.target.dataset.v;if(v){sdView=v;renderSorteios()}};
 /* carrossel de sorteios: setas deslizam, no celular é só arrastar */
@@ -2731,6 +3077,8 @@ function renderStage(){
 function goStage(fromOutside){
  /* sem usuário logado, TODA entrada de participação abre a gaveta de login em tela cheia */
  if(!currentUser&&typeof openLoginGaveta==="function")openLoginGaveta("login");
+ /* o palco de participação vive dentro da gaveta de sorteios — garante que ela esteja aberta */
+ if(typeof openSg==="function")openSg();
  stageOpen=true;renderStage();
  /* alinhamento preciso: depois do deslize, o botão "‹ Voltar aos sorteios"
     fica a 12px da parte de baixo do cabeçalho fixo (como na referência) */
@@ -2845,8 +3193,9 @@ function tl(s){
 }
 function slideHTML(s,i,n){
  const H=s.kind==="main"?"h1":"h2",cls=s.kind==="main"?"":' class="hl"';
+ const guest=!currentUser;
  const ctas=s.kind==="main"
-  ?'<a class="btn lg" href="#participar">Participar do sorteio</a><a class="btn lg ghost" href="#como">Como funciona</a>'
+  ?'<a class="btn lg" href="#sorteios">Participar do sorteio</a>'+(guest?'<a class="btn lg ghost" href="#como">Como funciona</a>':"")
   :`<a class="btn lg" href="#eventos" data-ev="${s.state}">Ver evento</a>${s.link?`<a class="btn lg ghost" href="${esc(s.link)}" target="_blank" rel="noopener noreferrer">Abrir oferta</a>`:""}`;
  return `<article class="slide" aria-roledescription="slide" aria-label="${i+1} de ${n}">
   <div class="s-top"><span class="tag ${s.tc}">${esc(s.tag)}</span>${s.tk?`<span class="tag y">+${s.tk} bilhete${s.tk>1?"s":""}</span>`:""}</div>
@@ -2883,7 +3232,15 @@ function tickHero(){
 }
 function renderHero(){
  const L=heroSlides();
- const sig=JSON.stringify(L.map(s=>[s.kind,s.id,s.state,s.tag,s.title,s.text,s.tk,s.start&&+s.start,s.end&&+s.end,s.link]));
+ /* assinatura inclui o estado de sessão: logou/deslogou, o hero é reconstruído
+    (o botão "Como funciona" só existe sem sessão) */
+ const sig=JSON.stringify(L.map(s=>[s.kind,s.id,s.state,s.tag,s.title,s.text,s.tk,s.start&&+s.start,s.end&&+s.end,s.link])).replace(/$/,currentUser?"·in":"·out");
+ /* ⓘ e a seção "Como funciona" só aparecem sem sessão conectada */
+ try{
+  document.querySelectorAll('[data-info="info-como"]').forEach(b=>b.hidden=!!currentUser);
+  const comoSec=document.querySelector('section#como');
+  if(comoSec)comoSec.hidden=!!currentUser;
+ }catch(e){}
  if(sig!==heroSig){
   heroSig=sig;heroData=L;
   $("slides").innerHTML=L.map((s,i)=>slideHTML(s,i,L.length)).join("");
@@ -2922,6 +3279,8 @@ function countdown(){
  renderHero();
  if(!hpause&&heroVis&&!reduceMotion&&!document.hidden&&heroData.length>1&&now-hlast>=15000){hlast=now;showSlide(hi+1,false)}
  if(pzN>1){if(pzPause||!pzVis||document.hidden)pzLast=now;else if(now-pzLast>=10000)pzShow(pzIdx+1)}
+ /* a cada 30s: apura leilões cujo prazo expirou (fechamento automático) */
+ if(now-lastSettleCheck>=30000){lastSettleCheck=now;try{settleExpiredAuctions()}catch(e){}}
 }
 /* performance: carrosséis só giram quando estão visíveis na tela */
 try{
@@ -3107,7 +3466,7 @@ const canReserveCount=()=>Math.floor(pointsOf(wallet)/COST);
 /* ============================================================
    11 · SESSÃO DO USUÁRIO (perfil + carteira em tempo real)
    ============================================================ */
-function stop(){try{clvStop()}catch(e){}if(unU)unU();if(unW)unW();if(unH)unH();if(unJ)unJ();if(unT)unT();if(unN)unN();if(unCof)unCof();unU=unW=unH=unJ=unT=unN=unCof=null;Object.values(unC).forEach(f=>f());unC={};claims={};history=[];myJoins=new Set();myTickets=[]}
+function stop(){try{clvStop()}catch(e){}if(unU)unU();if(unW)unW();if(unH)unH();if(unJ)unJ();if(unT)unT();if(unN)unN();if(unCof)unCof();if(unD)unD();Object.values(unAuc).forEach(f=>{try{f()}catch(e){}});unU=unW=unH=unJ=unT=unN=unCof=unD=null;unAuc={};aucBidsMap={};Object.values(unC).forEach(f=>f());unC={};claims={};history=[];myJoins=new Set();myTickets=[]}
 async function boot(user){
  bskMark("auth");
  const s=++session;
@@ -3131,7 +3490,27 @@ async function boot(user){
    render()},e=>console.error("Perfil:",e));
  }catch(e){console.error("Perfil (início da sessão):",e)}
  try{
-  if(!(await getDoc(uRef)).exists())await setDoc(uRef,{name:"",email:user.email||"",createdAt:serverTimestamp()});
+  const uExisted=(await getDoc(uRef)).exists();
+  if(!uExisted)await setDoc(uRef,{name:"",email:user.email||"",createdAt:serverTimestamp()});
+  /* AFILIADO YSHIPPCOMMERCE: conta criada com ?ref= marca quem indicou;
+     afiliado ganha +5 comuns (1x por indicação) e o novo membro +5 extra */
+  if(!uExisted){
+   try{
+    let ref=String(new URLSearchParams(location.search).get("ref")||"").trim();
+    if(!ref){try{ref=localStorage.getItem("yref")||""}catch(e){}}
+    if(ref&&ref!==user.uid&&(await getDoc(doc(db,"users",ref))).exists()){
+     await runTransaction(db,async tx=>{
+      const us=await tx.get(uRef);
+      if(us.exists()&&us.data().referredBy)return;
+      tx.set(uRef,{referredBy:ref,updatedAt:serverTimestamp()},{merge:true});
+      tx.set(doc(db,"wallets",ref),{common:increment(5),updatedAt:serverTimestamp()},{merge:true});
+      tx.set(doc(collection(db,"wallets",ref,"history")),{kind:"affiliate",amount:5,ticketType:"common",reason:"Indicação: nova conta criada com seu link 🤝",createdAt:serverTimestamp()});
+      tx.set(doc(db,"wallets",user.uid),{common:increment(5),updatedAt:serverTimestamp()},{merge:true});
+      tx.set(doc(collection(db,"wallets",user.uid,"history")),{kind:"welcome_ref",amount:5,ticketType:"common",reason:"Bônus extra: você entrou pelo link de um afiliado 🎉",createdAt:serverTimestamp()});
+     });
+    }
+   }catch(e){console.error("Afiliado:",e)}
+  }
   /* BÔNUS DE BOAS-VINDAS: 10 bilhetes comuns creditados uma única vez, logo após o cadastro */
   try{
    const wRef=doc(db,"wallets",user.uid);
@@ -3151,7 +3530,8 @@ async function boot(user){
   /* bilhetes reais do usuário (todas as reservas, de todos os sorteios) */
   /* sem orderBy: where+orderBy exigiria índice composto no Firestore (gerava
      failed-precondition) — ordena no cliente, mesmo resultado, sem índice */
-  unT=onSnapshot(query(collection(db,"reservations"),where("uid","==",user.uid),limit(200)),x=>{if(s!==session)return;myTickets=x.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(stampMs(b.createdAt)||0)-(stampMs(a.createdAt)||0));render()},e=>console.error("Bilhetes:",e));
+  /* sem limit: o participante vê TODOS os seus bilhetes (o limit(200) cortava os antigos) */
+  unT=onSnapshot(query(collection(db,"reservations"),where("uid","==",user.uid)),x=>{if(s!==session)return;myTickets=x.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(stampMs(b.createdAt)||0)-(stampMs(a.createdAt)||0));render()},e=>console.error("Bilhetes:",e));
   watchClaims();
  }catch(e){if(s===session)showError(e)}
  render();
@@ -3177,35 +3557,44 @@ onSnapshot(query(collection(db,"reservations"),orderBy("createdAt","desc"),limit
  mapPhotos(resvAll);
  ckSave({resv:resvAll});
  feedReady=true;render();
-},e=>{console.error("Feed:",e);bskMark("feed");$("feed").innerHTML='<p class="foot">Não foi possível carregar as participações.</p>'});
+},e=>{console.error("Feed:",e);bskMark("feed");const m='<p class="foot">Não foi possível carregar as participações.</p>';if($("feed-draw"))$("feed-draw").innerHTML=m;if($("feed-auc"))$("feed-auc").innerHTML=m});
 
 let feedView="all";
+/* feed dividido: números reservados vivem na gaveta de Sorteios,
+   lances vivem na gaveta de Leilões — nada na interface principal */
 function renderFeed(){
- const el=$("feed");if(!el)return;
- [...$("ftabs").children].forEach(b=>b.classList.toggle("on",b.dataset.v===feedView));
- if(!feedReady){el.innerHTML='<p class="foot">Carregando participações…</p>';return}
+ const elD=$("feed-draw"),elA=$("feed-auc");
+ if(!elD&&!elA)return;
+ const ft=$("ftabs");
+ if(ft)[...ft.children].forEach(b=>b.classList.toggle("on",b.dataset.v===feedView));
+ if(!feedReady){
+  const m='<p class="foot">Carregando participações…</p>';
+  if(elD)elD.innerHTML=m;if(elA)elA.innerHTML=m;return;
+ }
  const evName=id=>id?(events.find(e=>e.id===id)?.name||""):"";
- const rows=[];
- if(feedView!=="auc")resvAll.forEach(x=>{
+ const rowsD=[],rowsA=[];
+ resvAll.forEach(x=>{
   const n=Number(x.number);if(!Number.isInteger(n))return;
   const d=draws.find(y=>y.id===x.drawId);
   const tot=Math.floor(Number(d?.totalNumbers))||150;
   const st=d?drawStateOf(d):"";
-  rows.push({at:stampMs(x.createdAt),who:maskName(x.displayName),ph:whoHTML(x,(x.displayName||"P").trim().charAt(0)),k:"draw",title:d?.name||"Sorteio",ev:evName(d?.eventId),extra:!d?"sorteio removido":st==="open"?"sorteio aberto":st==="ended"?"sorteio encerrado":"sorteio em espera",val:"Nº "+pad(n,String(tot).length)});
+  rowsD.push({at:stampMs(x.createdAt),who:maskName(x.displayName),ph:whoHTML(x,(x.displayName||"P").trim().charAt(0)),k:"draw",title:d?.name||"Sorteio",ev:evName(d?.eventId),extra:!d?"sorteio removido":st==="open"?"sorteio aberto":st==="ended"?"sorteio encerrado":"sorteio em espera",val:"Nº "+pad(n,String(tot).length)});
  });
- if(feedView!=="draw")bidsArr.forEach(b=>{
+ bidsArr.forEach(b=>{
   const amt=Math.max(0,Math.floor(Number(b.amount)||0));if(!amt)return;
   const a=auctions.find(y=>y.id===b.auctionId);
   const tot=Math.max(1,Math.floor(Number(a?.totalTickets)||100));
-  rows.push({at:stampMs(b.updatedAt||b.createdAt),who:maskName(b.displayName||"Participante"),ph:whoHTML(b,(b.displayName||"P").trim().charAt(0)),k:"auc",title:a?.name||"Leilão",ev:evName(a?.eventId),extra:(a?.prize?"prêmio: "+a.prize+" · ":"")+"lance acumulado · "+Math.min(100,Math.round(amt/tot*100))+"% da meta",val:amt+" bilhete"+(amt>1?"s":"")});
+  rowsA.push({at:stampMs(b.updatedAt||b.createdAt),who:maskName(b.displayName||"Participante"),ph:whoHTML(b,(b.displayName||"P").trim().charAt(0)),k:"auc",title:a?.name||"Leilão",ev:evName(a?.eventId),extra:(a?.prize?"prêmio: "+a.prize+" · ":"")+"lance acumulado · "+Math.min(100,Math.round(amt/tot*100))+"% da meta",val:amt+" bilhete"+(amt>1?"s":"")});
  });
- rows.sort((x,y)=>y.at-x.at);
- const l=rows.slice(0,10);
- el.innerHTML='<div class="fr2 h"><span>Horário</span><span>Participante e modalidade</span><span>Nº / lance</span></div>'+
+ rowsD.sort((x,y)=>y.at-x.at);
+ rowsA.sort((x,y)=>y.at-x.at);
+ const tbl=(l,empty)=>'<div class="fr2 h"><span>Horário</span><span>Participante e modalidade</span><span>Nº / lance</span></div>'+
   (l.length?l.map(r=>`<div class="fr2"><span class="t">${r.at?fmtS(new Date(r.at)):"—"}</span><div class="fm"><b>${r.ph}<span style="overflow:hidden;text-overflow:ellipsis">${esc(r.who)}</span></b><small><span class="tag ${r.k==="draw"?"g":"y"}">${r.k==="draw"?"Sorteio":"Leilão"}</span>${r.k==="draw"?"🎟️":"⚖"} ${esc(r.title)}${r.ev?" · ◈ "+esc(r.ev):""} · ${esc(r.extra)}</small></div><b class="fv ${r.k==="auc"?"a":""}">${esc(r.val)}</b></div>`).join("")
-  :`<p class="foot">${feedView==="auc"?"Nenhum lance em leilão ainda.":feedView==="draw"?"Nenhum número reservado ainda.":"Nenhuma participação registrada ainda. Seja o primeiro."}</p>`);
+  :`<p class="foot">${empty}</p>`);
+ if(elD)elD.innerHTML=tbl(rowsD.slice(0,10),"Nenhum número reservado ainda. Reserve o seu!");
+ if(elA)elA.innerHTML=tbl(rowsA.slice(0,10),"Nenhum lance em leilão ainda. Dê o primeiro lance!");
 }
-$("ftabs").onclick=e=>{const v=e.target.dataset.v;if(v){feedView=v;renderFeed()}};
+if($("ftabs"))$("ftabs").onclick=e=>{const v=e.target.dataset.v;if(v){feedView=v;renderFeed()}};
 
 /* ============================================================
    13 · DADOS DA PLATAFORMA (settings, draws, events, tasks, links)
@@ -3213,12 +3602,17 @@ $("ftabs").onclick=e=>{const v=e.target.dataset.v;if(v){feedView=v;renderFeed()}
 let resvAll=[];
 function applyResv(){
  taken=new Set();feedItems=[];
- resvAll.forEach(x=>{const n=Number(x.number);
-  if(x.drawId===drawId&&Number.isInteger(n)&&n>=1&&n<=TOTAL){taken.add(n);feedItems.push({...x,number:n})}});
+ const add=x=>{const n=Number(x.number);
+  if(x.drawId===drawId&&Number.isInteger(n)&&n>=1&&n<=TOTAL&&!taken.has(n)){taken.add(n);feedItems.push({...x,number:n})}};
+ resvAll.forEach(add);
+ /* listener completo do sorteio selecionado: taken nunca sai de uma amostra */
+ if(unD)drawResvFeed.forEach(add);
 }
 function applyDraw(){
  draws=draws.filter(d=>d&&d.id);
- const opens=draws.filter(d=>d.status==="open");
+ /* ordem determinística: o sorteio principal é o aberto que encerra primeiro
+    (a ordem bruta do Firestore é lexicográfica por ID, não por data) */
+ const opens=draws.filter(d=>d.status==="open").sort((a,b)=>(tme(a.endAt)||Infinity)-(tme(b.endAt)||Infinity)||(tms(a.startAt)||0)-(tms(b.startAt)||0));
  draw=(selDrawId&&opens.find(d=>d.id===selDrawId))||opens[0]||draws.find(d=>d.status!=="draft"&&d.result)||null;
  drawId=draw?.id||"";
  TOTAL=Math.max(1,Math.floor(Number(draw?.totalNumbers))||150);
@@ -3226,6 +3620,25 @@ function applyDraw(){
  END=validDate(draw?.endAt)||new Date(864e13);
  COST=Math.max(1,Math.floor(Number(draw?.ticketCost))||1);
  applyResv();
+ watchDrawResv();
+}
+/* ── LISTENER COMPLETO DAS RESERVAS DO SORTEIO SELECIONADO ──
+   Todas as reservas do sorteio atual (sem limit): taken passa a ser exato,
+   em vez de vir do feed global truncado em 200. */
+let unD=null,drawResvFeed=[],drawResvDrawId="";
+function watchDrawResv(){
+ if(drawResvDrawId===drawId&&unD)return;
+ if(unD){try{unD()}catch(e){}unD=null}
+ drawResvDrawId=drawId||"";
+ drawResvFeed=[];
+ if(!drawId)return;
+ try{
+  unD=onSnapshot(query(collection(db,"reservations"),where("drawId","==",drawId)),s=>{
+   drawResvFeed=s.docs.map(d=>({id:d.id,...d.data()}));
+   applyResv();
+   render();
+  },e=>console.error("Reservas do sorteio:",e));
+ }catch(e){console.error("Reservas do sorteio:",e)}
 }
 /* ============================================================
    CATÁLOGO DE TAREFAS (categorias e serviços definidos no painel
@@ -3305,7 +3718,6 @@ onSnapshot(doc(db,"settings","platform"),s=>{bskMark("platform");
   $("faq-dyn").hidden=false;$("faq-static").hidden=true;
   $("faq-dyn").innerHTML=settings.faq.map(x=>`<details><summary>${esc(x.q)}</summary><div>${esc(x.a)}</div></details>`).join("");
  }else{$("faq-dyn").hidden=true;$("faq-static").hidden=false}
- collectFaq();
  if(settings.institutionalText)document.querySelector("footer p").textContent=settings.institutionalText;
  render();
 },e=>{console.error("Configurações:",e);bskMark("platform")});
@@ -3313,8 +3725,27 @@ onSnapshot(collection(db,"draws"),s=>{bskMark("draws");draws=s.docs.map(d=>({id:
 onSnapshot(collection(db,"events"),s=>{bskMark("events");events=s.docs.map(d=>({id:d.id,...d.data()}));ckSave({events});renderEvents();renderPrizes();render()},e=>{console.error("Eventos:",e);bskMark("events")});
 onSnapshot(collection(db,"tasks"),s=>{bskMark("tasks");tasks=s.docs.map(d=>({id:d.id,...d.data()}));ckSave({tasks});watchClaims();try{watchCollabReview()}catch(e){}renderEvents();render()},e=>{console.error("Tarefas:",e);bskMark("tasks")});
 onSnapshot(collection(db,"eventTasks"),s=>{bskMark("links");links=s.docs.map(d=>({id:d.id,...d.data()}));ckSave({links});renderEvents()},e=>{console.error("Vínculos:",e);bskMark("links")});
-onSnapshot(collection(db,"auctions"),s=>{bskMark("auctions");auctions=s.docs.map(d=>({id:d.id,...d.data()}));ckSave({auctions});renderAuctions();renderFeed();renderResult();updateTabBadges()},e=>{console.error("Leilões:",e);bskMark("auctions")});
-onSnapshot(query(collection(db,"bids"),limit(500)),s=>{bskMark("bids");bidsArr=s.docs.map(d=>({id:d.id,...d.data()}));mapPhotos(bidsArr);ckSave({bids:bidsArr});renderAuctions();renderFeed();renderResult();renderTicker()},e=>{console.error("Lances:",e);bskMark("bids")});
+onSnapshot(collection(db,"auctions"),s=>{bskMark("auctions");auctions=s.docs.map(d=>({id:d.id,...d.data()}));ckSave({auctions});watchAuctionBids();renderAuctions();renderFeed();renderResult();updateTabBadges();settleExpiredAuctions()},e=>{console.error("Leilões:",e);bskMark("auctions")});
+onSnapshot(query(collection(db,"bids"),orderBy("updatedAt","desc"),limit(200)),s=>{bskMark("bids");bidsArr=s.docs.map(d=>({id:d.id,...d.data()}));mapPhotos(bidsArr);ckSave({bids:bidsArr});renderAuctions();renderFeed();renderResult();renderTicker()},e=>{console.error("Lances:",e);bskMark("bids")});
+/* ── LANCES POR LEILÃO (exatos) ──────────────────────────────────────────
+   O listener global acima é só o FEED de últimas participações. Totais,
+   ranking, % da meta e o botão de reivindicar usam um listener COMPLETO por
+   leilão (where auctionId), nunca a amostra global. */
+function aucBidsOf(id){return aucBidsMap[id]||bidsArr.filter(b=>b.auctionId===id)}
+function watchAuctionBids(){
+ const wanted=new Set(auctions.filter(a=>a.status==="open"||(a.status==="ended"&&aucView==="ended")).map(a=>a.id));
+ Object.keys(unAuc).forEach(id=>{if(!wanted.has(id)){try{unAuc[id]()}catch(e){}delete unAuc[id];delete aucBidsMap[id]}});
+ wanted.forEach(id=>{
+  if(unAuc[id])return;
+  try{
+   unAuc[id]=onSnapshot(query(collection(db,"bids"),where("auctionId","==",id),limit(1000)),s=>{
+    aucBidsMap[id]=s.docs.map(d=>({id:d.id,...d.data()}));
+    mapPhotos(aucBidsMap[id]);
+    renderAuctions();renderResult();renderFeed();
+   },e=>console.error("Lances do leilão:",e));
+  }catch(e){}
+ });
+}
 onSnapshot(collection(db,"covers"),s=>{bskMark("covers");covers=s.docs.map(d=>({id:d.id,...d.data()})).filter(c=>c&&Array.isArray(c.images)&&c.images.some(Boolean));ckSave({covers});renderCovers()},e=>{console.error("Capas:",e);bskMark("covers")});
 getDoc(doc(db,"settings","platform")).then(()=>{cfgReady=true;render()}).catch(()=>{cfgReady=true;render()});
 
@@ -3358,7 +3789,7 @@ function taskCard(t){
   </div>
   ${t.description?`<p>${esc(t.description)}</p>`:""}
   <div class="kv"><span>Valor</span><b>+${rd} ${esc(catLabel(ty))}</b></div>
-  <div class="kv"><span>ID da tarefa</span><b class="mono" style="display:inline-flex;gap:6px;align-items:center">${esc(t.id)}<button class="btn sm ghost" type="button" data-copy="${esc(t.id)}">Copiar</button></b></div>
+  <div class="kv"><span>ID da tarefa</span><b class="mono" style="display:inline-flex;flex-wrap:wrap;justify-content:flex-end;gap:6px;align-items:center;min-width:0">${esc(t.id)}<button class="btn sm ghost" type="button" data-copy="${esc(t.id)}">Copiar</button></b></div>
   ${prN?`<div class="kv"><span>Prova exigida</span><b>📎 ${minP>1?minP+" provas mínimas":"comprovante"}</b></div>`:""}
   ${left!==null?`<div class="kv"><span>Vagas restantes</span><b>${soldOut?'<span class="tag r">Esgotadas</span>':left+" de "+t.stock}</b></div>`:""}
   <div class="actions" style="margin:0">
@@ -3427,6 +3858,7 @@ function openWorkspace(id){
  }
  $("ws-ico").textContent=catIcoS(t.category);
  $("ws-title").textContent=t.serviceLabel||t.name||"Tarefa";
+ try{$("ws-sub").textContent=(catLabelS(t.category)||"Tarefa")+(d?" · "+d.label:"")+" · recompensa +"+rd+" "+catLabel(ty)+" · execução e comprovante"}catch(e){}
  $("ws-body").innerHTML=`
  <div class="ws-chips">
   <span class="tag g">${esc(catIcoS(t.category))} ${esc(catLabelS(t.category))}</span>
@@ -3441,7 +3873,7 @@ function openWorkspace(id){
   <div><span>Categoria</span><b>${esc(catLabelS(t.category))}</b></div>
   <div><span>Tarefa</span><b>${esc(t.serviceLabel||t.name)}</b></div>
   <div><span>Valor em bilhetes</span><b>+${rd} ${esc(catLabel(ty))}</b></div>
-  <div><span>ID da tarefa</span><b class="mono" style="display:inline-flex;gap:6px;align-items:center">${esc(t.id)}<button class="btn sm ghost" type="button" data-copy="${esc(t.id)}">Copiar</button></b></div>
+  <div><span>ID da tarefa</span><b class="mono" style="display:inline-flex;flex-wrap:wrap;justify-content:flex-end;gap:6px;align-items:center;min-width:0">${esc(t.id)}<button class="btn sm ghost" type="button" data-copy="${esc(t.id)}">Copiar</button></b></div>
   <div><span>Dificuldade</span><b>${d?d.dot+" "+esc(d.label):"—"}</b></div>
   ${t.endAt?`<div><span>Termina em</span><b>${fmt(t.endAt)}</b></div>`:""}
   ${left!==null?`<div><span>Vagas restantes</span><b>${soldOut?"Esgotadas":left+" de "+t.stock}</b></div>`:""}
@@ -3604,6 +4036,9 @@ async function joinEvent(id){
  if(myJoins.has(id))return toast("Você já confirmou este evento.");
  const cost=Math.max(0,Math.floor(Number(ev.entryCost)||0));
  const uid=currentUser.uid,jRef=doc(db,"eventJoins",uid+"_"+id),wRef=doc(db,"wallets",uid);
+ /* a carteira pode ainda não ter chegado no snapshot: busca direto antes de
+    recusar (antes dava falso "bilhetes insuficientes" logo após o login) */
+ if(cost>0&&!wallet){try{const ws=await getDoc(wRef);if(ws.exists())wallet=ws.data()}catch(e){}}
  if(cost>0&&pointsOf(wallet)<cost)return toast("Bilhetes insuficientes: a entrada custa "+cost+" bilhete(s). Conclua tarefas para ganhar bilhetes.");
  try{
   await runTransaction(db,async tx=>{
@@ -3632,7 +4067,7 @@ function renderAuctions(){
  if(!list.length){el.innerHTML=`<div class="card evc"><p class="hint">${act?"Nenhum leilão aberto agora. Volte mais tarde.":"Nenhum leilão encerrado ainda."}</p></div>`;return}
  el.innerHTML=list.map(a=>{
   const min=Math.max(1,Math.floor(Number(a.minBid)||1)),tot=Math.max(1,Math.floor(Number(a.totalTickets)||100));
-  const bids=bidsArr.filter(b=>b.auctionId===a.id);
+  const bids=aucBidsOf(a.id);
   const total=bids.reduce((s,b)=>s+Math.max(0,Math.floor(Number(b.amount)||0)),0);
   const pct=Math.min(100,Math.round(total/tot*100));
   const ev=a.eventId?events.find(x=>x.id===a.eventId):null;
@@ -3691,34 +4126,93 @@ function renderAuctions(){
 async function claimAuction(aid){
  if(!termsOk())return askTerms();
  if(!currentUser?.emailVerified)return toast("Entre com uma conta verificada.");
- const aRef=doc(db,"auctions",aid),snap=await getDoc(aRef);
- if(!snap.exists())return toast("Leilão não encontrado.");
- const a={id:aid,...snap.data()};
- if(a.status!=="open")return toast("Este leilão já foi encerrado.");
- const tot=Math.max(1,Math.floor(Number(a.totalTickets)||1));
- const bsnap=await getDocs(query(collection(db,"bids"),where("auctionId","==",aid)));
- const all=bsnap.docs.map(d=>({id:d.id,...d.data()}));
- const mine=all.find(b=>b.uid===currentUser.uid);
- const my=Math.max(0,Math.floor(Number(mine?.amount)||0));
- if(!mine||my<tot)return toast("Você ainda não atingiu a meta de "+tot+" bilhete(s) neste leilão.");
- return askConfirm("Reivindicar o prêmio agora? O leilão encerra imediatamente e você é o ganhador.","Reivindicar prêmio",async()=>{
+ if(profile?.banned)return toast("Sua conta foi suspensa pelo organizador.");
+ if(!profileOk())return toast("Salve seus dados de perfil primeiro.");
+ const aRef=doc(db,"auctions",aid);
+ const tot0=Math.max(1,Math.floor(Number(auctions.find(x=>x.id===aid)?.totalTickets)||1));
+ /* validação amigável antes do diálogo — a transação abaixo refaz TODAS as checagens */
  try{
-  const total=all.reduce((s,b)=>s+Math.max(0,Math.floor(Number(b.amount)||0)),0);
-  let batch=writeBatch(db),ops=0;
-  for(const b of all){
-   if(b.uid===currentUser.uid)continue;
-   const amt=Math.max(0,Math.floor(Number(b.amount)||0));
-   if(!b.uid||amt<1)continue;
-   batch.set(doc(db,"wallets",b.uid),{change:increment(amt),updatedAt:serverTimestamp()},{merge:true});
-   batch.set(doc(collection(db,"wallets",b.uid,"history")),{kind:"auction_refund",amount:amt,auctionId:aid,auctionName:a.name||"",createdAt:serverTimestamp()});
-   ops+=2;
-   if(ops>=400){await batch.commit();batch=writeBatch(db);ops=0}
-  }
-  if(ops>0)await batch.commit();
-  await setDoc(aRef,{status:"ended",result:{winnerUid:currentUser.uid,winnerName:profile?.name||"",winnerAmount:my,totalRaised:total,endedAt:serverTimestamp()},updatedAt:serverTimestamp()},{merge:true});
-  toast("Prêmio reivindicado! 🏆 O organizador entrará em contato.");
+  const bs=await getDocs(query(collection(db,"bids"),where("auctionId","==",aid)));
+  const all=bs.docs.map(d=>d.data());
+  const mine=all.find(b=>b.uid===currentUser.uid);
+  const my=Math.max(0,Math.floor(Number(mine?.amount)||0));
+  if(!mine||my<tot0)return toast("Você ainda não atingiu a meta de "+tot0+" bilhete(s) neste leilão.");
+  return askConfirm("Reivindicar o prêmio agora? O leilão encerra imediatamente e você é o ganhador.","Reivindicar prêmio",async()=>{
+   try{
+    /* TUDO numa única transação: dois participantes reivindicando juntos não
+       podem mais ganhar os dois nem receber reembolso em dobro — quem chegar
+       depois vê status "ended" e sai sem escrever nada. */
+    await runTransaction(db,async tx=>{
+     const as=await tx.get(aRef);
+     if(!as.exists()||as.data().status!=="open")throw new Error("Este leilão já foi encerrado.");
+     const a=as.data();
+     const tot=Math.max(1,Math.floor(Number(a.totalTickets)||1));
+     const bs=await tx.get(query(collection(db,"bids"),where("auctionId","==",aid)));
+     const bids=bs.docs.map(d=>d.data());
+     const me=bids.find(b=>b.uid===currentUser.uid);
+     const my=Math.max(0,Math.floor(Number(me?.amount)||0));
+     if(!me||my<tot)throw new Error("Você ainda não atingiu a meta de "+tot+" bilhete(s) neste leilão.");
+     const total=bids.reduce((s,b)=>s+Math.max(0,Math.floor(Number(b.amount)||0)),0);
+     tx.set(aRef,{status:"ended",result:{winnerUid:currentUser.uid,winnerName:profile?.name||"",winnerAmount:my,totalRaised:total,endedAt:serverTimestamp()},updatedAt:serverTimestamp()},{merge:true});
+     for(const b of bids){
+      if(b.uid===currentUser.uid)continue;
+      const amt=Math.max(0,Math.floor(Number(b.amount)||0));
+      if(!b.uid||amt<1)continue;
+      tx.set(doc(db,"wallets",b.uid),{change:increment(amt),updatedAt:serverTimestamp()},{merge:true});
+      tx.set(doc(collection(db,"wallets",b.uid,"history")),{kind:"auction_refund",amount:amt,auctionId:aid,auctionName:a.name||"",createdAt:serverTimestamp()});
+     }
+    });
+    toast("Prêmio reivindicado! 🏆 O organizador entrará em contato.","win");
+   }catch(e){toast(e.message||"Erro ao reivindicar o prêmio.")}
+  },"Reivindicar agora");
  }catch(e){toast(e.message||"Erro ao reivindicar o prêmio.")}
- },"Reivindicar agora");
+}
+/* ── FECHAMENTO AUTOMÁTICO DO LEILÃO EXPIRADO ──────────────────────────
+   Sem backend agendado, o próprio site apura: quando o prazo (endAt) passa,
+   o primeiro cliente que notar encerra o leilão em UMA transação idempotente
+   e à prova de corrida (quem chegar depois vê status "ended" e não escreve).
+   Meta não atingida → todos os lances voltam; meta atingida → maior lance
+   vence e os demais são reembolsados. */
+async function settleAuction(aid){
+ if(settleBusy)return;
+ settleBusy=true;
+ try{
+  const aRef=doc(db,"auctions",aid);
+  await runTransaction(db,async tx=>{
+   const as=await tx.get(aRef);
+   if(!as.exists()||as.data().status!=="open")return;
+   const a=as.data();
+   const end=a.endAt?validDate(a.endAt):null;
+   if(!end||end.getTime()>Date.now())return; /* ainda dentro do prazo */
+   const bs=await tx.get(query(collection(db,"bids"),where("auctionId","==",aid)));
+   const bids=bs.docs.map(d=>d.data());
+   const meta=Math.max(1,Math.floor(Number(a.totalTickets)||1));
+   const total=bids.reduce((s,b)=>s+Math.max(0,Math.floor(Number(b.amount)||0)),0);
+   const sorted=[...bids].sort((x,y)=>(Number(y.amount)||0)-(Number(x.amount)||0));
+   const winner=sorted.find(b=>b.uid);
+   const refund=(list,winnerUid)=>{
+    for(const b of list){
+     if(b.uid===winnerUid)continue;
+     const amt=Math.max(0,Math.floor(Number(b.amount)||0));
+     if(!b.uid||amt<1)continue;
+     tx.set(doc(db,"wallets",b.uid),{change:increment(amt),updatedAt:serverTimestamp()},{merge:true});
+     tx.set(doc(collection(db,"wallets",b.uid,"history")),{kind:"auction_refund",amount:amt,auctionId:aid,auctionName:a.name||"",createdAt:serverTimestamp()});
+    }
+   };
+   if(!winner||total<meta){
+    refund(bids,null);
+    tx.set(aRef,{status:"ended",result:{winnerUid:null,winnerName:null,winnerAmount:0,totalRaised:total,endedAt:serverTimestamp(),auto:true},updatedAt:serverTimestamp()},{merge:true});
+   }else{
+    refund(bids,winner.uid);
+    tx.set(aRef,{status:"ended",result:{winnerUid:winner.uid,winnerName:winner.displayName||winner.uid||"—",winnerAmount:Math.max(0,Math.floor(Number(winner.amount)||0)),totalRaised:total,endedAt:serverTimestamp(),auto:true},updatedAt:serverTimestamp()},{merge:true});
+   }
+  });
+ }catch(e){console.error("Fechamento automático do leilão:",e)}
+ finally{settleBusy=false}
+}
+function settleExpiredAuctions(){
+ auctions.filter(a=>a.status==="open"&&a.endAt&&tme(a.endAt)<Date.now())
+  .forEach((a,i)=>setTimeout(()=>settleAuction(a.id),i*800));
 }
 async function placeBid(aid){
  if(!termsOk())return askTerms();
@@ -3739,7 +4233,12 @@ async function placeBid(aid){
  const uid=currentUser.uid,bRef=doc(db,"bids",aid+"_"+uid),wRef=doc(db,"wallets",uid);
  try{
   await runTransaction(db,async tx=>{
-   const [bs,ws]=await Promise.all([tx.get(bRef),tx.get(wRef)]);
+   /* revalida o leilão DENTRO da transação (status e prazo): antes, a única
+      checagem era fora, e um leilão encerrado no meio aceitava o lance */
+   const [bs,ws,as]=await Promise.all([tx.get(bRef),tx.get(wRef),tx.get(doc(db,"auctions",aid))]);
+   if(!as.exists()||as.data().status!=="open")throw new Error("Este leilão não está mais aberto.");
+   const aEnd=as.data().endAt?validDate(as.data().endAt):null;
+   if(aEnd&&aEnd.getTime()<Date.now())throw new Error("O prazo deste leilão terminou.");
    const prev=bs.exists()?Math.max(0,Math.floor(Number(bs.data().amount)||0)):0;
    if(prev===0&&amt<min)throw new Error("O lance mínimo é de "+min+" bilhete(s).");
    const wd=ws.exists()?ws.data():{};
@@ -3754,7 +4253,7 @@ async function placeBid(aid){
 }
 $("aprev").onclick=()=>{const el=$("aucs");if(el)slide(el,-1)};
 $("anext").onclick=()=>{const el=$("aucs");if(el)slide(el,1)};
-$("autabs").onclick=e=>{const v=e.target.dataset.v;if(v){aucView=v;$("autabs").querySelectorAll("button").forEach(b=>b.classList.toggle("on",b.dataset.v===v));renderAuctions()}};
+$("autabs").onclick=e=>{const v=e.target.dataset.v;if(v){aucView=v;watchAuctionBids();$("autabs").querySelectorAll("button").forEach(b=>b.classList.toggle("on",b.dataset.v===v));renderAuctions()}};
 document.addEventListener("click",e=>{
  const info=e.target.dataset?.info;
  if(info){const el=document.getElementById(info);if(el)el.hidden=!el.hidden;return}
@@ -3816,9 +4315,19 @@ document.addEventListener("click",async e=>{
     await runTransaction(db,async tx=>{
      const cs=await tx.get(ref);
      if(!cs.exists()||cs.data().status!=="pending")return;
+     /* baixa de estoque lida DENTRO da transação, com leitura fresca do doc:
+        antes usava stockOf(t) calculado fora, e duas aprovações simultâneas
+        gravavam o mesmo número → vagas vendidas além do limite */
+     if(t.stock>0){
+      const ts=await tx.get(doc(db,"tasks",id));
+      const td=ts.exists()?ts.data():{};
+      const totT=Math.max(0,Math.floor(Number(td.stock)||0));
+      const leftT=Number.isFinite(Number(td.stockLeft))?Math.floor(Number(td.stockLeft)):totT;
+      if(leftT<=0)throw new Error("Esta oferta esgotou as vagas agora mesmo. Fique de olho nas próximas!");
+      tx.set(doc(db,"tasks",id),{stockLeft:Math.max(0,leftT-1),updatedAt:serverTimestamp()},{merge:true});
+     }
      tx.set(wRef,{[ty]:increment(rd),updatedAt:serverTimestamp()},{merge:true});
      tx.set(doc(collection(db,"wallets",currentUser.uid,"history")),{kind:"reward",amount:rd,ticketType:ty,taskId:id,taskName:t.name||"",eventName:"",createdAt:serverTimestamp()});
-     if(t.stock>0)tx.set(doc(db,"tasks",id),{stockLeft:Math.max(0,(stockOf(t)??Math.floor(Number(t.stock)))-1),updatedAt:serverTimestamp()},{merge:true});
      tx.update(ref,{status:"approved",reviewedAt:serverTimestamp(),reward:rd,ticketType:ty,autoApproved:true});
     });
     return toast("Tarefa aprovada automaticamente! Bilhetes creditados na carteira 🎉");
@@ -3837,7 +4346,9 @@ const freeNumbers=()=>{const r=[];for(let n=1;n<=TOTAL;n++)if(!taken.has(n))r.pu
 const evOfDraw=()=>{const d=draws.find(x=>x.id===drawId);const eid=d?.eventId;return eid?events.find(x=>x.id===eid):null};
 const eventOk=()=>{const ev=evOfDraw();return !ev||(evState(ev)==="active"&&myJoins.has(ev.id))};
 function canParticipate(){
- return !!(ready()&&drawId&&currentUser?.emailVerified&&!profile?.banned&&profileOk()&&canReserveCount()>mine().length&&drawState()==="open"&&eventOk());
+ /* canReserveCount()>0 = saldo cobre 1 número. A comparação antiga com
+    mine().length travava quem recebeu reembolso de sorteios encerrados. */
+ return !!(ready()&&drawId&&currentUser?.emailVerified&&!profile?.banned&&profileOk()&&canReserveCount()>0&&drawState()==="open"&&eventOk());
 }
 
 /* ============================================================
@@ -3886,18 +4397,29 @@ $("yes").onclick=async()=>{
  if(!canParticipate()||busy||!number)return toast("Não foi possível confirmar agora. Confira seu progresso.");
  busy=true;render();
  try{
+  /* ID canônico SEM padding: o formato antigo (_n007) dependia da quantidade
+     de dígitos de totalNumbers — se o painel mudasse o total, o mesmo número
+     virava outro documento e podia ser reservado 2x. Os formatos antigos
+     ainda são verificados para respeitar reservas já existentes. */
+  const resvDocId=(did,n)=>did+"_n"+n;
+  const resvLegacyIds=(did,n)=>{const r=[];for(let w=2;w<=6;w++){const id=did+"_n"+pad(n,w);if(id!==resvDocId(did,n))r.push(id)}return r};
   const uid=currentUser.uid,wRef=doc(db,"wallets",uid),uRef=doc(db,"users",uid),dRef=doc(db,"draws",drawId),
-   rRef=doc(db,"reservations",drawId+"_n"+pad(number,String(TOTAL).length));
+   rRef=doc(db,"reservations",resvDocId(drawId,number)),
+   rOld=resvLegacyIds(drawId,number).map(id=>doc(db,"reservations",id));
   await runTransaction(db,async tx=>{
-   const [ws,us,rs,ds]=await Promise.all([tx.get(wRef),tx.get(uRef),tx.get(rRef),tx.get(dRef)]);
+   const gets=[tx.get(wRef),tx.get(uRef),tx.get(rRef),tx.get(dRef)].concat(rOld.map(r=>tx.get(r)));
+   const sn=await Promise.all(gets);
+   const [ws,us,rs,ds]=sn;
    if(!Number.isInteger(number)||number<1||number>TOTAL)throw new Error("Número inválido.");
    if(!ds.exists()||ds.data().status!=="open")throw new Error("Este sorteio não está aberto para reservas.");
-   if(rs.exists())throw new Error("Este número acabou de ser reservado por outra pessoa. Escolha outro.");
+   if(rs.exists()||sn.slice(4).some(s=>s.exists()))throw new Error("Este número acabou de ser reservado por outra pessoa. Escolha outro.");
    if(!us.exists())throw new Error("Perfil não encontrado.");
    const ud=us.data(),have=Array.isArray(ud.numbers)?ud.numbers:[];
    if(!ud.name||ud.name.trim().length<3)throw new Error("Seu perfil precisa estar completo.");
    const wd=ws.exists()?ws.data():{};
-   if(have.length>=Math.floor(pointsOf(wd)/COST))throw new Error("Você já usou todo o seu saldo em bilhetes. Conclua mais tarefas para reservar novos números.");
+   /* a limitação de saldo é feita APENAS pelo débito real na carteira
+      (spendValue). A checagem antiga have.length >= saldo/COST travava para
+      sempre quem recebeu reembolso de sorteios anteriores. */
    const spend=spendValue(wd,COST);
    if(!spend)throw new Error("Bilhetes insuficientes. Conclua mais tarefas para ganhar bilhetes.");
    tx.set(rRef,{drawId,number,uid,displayName:maskName(ud.name),photo:myPhoto(),createdAt:serverTimestamp()});
@@ -4008,6 +4530,14 @@ function renderTicket(done){
 /* setas e contador do carrossel de bilhetes */
 $("tkprev").onclick=()=>slide($("tks"),-1);
 $("tknext").onclick=()=>slide($("tks"),1);
+/* botão "Meus bilhetes" dentro da gaveta de Sorteios: abre/fecha o carrossel */
+if($("tks-toggle"))$("tks-toggle").onclick=()=>{
+ const box=$("tks-box"),btn=$("tks-toggle");
+ const open=box.hidden;
+ box.hidden=!open;
+ btn.setAttribute("aria-expanded",open?"true":"false");
+ btn.textContent=open?"🎫 Meus bilhetes — fechar carrossel":"🎫 Meus bilhetes — abrir carrossel";
+};
 $("tks").addEventListener("scroll",()=>{const el=$("tks");if(!el.children.length)return;const i=Math.min(el.children.length-1,Math.round(el.scrollLeft/((el.firstElementChild?.getBoundingClientRect().width||246)+10)));$("tk-count").textContent=(i+1)+"/"+el.children.length},{passive:true});
 /* filtro dos bilhetes */
 $("tktabs").onclick=e=>{const f=e.target.dataset.f;if(f){tkFilter=f;renderTicket([true,true,true,mine().length>0])}};
@@ -4054,7 +4584,7 @@ function renderResult(){
  const grp=(t,n)=>`<div class="rgrp"><b>${t}</b><span class="tag">${n}</span></div>`;
  const row=(pos,main,sub,val,vsub,win)=>`<div class="rx ${win?"win":""}"><span class="rp">${pos}</span><div class="rm"><b>${main}</b><small>${sub}</small></div><div class="rv"><b>${val}</b>${vsub?`<small>${vsub}</small>`:""}</div></div>`;
  const empty=t=>`<div class="foot">${t}</div>`;
- const aucBids=a=>bidsArr.filter(b=>b.auctionId===a.id);
+ const aucBids=a=>aucBidsOf(a.id);
  let html="";
  if(resView==="running"){
   html+=grp("🎟️ Sorteios em andamento",openDraws.length);
@@ -4195,7 +4725,7 @@ function renderNow(){
   $("pc-cost").textContent=COST+" bilhete(s)";
   $("pc-free").textContent=free+" de "+TOTAL;
   $("pc-wallet").textContent=logged?pointsOf(wallet)+" bilhete(s)":"Entre na conta";
-  $("pc-mine").textContent=logged?String(myTickets.filter(t=>t.drawId===drawId).length||mine().length):"—";
+  $("pc-mine").textContent=logged?String(myTickets.filter(t=>t.drawId===drawId).length):"—";
   $("pc-fill").style.width=(TOTAL?Math.round(taken.size/TOTAL*100):0)+"%";
   $("pc-state").textContent=ds==="open"?"Aberto":ds==="waiting"?"Em breve":ds==="paused"?"Pausado":"Encerrado";
   $("pc-state").className="tag "+(ds==="open"?"g":ds==="waiting"?"y":"");
@@ -4267,24 +4797,51 @@ function hpIdent(){
   :"Visitante — entre na conta ou informe seu UID para abrir uma solicitação";
 }
 
+/* trava de rolagem compartilhada: sempre recalculada a partir do estado real
+   de TODAS as telas (gavetas + central de ajuda), para não destravar o fundo
+   quando duas telas estão empilhadas e uma delas fecha */
+function syncGavLock(){
+ const anyOpen=[...document.querySelectorAll(".gaveta.open")].length>0||!($("sup-modal")?.hidden??true);
+ document.documentElement.classList.toggle("gav-lock",anyOpen);
+}
 function openSupport(){
  const m=$("sup-modal");
  m.hidden=!m.hidden;
- document.documentElement.classList.toggle("gav-lock",!m.hidden);
+ syncGavLock();
  if(!m.hidden){
-  hpIdent();
-  hpWatch();
-  hpRender();
-  $("hp-main").scrollTop=0;
+  /* código de suporte salvo no painel (settings.supportCode), se houver,
+     roda isolado no lugar da Central de Ajuda nativa; campo vazio = nativa */
+  const custom=String(settings.supportCode||"").trim();
+  const frame=$("sup-frame"),main=$("hp-main");
+  if(frame&&main){
+   if(custom){
+    frame.hidden=false;main.hidden=true;
+    frame.srcdoc=buildAdDoc(custom);
+   }else{
+    frame.hidden=true;main.hidden=false;frame.srcdoc="";
+    hpIdent();
+    hpWatch();
+    hpRender();
+    $("hp-main").scrollTop=0;
+   }
+  }else{
+   hpIdent();
+   hpWatch();
+   hpRender();
+   $("hp-main").scrollTop=0;
+  }
  }else{
+  const frame=$("sup-frame");
+  if(frame)frame.srcdoc="";
   hpStopChat();
  }
 }
 function hpStopChat(){HP.unMsg?.();HP.unMsg=null;HP.chat=null}
 $("nav-sup").onclick=e=>{e.preventDefault();openSupport()};
-$("sup-close").onclick=()=>{$("sup-modal").hidden=true;document.documentElement.classList.remove("gav-lock");hpStopChat()};
-$("fq-sup").onclick=()=>openSupport();
-document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("sup-modal").hidden){$("sup-modal").hidden=true;document.documentElement.classList.remove("gav-lock");hpStopChat()}});
+const nsq=$("nav-sup-top");if(nsq)nsq.onclick=e=>{e.preventDefault();openSupport()};
+const nsf=$("nav-sup-faq");if(nsf)nsf.onclick=e=>{e.preventDefault();openSupport()};
+$("sup-close").onclick=()=>{$("sup-modal").hidden=true;syncGavLock();hpStopChat()};
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("sup-modal").hidden){$("sup-modal").hidden=true;syncGavLock();hpStopChat()}});
 
 function hpWatch(){
  HP.unTk?.();HP.unTk=null;
@@ -4486,14 +5043,30 @@ async function hpReply(){
    quer abrir o suporte agora para começar a trabalhar conosco
    ou prefere deixar para depois.
    ============================================================ */
-function openColabNotice(){$("colab-modal").hidden=false}
+function openColabNotice(){openClvTo("anunciar");clvAnun("notice")}
+/* botão "Anunciar" ABAIXO das abas da Central do colaborador */
+if($("clv-anunciar-btn"))$("clv-anunciar-btn").onclick=()=>openColabNotice();
 document.addEventListener("click",e=>{
  if(e.target.closest("[data-collab]")){openColabNotice();return}
- if(e.target.closest("[data-colab-close]")){$("colab-modal").hidden=true;return}
- if(e.target.id==="colab-modal")$("colab-modal").hidden=true;
+ if(e.target.closest("[data-colab-close]")){clvFilter="pending";clvSwap();clvRenderAll();return}
 });
-$("colab-go").onclick=()=>{$("colab-modal").hidden=true;openCollabForm()};
-document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("colab-modal").hidden)$("colab-modal").hidden=true});
+$("colab-go").onclick=()=>{clvAnun("form");openCollabForm()};
+/* move o aviso e o formulário de anunciar para DENTRO da Central do colaborador */
+try{
+ const an=$("clv-anunciar");
+ const cc=document.querySelector("#colab-modal .colab-card"),cb=document.querySelector("#cform-modal .cform-box");
+ if(an&&cc)an.appendChild(cc);
+ if(an&&cb)an.appendChild(cb);
+ const mo=$("colab-modal");if(mo)mo.remove();
+ const mf=$("cform-modal");if(mf)mf.remove();
+ if(cc)cc.hidden=false;
+ if(cb)cb.hidden=true;
+}catch(e){console.warn("Aba Anunciar:",e)}
+function clvAnun(which){
+ const cc=document.querySelector("#clv-anunciar .colab-card"),cb=document.querySelector("#clv-anunciar .cform-box");
+ if(cc)cc.hidden=which!=="notice";
+ if(cb)cb.hidden=which!=="form";
+}
 
 /* ============================================================
    19d · FORMULÁRIO DE TAREFA DO COLABORADOR
@@ -4679,18 +5252,14 @@ function openCollabForm(editId){
  $("cf-note").value="";
  cfShow(1);
  renderCollabMine();
- $("cform-modal").hidden=false;
- document.documentElement.classList.add("ws-lock");
+ clvAnun("form");
 }
 function closeCollabForm(){
- $("cform-modal").hidden=true;
- document.documentElement.classList.remove("ws-lock");
+ clvAnun("notice");
  cfEditId=null;
 }
 $("cform-close").onclick=closeCollabForm;
 $("cform-cancel").onclick=closeCollabForm;
-$("cform-modal").addEventListener("click",e=>{if(e.target===$("cform-modal"))closeCollabForm()});
-document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("cform-modal").hidden)closeCollabForm()});
 $("cform-mine").addEventListener("click",e=>{
  const edit=e.target.dataset.cfEdit;
  if(edit)openCollabForm(edit);
@@ -4813,6 +5382,8 @@ function clvRenderAll(){
  if(st)st.innerHTML=[["Tarefas publicadas",mine.length,""],["Aguardando você",cnt.pend,"gold"],["Aprovadas",cnt.ok,"green"],["Negadas",cnt.no,"red"]].map(([l,v,c])=>`<div class="clv-stat"><span>${l}</span><b class="${c}">${v}</b></div>`).join("");
  const tb=$("clv-tabs");
  if(tb)tb.innerHTML=[["pending","Pendentes ("+cnt.pend+")"],["changes","Correção ("+cnt.chg+")"],["approved","Aprovadas ("+cnt.ok+")"],["rejected","Negadas ("+cnt.no+")"]].map(([k,l])=>`<button type="button" data-clv-tab="${k}" class="${clvFilter===k?"on":""}">${l}</button>`).join("");
+ const ab=$("clv-anunciar-btn");
+ if(ab)ab.classList.toggle("on",clvFilter==="anunciar");
  const sel=$("clv-tasksel");
  if(sel){
   sel.innerHTML=`<button type="button" class="clv-taskchip ${clvTask==="all"?"on":""}" data-clv-task="all"><span>Todas as minhas tarefas</span><b>${cnt.total} prova(s)</b></button>`+mine.map(t=>{
@@ -4915,20 +5486,26 @@ function openClv(){
  clvIsOpen=true;
  $("claveta").classList.add("open");
  $("clav").classList.add("open");
- document.documentElement.classList.add("gav-lock");
+ syncGavLock();
+ clvSwap();
  clvRenderAll();
+}
+function openClvTo(f){clvFilter=f||"pending";openClv()}
+function clvSwap(){
+ const an=clvFilter==="anunciar";const A=$("clv-anunciar");if(A)A.hidden=!an;
+ ["clv-tasksel","clv-list","clv-stats"].forEach(id=>{const el=$(id);if(el)el.hidden=an});
 }
 function closeClv(){
  clvIsOpen=false;
  $("claveta").classList.remove("open");
  $("clav").classList.remove("open");
- document.documentElement.classList.remove("gav-lock");
+ syncGavLock();
 }
 document.addEventListener("click",e=>{
  const b=e.target.closest("[data-clv]");
- if(b){openClv();return}
+ if(b){clvFilter="pending";openClv();return}
  const tab=e.target.closest("[data-clv-tab]");
- if(tab){clvFilter=tab.dataset.clvTab;clvRenderAll();return}
+ if(tab){clvFilter=tab.dataset.clvTab;clvSwap();clvRenderAll();return}
  const tk=e.target.closest("[data-clv-task]");
  if(tk){clvTask=tk.dataset.clvTask;clvRenderAll();return}
  const ok=e.target.closest("[data-clv-ok]");
@@ -4940,6 +5517,83 @@ document.addEventListener("click",e=>{
  if(e.target.closest("#clv-x"))return closeClv();
 });
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&clvIsOpen)closeClv()});
+
+/* ============================================================
+   GAVETAS DE TELA CHEIA · SORTEIOS E LEILÕES
+   A tela inicial mostra só resumos; cada assunto abre a sua
+   própria tela completa, descendo até logo abaixo do cabeçalho.
+   ============================================================ */
+let sgIsOpen=false,lgIsOpen=false;
+function openSg(){sgIsOpen=true;$("sgaveta").classList.add("open");$("sgav").classList.add("open");syncGavLock()}
+function closeSg(){sgIsOpen=false;$("sgaveta").classList.remove("open");$("sgav").classList.remove("open");syncGavLock()}
+function openLg(){lgIsOpen=true;$("lgaveta").classList.add("open");$("lgav").classList.add("open");syncGavLock()}
+function closeLg(){lgIsOpen=false;$("lgaveta").classList.remove("open");$("lgav").classList.remove("open");syncGavLock()}
+document.addEventListener("click",e=>{
+ if(e.target.closest("#sg-x"))return closeSg();
+ if(e.target.closest("#lgx-x"))return closeLg();
+ const a=e.target.closest('a[href="#sorteios"],[data-sg]');
+ if(a){e.preventDefault();openSg();return}
+ const l=e.target.closest('a[href="#leiloes"],[data-lg]');
+ if(l){e.preventDefault();openLg();return}
+ const p=e.target.closest('a[href="#participar"]');
+ if(p){e.preventDefault();openSg()}
+});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){if(sgIsOpen)closeSg();if(lgIsOpen)closeLg();if(ogIsOpen)closeOg();if(cogIsOpen)closeCog();if(rgIsOpen)closeRg();if(cgIsOpen)closeCg()}});
+
+/* ═══ GAVETAS DE OFERTAS, RESULTADOS E MINHA CONTA · 100% tela cheia ═══ */
+let ogIsOpen=false,cogIsOpen=false,rgIsOpen=false,cgIsOpen=false;
+/* a gaveta "Minha conta" nasce dentro do menu; muda para o corpo da página
+   para continuar visível mesmo com o menu fechado */
+try{const cg=$("cgaveta");if(cg)document.body.appendChild(cg)}catch(e){}
+function openOg(){ogIsOpen=true;$("ogaveta").classList.add("open");$("ogav").classList.add("open");syncGavLock()}
+function closeOg(){ogIsOpen=false;$("ogaveta").classList.remove("open");$("ogav").classList.remove("open");syncGavLock()}
+function openCog(){cogIsOpen=true;$("cogaveta").classList.add("open");$("cogav").classList.add("open");syncGavLock()}
+function closeCog(){cogIsOpen=false;$("cogaveta").classList.remove("open");$("cogav").classList.remove("open");syncGavLock()}
+function openRg(){rgIsOpen=true;$("rgaveta").classList.add("open");$("rgav").classList.add("open");syncGavLock()}
+function closeRg(){rgIsOpen=false;$("rgaveta").classList.remove("open");$("rgav").classList.remove("open");syncGavLock()}
+function openCg(){cgIsOpen=true;$("cgaveta").classList.add("open");$("cgav").classList.add("open");syncGavLock()}
+function closeCg(){cgIsOpen=false;$("cgaveta").classList.remove("open");$("cgav").classList.remove("open");syncGavLock()}
+document.addEventListener("click",e=>{
+ if(e.target.closest("#og-x"))return closeOg();
+ if(e.target.closest("#cog-x"))return closeCog();
+ if(e.target.closest("#rg-x"))return closeRg();
+ if(e.target.closest("#c-x"))return closeCg();
+ const o=e.target.closest('a[href="#ofertas"],[data-of]');
+ if(o){e.preventDefault();openOg();return}
+ const co=e.target.closest('a[href="#ofertas-colab"],[data-cof]');
+ if(co){e.preventDefault();openCog();return}
+ const r=e.target.closest('a[href="#resultado"],[data-res]');
+ if(r){e.preventDefault();openRg();return}
+ const c=e.target.closest("[data-conta]");
+ if(c){const ms=$("menu-sheet");if(ms)ms.hidden=true;openCg();return}
+});
+/* resumos ao vivo da tela inicial (contagem + destaques) */
+function renderResumo(){
+ const so=$("res-sg-open"),su=$("res-sg-sub"),ao=$("res-lg-open"),au=$("res-lg-sub");
+ if(!so)return;
+ const op=draws.filter(d=>drawStateOf(d)==="open");
+ const fu=draws.filter(d=>["waiting","paused"].includes(drawStateOf(d)));
+ so.textContent=op.length;
+ su.innerHTML=op.length?op.slice(0,2).map(d=>esc(d.name||"Sorteio")).join(" · ")+(op.length>2?" e outros":""):(fu.length?fu.length+" futuro(s) no calendário":"Nenhum aberto agora — volte mais tarde");
+ const la=auctions.filter(a=>a.status==="open");
+ ao.textContent=la.length;
+ au.innerHTML=la.length?la.slice(0,2).map(a=>esc(a.name||"Leilão")).join(" · ")+(la.length>2?" e outros":""):"Nenhum leilão aberto agora — volte mais tarde";
+ /* blocos de Tarefas: ofertas oficiais e de colaboradores separadas */
+ const tk=$("res-tk-open"),ts=$("res-tk-sub");
+ if(tk){
+  const onAll=generalTasks().filter(t=>offerState(t)==="on");
+  const on=onAll.filter(t=>t.source!=="collab");
+  tk.textContent=on.length;
+  if(ts)ts.innerHTML=on.length?"Ofertas oficiais da plataforma. Cada aprovação credita bilhetes.":"Nenhuma tarefa oficial ativa agora — volte mais tarde";
+ }
+ const ck=$("res-cof-open"),cs=$("res-cof-sub");
+ if(ck){
+  const onC=generalTasks().filter(t=>offerState(t)==="on"&&t.source==="collab");
+  ck.textContent=onC.length;
+  if(cs)cs.innerHTML=onC.length?"Ofertas 🤝 de parceiros revisadas pela equipe.":"Nenhuma oferta de colaborador ativa agora";
+ }
+}
+try{renderResumo()}catch(e){}
 /* ---- DISPUTA: participante leva o caso ao suporte com o ID da tarefa ---- */
 function openDispute(id){
  const t=tasks.find(x=>x.id===id);
@@ -5034,7 +5688,10 @@ function renderCofre(){
  }).join(""):'<p class="hint">O primeiro sorteio acontece no fim deste mês. Boa sorte!</p>';
 }
 $("cfre-pick").onclick=async()=>{
+ if(!termsOk())return askTerms();
  if(!currentUser||!currentUser.emailVerified)return toast("Entre com uma conta verificada para escolher seu número do Cofre Real.");
+ if(profile?.banned)return toast("Sua conta foi suspensa pelo organizador.");
+ if(!profileOk())return toast("Salve seus dados de perfil primeiro.");
  const n=Math.floor(Number($("cfre-num").value));
  if(!Number.isInteger(n)||n<1||n>1000)return toast("Escolha um número entre 1 e 1000.");
  try{
@@ -5077,8 +5734,8 @@ function renderAdBtn(){
 function adStopTimer(){if(adI){clearInterval(adI);adI=0}}
 function closeAdDrawer(){
  adStopTimer();
- document.documentElement.classList.remove("gav-lock");
  const gt=$("gaveta");if(gt)gt.classList.remove("open");
+ syncGavLock();
  const f=$("gv-frame");if(f)f.srcdoc="";
 }
 function adAfterSlide(gv){
@@ -5126,8 +5783,8 @@ async function openAdDrawer(){
  $("gv-secs").textContent="…";
  $("gv-secs").classList.remove("ok");
  const bar=$("gv-bar");bar.classList.remove("run");
- document.documentElement.classList.add("gav-lock");
  gt.classList.add("open");gv.classList.add("open");
+ syncGavLock();
  await adAfterSlide(gv);
  if(!gt.classList.contains("open")){adOpening=false;return}
  let claimed=false;
@@ -5192,11 +5849,14 @@ function noteMarkSeen(id){const s=noteSeen();s[id]=1;try{localStorage.setItem(no
 function watchNotes(){
  if(unN){unN();unN=null}
  const seen=noteSeen();
- const q=currentUser
-  ?query(collection(db,"notifications"),where("target","in",[currentUser.uid,"all"]),limit(20))
-  :query(collection(db,"notifications"),where("target","==","all"),limit(20));
+ const q=query(collection(db,"notifications"),orderBy("createdAt","desc"),limit(200));
  unN=onSnapshot(q,snap=>{
-  const all=snap.docs.map(d=>({id:d.id,...d.data()}));
+  /* orderBy simples em 1 campo: não exige índice composto (where+orderBy
+     exigiria). Pega as 200 mais recentes e filtra o destinatário aqui —
+     antes era where+limit(20) sem orderBy, que devolvia um subconjunto
+     arbitrário e fazia notificação sumir. */
+  const t=currentUser?currentUser.uid:"";
+  const all=snap.docs.map(d=>({id:d.id,...d.data()})).filter(n=>n.target==="all"||(t&&n.target===t));
   all.sort((a,b)=>(stampMs(b.createdAt)||0)-(stampMs(a.createdAt)||0));
   freshNotes=all;
   const shown=all.filter(n=>!seen[n.id]).slice(0,3);
@@ -5211,6 +5871,7 @@ function updateTabBadges(){
  if(bD){const n=draws.filter(d=>drawStateOf(d)==="open").length;bD.textContent=n;bD.hidden=!n}
  if(bA){const n=auctions.filter(a=>a.status==="open").length;bA.textContent=n;bA.hidden=!n}
  if(bN){const n=freshNotes.filter(x=>!noteSeen()[x.id]).length;bN.textContent=n;bN.hidden=!n}
+ renderResumo();
 }
 /* notificações do organizador dentro do perfil (só as do painel aparecem aqui) */
 function renderProfileNotes(){
@@ -5367,6 +6028,8 @@ function closeSheet(){
 }
 function openSheet(name){
  if(!name||!SHEETS[name])return closeSheet();
+ /* abas internas (perfil/carteira) fecham a gaveta Minha conta primeiro */
+ try{if(cgIsOpen)closeCg()}catch(e){}
  if((name==="wallet"||name==="profile")&&!currentUser?.emailVerified){
   closeSheet();goStage(true);
   toast(currentUser?"Confirme seu e-mail para acessar "+(name==="wallet"?"a carteira":"o seu perfil")+".":"Entre na sua conta para acessar "+(name==="wallet"?"a carteira":"o seu perfil")+".","info");
@@ -5513,7 +6176,7 @@ $("wl-body").addEventListener("click",e=>{
  const a=e.target.closest("[data-wl]")?.dataset.wl;if(!a)return;
  closeSheet();
  if(a==="tasks"||a==="pick")goStage(true);
- if(a==="auc")$("leiloes").scrollIntoView({behavior:reduceMotion?"auto":"smooth"});
+ if(a==="auc")openLg();
  if(a==="tickets")$("bilhete").scrollIntoView({behavior:reduceMotion?"auto":"smooth"});
 });
 
@@ -5690,6 +6353,8 @@ $("cs-save").onclick=()=>{
 };
 $("cs-reopen").onclick=()=>showConsent("perms");
 document.addEventListener("click",e=>{if(e.target.closest("[data-terms]")){e.preventDefault();showConsent("terms")}});
+/* "gerencie suas permissões": abre o painel de permissões do consentimento */
+document.addEventListener("click",e=>{if(e.target.closest("[data-consent]")){e.preventDefault();showConsent("perms")}});
 addEventListener("resize",()=>{if(!$("consent").hidden)csLayout()});
 window.yConsent=consent();
 if(!termsOk())setTimeout(()=>showConsent(),600);
@@ -5697,51 +6362,276 @@ if(!termsOk())setTimeout(()=>showConsent(),600);
 /* ============================================================
    20 · FAQ EM CARROSSEL (um carrossel por seção/categoria)
    ============================================================ */
-let fqGroups=[],fqState={};
-function collectFaq(){
- const src=$("faq-dyn").hidden?$("faq-static"):$("faq-dyn");
- let cat="";
- fqGroups=[];
- [...src.children].forEach(el=>{
-  if(el.tagName==="P"&&el.classList.contains("label")){cat=el.textContent.trim();return}
-  if(el.tagName==="P")return;
-  if(el.tagName==="DETAILS"){
-   const q=el.querySelector("summary")?.textContent.trim()||"";
-   const a=el.querySelector("div")?.innerHTML||"";
-   if(!q)return;
-   let g=fqGroups.find(x=>x.cat===cat);
-   if(!g){g={cat,items:[]};fqGroups.push(g)}
-   g.items.push({q,a});
-  }
- });
- renderFaq();
-}
-let fqCat=0,fqQ="";
-const fqNorm=t=>String(t).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
-function renderFaq(){
- const cats=$("fq-cats"),list=$("fq-list");if(!list)return;
- if(!fqGroups.length){cats.innerHTML="";list.innerHTML='<p class="hint">Nenhuma pergunta cadastrada.</p>';return}
- if(fqCat>=fqGroups.length)fqCat=0;
- const q=fqNorm(fqQ.trim());
- cats.innerHTML=fqGroups.map((g,i)=>`<button type="button" role="tab" aria-selected="${i===fqCat&&!q}" class="chip2 ${i===fqCat&&!q?"on":""}" data-fqc="${i}">${esc(g.cat||"Geral")}<span>${g.items.length}</span></button>`).join("");
- const items=q?fqGroups.flatMap(g=>g.items.map(it=>({...it,cat:g.cat}))).filter(it=>fqNorm(it.q+" "+it.a.replace(/<[^>]+>/g," ")).includes(q)):fqGroups[fqCat].items.map(it=>({...it,cat:fqGroups[fqCat].cat}));
- const total=fqGroups.reduce((s,g)=>s+g.items.length,0);
- const cnt=$("fq-count");if(cnt)cnt.textContent=total+" respostas";
- list.innerHTML=items.length?items.map((it,i)=>`<div class="fq-item"><label class="cs-perm fq-perm"><span class="cs-pt"><b>${esc(it.q)}</b>${q&&it.cat?`<small>Tema: ${esc(it.cat)}</small>`:""}</span><input type="checkbox" class="cs-sw" data-fqo aria-label="Abrir resposta"></label><div class="fq-ans">${it.a}</div></div>`).join(""):`<p class="hint" style="padding:6px 2px">Nada encontrado para "${esc(fqQ)}". Tente outra palavra ou fale com o suporte.</p>`;
-}
-$("fq-cats").addEventListener("click",e=>{const b=e.target.closest("[data-fqc]");if(b){fqCat=Number(b.dataset.fqc);fqQ="";$("fq-q").value="";renderFaq()}});
-$("fq-q").addEventListener("input",e=>{fqQ=e.target.value;renderFaq()});
-/* sanfona: abrir uma pergunta fecha as outras (interruptor estilo gerenciador de permissões) */
-$("fq-list").addEventListener("change",e=>{
- const sw=e.target.closest("[data-fqo]");if(!sw)return;
- const item=sw.closest(".fq-item");
- if(sw.checked){
-  $("fq-list").querySelectorAll(".fq-item.open").forEach(d=>{if(d!==item){d.classList.remove("open");const o=d.querySelector("[data-fqo]");if(o)o.checked=false}});
-  item.classList.add("open");
- }else item.classList.remove("open");
-});
-$("fq-sup").onclick=()=>openSupport();
-collectFaq();
+/* ============================================================
+   20 · FAQ — o bloco de perguntas da home foi removido da
+   interface: as perguntas e respostas agora vivem só na
+   Central de Ajuda (botão de suporte), que lê em tempo real
+   os dados ocultos de #faq-dyn / #faq-static.
+   ============================================================ */
+/* ============================================================
+   20 · FAQ — o bloco de perguntas da home foi removido da
+   interface: as perguntas e respostas agora vivem só na
+   Central de Ajuda (botão de suporte), que lê em tempo real
+   os dados ocultos de #faq-dyn / #faq-static.
+   ============================================================ */
+/* ============================================================
+   20 · FAQ — o bloco de perguntas da home foi removido da
+   interface: as perguntas e respostas agora vivem só na
+   Central de Ajuda (botão de suporte), que lê em tempo real
+   os dados ocultos de #faq-dyn / #faq-static.
+   ============================================================ */
+/* ============================================================
+   20 · FAQ — o bloco de perguntas da home foi removido da
+   interface: as perguntas e respostas agora vivem só na
+   Central de Ajuda (botão de suporte), que lê em tempo real
+   os dados ocultos de #faq-dyn / #faq-static.
+   ============================================================ */
+/* ============================================================
+   20 · FAQ — o bloco de perguntas da home foi removido da
+   interface: as perguntas e respostas agora vivem só na
+   Central de Ajuda (botão de suporte), que lê em tempo real
+   os dados ocultos de #faq-dyn / #faq-static.
+   ============================================================ */
+/* ============================================================
+   20 · FAQ — o bloco de perguntas da home foi removido da
+   interface: as perguntas e respostas agora vivem só na
+   Central de Ajuda (botão de suporte), que lê em tempo real
+   os dados ocultos de #faq-dyn / #faq-static.
+   ============================================================ */
+/* ============================================================
+   20 · FAQ — o bloco de perguntas da home foi removido da
+   interface: as perguntas e respostas agora vivem só na
+   Central de Ajuda (botão de suporte), que lê em tempo real
+   os dados ocultos de #faq-dyn / #faq-static.
+   ============================================================ */
+/* ============================================================
+   20 · FAQ — o bloco de perguntas da home foi removido da
+   interface: as perguntas e respostas agora vivem só na
+   Central de Ajuda (botão de suporte), que lê em tempo real
+   os dados ocultos de #faq-dyn / #faq-static.
+   ============================================================ */
+/* ============================================================
+   20 · FAQ — o bloco de perguntas da home foi removido da
+   interface: as perguntas e respostas agora vivem só na
+   Central de Ajuda (botão de suporte), que lê em tempo real
+   os dados ocultos de #faq-dyn / #faq-static.
+   ============================================================ */
+/* ============================================================
+   20 · FAQ — o bloco de perguntas da home foi removido da
+   interface: as perguntas e respostas agora vivem só na
+   Central de Ajuda (botão de suporte), que lê em tempo real
+   os dados ocultos de #faq-dyn / #faq-static.
+   ============================================================ */
+/* ============================================================
+   20 · FAQ — o bloco de perguntas da home foi removido da
+   interface: as perguntas e respostas agora vivem só na
+   Central de Ajuda (botão de suporte), que lê em tempo real
+   os dados ocultos de #faq-dyn / #faq-static.
+   ============================================================ */
+/* ============================================================
+   20 · FAQ — o bloco de perguntas da home foi removido da
+   interface: as perguntas e respostas agora vivem só na
+   Central de Ajuda (botão de suporte), que lê em tempo real
+   os dados ocultos de #faq-dyn / #faq-static.
+   ============================================================ */
+/* ============================================================
+   20 · FAQ — o bloco de perguntas da home foi removido da
+   interface: as perguntas e respostas agora vivem só na
+   Central de Ajuda (botão de suporte), que lê em tempo real
+   os dados ocultos de #faq-dyn / #faq-static.
+   ============================================================ */
+/* ============================================================
+   20 · FAQ — o bloco de perguntas da home foi removido da
+   interface: as perguntas e respostas agora vivem só na
+   Central de Ajuda (botão de suporte), que lê em tempo real
+   os dados ocultos de #faq-dyn / #faq-static.
+   ============================================================ */
+/* ============================================================
+   20 · FAQ — o bloco de perguntas da home foi removido da
+   interface: as perguntas e respostas agora vivem só na
+   Central de Ajuda (botão de suporte), que lê em tempo real
+   os dados ocultos de #faq-dyn / #faq-static.
+   ============================================================ */
+/* ============================================================
+   20 · FAQ — o bloco de perguntas da home foi removido da
+   interface: as perguntas e respostas agora vivem só na
+   Central de Ajuda (botão de suporte), que lê em tempo real
+   os dados ocultos de #faq-dyn / #faq-static.
+   ============================================================ */
+/* ============================================================
+   20 · FAQ — o bloco de perguntas da home foi removido da
+   interface: as perguntas e respostas agora vivem só na
+   Central de Ajuda (botão de suporte), que lê em tempo real
+   os dados ocultos de #faq-dyn / #faq-static.
+   ============================================================ */
+/* ============================================================
+   20 · FAQ — o bloco de perguntas da home foi removido da
+   interface: as perguntas e respostas agora vivem só na
+   Central de Ajuda (botão de suporte), que lê em tempo real
+   os dados ocultos de #faq-dyn / #faq-static.
+   ============================================================ */
+/* ============================================================
+   20 · FAQ — o bloco de perguntas da home foi removido da
+   interface: as perguntas e respostas agora vivem só na
+   Central de Ajuda (botão de suporte), que lê em tempo real
+   os dados ocultos de #faq-dyn / #faq-static.
+   ============================================================ */
+/* ============================================================
+   20 · FAQ — o bloco de perguntas da home foi removido da
+   interface: as perguntas e respostas agora vivem só na
+   Central de Ajuda (botão de suporte), que lê em tempo real
+   os dados ocultos de #faq-dyn / #faq-static.
+   ============================================================ */
+/* ============================================================
+   20 · FAQ — o bloco de perguntas da home foi removido da
+   interface: as perguntas e respostas agora vivem só na
+   Central de Ajuda (botão de suporte), que lê em tempo real
+   os dados ocultos de #faq-dyn / #faq-static.
+   ============================================================ */
+/* ============================================================
+   20 · FAQ — o bloco de perguntas da home foi removido da
+   interface: as perguntas e respostas agora vivem só na
+   Central de Ajuda (botão de suporte), que lê em tempo real
+   os dados ocultos de #faq-dyn / #faq-static.
+   ============================================================ */
+/* ============================================================
+   20 · FAQ — o bloco de perguntas da home foi removido da
+   interface: as perguntas e respostas agora vivem só na
+   Central de Ajuda (botão de suporte), que lê em tempo real
+   os dados ocultos de #faq-dyn / #faq-static.
+   ============================================================ */
+/* ============================================================
+   20 · FAQ — o bloco de perguntas da home foi removido da
+   interface: as perguntas e respostas agora vivem só na
+   Central de Ajuda (botão de suporte), que lê em tempo real
+   os dados ocultos de #faq-dyn / #faq-static.
+   ============================================================ */
+/* ============================================================
+   20 · FAQ — o bloco de perguntas da home foi removido da
+   interface: as perguntas e respostas agora vivem só na
+   Central de Ajuda (botão de suporte), que lê em tempo real
+   os dados ocultos de #faq-dyn / #faq-static.
+   ============================================================ */
+/* ============================================================
+   20 · FAQ — o bloco de perguntas da home foi removido da
+   interface: as perguntas e respostas agora vivem só na
+   Central de Ajuda (botão de suporte), que lê em tempo real
+   os dados ocultos de #faq-dyn / #faq-static.
+   ============================================================ */
+/* ============================================================
+   20 · FAQ — o bloco de perguntas da home foi removido da
+   interface: as perguntas e respostas agora vivem só na
+   Central de Ajuda (botão de suporte), que lê em tempo real
+   os dados ocultos de #faq-dyn / #faq-static.
+   ============================================================ */
+/* ============================================================
+   20 · FAQ — o bloco de perguntas da home foi removido da
+   interface: as perguntas e respostas agora vivem só na
+   Central de Ajuda (botão de suporte), que lê em tempo real
+   os dados ocultos de #faq-dyn / #faq-static.
+   ============================================================ */
+/* ============================================================
+   20 · FAQ — o bloco de perguntas da home foi removido da
+   interface: as perguntas e respostas agora vivem só na
+   Central de Ajuda (botão de suporte), que lê em tempo real
+   os dados ocultos de #faq-dyn / #faq-static.
+   ============================================================ */
+/* ============================================================
+   20 · FAQ — o bloco de perguntas da home foi removido da
+   interface: as perguntas e respostas agora vivem só na
+   Central de Ajuda (botão de suporte), que lê em tempo real
+   os dados ocultos de #faq-dyn / #faq-static.
+   ============================================================ */
+/* ============================================================
+   20 · FAQ — o bloco de perguntas da home foi removido da
+   interface: as perguntas e respostas agora vivem só na
+   Central de Ajuda (botão de suporte), que lê em tempo real
+   os dados ocultos de #faq-dyn / #faq-static.
+   ============================================================ */
+/* ============================================================
+   20 · FAQ — o bloco de perguntas da home foi removido da
+   interface: as perguntas e respostas agora vivem só na
+   Central de Ajuda (botão de suporte), que lê em tempo real
+   os dados ocultos de #faq-dyn / #faq-static.
+   ============================================================ */
+/* ============================================================
+   20 · FAQ — o bloco de perguntas da home foi removido da
+   interface: as perguntas e respostas agora vivem só na
+   Central de Ajuda (botão de suporte), que lê em tempo real
+   os dados ocultos de #faq-dyn / #faq-static.
+   ============================================================ */
+/* ============================================================
+   20 · FAQ — o bloco de perguntas da home foi removido da
+   interface: as perguntas e respostas agora vivem só na
+   Central de Ajuda (botão de suporte), que lê em tempo real
+   os dados ocultos de #faq-dyn / #faq-static.
+   ============================================================ */
+/* ============================================================
+   20 · FAQ — o bloco de perguntas da home foi removido da
+   interface: as perguntas e respostas agora vivem só na
+   Central de Ajuda (botão de suporte), que lê em tempo real
+   os dados ocultos de #faq-dyn / #faq-static.
+   ============================================================ */
+/* ============================================================
+   20 · FAQ — o bloco de perguntas da home foi removido da
+   interface: as perguntas e respostas agora vivem só na
+   Central de Ajuda (botão de suporte), que lê em tempo real
+   os dados ocultos de #faq-dyn / #faq-static.
+   ============================================================ */
+/* ============================================================
+   20 · FAQ — o bloco de perguntas da home foi removido da
+   interface: as perguntas e respostas agora vivem só na
+   Central de Ajuda (botão de suporte), que lê em tempo real
+   os dados ocultos de #faq-dyn / #faq-static.
+   ============================================================ */
+/* ============================================================
+   20 · FAQ — o bloco de perguntas da home foi removido da
+   interface: as perguntas e respostas agora vivem só na
+   Central de Ajuda (botão de suporte), que lê em tempo real
+   os dados ocultos de #faq-dyn / #faq-static.
+   ============================================================ */
+/* ============================================================
+   20 · FAQ — o bloco de perguntas da home foi removido da
+   interface: as perguntas e respostas agora vivem só na
+   Central de Ajuda (botão de suporte), que lê em tempo real
+   os dados ocultos de #faq-dyn / #faq-static.
+   ============================================================ */
+/* ============================================================
+   20 · FAQ — o bloco de perguntas da home foi removido da
+   interface: as perguntas e respostas agora vivem só na
+   Central de Ajuda (botão de suporte), que lê em tempo real
+   os dados ocultos de #faq-dyn / #faq-static.
+   ============================================================ */
+/* ============================================================
+   20 · FAQ — o bloco de perguntas da home foi removido da
+   interface: as perguntas e respostas agora vivem só na
+   Central de Ajuda (botão de suporte), que lê em tempo real
+   os dados ocultos de #faq-dyn / #faq-static.
+   ============================================================ */
+/* ============================================================
+   20 · FAQ — o bloco de perguntas da home foi removido da
+   interface: as perguntas e respostas agora vivem só na
+   Central de Ajuda (botão de suporte), que lê em tempo real
+   os dados ocultos de #faq-dyn / #faq-static.
+   ============================================================ */
+/* ============================================================
+   20 · FAQ — o bloco de perguntas da home foi removido da
+   interface: as perguntas e respostas agora vivem só na
+   Central de Ajuda (botão de suporte), que lê em tempo real
+   os dados ocultos de #faq-dyn / #faq-static.
+   ============================================================ */
+/* ============================================================
+   20 · FAQ — o bloco de perguntas da home foi removido da
+   interface: as perguntas e respostas agora vivem só na
+   Central de Ajuda (botão de suporte), que lê em tempo real
+   os dados ocultos de #faq-dyn / #faq-static.
+   ============================================================ */
+/* ============================================================
+   20 · FAQ — o bloco de perguntas da home foi removido da
+   interface: as perguntas e respostas agora vivem só na
+   Central de Ajuda (botão de suporte), que lê em tempo real
+   os dados ocultos de #faq-dyn / #faq-static.
+   ============================================================ */
 
 /* ============================================================
    20 · CONFIRMAÇÃO PROFISSIONAL (nada de alertas nativos do navegador)
@@ -5772,14 +6662,30 @@ function renderLg(){
  $("lg-forgot").textContent=r?"Voltar para o login":"Esqueci minha senha";
  $("lg-forgot").hidden=reg;
  $("lg-pw").autocomplete=reg?"new-password":"current-password";
+ const tw=$("lg-terms-wrap");
+ if(tw)tw.hidden=r;
  $("lg-msg").textContent=lgNote||(reg?"Use pelo menos "+MIN_PW+" caracteres. Enviaremos um link para verificar seu e-mail.":"");
+}
+/* caixa de aceitação dos termos: obrigatória para entrar/criar conta */
+function lgTermsOk(){
+ const cb=$("lg-terms-ok"),wrap=$("lg-terms-wrap");
+ if(!cb||!wrap||wrap.hidden)return true;
+ const row=cb.closest(".lg-terms");
+ if(cb.checked){row.classList.remove("on");return true}
+ row.classList.add("on");
+ lgNote="☑ Marque a caixa aceitando os termos de uso e responsabilidades para continuar.";
+ renderLg();
+ row.classList.add("on");
+ try{toast("Marque a caixa aceitando os termos de uso e responsabilidades para continuar.")}catch(e){}
+ try{cb.focus()}catch(e){}
+ return false;
 }
 function openLoginGaveta(mode){
  lgMode=mode||"login";lgNote="";
  renderLg();
  $("login-gaveta").classList.add("open");
  $("login-gav").classList.add("open");
- document.documentElement.classList.add("gav-lock");
+ syncGavLock();
  setTimeout(()=>{try{$("lg-email").focus()}catch(e){}},400);
 }
 function closeLoginGaveta(){
@@ -5787,7 +6693,7 @@ function closeLoginGaveta(){
  setTimeout(()=>{
   if(!$("login-gav").classList.contains("open")){
    $("login-gaveta").classList.remove("open");
-   document.documentElement.classList.remove("gav-lock");
+   syncGavLock();
   }
  },400);
 }
@@ -5802,6 +6708,7 @@ $("lg-showpw").onclick=()=>{const p=$("lg-pw"),s=p.type==="password";p.type=s?"t
 $("lg-go").onclick=async()=>{
  const email=$("lg-email").value.trim(),pw=$("lg-pw").value;
  if(lgMode!=="reset"&&!termsOk())return askTerms();
+ if(lgMode!=="reset"&&!lgTermsOk())return;
  const b=$("lg-go");if(b.disabled)return;
  try{
   if(lgMode==="reset"){
@@ -5841,9 +6748,10 @@ async function socialSignIn(make){
 }
 $("facebook").onclick=()=>socialSignIn(fbProvider);
 $("tiktok").onclick=tikTokNotice;
-$("lg-google").onclick=()=>socialSignIn(()=>new GoogleAuthProvider());
-$("lg-facebook").onclick=()=>socialSignIn(fbProvider);
-$("lg-tiktok").onclick=tikTokNotice;
+$("lg-google").onclick=()=>{if(!lgTermsOk())return;socialSignIn(()=>new GoogleAuthProvider())};
+$("lg-facebook").onclick=()=>{if(!lgTermsOk())return;socialSignIn(fbProvider)};
+$("lg-tiktok").onclick=()=>{if(!lgTermsOk())return;tikTokNotice()};
+$("lg-terms-ok")?.addEventListener("change",()=>{const cb=$("lg-terms-ok");if(cb.checked)cb.closest(".lg-terms").classList.remove("on")});
 $("lg-inapp").hidden=!inApp;
 
 /* conectar outras formas de entrar (usuário já logado por e-mail/senha) */
@@ -5902,6 +6810,364 @@ document.addEventListener("click",async e=>{
   },"Desconectar");
  }
 });
+/* ============================================================
+   22 · CENTRAL DE ANÚNCIOS YSHIPPCOMMERCE (gaveta tela cheia)
+   · Anunciar: banners, links e vídeos pagos em bilhetes
+   · Ferramentas: encurtadores, plataformas de monetização,
+     gerador de banner, calculadora e testador de código
+   · Monetização Yshipp: programa de afiliados e pool de anúncios
+   · Rotação automática: gaveta obrigatória a cada X minutos
+     (settings.adcEveryMin / settings.adcViewSec no painel)
+   ============================================================ */
+const ADPRICE={
+ banner:{n:"Banner de imagem",i:"🖼️",p:{h12:30,h24:50,d7:200}},
+ link:{n:"Link patrocinado",i:"🔗",p:{h12:20,h24:35,d7:120}},
+ video:{n:"Vídeo / embed",i:"🎬",p:{h12:40,h24:70,d7:280}}
+};
+const ADUR={h12:{n:"12 horas",ms:432e5},h24:{n:"24 horas",ms:864e5},d7:{n:"7 dias",ms:6048e5}};
+let adcAds=[],adcMine=[],unAdcRot=null,unAdcMine=null,adcTab="inicio";
+let adcType="banner",adcDur="h24";
+const adcActive=a=>a&&a.status!=="rejected"&&a.status!=="paused"&&(!a.expiresAt||stampMs(a.expiresAt)>Date.now());
+function adcOpen(){$("adcveta").classList.add("open");$("adcav").classList.add("open");syncGavLock();adcRender()}
+function adcClose(){$("adcveta").classList.remove("open");$("adcav").classList.remove("open");syncGavLock()}
+/* resumo da Central de Anúncios na página principal (seção #anuncios) */
+function adcMainSync(){
+ const n=$("adc-main-n"),p=$("adc-main-pool");
+ if(!n||!p)return;
+ const live=adcAds.filter(adcActive);
+ n.textContent=String(live.length);
+ p.textContent=String(live.reduce((s,a)=>s+Math.max(0,Math.floor(Number(a.amount)||0)),0));
+}
+/* ── documento da Central de Anúncios salvo pelo painel (settings/adsCenter):
+   rotação, preços e ferramentas recomendadas com mini-curso ── */
+let adcCenter=null;
+onSnapshot(doc(db,"settings","adsCenter"),s=>{
+ adcCenter=s.exists()?s.data():null;
+ try{adcRender()}catch(e){}
+ try{adcMainSync()}catch(e){}
+},e=>console.warn("Central de anúncios:",e));
+function adcPriceOf(t,d){
+ const p=adcCenter?.prices?.[t]?.[d];
+ return Math.max(1,Math.floor(Number(p)||0))||ADPRICE[t].p[d];
+}
+const adcToolsOf=()=>{
+ const list=Array.isArray(adcCenter?.tools)?adcCenter.tools.filter(t=>t&&t.name&&t.active!==false):[];
+ return list;
+};
+let adcOpenTool=null;
+function adcToolOpen(tool){
+ adcOpenTool=tool;
+ $("adct-ico").textContent=String(tool.icon||"🧰").slice(0,4);
+ $("adct-name").textContent=String(tool.name||"Ferramenta").slice(0,60);
+ const stage=$("adct-stage");
+ const course=String(tool.course||"").trim();
+ if(course){
+  const f=document.createElement("iframe");
+  f.setAttribute("sandbox","allow-scripts allow-popups allow-popups-to-escape-sandbox allow-forms allow-same-origin");
+  f.style.cssText="width:100%;height:100%;min-height:220px;border:0;background:#fff";
+  f.srcdoc=buildAdDoc(course);
+  stage.innerHTML="";stage.appendChild(f);
+ }else{
+  stage.innerHTML=`<div style="padding:24px 16px;display:grid;gap:10px;justify-items:center;text-align:center;align-content:center;min-height:200px"><b style="font-size:18px">${esc(tool.icon||"")} ${esc(tool.name||"")}</b><p style="color:var(--mu);font-size:13.5px;max-width:52ch;margin:0;line-height:1.7">${esc(tool.desc||"")}</p></div>`;
+ }
+ const op=$("adct-open");
+ op.hidden=!validUrl(tool.ref);
+ if(!op.hidden)op.onclick=()=>window.open(tool.ref,"_blank","noopener");
+ $("adct-note").textContent=String(tool.tag||"Conteúdo escolhido pela equipe Yshippcommerce.").slice(0,90);
+ $("adctool").classList.add("open");$("adctv").classList.add("open");syncGavLock();
+}
+$("adct-x").onclick=()=>{
+ $("adctool").classList.remove("open");$("adctv").classList.remove("open");syncGavLock();
+ $("adct-stage").innerHTML="";
+};
+function adcAutoCfg(){return{everyMin:Math.min(240,Math.max(5,Math.floor(Number(adcCenter?.everyMin)||Number(settings.adcEveryMin)||20))),viewSec:Math.min(120,Math.max(5,Math.floor(Number(adcCenter?.viewSec)||Number(settings.adcViewSec)||10)))}}
+function adcWatch(uid){
+ unAdcRot?.();unAdcMine?.();unAdcRot=null;unAdcMine=null;
+ if(!uid){adcAds=[];adcMine=[];try{adcMainSync()}catch(e){}return}
+ unAdcRot=onSnapshot(query(collection(db,"marketAds"),limit(100)),s=>{adcAds=s.docs.map(d=>({id:d.id,...d.data()}));try{adcRender()}catch(e){}try{adcMainSync()}catch(e){}},e=>console.warn("Anúncios:",e));
+ unAdcMine=onSnapshot(query(collection(db,"marketAds"),where("uid","==",uid),limit(25)),s=>{adcMine=s.docs.map(d=>({id:d.id,...d.data()}));try{adcRender()}catch(e){}},e=>console.warn(e));
+}
+function adcStats(){
+ const live=adcAds.filter(adcActive);
+ const mine=adcMine.filter(adcActive);
+ const pool=live.reduce((s,a)=>s+Math.max(0,Math.floor(Number(a.amount)||0)),0);
+ const views=adcMine.reduce((s,a)=>s+(Number(a.impressions)||0),0);
+ const clicks=adcMine.reduce((s,a)=>s+(Number(a.clicks)||0),0);
+ $("adc-stats").innerHTML=`
+  <div class="clv-stat"><span>No ar agora</span><b class="gold">${live.length}</b></div>
+  <div class="clv-stat"><span>Minhas</span><b>${mine.length}</b></div>
+  <div class="clv-stat"><span>Visualizações</span><b class="green">${views}</b></div>
+  <div class="clv-stat"><span>Pool do mês</span><b class="gold">${pool}</b></div>
+  ${clicks?`<div class="clv-stat"><span>Cliques</span><b>${clicks}</b></div>`:""}`;
+}
+function adcRender(){
+ adcStats();
+ const tabs=[["inicio","🏠 Início"],["anunciar","📢 Anunciar"],["ferramentas","🧰 Ferramentas"],["monetizar","💰 Monetizar Yshipp"]];
+ $("adc-tabs").innerHTML=tabs.map(([k,l])=>`<button class="${adcTab===k?"on":""}" data-adctab="${k}">${l}</button>`).join("");
+ const b=$("adc-body");
+ if(adcTab==="inicio")b.innerHTML=adcHome();
+ else if(adcTab==="anunciar")b.innerHTML=adcForm();
+ else if(adcTab==="ferramentas")b.innerHTML=adcTools();
+ else b.innerHTML=adcMoney();
+}
+function adcHome(){
+ const live=adcAds.filter(adcActive).slice(0,4);
+ const mine=adcMine.filter(adcActive);
+ const cfg=adcAutoCfg();
+ return `<div class="adc-hero">
+   <b>📢 Central de Anúncios Yshippcommerce</b>
+   <p>Aqui o membro anuncia para a comunidade inteira, usa ferramentas profissionais de monetização e ainda fatura com o programa de afiliados da casa. Todo bilhete pago em anúncio vira prêmio nos sorteios.</p>
+   <div style="display:flex;gap:8px;flex-wrap:wrap">
+    <button class="btn sm" data-adctab-go="anunciar">🚀 Criar anúncio agora</button>
+    <button class="btn sm ghost" data-adctab-go="monetizar">🤝 Ser um afiliado</button>
+    ${adLive()?'<button class="btn sm ghost" id="adc-reward">🎁 Anúncio com recompensa ('+esc(String(settings.adReward||"+0"))+' bilhetes)</button>':""}
+   </div>
+   <p class="hint" style="margin:0">Rotação automática: um anúncio pago abre sozinho a cada ${cfg.everyMin} min, com ${cfg.viewSec}s de visualização obrigatória (configurável pelo painel).</p>
+  </div>
+  <div>
+   <b style="font-size:13.5px">📣 Em rotação agora</b>
+   <div class="clv-body" style="padding:10px 0 0;display:grid;gap:8px">
+   ${live.length?live.map(a=>`<div class="adc-mrow"><span>${ADPRICE[a.type]?.i||"📣"} ${esc(a.title||"Anúncio")}</span><b>${Number(a.impressions)||0} views</b></div>`).join(""):'<p class="hint" style="margin:0">Nenhum anúncio no ar. Seja o primeiro a anunciar!</p>'}
+   </div>
+  </div>
+  ${mine.length?`<div>
+   <b style="font-size:13.5px">🧾 Minhas campanhas</b>
+   <div class="clv-body" style="padding:10px 0 0;display:grid;gap:8px">
+   ${mine.map(a=>`<div class="adc-mrow"><span>${esc(a.title||"")}</span><b>${Number(a.impressions)||0} views · ${Number(a.clicks)||0} cliques</b></div>`).join("")}
+   </div></div>`:""}`;
+}
+function adcForm(){
+ const bal=Math.max(0,Math.floor(Number(wallet?.common)||0));
+ const price=adcPriceOf(adcType,adcDur);
+ return `<div class="adc-hero"><b>📢 Criar anúncio pago</b><p>Escolha o formato e a duração. O custo sai da sua carteira de bilhetes comuns, o anúncio entra na rotação automática na hora e cada bilhete pago vira prêmio nos sorteios.</p></div>
+  <div class="clv-claim">
+   <span class="clv-note" style="font-weight:600">1 · Formato do anúncio</span>
+   <div class="adc-price">
+    ${Object.entries(ADPRICE).map(([k,v])=>`<button class="prc ${adcType===k?"on":""}" data-adcty="${k}"><b style="font-size:13px">${v.i} ${v.n.split(" ")[0]}</b><small>${v.n}</small><small>desde ${adcPriceOf(k,"h12")} 🎟️</small></button>`).join("")}
+   </div>
+   <span class="clv-note" style="font-weight:600">2 · Duração</span>
+   <div class="adc-price">
+    ${Object.entries(ADUR).map(([k,v])=>`<button class="prc ${adcDur===k?"on":""}" data-adcdur="${k}"><b>${adcPriceOf(adcType,k)} 🎟️</b><small>${v.n}</small></button>`).join("")}
+   </div>
+   <div class="field"><label class="label">Título do anúncio (mín. 3 letras)</label><input id="adcf-title" maxlength="60" placeholder="Ex.: Promoção imperdível na minha loja"></div>
+   <div class="field"><label class="label">Texto / descrição</label><textarea id="adcf-text" maxlength="300" placeholder="Fale o que você anuncia em 1 ou 2 frases…"></textarea></div>
+   <div class="field"><label class="label">Link de destino (obrigatório)</label><input id="adcf-link" placeholder="https://…"></div>
+   ${adcType==="banner"?`<div class="field"><label class="label">Imagem do banner (URL, obrigatória para banner)</label><input id="adcf-img" placeholder="https://…/banner.jpg"></div>`:""}
+   ${adcType==="video"?`<div class="field"><label class="label">Código do vídeo/embed (iframe, script ou HTML)</label><textarea id="adcf-embed" placeholder="Cole aqui o código de incorporação…"></textarea></div>`:""}
+   <div class="adc-mrow"><span>Seu saldo: <b>${bal} 🎟️</b></span><span>Custo: <b class="gold">${price} 🎟️</b></span></div>
+   <button class="btn" id="adcf-go" style="width:100%">Publicar anúncio (${price} bilhetes comuns)</button>
+   <p class="clv-note">Ao publicar, o valor é debitado na hora e o anúncio entra na rotação. A equipe pode pausar anúncios inadequados pelo painel (o valor não é devolvido — anuncie com responsabilidade).</p>
+  </div>`;
+}
+function adcTools(){
+ const tools=adcToolsOf();
+ return `<div class="adc-hero"><b>🧰 Ferramentas de anúncio e monetização</b><p>Ferramentas <b>indicadas pela administração</b>: toque em qualquer uma para abrir o <b>mini-curso completo</b> em tela cheia e começar a usar. O botão "Abrir ferramenta" usa o link oficial de indicação da casa.</p></div>
+  ${tools.length?`<div class="adc-grid2">
+   ${tools.map((t,i)=>`<div class="pcard" data-adctoolopen="${i}" style="cursor:pointer">
+    <span class="ptag">${esc(t.tag||t.cat||"ferramenta")}</span>
+    <b>${esc(t.icon||"🧰")} ${esc(t.name)}</b>
+    <p>${esc(t.desc||"")}</p>
+    <p style="margin:0;color:var(--acx);font-weight:600;font-size:12.5px">📖 Abrir mini-curso →</p>
+   </div>`).join("")}
+  </div>`:`<div class="ntv-empty" style="border-style:solid">A administração ainda não publicou ferramentas recomendadas. Volte em breve!</div>`}
+  <div class="clv-claim">
+   <b style="font-size:13.5px">🖼️ Gerador de banner HTML</b>
+   <div class="adc-grid2">
+    <div class="field"><label class="label">URL da imagem</label><input id="bimg" placeholder="https://…/banner.jpg"></div>
+    <div class="field"><label class="label">Link de destino</label><input id="blink" placeholder="https://…"></div>
+   </div>
+   <button class="btn sm" id="bgen">Gerar código + prévia</button>
+   <div id="bprev"></div>
+  </div>
+  <div class="clv-claim">
+   <b style="font-size:13.5px">🧮 Calculadora de ganhos</b>
+   <div class="adc-grid2">
+    <div class="field"><label class="label">Impressões/dia</label><input id="cimp" type="number" min="0" placeholder="1000"></div>
+    <div class="field"><label class="label">CPM médio (US$)</label><input id="ccpm" type="number" step="0.1" min="0" placeholder="1.20"></div>
+   </div>
+   <div class="field"><label class="label">Dias</label><input id="cdays" type="number" min="1" placeholder="30"></div>
+   <button class="btn sm" id="ccalc">Calcular</button>
+   <div id="cres"></div>
+  </div>
+  <div class="clv-claim">
+   <b style="font-size:13.5px">🧪 Testador de código de anúncio</b>
+   <p class="clv-note">Cole o código do seu anúncio e veja como ele renderiza isolado, igual à gaveta de exibição.</p>
+   <textarea id="tcode" placeholder="<div>Seu HTML/script aqui…</div>"></textarea>
+   <button class="btn sm" id="tgo" style="margin-top:8px">Testar visualização</button>
+   <iframe class="adc-prev" id="tprev" sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox allow-forms allow-same-origin" hidden></iframe>
+  </div>`;
+}
+function adcMoney(){
+ const uid=currentUser?.uid||"";
+ const refLink=location.origin+location.pathname+"?ref="+encodeURIComponent(uid);
+ const live=adcAds.filter(adcActive);
+ const pool=live.reduce((s,a)=>s+Math.max(0,Math.floor(Number(a.amount)||0)),0);
+ return `<div class="adc-hero"><b>💰 Monetização Yshippcommerce</b><p>Programas da própria casa para o membro transformar presença em bilhetes: afiliado, anúncios pagos e pool coletivo.</p></div>
+  <div class="clv-claim">
+   <b style="font-size:13.5px">🤝 Programa de afiliados</b>
+   <p class="clv-note">Compartilhe seu link: quando alguém criar a conta pelo seu link, <b>você ganha +5 bilhetes comuns</b> e a pessoa ganha <b>+5 de bônus extra</b> além das boas-vindas. Sem limite de indicações.</p>
+   <div class="adc-code"><button class="btn sm ghost adc-copy" data-adccopy>Copiar</button>${esc(refLink)}</div>
+   <div class="adc-mrow"><span>Contas indicadas por você:</span><b id="adc-refcount">…</b></div>
+  </div>
+  <div class="clv-claim">
+   <b style="font-size:13.5px">📣 Anúncio pago = pool dos sorteios</b>
+   <p class="clv-note">Cada bilhete pago em anúncio vai direto para o pool que fortalece os prêmios dos sorteios do mês. Anunciar é patrocinar a comunidade — e aparecer para todo mundo.</p>
+   <div class="adc-mrow"><span>Pool atual do mês:</span><b class="gold">${pool} 🎟️</b></div>
+  </div>
+  <div class="clv-claim">
+   <b style="font-size:13.5px">🎟️ Tabela de preços de anúncio</b>
+   <div class="adc-price" style="margin-top:8px">
+    ${Object.entries(ADPRICE).map(([k,v])=>`<div class="prc on"><b>${v.n.split(" ")[0]}</b><small>${adcPriceOf(k,"h12")} / ${adcPriceOf(k,"h24")} / ${adcPriceOf(k,"d7")}</small><small>12h / 24h / 7d</small></div>`).join("")}
+   </div>
+   <p class="clv-note">Preços definidos pela administração no painel — atualizam na hora.</p>
+  </div>`;
+}
+/* delegação dos cliques da central de anúncios */
+$("adc-x").onclick=adcClose;
+$("adc-main-open").onclick=()=>adcOpen();
+$("adc-tabs").addEventListener("click",e=>{const b=e.target.closest("[data-adctab]");if(b){adcTab=b.dataset.adctab;adcRender()}});
+$("adc-body").addEventListener("click",async e=>{
+ const tl=e.target.closest("[data-adctoolopen]");
+ if(tl){const tools=adcToolsOf();const t=tools[Number(tl.dataset.adctoolopen)];if(t)adcToolOpen(t);return}
+ const go=e.target.closest("[data-adctab-go]");
+ if(go){adcTab=go.dataset.adctabGo;adcRender();return}
+ if(e.target.closest("#adc-reward")){adcClose();return openAdDrawer()}
+ const cp=e.target.closest("[data-adccopy]");
+ if(cp){copyText(cp.parentElement.textContent.trim());return}
+ const ty=e.target.closest("[data-adcty]");if(ty){adcType=ty.dataset.adcty;return adcRender()}
+ const du=e.target.closest("[data-adcdur]");if(du){adcDur=du.dataset.adcdur;return adcRender()}
+ if(e.target.closest("#bgen")){
+  const img=$("bimg").value.trim(),ln=$("blink").value.trim();
+  if(!validUrl(img))return toast("Informe a URL da imagem do banner.");
+  const code=`<a href="${esc(validUrl(ln)?ln:"#")}" target="_blank" rel="noopener sponsored"><img src="${esc(img)}" alt="Banner patrocinado" style="width:100%;max-width:480px;border-radius:10px;display:block"></a>`;
+  $("bprev").innerHTML=`<div class="adc-code" style="margin-top:10px"><button class="btn sm ghost adc-copy" data-adccopy>Copiar</button>${esc(code)}</div><img src="${esc(img)}" style="width:100%;max-width:480px;border-radius:10px;margin-top:8px" alt="Prévia">`;
+  return;
+ }
+ if(e.target.closest("#ccalc")){
+  const imp=Math.max(0,Number($("cimp").value)||0),cpm=Math.max(0,Number($("ccpm").value)||0),d=Math.max(1,Number($("cdays").value)||1);
+  const usd=imp*cpm/1000*d;
+  $("cres").innerHTML=`<div class="adc-mrow" style="margin-top:8px"><span>Ganho estimado em ${d} dia(s):</span><b class="gold">US$ ${usd.toFixed(2)}</b></div><p class="clv-note">Estimativa por CPM — valores reais variam com país e formato.</p>`;
+  return;
+ }
+ if(e.target.closest("#tgo")){
+  const code=$("tcode").value.trim();
+  if(!code)return toast("Cole um código para testar.");
+  const f=$("tprev");f.hidden=false;f.srcdoc=buildAdDoc(code);
+  return;
+ }
+ if(e.target.closest("#adcf-go"))return adcPublish();
+ if(e.target.closest("#adc-refcount"))return;
+ if(adcTab==="monetizar"){
+  const el=$("adc-refcount");
+  if(el&&el.textContent==="…"&&currentUser){
+   try{const n=await getCountFromServer(query(collection(db,"users"),where("referredBy","==",currentUser.uid)));el.textContent=String(n)}catch(err){el.textContent="0"}
+  }
+ }
+});
+async function adcPublish(){
+ if(!currentUser?.emailVerified)return toast("Entre com uma conta verificada para anunciar.");
+ if(!termsOk())return askTerms();
+ if(!profileOk())return toast("Salve seus dados de perfil primeiro.");
+ const title=$("adcf-title")?.value.trim()||"";
+ const text=$("adcf-text")?.value.trim()||"";
+ const link=$("adcf-link")?.value.trim()||"";
+ const img=$("adcf-img")?.value.trim()||"";
+ const embed=$("adcf-embed")?.value.trim()||"";
+ if(title.length<3)return toast("Dê um título de pelo menos 3 letras ao anúncio.");
+ if(!validUrl(link))return toast("Informe um link de destino válido (https://…).");
+ if(adcType==="banner"&&!validUrl(img))return toast("Banners precisam de uma imagem válida (https://…).");
+ if(adcType==="video"&&!embed)return toast("Cole o código do vídeo/embed para o formato Vídeo.");
+ const price=adcPriceOf(adcType,adcDur);
+ const bal=Math.max(0,Math.floor(Number(wallet?.common)||0));
+ if(bal<price)return toast("Você tem "+bal+" bilhetes comuns. Faltam "+(price-bal)+" para publicar este anúncio.");
+ if(!confirm('Publicar "'+title+'" por '+ADUR[adcDur].n+' por '+price+' bilhetes comuns? O valor é debitado na carteira agora.'))return;
+ const btn=$("adcf-go");btn.disabled=true;btn.textContent="Publicando…";
+ try{
+  const uid=currentUser.uid;
+  const ref=doc(collection(db,"marketAds"));
+  await runTransaction(db,async tx=>{
+   const ws=await tx.get(doc(db,"wallets",uid));
+   const wd=ws.exists()?ws.data():{};
+   const spend=spendValue(wd,price);
+   if(!spend)throw new Error("Bilhetes insuficientes. Conclua tarefas para ganhar mais.");
+   tx.set(ref,{
+    uid,advertiserName:maskName(profile?.name||""),type:adcType,duration:adcDur,
+    title,text,linkUrl:link,imageUrl:adcType==="banner"?img:"",
+    embed:adcType==="video"?embed:"",
+    amount:price,ticketType:"common",status:"active",
+    impressions:0,clicks:0,
+    createdAt:serverTimestamp(),
+    expiresAt:new Date(Date.now()+ADUR[adcDur].ms)
+   });
+   tx.set(doc(db,"wallets",uid),{...applySpend(wd,spend),updatedAt:serverTimestamp()},{merge:true});
+   tx.set(doc(collection(db,"wallets",uid,"history")),{kind:"ad_purchase",amount:price,ticketType:"common",reason:"Anúncio publicado: "+title.slice(0,60),createdAt:serverTimestamp()});
+  });
+  toast("📣 Anúncio publicado! Ele entra na rotação automática.");
+  adcTab="inicio";adcRender();
+ }catch(e){showError(e)}
+ finally{const b=$("adcf-go");if(b){b.disabled=false;b.textContent="Publicar anúncio ("+price+" bilhetes comuns)"}}
+}
+/* ── ROTAÇÃO AUTOMÁTICA DE ANÚNCIOS PAGOS (gaveta obrigatória) ── */
+let adcVwI=0,adcVwLeft=0;
+const adcAutoLS=()=>{try{return JSON.parse(localStorage.getItem("yadcauto")||"{}")}catch(e){return{}}};
+function adViewOpen(ad,cfg){
+ $("adcv-brand").textContent=(ad.title||"Anúncio patrocinado").slice(0,60);
+ const stage=$("adcv-stage");
+ if(ad.type==="banner"&&validUrl(ad.imageUrl)){
+  stage.innerHTML=`<a href="${esc(ad.linkUrl||"")}" target="_blank" rel="noopener sponsored" id="adcv-a" style="display:block;width:100%;height:100%"><img src="${esc(ad.imageUrl)}" alt="${esc(ad.title||"Banner patrocinado")}" style="width:100%;height:100%;object-fit:cover;min-height:200px"></a>`;
+ }else if(ad.embed||ad.code){
+  const f=document.createElement("iframe");
+  f.setAttribute("sandbox","allow-scripts allow-popups allow-popups-to-escape-sandbox allow-forms allow-same-origin");
+  f.style.cssText="width:100%;height:100%;min-height:220px;border:0;background:#fff";
+  f.srcdoc=buildAdDoc(String(ad.embed||ad.code));
+  stage.innerHTML="";stage.appendChild(f);
+ }else{
+  stage.innerHTML=`<div style="padding:24px 16px;display:grid;gap:8px;justify-items:center;text-align:center;align-content:center;min-height:200px"><b style="font-size:17px">${esc(ad.title||"")}</b><p style="color:var(--mu);font-size:13.5px;max-width:48ch;margin:0">${esc(ad.text||"")}</p></div>`;
+ }
+ const op=$("adcv-open");
+ op.hidden=!validUrl(ad.linkUrl);
+ op.onclick=()=>{updateDoc(doc(db,"marketAds",ad.id),{clicks:increment(1)}).catch(()=>{});window.open(ad.linkUrl,"_blank","noopener")};
+ $("adcv-x").disabled=true;
+ const secs=$("adcv-secs");secs.classList.remove("ok");
+ const bar=$("adcv-bar");bar.classList.remove("run");void bar.offsetWidth;bar.style.animationDuration=cfg.viewSec+"s";bar.classList.add("run");
+ $("adcvw").classList.add("open");$("adcwv").classList.add("open");syncGavLock();
+ try{localStorage.setItem("yadcauto",JSON.stringify({...adcAutoLS(),last:Date.now()}))}catch(e){}
+ updateDoc(doc(db,"marketAds",ad.id),{impressions:increment(1)}).catch(()=>{});
+ if(adcVwI)clearInterval(adcVwI);
+ adcVwLeft=cfg.viewSec;
+ secs.textContent=adcVwLeft+"s";
+ adcVwI=setInterval(()=>{
+  adcVwLeft--;
+  if(adcVwLeft>0){secs.textContent=adcVwLeft+"s";return}
+  clearInterval(adcVwI);adcVwI=0;
+  secs.textContent="pronto ✓";secs.classList.add("ok");
+  $("adcv-x").disabled=false;
+ },1000);
+}
+function adcVwClose(){
+ if($("adcv-x").disabled)return; /* visualização obrigatória em andamento */
+ if(adcVwI){clearInterval(adcVwI);adcVwI=0}
+ $("adcvw").classList.remove("open");$("adcwv").classList.remove("open");syncGavLock();
+ $("adcv-stage").innerHTML="";
+}
+$("adcv-x").onclick=adcVwClose;
+function adcAutoTick(){
+ try{
+  if(!currentUser?.emailVerified||!termsOk())return;
+  if($("adcvw").classList.contains("open"))return;
+  if(document.querySelector(".gaveta.open"))return;
+  if(!($("sup-modal")?.hidden??true))return;
+  const ae=document.activeElement;
+  if(ae&&(ae.tagName==="INPUT"||ae.tagName==="TEXTAREA"||ae.isContentEditable))return;
+  const st=adcAutoLS(),cfg=adcAutoCfg();
+  if(Date.now()-(st.last||0)<cfg.everyMin*6e4)return;
+  const pool=adcAds.filter(adcActive);
+  if(!pool.length)return;
+  adViewOpen(pool[Math.floor(Math.random()*pool.length)],cfg);
+ }catch(e){}
+}
+setInterval(adcAutoTick,20000);
+onAuthStateChanged(auth,u=>{adcWatch(u?.uid)});
 /* barra do topo + gaveta reagem ao estado de login */
 onAuthStateChanged(auth,u=>{
  $("ldbar").hidden=!!u;
